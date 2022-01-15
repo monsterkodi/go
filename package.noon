@@ -1,0 +1,14 @@
+name            go
+version         0.1.0
+main            js/main.js
+author          monsterkodi
+license         Unlicense
+build
+                asar  false
+                mac
+                  icon  img/app.icns
+dependencies
+                kxk  monsterkodi/kxk
+devDependencies
+                electron        ^16.0.7
+                electron-builder  ^22.14.5

@@ -1,0 +1,64 @@
+###
+00     00   0000000   000  000   000
+000   000  000   000  000  0000  000
+000000000  000000000  000  000 0 000
+000 0 000  000   000  000  000  0000
+000   000  000   000  000  000   000
+###
+
+{ app, post } = require 'kxk'
+
+{ BrowserWindow } = require 'electron'
+    
+{ abs } = Math
+
+wins = -> BrowserWindow.getAllWindows().sort (a,b) -> a.id - b.id
+
+class Main extends app
+
+    @: ->
+                
+        super
+            dir:            __dirname
+            pkg:            require '../package.json'
+            dirs:           ['../pug' '../styl'] # watch pug and styl
+            index:          'index.html'
+            icon:           '../img/app.ico'
+            about:          '../img/about.png'
+            prefsSeperator: '▸'
+            width:          1024
+            height:         768
+            minWidth:       300
+            minHeight:      300
+            
+        @opt.onQuit = @quit
+        @opt.onShow = @onShow
+
+        @app.on 'window-all-closed' (event) => @exitApp()
+        
+        post.on 'menuAction' @onMenuAction
+        
+    # onShow: => 
+    hideDock: -> 
+                
+    #  0000000   000   000  000  000000000  
+    # 000   000  000   000  000     000     
+    # 000 00 00  000   000  000     000     
+    # 000 0000   000   000  000     000     
+    #  00000 00   0000000   000     000     
+    
+    quit: =>
+
+        toSave = wins().length
+
+        if toSave
+            post.toWins 'saveStash'
+            post.on 'stashSaved' =>
+                toSave -= 1
+                if toSave == 0
+                    @exitApp()
+            'delay'
+                            
+    onWinReady: (win) => 
+                    
+new Main

@@ -1,0 +1,94 @@
+###
+000   000  000  000   000  0000000     0000000   000   000
+000 0 000  000  0000  000  000   000  000   000  000 0 000
+000000000  000  000 0 000  000   000  000   000  000000000
+000   000  000  000  0000  000   000  000   000  000   000
+00     00  000  000   000  0000000     0000000   00     00
+###
+
+kxk = require 'kxk'
+{ args, kerror, keyinfo, klog, post, stash, win, $ } = kxk
+
+Board = require './board'
+
+function MainWin extends win
+    
+    @: ->
+        
+        super
+            dir:    __dirname
+            pkg:    require '../package.json'
+            menu:   '../kode/menu.noon'
+            icon:   '../img/mini.png'
+            prefsSeperator: '▸'
+            onLoad: @onLoad
+            
+        post.on 'alert' (msg) -> window.alert(msg); kerror msg
+        post.on 'saveStash'   @saveStash
+        
+        window.stash = new stash "win/#{@id}" separator:'▸'
+        post.setMaxListeners 20
+        
+        window.onload = @onLoad
+                                    
+    # 000       0000000    0000000   0000000    
+    # 000      000   000  000   000  000   000  
+    # 000      000   000  000000000  000   000  
+    # 000      000   000  000   000  000   000  
+    # 0000000   0000000   000   000  0000000    
+    
+    onLoad: =>
+        
+        @main =$ '#main'
+        
+        @board = new Board @main
+        
+        post.emit 'resize'
+        
+        window.onresize = @onResize
+
+        @restore()
+        
+    onMove: => window.stash.set 'bounds' @getBounds()
+    
+    onResize: =>
+        
+        window.stash.set 'bounds' @getBounds()
+        post.emit 'resize'
+        
+    # 00000000   00000000   0000000  000000000   0000000   00000000   00000000  
+    # 000   000  000       000          000     000   000  000   000  000       
+    # 0000000    0000000   0000000      000     000   000  0000000    0000000   
+    # 000   000  000            000     000     000   000  000   000  000       
+    # 000   000  00000000  0000000      000      0000000   000   000  00000000  
+    
+    restore: =>
+    
+        if bounds = window.stash.get 'bounds'
+            @setBounds bounds
+    
+        post.emit 'restore'
+   
+    saveStash: =>
+    
+        window.stash.set 'bounds' @getBounds()
+        post.emit 'stash'
+        window.stash.save()
+        post.toMain 'stashSaved'
+                
+    # 00     00  00000000  000   000  000   000  
+    # 000   000  000       0000  000  000   000  
+    # 000000000  0000000   000 0 000  000   000  
+    # 000 0 000  000       000  0000  000   000  
+    # 000   000  00000000  000   000   0000000   
+    
+    onMenuAction: (action, args) =>
+               
+        switch action.toLowerCase()
+            when 'save'         then return @saveStash()
+            when 'revert'       then return @restore()
+                        
+        klog "menuAction '#{action}'" # args     
+        super action, args
+           
+new MainWin            
