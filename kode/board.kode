@@ -10,7 +10,7 @@
 
 function Board
 
-    @: (parent) ->
+    @: (parent, @size=19) ->
         
         @div = elem 'div' class:'board'   parent:parent
         @img = elem 'img' class:'wood'    src:'../img/wood.png' parent:@div
@@ -37,10 +37,10 @@ function Board
         
         @ctx.fillStyle = 'black'
         
-        d = s/20
+        d = s/(@size+1)
         o = d
         
-        for i in 0...19
+        for i in 0...@size
             @ctx.beginPath()
             @ctx.moveTo o+i*d, o
             @ctx.lineTo o+i*d, s-o
@@ -51,23 +51,26 @@ function Board
         for x in -1..1
             for y in -1..1
                 @ctx.beginPath()
-                @ctx.arc s/2+x*d*6, s/2+y*d*6, d/12, 0, 2 * Math.PI, false
+                if @size >= 13
+                    @ctx.arc s/2+x*d*(int(-@size/2) + 3), s/2+y*d*(int(-@size/2) + 3), s/180, 0, 2 * Math.PI, false
+                else if x and y
+                    @ctx.arc s/2+x*d*(int(-@size/2) + 2), s/2+y*d*(int(-@size/2) + 2), s/180, 0, 2 * Math.PI, false
                 @ctx.fill()
                 
-        for x in 0..18
-            for y in 0..18
-              @addStone [x,y], (x+y)%2
+        for x in 0...@size
+            for y in 0...@size
+               @addStone [x,y], (x+y)%2
+               y += 2
             x+=1
                 
     addStone: (pos, black) ->
         
-        d = 100/20
-        src = "../img/stone_white#{randIntRange 1 15}.png"
-        src = '../img/stone_black.png' if black
+        d = 100/(@size+1)
+        src = "../img/stone_#{black ? 'black' : 'white' + randIntRange 1 15}.png" 
         shadow = elem 'img' class:'shadow' src:'../img/stone_shadow.png', width:"auto", height:"#{d+1}%" parent:@shd
         stone = elem 'img' class:'stone' src:src, width:"auto", height:"#{d}%" parent:@div
-        x = (pos[0]+0.5)*100/20
-        y = (pos[1]+0.5)*100/20
+        x = (pos[0]+0.5)*100/(@size+1)
+        y = (pos[1]+0.5)*100/(@size+1)
         stone.style = "left:#{x}%; top:#{y}%;" 
         shadow.style = "left:#{x}%; top:#{y}%;" 
 

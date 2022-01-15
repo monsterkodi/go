@@ -41,7 +41,7 @@ function MainWin extends win
         
         @main =$ '#main'
         
-        @board = new Board @main
+        @board = new Board @main, 9
         
         post.emit 'resize'
         
