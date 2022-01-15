@@ -7,7 +7,7 @@
 ###
 
 kxk = require 'kxk'
-{ args, kerror, keyinfo, klog, post, stash, win, $ } = kxk
+{ args, kerror, keyinfo, klog, post, stash, win, elem, $ } = kxk
 
 Board = require './board'
 
@@ -41,7 +41,22 @@ function MainWin extends win
         
         @main =$ '#main'
         
-        @board = new Board @main, 9
+        if 0
+            r1 = elem 'div' class:'row' parent:@main
+            r2 = elem 'div' class:'row' parent:@main
+            r1.style = 'height:50%'
+            r2.style = 'height:50%'
+            
+            @board1 = new Board r1, 9
+            @board2 = new Board r1, 13
+            @board5 = new Board r1, 19
+            @board3 = new Board r2, 19
+            @board4 = new Board r2, 13
+            @board6 = new Board r2, 9
+        else
+            r1 = elem 'div' class:'row' parent:@main
+            r1.style = 'height:100%'
+            @board1 = new Board r1, 19
         
         post.emit 'resize'
         

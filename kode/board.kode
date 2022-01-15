@@ -16,11 +16,7 @@ function Board
         @img = elem 'img' class:'wood'    src:'../img/wood.png' parent:@div
         @shd = elem 'div' class:'shadows' parent:@div
         
-        br = @div.getBoundingClientRect()
-        w = parseInt br.width
-        h = parseInt br.height
-        
-        @height = h*2
+        @height = 700
         @width  = @height
         s = @height
         
@@ -28,7 +24,7 @@ function Board
 
         @ctx = @canvas.getContext '2d'
         @ctx.strokeStyle = 'black'
-        @ctx.lineWidth = 4
+        @ctx.lineWidth = @size == 19 ? 2 : @size == 13 ? 2.5 : 3
         @ctx.lineCap = "round"
 
         @ctx.fillStyle = '#f6c67111'
@@ -57,11 +53,14 @@ function Board
                     @ctx.arc s/2+x*d*(int(-@size/2) + 2), s/2+y*d*(int(-@size/2) + 2), s/180, 0, 2 * Math.PI, false
                 @ctx.fill()
                 
-        for x in 0...@size
-            for y in 0...@size
-               @addStone [x,y], (x+y)%2
-               y += 2
-            x+=1
+        # for x in 0...@size
+            # for y in 0...@size
+               # @addStone [x,y], (x+y)%2
+               # y += 2
+            # x+=1
+            
+        @addStone [0,0], 0
+        @addStone [1,1], 1
                 
     addStone: (pos, black) ->
         
