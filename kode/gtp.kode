@@ -37,8 +37,18 @@ function GTP
             'quit'              ➜   @ok(); process.exit 0
             'list_commands'     ➜   @ok commands.join '\n'
                                 ➜   
-                                    if @game[args[0]] is func
-                                        @ok @game[args[0]].apply @game, args[1..]
+                                    c = args[0]
+                                    if c.length == 1
+                                        c = switch c
+                                            'b' ➜ 'showboard'
+                                            'c' ➜ 'clear_board'
+                                            'l' ➜ 'countlib'
+                                            'f' ➜ 'free'
+                                            'p' ➜ 'play'
+                                            'q' ➜ 'quit'
+                                                ➜ c
+                                    if @game[c] is func
+                                        @ok @game[c].apply @game, args[1..]
                                     else 
                                         @ok()
         @run()

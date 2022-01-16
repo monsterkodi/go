@@ -13,7 +13,12 @@ stone = black:'○' white:'●' empty:' ' B:'○' W:'●' b:'○' w:'●'
 
 function Game
 
-    @: -> @boardsize 9
+    @: -> 
+        
+        @boardsize 9
+        @play 'b' 'b1'
+        @play 'b' 'b2'
+        @play 'b' 'a2'
     
     legal: (color, c) ->
         
@@ -29,15 +34,58 @@ function Game
                     l.push @pos [x,y]
         l
         
+    countlib: (p) -> @liberties @coord p
+    liberties: (c) ->
+        if @valid c
+            s = @stoneAt c
+            if s != stone.empty
+                g = @group c
+                n = @group_neighbors g
+                n = n.filter (p) => stone.empty == @stoneAt @coord p
+                return n.length
+        0
+        
+    group: (c) ->
+        s = @stoneAt c
+        g = [@pos c]
+        f = [@pos c]
+        while fp = f.shift()
+            for n in @neighbors @coord fp
+                if s == @stoneAt n
+                    p = @pos n
+                    if p not in g
+                        g.push p
+                        if p not in f then f.push p
+        g
+        
+    group_neighbors: (g) ->
+        gn = []
+        for p in g
+            for n in @poslist @neighbors @coord p
+                if n not in g and n not in gn
+                    gn.push n
+        gn
+        
+    poslist: (cl) -> cl.map @pos
+        
+    neighbors: (c) ->
+        ns = []
+        for [x,y] in [[-1 0] [1 0] [0 -1] [0 1]]
+            n = [c[0]+x, c[1]+y]
+            if @valid n
+                ns.push n
+        ns
+        
     free: (color, p) -> @freedoms color, @coord p
     freedoms: (color, c) ->
         
         l = 0
-        for [x,y] in [[-1, 0] [1,0] [0,-1] [0,1]]
-            n = [c[0]+x, c[1]+y]
-            if @valid(n) and @stoneAt(n) in [stone.empty, stone[color]]
-                log n, @valid(n), c, x, y, @stoneAt(n)
-                l++
+        for n in @neighbors c
+            s = @stoneAt n
+            if s == stone.empty then l++
+            else if s == stone[color]
+                if @liberties(n) > 1
+                    l++
         l
         
     valid: (c) -> 0 <= c[0] < @size and 0 <= c[1] < @size
@@ -54,15 +102,22 @@ function Game
         
         color ?= @nextColor()
         l = @all_legal color
+        
+        if @moves.length and @moves[-1].endsWith 'pass'
+            return 'pass'
+        
         if valid l
             p = l[randInt l.length]
             @play color, p
             p
         else
-            'PASS'
+            'pass'
         
     play: (color, p) ->
         
+        if p.toLowerCase() == 'pass' 
+            @moves.push color + ' ' + p.toLowerCase()
+            return ''
         if not p 
             p = color
             color = @nextColor()
@@ -81,10 +136,10 @@ function Game
             @genmove()
         @showboard()
     
-    stoneAt: (c) -> @rows[c[1]][c[0]]
+    stoneAt: (c) => @rows[c[1]][c[0]]
         
-    coord: (p) -> [alpha.indexOf(p[0].toUpperCase()), @size-int(p[1..])]
-    pos:   (c) -> alpha[c[0]] + (@size-c[1])
+    coord: (p) => [alpha.indexOf(p[0].toUpperCase()), @size-int(p[1..])]
+    pos:   (c) => alpha[c[0]] + (@size-c[1])
     
     black: (p) -> @play 'B' p
     white: (p) -> @play 'W' p
