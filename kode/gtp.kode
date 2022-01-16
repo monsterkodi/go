@@ -1,0 +1,81 @@
+###
+ 0000000   000000000  00000000 
+000           000     000   000
+000  0000     000     00000000 
+000   000     000     000      
+ 0000000      000     000      
+###
+
+readline = require 'readline'
+Game = require './game'
+
+commands = ['name' 'version' 'protocol_version' 'clear_board' 'color' 'white' 'black' 'boardsize' 'showboard' 'list_commands' 'quit'
+    'play' 'move' 'genmove' 'next' 'all_legal' 
+    ]
+
+function GTP
+
+    @: ->
+        
+        @rl = readline.createInterface input:process.stdin, output:process.stdout
+        @game = new Game()
+        
+    run: ->
+        
+        @rl.question '' @cmd
+        
+    ok: (a='') -> log "=\n#{a}\n"
+            
+    cmd: (cmd) =>
+        
+        args = cmd.split ' '
+            
+        switch args[0]
+            'name'              ➜   @ok 'go'
+            'version'           ➜   @ok '0.0.3'
+            'protocol_version'  ➜   @ok 1
+            'quit'              ➜   @ok(); process.exit 0
+            'list_commands'     ➜   @ok commands.join '\n'
+                                ➜   
+                                    if @game[args[0]] is func
+                                        @ok @game[args[0]].apply @game, args[1..]
+                                    else 
+                                        @ok()
+        @run()
+        
+gtp = new GTP()
+gtp.run()
+
+###
+all_legal
+all_move_values
+black
+boardsize
+color
+estimate_score
+experimental_score
+final_score
+final_status
+final_status_list
+fixed_handicap
+genmove
+genmove_black
+genmove_white
+is_legal
+is_surrounded
+komi
+last_move
+list_stones
+move_history
+name
+new_score
+play
+protocol_version
+quit
+showboard
+top_moves
+top_moves_black
+top_moves_white
+version
+white
+###

@@ -41,7 +41,7 @@ function MainWin extends win
         
         @main =$ '#main'
         
-        if 0
+        if 1
             r1 = elem 'div' class:'row' parent:@main
             r2 = elem 'div' class:'row' parent:@main
             r1.style = 'height:50%'
@@ -49,9 +49,9 @@ function MainWin extends win
             
             @board1 = new Board r1, 9
             @board2 = new Board r1, 13
-            @board5 = new Board r1, 19
-            @board3 = new Board r2, 19
-            @board4 = new Board r2, 13
+            @board3 = new Board r1, 19
+            @board4 = new Board r2, 19
+            @board5 = new Board r2, 13
             @board6 = new Board r2, 9
         else
             r1 = elem 'div' class:'row' parent:@main

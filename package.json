@@ -11,7 +11,8 @@
     }
   },
   "dependencies": {
-    "kxk": "monsterkodi/kxk"
+    "kxk": "monsterkodi/kxk",
+    "readline-sync": "^1.4.10"
   },
   "devDependencies": {
     "electron": "^16.0.7",
