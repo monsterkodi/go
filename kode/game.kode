@@ -9,37 +9,41 @@
 { randInt } = require 'kxk'
 
 alpha = 'ABCDEFGHJKLMNOPQRST'
-stone = black:'○' white:'●' empty:' ' B:'○' W:'●'
+stone = black:'○' white:'●' empty:' ' B:'○' W:'●' b:'○' w:'●'
 
 function Game
 
     @: -> @boardsize 9
-                
-    legal: (c) ->
+    
+    legal: (color, c) ->
         
-        @stoneAt(c) == stone.empty and @liberties c
-        
-    liberties: (c) ->
-        
-        l = 0
-        for x in [-1, 1]
-            for y in [-1, 1]
-                n = [c[0]+x, c[1]+y]
-                if @valid(n) and @stoneAt(n) == stone.empty
-                    l++
-        l
-        
-    valid: (c) -> c[0] >= 0 and c[0] < @size and c[1] >= 0 and c[1] < @size
+        @stoneAt(c) == stone.empty and @freedoms color, c
         
     all_legal: (color) ->
         
-        legal = []
+        color ?= @nextColor()
+        l = []
         for y in 0...@size
             for x in 0...@size
-                if @legal [x,y]
-                    legal.push @pos [x,y]
-        legal
+                if @legal color, [x,y]
+                    l.push @pos [x,y]
+        l
         
+    free: (color, p) -> @freedoms color, @coord p
+    freedoms: (color, c) ->
+        
+        l = 0
+        for [x,y] in [[-1, 0] [1,0] [0,-1] [0,1]]
+            n = [c[0]+x, c[1]+y]
+            if @valid(n) and @stoneAt(n) in [stone.empty, stone[color]]
+                log n, @valid(n), c, x, y, @stoneAt(n)
+                l++
+        l
+        
+    valid: (c) -> 0 <= c[0] < @size and 0 <= c[1] < @size
+        
+    move_history: -> @moves.join '\n'
+            
     nextColor: ->
         
         switch @moves.length%2
@@ -55,7 +59,7 @@ function Game
             @play color, p
             p
         else
-            'pass'
+            'PASS'
         
     play: (color, p) ->
         
@@ -63,10 +67,13 @@ function Game
             p = color
             color = @nextColor()
         c = @coord p
-        r = @rows[c[1]]
-        @rows[c[1]] = r.slice(0, c[0]) + stone[color] + r.slice(c[0]+1)
-        @moves.push color + ' ' + p
-        ''
+        if @valid c
+            r = @rows[c[1]]
+            @rows[c[1]] = r.slice(0, c[0]) + stone[color] + r.slice(c[0]+1)
+            @moves.push color + ' ' + p
+            ''
+        else
+            '? invalid color or coordinate'
             
     next: (num=1) ->
         
@@ -76,7 +83,7 @@ function Game
     
     stoneAt: (c) -> @rows[c[1]][c[0]]
         
-    coord: (p) -> [alpha.indexOf(p[0]), @size-int(p[1..])]
+    coord: (p) -> [alpha.indexOf(p[0].toUpperCase()), @size-int(p[1..])]
     pos:   (c) -> alpha[c[0]] + (@size-c[1])
     
     black: (p) -> @play 'B' p

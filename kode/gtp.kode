@@ -10,7 +10,7 @@ readline = require 'readline'
 Game = require './game'
 
 commands = ['name' 'version' 'protocol_version' 'clear_board' 'color' 'white' 'black' 'boardsize' 'showboard' 'list_commands' 'quit'
-    'play' 'move' 'genmove' 'next' 'all_legal' 
+    'play' 'move' 'genmove' 'next' 'all_legal' 'move_history'
     ]
 
 function GTP
@@ -24,7 +24,7 @@ function GTP
         
         @rl.question '' @cmd
         
-    ok: (a='') -> log "=\n#{a}\n"
+    ok: (a='') -> if a[0] == '?' then log a+'\n' else log "=\n#{a}\n"
             
     cmd: (cmd) =>
         
