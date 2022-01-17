@@ -6,7 +6,8 @@
 0000000     0000000   000   000  000   000  0000000  
 ###
 
-{ elem, randIntRange } = require 'kxk'
+kxk = require 'kxk'
+{ elem, kpos, randIntRange, $ } = kxk
 
 function Board
 
@@ -16,11 +17,22 @@ function Board
         @img = elem 'img' class:'wood'    src:'../img/wood.png' parent:@div
         @shd = elem 'div' class:'shadows' parent:@div
         
+        @div.addEventListener 'mousemove'  @onMouseMove
+        @div.addEventListener 'mousedown'  @onMouseDown
+        @div.addEventListener 'mouseleave' @onMouseLeave
+        
         @height = 1000
         @width  = @height
         s = @height
+        d = s/(@size+1)
+        h = 100/(@size+1)
+        o = d
         
         @canvas = elem 'canvas' class:'lines' height:s, width:s, parent:@div
+        
+        @hlt = elem 'div' class:'highlts' parent:@div
+        @hover = elem 'div' class:'hover' parent:@hlt
+        @hover.style = "width:#{h}%; height:#{h}%; display:none;" 
 
         @ctx = @canvas.getContext '2d'
         @ctx.strokeStyle = 'black'
@@ -32,10 +44,7 @@ function Board
         @ctx.fill()
         
         @ctx.fillStyle = 'black'
-        
-        d = s/(@size+1)
-        o = d
-        
+                
         for i in 0...@size
             @ctx.beginPath()
             @ctx.moveTo o+i*d, o
@@ -52,15 +61,74 @@ function Board
                 else if x and y
                     @ctx.arc s/2+x*d*(int(-@size/2) + 2), s/2+y*d*(int(-@size/2) + 2), s/180, 0, 2 * Math.PI, false
                 @ctx.fill()
-                                
-    addStone: (pos, black) ->
+                
+    onMouseLeave: (event) =>
+        
+        @hover.style.display = 'none'
+        
+    onMouseMove: (event) =>
+        
+        c = @coordAtEvent event
+        
+        if c.x < 0 or c.y < 0 or c.x >= @size or c.y >= @size
+            @hover.style.display = 'none'
+            return
+
+        if @gnu
+            p = @gnu.game.pos [c.x, c.y]
+            if not p in @gnu.game.all_legal()
+                @hover.style.display = 'none'
+                return
+            
+        @hover.style.display = 'initial'
+        
+        p = @coordToPrcnt c
+        
+        @hover.style.left = "#{p.x}%"
+        @hover.style.top  = "#{p.y}%"
+        
+    onMouseDown: (event) =>
+        
+        c = @coordAtEvent event
+        if @gnu
+            p = @gnu.game.pos [c.x, c.y]
+            if p in @gnu.game.all_legal()
+                @gnu.humanMove c
+        
+    coordAtEvent: (event) ->
+        
+        p = kpos event
+        br = @div.getBoundingClientRect()
+        p.sub br
+        sz = br.width / (@size+1)
+        p.div kpos sz, sz
+        p.add kpos -1, -1
+        kpos int(Math.round(p.x)), int(Math.round(p.y))
+        
+    coordToPrcnt: (c) ->
+        br = @div.getBoundingClientRect()
+        kpos 100 * (c.x+1) / (@size+1), 100 * (c.y+1) / (@size+1)
+             
+    delStone: (c) ->
+        log 'delStone' c
+        while s = $ ".pos#{c[0]}_#{c[1]}"
+            log typeof s
+            log s
+            s.remove()
+            
+    addStone: (c, color='black') ->
+        
+        # log 'addStone' color, c
         
         d = 100/(@size+1)
-        src = "../img/stone_#{black ? 'black' : 'white' + randIntRange 1 15}.png" 
-        shadow = elem 'img' class:'shadow' src:'../img/stone_shadow.png', width:"auto", height:"#{d+1}%" parent:@shd
-        stone = elem 'img' class:'stone' src:src, width:"auto", height:"#{d}%" parent:@div
-        x = (pos[0]+0.5)*100/(@size+1)
-        y = (pos[1]+0.5)*100/(@size+1)
+        stn = color
+        stn += randIntRange 1 15 if color == 'white'
+        src = "../img/stone_#{stn}.png" 
+        shadow = elem 'img' class:"shadow pos#{c[0]}_#{c[1]}" src:'../img/stone_shadow.png', width:"auto", height:"#{d+1}%" parent:@shd
+        stone = elem 'img' class:"stone pos#{c[0]}_#{c[1]}" src:src, width:"auto", height:"#{d}%" parent:@div
+        x = (c[0]+0.5)*100/(@size+1)
+        y = (c[1]+0.5)*100/(@size+1)
+
         stone.style = "left:#{x}%; top:#{y}%;" 
         shadow.style = "left:#{x}%; top:#{y}%;" 
 

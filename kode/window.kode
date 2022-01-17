@@ -10,6 +10,8 @@ kxk = require 'kxk'
 { args, kerror, keyinfo, klog, post, stash, win, elem, $ } = kxk
 
 Board = require './board'
+Game  = require './game'
+GNU   = require './gnu'
 
 function MainWin extends win
     
@@ -39,6 +41,8 @@ function MainWin extends win
     
     onLoad: =>
         
+        @restore()
+        
         @main =$ '#main'
         
         if 0
@@ -54,15 +58,18 @@ function MainWin extends win
             @board5 = new Board r2, 13
             @board6 = new Board r2, 9
         else
-            r1 = elem 'div' class:'row' parent:@main
-            r1.style = 'height:100%'
-            @board1 = new Board r1, 9
+            @newGame 9
         
-        post.emit 'resize'
-        
-        window.onresize = @onResize
-
-        @restore()
+    newGame: (@boardsize=9) ->
+        # log @boardsize
+        @main.innerHTML = ''
+        r1 = elem 'div' class:'row' parent:@main
+        r1.style = 'height:100%'
+        @board = new Board r1, @boardsize
+        @game = new Game @board
+        @gnu = new GNU @game
+        @board.gnu = @gnu
+        @gnu.newGame @boardsize, 'black'
         
     onMove: => window.stash.set 'bounds' @getBounds()
     
@@ -100,8 +107,12 @@ function MainWin extends win
     onMenuAction: (action, args) =>
                
         switch action.toLowerCase()
-            when 'save'         then return @saveStash()
-            when 'revert'       then return @restore()
+            'save'         ➜ return @saveStash()
+            'revert'       ➜ return @restore()
+            'new game'     ➜ return @newGame @boardsize
+            'boardsize 9'
+            'boardsize 13'
+            'boardsize 19' ➜ return @newGame int action.split(' ')[1]
                         
         klog "menuAction '#{action}'" # args     
         super action, args

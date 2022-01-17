@@ -67,10 +67,18 @@ body {
 .stone {
   position: absolute;
 }
+.highlts {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  top: 0;
+}
 .hover {
   border: 1px solid;
   position: absolute;
   display: block;
+  transform: translate(-50%, -50%);
 }
 #titlebar {
   display: flex;
@@ -84,9 +92,15 @@ body {
 }
 .titlebar-title {
   font: titlebarFont;
-  display: flex;
-  flex-direction: row;
   flex: 1 1;
+}
+.spacer {
+  flex: 1 1;
+}
+.captures {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
 }
 .quote {
   opacity: 0.5;

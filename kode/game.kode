@@ -6,19 +6,21 @@
  0000000   000   000  000   000  00000000
 ###
 
-{ randInt } = require 'kxk'
+kxk = require 'kxk'
+{ elem, $ } = kxk
 
 alpha = 'ABCDEFGHJKLMNOPQRST'
 stone = black:'○' white:'●' empty:' ' B:'○' W:'●' b:'○' w:'●'
 
 function Game
 
-    @: -> 
-        
-        @boardsize 9
-        # @play 'b' 'b1'
-        # @play 'b' 'b2'
-        # @play 'b' 'a2'
+    @: (@board) -> @boardsize @board.size
+    
+    # 000      00000000   0000000    0000000   000      
+    # 000      000       000        000   000  000      
+    # 000      0000000   000  0000  000000000  000      
+    # 000      000       000   000  000   000  000      
+    # 0000000  00000000   0000000   000   000  0000000  
     
     legal: (color, c) ->
         
@@ -34,6 +36,12 @@ function Game
                     l.push @pos [x,y]
         l
         
+    # 000      000  0000000    00000000  00000000   000000000  000  00000000   0000000  
+    # 000      000  000   000  000       000   000     000     000  000       000       
+    # 000      000  0000000    0000000   0000000       000     000  0000000   0000000   
+    # 000      000  000   000  000       000   000     000     000  000            000  
+    # 0000000  000  0000000    00000000  000   000     000     000  00000000  0000000   
+    
     countlib: (p) -> @liberties @coord p
     liberties: (c) ->
         if @valid c
@@ -45,6 +53,12 @@ function Game
                 return n.length
         0
         
+    #  0000000   00000000    0000000   000   000  00000000   
+    # 000        000   000  000   000  000   000  000   000  
+    # 000  0000  0000000    000   000  000   000  00000000   
+    # 000   000  000   000  000   000  000   000  000        
+    #  0000000   000   000   0000000    0000000   000        
+    
     group: (c) ->
         s = @stoneAt c
         g = [@pos c]
@@ -75,6 +89,12 @@ function Game
                 ns.push n
         ns
         
+    # 00000000  00000000   00000000  00000000  0000000     0000000   00     00   0000000  
+    # 000       000   000  000       000       000   000  000   000  000   000  000       
+    # 000000    0000000    0000000   0000000   000   000  000   000  000000000  0000000   
+    # 000       000   000  000       000       000   000  000   000  000 0 000       000  
+    # 000       000   000  00000000  00000000  0000000     0000000   000   000  0000000   
+    
     free: (color, p) -> @freedoms color, @coord p
     freedoms: (color, c) ->
         
@@ -86,9 +106,7 @@ function Game
                 if @liberties(n) > 1
                     l++
         l
-        
-    valid: (c) -> 0 <= c[0] < @size and 0 <= c[1] < @size
-        
+                
     move_history: -> @moves.join '\n'
             
     nextColor: ->
@@ -97,6 +115,12 @@ function Game
             0 ➜ 'B'
               ➜ 'W'
         
+    #  0000000   00000000  000   000  00     00   0000000   000   000  00000000  
+    # 000        000       0000  000  000   000  000   000  000   000  000       
+    # 000  0000  0000000   000 0 000  000000000  000   000   000 000   0000000   
+    # 000   000  000       000  0000  000 0 000  000   000     000     000       
+    #  0000000   00000000  000   000  000   000   0000000       0      00000000  
+    
     genmove: (color) ->
         
         color ?= @nextColor()
@@ -112,23 +136,82 @@ function Game
         else
             'pass'
         
+    # 00000000   000       0000000   000   000  
+    # 000   000  000      000   000   000 000   
+    # 00000000   000      000000000    00000    
+    # 000        000      000   000     000     
+    # 000        0000000  000   000     000     
+    
     play: (color, p) ->
-        
+
         if p.toLowerCase() == 'pass' 
             @moves.push color + ' ' + p.toLowerCase()
             return ''
+            
         if not p 
             p = color
             color = @nextColor()
+            
         c = @coord p
         if @valid c
-            r = @rows[c[1]]
-            @rows[c[1]] = r.slice(0, c[0]) + stone[color] + r.slice(c[0]+1)
+            # log 'GAME.play' color, p
+            @setStone c, color
             @moves.push color + ' ' + p
+            @removeDead @opponent color
             ''
         else
             '? invalid color or coordinate'
             
+    setStone: (c, color) ->
+        
+        if color == 'empty'
+            @board.delStone c
+        else
+            @board.addStone c, color
+        r = @rows[c[1]]
+        @rows[c[1]] = r.slice(0, c[0]) + stone[color] + r.slice(c[0]+1)
+            
+    # 00000000   00000000  00     00   0000000   000   000  00000000  0000000    00000000   0000000   0000000    
+    # 000   000  000       000   000  000   000  000   000  000       000   000  000       000   000  000   000  
+    # 0000000    0000000   000000000  000   000   000 000   0000000   000   000  0000000   000000000  000   000  
+    # 000   000  000       000 0 000  000   000     000     000       000   000  000       000   000  000   000  
+    # 000   000  00000000  000   000   0000000       0      00000000  0000000    00000000  000   000  0000000    
+    
+    removeDead: (color) ->
+        
+        for p in @allstones color
+            c = @coord p
+            if @liberties(c) < 1
+                g = @group c
+                @captures[@opponent color] += g.length
+                for dp in g
+                    dc = @coord dp
+                    @setStone dc, 'empty'
+                @updateTitle()
+                @removeDead()
+                return
+        
+    allstones: (color) ->
+        
+        s = stone[color]
+        l = []
+        for y in 0...@size
+            for x in 0...@size
+                if s == @stoneAt [x,y]
+                    l.push @pos [x,y]
+        l
+        
+    opponent: (color) ->
+        
+        opp =
+            black: 'white'
+            B:     'white' 
+            b:     'white'
+            white: 'black'
+            W:     'black'
+            w:     'black'
+        opp[color]
+        
     next: (num=1) ->
         
         for i in 0...num
@@ -136,7 +219,7 @@ function Game
         @showboard()
     
     stoneAt: (c) => @rows[c[1]][c[0]]
-        
+    valid: (c) => 0 <= c[0] < @size and 0 <= c[1] < @size   
     coord: (p) => [alpha.indexOf(p[0].toUpperCase()), @size-int(p[1..])]
     pos:   (c) => alpha[c[0]] + (@size-c[1])
     poslist: (cl) -> cl.map @pos
@@ -152,14 +235,28 @@ function Game
         
     boardsize: (@size) -> @clear_board()
 
+    #  0000000  000      00000000   0000000   00000000           0000000     0000000    0000000   00000000   0000000    
+    # 000       000      000       000   000  000   000          000   000  000   000  000   000  000   000  000   000  
+    # 000       000      0000000   000000000  0000000            0000000    000   000  000000000  0000000    000   000  
+    # 000       000      000       000   000  000   000          000   000  000   000  000   000  000   000  000   000  
+    #  0000000  0000000  00000000  000   000  000   000  000000  0000000     0000000   000   000  000   000  0000000    
+    
     clear_board: ->
         
+        @captures = black:0 white:0
         @rows = []
         for y in 0...@size
             @rows.push rpad @size, ''
         @moves = []
+        @updateTitle()
         ''
         
+    #  0000000  000   000   0000000   000   000  0000000     0000000    0000000   00000000   0000000    
+    # 000       000   000  000   000  000 0 000  000   000  000   000  000   000  000   000  000   000  
+    # 0000000   000000000  000   000  000000000  0000000    000   000  000000000  0000000    000   000  
+    #      000  000   000  000   000  000   000  000   000  000   000  000   000  000   000  000   000  
+    # 0000000   000   000   0000000   00     00  0000000     0000000   000   000  000   000  0000000    
+    
     showboard: ->
 
         s = ' '
@@ -180,5 +277,15 @@ function Game
         b += alpha.slice(0,@size) each (v) -> s + v
         b += '\n'
         b
+        
+    updateTitle: ->
+        
+        t = $ '.titlebar-title'
+        t.innerHTML = ''
+        # elem 'div' class:'spacer' parent:t
+        td = elem 'div' class:'captures' parent:t
+        # elem 'div' class:'spacer' parent:t
+        elem 'span' class:'capture black' text: @captures.black + stone.black, parent:td
+        elem 'span' class:'capture white' text: stone.white + @captures.white, parent:td
 
 module.exports = Game

@@ -1,0 +1,47 @@
+###
+ 0000000   000   000  000   000
+000        0000  000  000   000
+000  0000  000 0 000  000   000
+000   000  000  0000  000   000
+ 0000000   000   000   0000000 
+###
+
+{ childp } = require 'kxk'
+
+function GNU
+
+    @: (@game) ->
+        
+        @gnu = childp.spawn '/usr/local/bin/gnugo' ['--mode' 'gtp']
+        @gnu.stdout.on 'data' @onData
+        
+    newGame: (boardsize, @color='white') ->
+        
+        @send "boardsize #{boardsize}"
+        if @color == 'white'
+            @human = 'black'
+        else
+            @human = 'white'
+            @send "genmove #{@color}"
+            
+    humanMove: (c) ->
+        p = @game.pos [c.x, c.y]
+        @game.play @human, p
+        @send "play #{@human} #{p}"
+        @send "genmove #{@color}"
+            
+    send: (@msg) -> @gnu.stdin.write msg + '\n'
+
+    onData: (chunk) =>
+        data = String chunk
+        while data.startsWith '= \n\n'
+            data = data[4..]
+            
+        if data[0] == '='
+            data = data[2..]
+            # log @msg, data
+            if @msg.startsWith 'genmove'
+                # log 'play' @color, data.split('\n')[0]
+                @game.play @color, data.split('\n')[0]
+
+module.exports = GNU

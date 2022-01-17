@@ -2,7 +2,7 @@
 
 var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}}
 
-var $, args, Board, elem, kerror, keyinfo, klog, kxk, MainWin, post, stash, win
+var $, args, Board, elem, Game, GNU, kerror, keyinfo, klog, kxk, MainWin, post, stash, win
 
 kxk = require('kxk')
 args = kxk.args
@@ -16,6 +16,8 @@ elem = kxk.elem
 $ = kxk.$
 
 Board = require('./board')
+Game = require('./game')
+GNU = require('./gnu')
 
 MainWin = (function ()
 {
@@ -44,6 +46,7 @@ MainWin = (function ()
     {
         var r1, r2
 
+        this.restore()
         this.main = $('#main')
         if (0)
         {
@@ -56,17 +59,28 @@ MainWin = (function ()
             this.board3 = new Board(r1,19)
             this.board4 = new Board(r2,19)
             this.board5 = new Board(r2,13)
-            this.board6 = new Board(r2,9)
+            return this.board6 = new Board(r2,9)
         }
         else
         {
-            r1 = elem('div',{class:'row',parent:this.main})
-            r1.style = 'height:100%'
-            this.board1 = new Board(r1,9)
+            return this.newGame(9)
         }
-        post.emit('resize')
-        window.onresize = this.onResize
-        return this.restore()
+    }
+
+    MainWin.prototype["newGame"] = function (boardsize = 9)
+    {
+        var r1
+
+        this.boardsize = boardsize
+    
+        this.main.innerHTML = ''
+        r1 = elem('div',{class:'row',parent:this.main})
+        r1.style = 'height:100%'
+        this.board = new Board(r1,this.boardsize)
+        this.game = new Game(this.board)
+        this.gnu = new GNU(this.game)
+        this.board.gnu = this.gnu
+        return this.gnu.newGame(this.boardsize,'black')
     }
 
     MainWin.prototype["onMove"] = function ()
@@ -108,6 +122,14 @@ MainWin = (function ()
 
             case 'revert':
                 return this.restore()
+
+            case 'new game':
+                return this.newGame(this.boardsize)
+
+            case 'boardsize 9':
+            case 'boardsize 13':
+            case 'boardsize 19':
+                return this.newGame(parseInt(action.split(' ')[1]))
 
         }
 

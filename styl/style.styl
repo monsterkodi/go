@@ -74,7 +74,7 @@ body
     position            absolute
     height              100%
     left                0
-
+    
 .shadows
     display             contents
     
@@ -85,10 +85,14 @@ body
 .stone
     position            absolute
     
+.highlts
+    fill-abs()
+    
 .hover
     border              1px solid
     position            absolute
     display             block
+    transform           translate(-50%, -50%)
     
 // 000000000  000  000000000  000      00000000  0000000     0000000   00000000 
 //    000     000     000     000      000       000   000  000   000  000   000
@@ -108,9 +112,18 @@ body
 
 .titlebar-title
     font                titlebarFont
-    display             flex
-    flex-direction      row
+    // text-align          center
+    // display             flex
+    // flex-direction      row
     flex                1 1
+    
+.spacer
+    flex                1 1
+.captures
+    // flex                0 0
+    position            absolute
+    left                50%
+    transform           translate(-50%, 0)
             
 .quote
     opacity             0.5
