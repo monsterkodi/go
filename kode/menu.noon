@@ -7,13 +7,26 @@
 
 go
     new game                cmdctrl+n, n
-    ----
-    boardsize 9             1
-    boardsize 13            2  
-    boardsize 19            3  
-    ----
-    about                   alt+cmdctrl+/
+    pass                    p
+    gnu 
+        black               b
+        white               w
+    boardsize 
+        9x9                 s
+        13x13               m  
+        19x19               l  
+    handicap
+        0                   0
+        2                   2  
+        3                   3
+        4                   4
+        5                   5
+        6                   6
+        7                   7
+        8                   8
+        9                   9
     -----
+    about                   alt+cmdctrl+/
     quit                    cmdctrl+q
         
 # 000   000  000  000   000  0000000     0000000   000   000

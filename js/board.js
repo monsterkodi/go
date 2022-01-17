@@ -35,9 +35,12 @@ Board = (function ()
         h = 100 / (this.size + 1)
         o = d
         this.canvas = elem('canvas',{class:'lines',height:s,width:s,parent:this.div})
+        this.stn = elem('div',{class:'stones',parent:this.div})
         this.hlt = elem('div',{class:'highlts',parent:this.div})
         this.hover = elem('div',{class:'hover',parent:this.hlt})
-        this.hover.style = `width:${h}%; height:${h}%; display:none;`
+        this.hover.style = `width:${h}%; height:${h}%; display:none;; border-radius:${d / 2}px;`
+        this.last = elem('div',{class:'last',parent:this.hlt})
+        this.last.style = "width:10px; height:10px; display:initial; border-radius:10px;"
         this.ctx = this.canvas.getContext('2d')
         this.ctx.strokeStyle = 'black'
         this.ctx.lineWidth = (this.size === 19 ? 2 : (this.size === 13 ? 2.5 : 3))
@@ -46,7 +49,7 @@ Board = (function ()
         this.ctx.rect(0,0,s,s)
         this.ctx.fill()
         this.ctx.fillStyle = 'black'
-        for (var _48_17_ = i = 0, _48_21_ = this.size; (_48_17_ <= _48_21_ ? i < this.size : i > this.size); (_48_17_ <= _48_21_ ? ++i : --i))
+        for (var _51_17_ = i = 0, _51_21_ = this.size; (_51_17_ <= _51_21_ ? i < this.size : i > this.size); (_51_17_ <= _51_21_ ? ++i : --i))
         {
             this.ctx.beginPath()
             this.ctx.moveTo(o + i * d,o)
@@ -82,7 +85,7 @@ Board = (function ()
     {
         var c, p
 
-        c = this.coordAtEvent(event)
+        c = this.posAtEvent(event)
         if (c.x < 0 || c.y < 0 || c.x >= this.size || c.y >= this.size)
         {
             this.hover.style.display = 'none'
@@ -98,7 +101,7 @@ Board = (function ()
             }
         }
         this.hover.style.display = 'initial'
-        p = this.coordToPrcnt(c)
+        p = this.posToPrcnt(c)
         this.hover.style.left = `${p.x}%`
         return this.hover.style.top = `${p.y}%`
     }
@@ -107,35 +110,48 @@ Board = (function ()
     {
         var c, p
 
-        c = this.coordAtEvent(event)
+        c = this.posAtEvent(event)
         if (this.gnu)
         {
             p = this.gnu.game.pos([c.x,c.y])
             if (_k_.in(p,this.gnu.game.all_legal()))
             {
+                this.hover.style.display = 'none'
                 return this.gnu.humanMove(c)
             }
         }
     }
 
-    Board.prototype["coordAtEvent"] = function (event)
+    Board.prototype["lastMove"] = function (color, c)
     {
-        var br, p, sz
+        var p
+
+        p = this.coordToPrcnt(c)
+        this.last.style.display = 'initial'
+        this.last.style.left = `${p.x}%`
+        return this.last.style.top = `${p.y}%`
+    }
+
+    Board.prototype["posAtEvent"] = function (event)
+    {
+        var b, p, s
 
         p = kpos(event)
-        br = this.div.getBoundingClientRect()
-        p.sub(br)
-        sz = br.width / (this.size + 1)
-        p.div(kpos(sz,sz))
+        b = this.div.getBoundingClientRect()
+        p.sub(b)
+        s = b.width / (this.size + 1)
+        p.div(kpos(s,s))
         p.add(kpos(-1,-1))
         return kpos(parseInt(Math.round(p.x)),parseInt(Math.round(p.y)))
     }
 
     Board.prototype["coordToPrcnt"] = function (c)
     {
-        var br
+        return this.posToPrcnt(kpos(c[0],c[1]))
+    }
 
-        br = this.div.getBoundingClientRect()
+    Board.prototype["posToPrcnt"] = function (c)
+    {
         return kpos(100 * (c.x + 1) / (this.size + 1),100 * (c.y + 1) / (this.size + 1))
     }
 
@@ -143,11 +159,8 @@ Board = (function ()
     {
         var s
 
-        console.log('delStone',c)
         while (s = $(`.pos${c[0]}_${c[1]}`))
         {
-            console.log(typeof(s))
-            console.log(s)
             s.remove()
         }
     }
@@ -164,7 +177,7 @@ Board = (function ()
         }
         src = `../img/stone_${stn}.png`
         shadow = elem('img',{class:`shadow pos${c[0]}_${c[1]}`,src:'../img/stone_shadow.png',width:"auto",height:`${d + 1}%`,parent:this.shd})
-        stone = elem('img',{class:`stone pos${c[0]}_${c[1]}`,src:src,width:"auto",height:`${d}%`,parent:this.div})
+        stone = elem('img',{class:`stone pos${c[0]}_${c[1]}`,src:src,width:"auto",height:`${d}%`,parent:this.stn})
         x = (c[0] + 0.5) * 100 / (this.size + 1)
         y = (c[1] + 0.5) * 100 / (this.size + 1)
         stone.style = `left:${x}%; top:${y}%;`

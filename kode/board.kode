@@ -29,11 +29,14 @@ function Board
         o = d
         
         @canvas = elem 'canvas' class:'lines' height:s, width:s, parent:@div
-        
+        @stn = elem 'div' class:'stones'  parent:@div
         @hlt = elem 'div' class:'highlts' parent:@div
         @hover = elem 'div' class:'hover' parent:@hlt
-        @hover.style = "width:#{h}%; height:#{h}%; display:none;" 
+        @hover.style = "width:#{h}%; height:#{h}%; display:none;; border-radius:#{d/2}px;" 
 
+        @last = elem 'div' class:'last' parent:@hlt
+        @last.style = "width:10px; height:10px; display:initial; border-radius:10px;"
+        
         @ctx = @canvas.getContext '2d'
         @ctx.strokeStyle = 'black'
         @ctx.lineWidth = @size == 19 ? 2 : @size == 13 ? 2.5 : 3
@@ -68,7 +71,7 @@ function Board
         
     onMouseMove: (event) =>
         
-        c = @coordAtEvent event
+        c = @posAtEvent event
         
         if c.x < 0 or c.y < 0 or c.x >= @size or c.y >= @size
             @hover.style.display = 'none'
@@ -82,50 +85,59 @@ function Board
             
         @hover.style.display = 'initial'
         
-        p = @coordToPrcnt c
+        p = @posToPrcnt c
         
         @hover.style.left = "#{p.x}%"
         @hover.style.top  = "#{p.y}%"
         
     onMouseDown: (event) =>
         
-        c = @coordAtEvent event
+        c = @posAtEvent event
         if @gnu
             p = @gnu.game.pos [c.x, c.y]
             if p in @gnu.game.all_legal()
+                @hover.style.display = 'none'
                 @gnu.humanMove c
         
-    coordAtEvent: (event) ->
+    lastMove: (color, c) ->
+        
+        p = @coordToPrcnt c
+        
+        @last.style.display = 'initial'
+        @last.style.left = "#{p.x}%"
+        @last.style.top  = "#{p.y}%"
+                
+    posAtEvent: (event) ->
         
         p = kpos event
-        br = @div.getBoundingClientRect()
-        p.sub br
-        sz = br.width / (@size+1)
-        p.div kpos sz, sz
-        p.add kpos -1, -1
+        b = @div.getBoundingClientRect()
+        p.sub b
+        s = b.width / (@size+1)
+        p.div kpos s, s
+        p.add kpos -1 -1
         kpos int(Math.round(p.x)), int(Math.round(p.y))
         
     coordToPrcnt: (c) ->
-        br = @div.getBoundingClientRect()
+
+        @posToPrcnt kpos c[0], c[1]
+
+    posToPrcnt: (c) ->
+
         kpos 100 * (c.x+1) / (@size+1), 100 * (c.y+1) / (@size+1)
-             
+        
     delStone: (c) ->
-        log 'delStone' c
+
         while s = $ ".pos#{c[0]}_#{c[1]}"
-            log typeof s
-            log s
             s.remove()
             
     addStone: (c, color='black') ->
-        
-        # log 'addStone' color, c
         
         d = 100/(@size+1)
         stn = color
         stn += randIntRange 1 15 if color == 'white'
         src = "../img/stone_#{stn}.png" 
         shadow = elem 'img' class:"shadow pos#{c[0]}_#{c[1]}" src:'../img/stone_shadow.png', width:"auto", height:"#{d+1}%" parent:@shd
-        stone = elem 'img' class:"stone pos#{c[0]}_#{c[1]}" src:src, width:"auto", height:"#{d}%" parent:@div
+        stone = elem 'img' class:"stone pos#{c[0]}_#{c[1]}" src:src, width:"auto", height:"#{d}%" parent:@stn
         x = (c[0]+0.5)*100/(@size+1)
         y = (c[1]+0.5)*100/(@size+1)
 

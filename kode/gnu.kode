@@ -14,34 +14,53 @@ function GNU
         
         @gnu = childp.spawn '/usr/local/bin/gnugo' ['--mode' 'gtp']
         @gnu.stdout.on 'data' @onData
+        @msg = []
         
-    newGame: (boardsize, @color='white') ->
+    newGame: (boardsize, @color='white', @handicap=0) ->
         
         @send "boardsize #{boardsize}"
+        @send "fixed_handicap #{handicap}" if @handicap > 1
         if @color == 'white'
             @human = 'black'
+            @send "genmove #{@color}" if @handicap > 1
         else
             @human = 'white'
             @send "genmove #{@color}"
             
     humanMove: (c) ->
-        p = @game.pos [c.x, c.y]
+        
+        p = c == 'pass' ? c : @game.pos [c.x, c.y]
         @game.play @human, p
         @send "play #{@human} #{p}"
         @send "genmove #{@color}"
             
-    send: (@msg) -> @gnu.stdin.write msg + '\n'
+    send: (m) -> @msg.push m; @gnu.stdin.write m + '\n'
 
     onData: (chunk) =>
         data = String chunk
         while data.startsWith '= \n\n'
             data = data[4..]
+            @msg.shift()
             
         if data[0] == '='
+            m = @msg.shift()
             data = data[2..]
-            # log @msg, data
-            if @msg.startsWith 'genmove'
-                # log 'play' @color, data.split('\n')[0]
-                @game.play @color, data.split('\n')[0]
+            # log m, data
+            if m.startsWith 'genmove'
+                p = data.split('\n')[0]
+                log 'play' @color, p
+                if p in ['PASS' 'resign']
+                    @send 'final_score'
+                @game.play @color, p
+            else if m.startsWith 'final_score'
+                log m, data
+                @game.finalScore data
+                @send 'final_status'
+                @send 'final_status_list'
+            else if m.startsWith 'fixed_handicap'
+                for p in data.split ' '
+                    @game.board.addStone @game.coord(p), 'black'
+            else
+                log m, data
 
 module.exports = GNU

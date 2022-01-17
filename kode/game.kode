@@ -146,6 +146,7 @@ function Game
 
         if p.toLowerCase() == 'pass' 
             @moves.push color + ' ' + p.toLowerCase()
+            @updateTitle()
             return ''
             
         if not p 
@@ -158,6 +159,7 @@ function Game
             @setStone c, color
             @moves.push color + ' ' + p
             @removeDead @opponent color
+            @board.lastMove color, c
             ''
         else
             '? invalid color or coordinate'
@@ -278,14 +280,24 @@ function Game
         b += '\n'
         b
         
+    # 000   000  00000000   0000000     0000000   000000000  00000000  000000000  000  000000000  000      00000000  
+    # 000   000  000   000  000   000  000   000     000     000          000     000     000     000      000       
+    # 000   000  00000000   000   000  000000000     000     0000000      000     000     000     000      0000000   
+    # 000   000  000        000   000  000   000     000     000          000     000     000     000      000       
+    #  0000000   000        0000000    000   000     000     00000000     000     000     000     0000000  00000000  
+    
     updateTitle: ->
         
-        t = $ '.titlebar-title'
+        t =$ '.titlebar-title'
         t.innerHTML = ''
-        # elem 'div' class:'spacer' parent:t
         td = elem 'div' class:'captures' parent:t
-        # elem 'div' class:'spacer' parent:t
         elem 'span' class:'capture black' text: @captures.black + stone.black, parent:td
         elem 'span' class:'capture white' text: stone.white + @captures.white, parent:td
-
+        
+    finalScore: (score) ->
+        
+        t =$ '.titlebar-title'
+        t.innerHTML = ''
+        td = elem 'div' class:'captures' text:score, parent:t
+        
 module.exports = Game

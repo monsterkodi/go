@@ -67,11 +67,13 @@ MainWin = (function ()
         }
     }
 
-    MainWin.prototype["newGame"] = function (boardsize = 9)
+    MainWin.prototype["newGame"] = function (boardsize = 9, gnucolor = 'black', handicap = 0)
     {
         var r1
 
         this.boardsize = boardsize
+        this.gnucolor = gnucolor
+        this.handicap = handicap
     
         this.main.innerHTML = ''
         r1 = elem('div',{class:'row',parent:this.main})
@@ -80,7 +82,7 @@ MainWin = (function ()
         this.game = new Game(this.board)
         this.gnu = new GNU(this.game)
         this.board.gnu = this.gnu
-        return this.gnu.newGame(this.boardsize,'black')
+        return this.gnu.newGame(this.boardsize,this.gnucolor,this.handicap)
     }
 
     MainWin.prototype["onMove"] = function ()
@@ -126,10 +128,29 @@ MainWin = (function ()
             case 'new game':
                 return this.newGame(this.boardsize)
 
-            case 'boardsize 9':
-            case 'boardsize 13':
-            case 'boardsize 19':
-                return this.newGame(parseInt(action.split(' ')[1]))
+            case 'pass':
+                return this.gnu.humanMove('pass')
+
+            case 'black':
+            case 'white':
+                return this.newGame(this.boardsize,action,this.handicap)
+
+            case '9x9':
+            case '13x13':
+            case '19x19':
+                return this.newGame(parseInt(action),this.gnucolor,this.handicap)
+
+            case '0':
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            case '8':
+            case '9':
+                return this.newGame(this.boardsize,this.gnucolor,parseInt(action))
 
         }
 
