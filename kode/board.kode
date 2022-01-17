@@ -8,6 +8,7 @@
 
 kxk = require 'kxk'
 { elem, kpos, randIntRange, $ } = kxk
+{ alpha } = require './util'
 
 function Board
 
@@ -16,6 +17,7 @@ function Board
         @div = elem 'div' class:'board'   parent:parent
         @img = elem 'img' class:'wood'    src:'../img/wood.png' parent:@div
         @shd = elem 'div' class:'shadows' parent:@div
+        @lgd = elem 'div' class:'legends' parent:@div
         
         @div.addEventListener 'mousemove'  @onMouseMove
         @div.addEventListener 'mousedown'  @onMouseDown
@@ -26,9 +28,10 @@ function Board
         s = @height
         d = s/(@size+1)
         h = 100/(@size+2)
-        o = d
+
+        @lines()
+        @legend()
         
-        @canvas = elem 'canvas' class:'lines' height:s, width:s, parent:@div
         @stn = elem 'div' class:'stones'  parent:@div
         @hlt = elem 'div' class:'highlts' parent:@div
         @hover = elem 'div' class:"hover #{@human}" parent:@hlt
@@ -37,6 +40,19 @@ function Board
         @last = elem 'div' class:"last #{@human}" parent:@hlt
         @last.style = "width:10px; height:10px; display:none; border-radius:10px;"
         
+    # 000      000  000   000  00000000   0000000  
+    # 000      000  0000  000  000       000       
+    # 000      000  000 0 000  0000000   0000000   
+    # 000      000  000  0000  000            000  
+    # 0000000  000  000   000  00000000  0000000   
+    
+    lines: ->
+        
+        s = @height
+        d = s/(@size+1)
+        o = d
+        
+        @canvas = elem 'canvas' class:'lines' height:s, width:s, parent:@div
         @ctx = @canvas.getContext '2d'
         @ctx.strokeStyle = 'black'
         @ctx.lineWidth = @size == 19 ? 2 : @size == 13 ? 2.5 : 3
@@ -65,6 +81,47 @@ function Board
                     @ctx.arc s/2+x*d*(int(-@size/2) + 2), s/2+y*d*(int(-@size/2) + 2), s/180, 0, 2 * Math.PI, false
                 @ctx.fill()
                 
+    # 000      00000000   0000000   00000000  000   000  0000000    
+    # 000      000       000        000       0000  000  000   000  
+    # 000      0000000   000  0000  0000000   000 0 000  000   000  
+    # 000      000       000   000  000       000  0000  000   000  
+    # 0000000  00000000   0000000   00000000  000   000  0000000    
+    
+    legend: ->
+        
+        d = 100/(@size+1)
+        
+        for x in 0...@size
+            
+            n = elem 'div' class:'legend' text:alpha[x], parent:@lgd
+            n.style.left = "#{d*(x+1)}%"
+            n.style.top = "#{d/4}%"
+            
+            n = elem 'div' class:'legend' text:alpha[x], parent:@lgd
+            n.style.left = "#{d*(x+1)}%"
+            n.style.top = "#{100-d/4}%"
+
+            n = elem 'div' class:'legend' text:@size-x, parent:@lgd
+            n.style.left = "#{d/4}%"
+            n.style.top = "#{d*(x+1)}%"
+            
+            n = elem 'div' class:'legend' text:@size-x, parent:@lgd
+            n.style.left = "#{100-d/4}%"
+            n.style.top = "#{d*(x+1)}%"
+            
+            @lgd.style.display = window.stash.get('legend') ? 'initial' : 'none'
+            
+    toggleLegend: ->
+        
+        window.stash.set 'legend', not window.stash.get 'legend'            
+        @lgd.style.display = window.stash.get('legend') ? 'initial' : 'none'
+            
+    # 00     00   0000000   000   000   0000000  00000000  
+    # 000   000  000   000  000   000  000       000       
+    # 000000000  000   000  000   000  0000000   0000000   
+    # 000 0 000  000   000  000   000       000  000       
+    # 000   000   0000000    0000000   0000000   00000000  
+    
     onMouseLeave: (event) =>
         
         @hover.style.display = 'none'
@@ -99,6 +156,12 @@ function Board
                 @hover.style.display = 'none'
                 @gnu.humanMove p
         
+    # 000       0000000    0000000  000000000  
+    # 000      000   000  000          000     
+    # 000      000000000  0000000      000     
+    # 000      000   000       000     000     
+    # 0000000  000   000  0000000      000     
+    
     lastMove: (color, c) ->
         
         p = @coordToPrcnt c
@@ -125,6 +188,12 @@ function Board
 
         kpos 100 * (c.x+1) / (@size+1), 100 * (c.y+1) / (@size+1)
         
+    #  0000000  000000000   0000000   000   000  00000000  
+    # 000          000     000   000  0000  000  000       
+    # 0000000      000     000   000  000 0 000  0000000   
+    #      000     000     000   000  000  0000  000       
+    # 0000000      000      0000000   000   000  00000000  
+    
     delStone: (c) ->
 
         while s = $ ".pos#{c[0]}_#{c[1]}"

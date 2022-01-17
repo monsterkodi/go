@@ -41,6 +41,7 @@ window
     close                   cmdctrl+w
     -
     toggle menu             alt+m
+    toggle legend           alt+l
     fullscreen              alt+f    
     --
     minimize                alt+ctrl+shift+m

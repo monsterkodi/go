@@ -8,10 +8,7 @@
 
 kxk = require 'kxk'
 { randInt, elem, $ } = kxk
-{ opponent } = require './util'
-
-alpha = 'ABCDEFGHJKLMNOPQRST'
-stone = black:'○' white:'●' empty:' ' B:'○' W:'●' b:'○' w:'●'
+{ opponent, alpha, stone } = require './util'
 
 function Game
 

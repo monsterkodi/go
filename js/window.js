@@ -139,6 +139,9 @@ MainWin = (function ()
             case 'calcscore':
                 return this.gnu.calcscore()
 
+            case 'toggle legend':
+                return this.board.toggleLegend()
+
             case 'black':
             case 'white':
                 return this.newGame(this.boardsize,action,this.handicap)

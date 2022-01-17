@@ -114,6 +114,7 @@ function MainWin extends win
             'pass'          ➜ return @gnu.humanMove 'pass'
             'genmove'       ➜ return @gnu.humanMove @game.genmove opponent @gnucolor
             'calcscore'     ➜ return @gnu.calcscore()
+            'toggle legend' ➜ return @board.toggleLegend()
             'black' 'white' ➜ return @newGame @boardsize, action, @handicap
             '9x9' '13x13' 
             '19x19'         ➜ return @newGame int(action), @gnucolor, @handicap

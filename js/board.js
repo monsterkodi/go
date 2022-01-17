@@ -2,7 +2,7 @@
 
 var _k_ = {in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}}
 
-var $, Board, elem, kpos, kxk, randIntRange
+var $, alpha, Board, elem, kpos, kxk, randIntRange
 
 kxk = require('kxk')
 elem = kxk.elem
@@ -10,12 +10,14 @@ kpos = kxk.kpos
 randIntRange = kxk.randIntRange
 $ = kxk.$
 
+alpha = require('./util').alpha
+
 
 Board = (function ()
 {
     function Board (parent, size = 19, human)
     {
-        var d, h, i, o, s, x, y
+        var d, h, s
 
         this.size = size
         this.human = human
@@ -26,6 +28,7 @@ Board = (function ()
         this.div = elem('div',{class:'board',parent:parent})
         this.img = elem('img',{class:'wood',src:'../img/wood.png',parent:this.div})
         this.shd = elem('div',{class:'shadows',parent:this.div})
+        this.lgd = elem('div',{class:'legends',parent:this.div})
         this.div.addEventListener('mousemove',this.onMouseMove)
         this.div.addEventListener('mousedown',this.onMouseDown)
         this.div.addEventListener('mouseleave',this.onMouseLeave)
@@ -34,14 +37,24 @@ Board = (function ()
         s = this.height
         d = s / (this.size + 1)
         h = 100 / (this.size + 2)
-        o = d
-        this.canvas = elem('canvas',{class:'lines',height:s,width:s,parent:this.div})
+        this.lines()
+        this.legend()
         this.stn = elem('div',{class:'stones',parent:this.div})
         this.hlt = elem('div',{class:'highlts',parent:this.div})
         this.hover = elem('div',{class:`hover ${this.human}`,parent:this.hlt})
         this.hover.style = `width:${h}%; height:${h}%; display:none; border-radius:${d / 2}px;`
         this.last = elem('div',{class:`last ${this.human}`,parent:this.hlt})
         this.last.style = "width:10px; height:10px; display:none; border-radius:10px;"
+    }
+
+    Board.prototype["lines"] = function ()
+    {
+        var d, i, o, s, x, y
+
+        s = this.height
+        d = s / (this.size + 1)
+        o = d
+        this.canvas = elem('canvas',{class:'lines',height:s,width:s,parent:this.div})
         this.ctx = this.canvas.getContext('2d')
         this.ctx.strokeStyle = 'black'
         this.ctx.lineWidth = (this.size === 19 ? 2 : (this.size === 13 ? 2.5 : 3))
@@ -50,7 +63,7 @@ Board = (function ()
         this.ctx.rect(0,0,s,s)
         this.ctx.fill()
         this.ctx.fillStyle = 'black'
-        for (var _51_17_ = i = 0, _51_21_ = this.size; (_51_17_ <= _51_21_ ? i < this.size : i > this.size); (_51_17_ <= _51_21_ ? ++i : --i))
+        for (var _67_17_ = i = 0, _67_21_ = this.size; (_67_17_ <= _67_21_ ? i < this.size : i > this.size); (_67_17_ <= _67_21_ ? ++i : --i))
         {
             this.ctx.beginPath()
             this.ctx.moveTo(o + i * d,o)
@@ -75,6 +88,35 @@ Board = (function ()
                 this.ctx.fill()
             }
         }
+    }
+
+    Board.prototype["legend"] = function ()
+    {
+        var d, n, x
+
+        d = 100 / (this.size + 1)
+        for (var _94_17_ = x = 0, _94_21_ = this.size; (_94_17_ <= _94_21_ ? x < this.size : x > this.size); (_94_17_ <= _94_21_ ? ++x : --x))
+        {
+            n = elem('div',{class:'legend',text:alpha[x],parent:this.lgd})
+            n.style.left = `${d * (x + 1)}%`
+            n.style.top = `${d / 4}%`
+            n = elem('div',{class:'legend',text:alpha[x],parent:this.lgd})
+            n.style.left = `${d * (x + 1)}%`
+            n.style.top = `${100 - d / 4}%`
+            n = elem('div',{class:'legend',text:this.size - x,parent:this.lgd})
+            n.style.left = `${d / 4}%`
+            n.style.top = `${d * (x + 1)}%`
+            n = elem('div',{class:'legend',text:this.size - x,parent:this.lgd})
+            n.style.left = `${100 - d / 4}%`
+            n.style.top = `${d * (x + 1)}%`
+            this.lgd.style.display = (window.stash.get('legend') ? 'initial' : 'none')
+        }
+    }
+
+    Board.prototype["toggleLegend"] = function ()
+    {
+        window.stash.set('legend',!window.stash.get('legend'))
+        return this.lgd.style.display = (window.stash.get('legend') ? 'initial' : 'none')
     }
 
     Board.prototype["onMouseLeave"] = function (event)

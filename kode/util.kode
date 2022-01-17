@@ -18,5 +18,8 @@ class Util
             W:     'black'
             w:     'black'
         opp[color]
+        
+    @alpha: 'ABCDEFGHJKLMNOPQRST'
+    @stone: black:'○' white:'●' empty:' ' B:'○' W:'●' b:'○' w:'●'
 
 module.exports = Util
