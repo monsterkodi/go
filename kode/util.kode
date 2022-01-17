@@ -1,0 +1,22 @@
+###
+000   000  000000000  000  000    
+000   000     000     000  000    
+000   000     000     000  000    
+000   000     000     000  000    
+ 0000000      000     000  0000000
+###
+
+class Util
+
+    @opponent: (color) ->
+        
+        opp =
+            black: 'white'
+            B:     'white' 
+            b:     'white'
+            white: 'black'
+            W:     'black'
+            w:     'black'
+        opp[color]
+
+module.exports = Util

@@ -13,11 +13,12 @@ $ = kxk.$
 
 Board = (function ()
 {
-    function Board (parent, size = 19)
+    function Board (parent, size = 19, human)
     {
         var d, h, i, o, s, x, y
 
         this.size = size
+        this.human = human
     
         this["onMouseDown"] = this["onMouseDown"].bind(this)
         this["onMouseMove"] = this["onMouseMove"].bind(this)
@@ -32,15 +33,15 @@ Board = (function ()
         this.width = this.height
         s = this.height
         d = s / (this.size + 1)
-        h = 100 / (this.size + 1)
+        h = 100 / (this.size + 2)
         o = d
         this.canvas = elem('canvas',{class:'lines',height:s,width:s,parent:this.div})
         this.stn = elem('div',{class:'stones',parent:this.div})
         this.hlt = elem('div',{class:'highlts',parent:this.div})
-        this.hover = elem('div',{class:'hover',parent:this.hlt})
-        this.hover.style = `width:${h}%; height:${h}%; display:none;; border-radius:${d / 2}px;`
-        this.last = elem('div',{class:'last',parent:this.hlt})
-        this.last.style = "width:10px; height:10px; display:initial; border-radius:10px;"
+        this.hover = elem('div',{class:`hover ${this.human}`,parent:this.hlt})
+        this.hover.style = `width:${h}%; height:${h}%; display:none; border-radius:${d / 2}px;`
+        this.last = elem('div',{class:`last ${this.human}`,parent:this.hlt})
+        this.last.style = "width:10px; height:10px; display:none; border-radius:10px;"
         this.ctx = this.canvas.getContext('2d')
         this.ctx.strokeStyle = 'black'
         this.ctx.lineWidth = (this.size === 19 ? 2 : (this.size === 13 ? 2.5 : 3))
@@ -117,7 +118,7 @@ Board = (function ()
             if (_k_.in(p,this.gnu.game.all_legal()))
             {
                 this.hover.style.display = 'none'
-                return this.gnu.humanMove(c)
+                return this.gnu.humanMove(p)
             }
         }
     }

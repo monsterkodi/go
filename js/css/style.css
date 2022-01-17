@@ -78,16 +78,28 @@ body {
   top: 0;
 }
 .hover {
-  border: 1px solid;
   position: absolute;
   display: block;
   transform: translate(-50%, -50%);
 }
+.hover.white {
+  background-color: rgba(255,255,255,0.533);
+  border: 2px solid rgba(255,255,255,0.533);
+}
+.hover.black {
+  background-color: rgba(0,0,0,0.533);
+  border: 2px solid rgba(0,0,0,0.533);
+}
 .last {
-  border: 1px solid;
   position: absolute;
   display: block;
   transform: translate(-50%, -50%);
+}
+.last.white {
+  border: 1px solid #fff;
+}
+.last.black {
+  border: 2px solid #000;
 }
 #titlebar {
   display: flex;
@@ -103,13 +115,10 @@ body {
   font: titlebarFont;
   flex: 1 1;
 }
-.spacer {
-  flex: 1 1;
-}
 .captures {
   position: absolute;
   left: 50%;
-  transform: translate(-50%, 0);
+  transform: translate(-50%, 30%);
 }
 .quote {
   opacity: 0.5;

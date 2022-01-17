@@ -2,7 +2,7 @@
 
 var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}}
 
-var $, args, Board, elem, Game, GNU, kerror, keyinfo, klog, kxk, MainWin, post, stash, win
+var $, args, Board, elem, Game, GNU, kerror, keyinfo, klog, kxk, MainWin, opponent, post, stash, win
 
 kxk = require('kxk')
 args = kxk.args
@@ -14,6 +14,8 @@ stash = kxk.stash
 win = kxk.win
 elem = kxk.elem
 $ = kxk.$
+
+opponent = require('./util').opponent
 
 Board = require('./board')
 Game = require('./game')
@@ -78,7 +80,7 @@ MainWin = (function ()
         this.main.innerHTML = ''
         r1 = elem('div',{class:'row',parent:this.main})
         r1.style = 'height:100%'
-        this.board = new Board(r1,this.boardsize)
+        this.board = new Board(r1,this.boardsize,opponent(this.gnucolor))
         this.game = new Game(this.board)
         this.gnu = new GNU(this.game)
         this.board.gnu = this.gnu
@@ -130,6 +132,12 @@ MainWin = (function ()
 
             case 'pass':
                 return this.gnu.humanMove('pass')
+
+            case 'genmove':
+                return this.gnu.humanMove(this.game.genmove(opponent(this.gnucolor)))
+
+            case 'calcscore':
+                return this.gnu.calcscore()
 
             case 'black':
             case 'white':

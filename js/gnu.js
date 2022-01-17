@@ -40,18 +40,24 @@ GNU = (function ()
         else
         {
             this.human = 'white'
-            return this.send(`genmove ${this.color}`)
+            if (this.handicap < 2)
+            {
+                return this.send(`genmove ${this.color}`)
+            }
         }
     }
 
-    GNU.prototype["humanMove"] = function (c)
+    GNU.prototype["humanMove"] = function (p)
     {
-        var p
-
-        p = (c === 'pass' ? c : this.game.pos([c.x,c.y]))
         this.game.play(this.human,p)
         this.send(`play ${this.human} ${p}`)
+        this.calcscore()
         return this.send(`genmove ${this.color}`)
+    }
+
+    GNU.prototype["calcscore"] = function ()
+    {
+        return this.send('estimate_score')
     }
 
     GNU.prototype["send"] = function (m)
@@ -87,16 +93,14 @@ GNU = (function ()
             else if (m.startsWith('final_score'))
             {
                 console.log(m,data)
-                this.game.finalScore(data)
-                this.send('final_status')
-                return this.send('final_status_list')
+                return this.game.finalScore(data)
             }
             else if (m.startsWith('fixed_handicap'))
             {
                 var list = _k_.list(data.split(' '))
-                for (var _61_22_ = 0; _61_22_ < list.length; _61_22_++)
+                for (var _63_22_ = 0; _63_22_ < list.length; _63_22_++)
                 {
-                    p = list[_61_22_]
+                    p = list[_63_22_]
                     this.game.board.addStone(this.game.coord(p),'black')
                 }
             }

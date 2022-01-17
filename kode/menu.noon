@@ -8,6 +8,8 @@
 go
     new game                cmdctrl+n, n
     pass                    p
+    genmove                 g
+    calcscore               c
     gnu 
         black               b
         white               w

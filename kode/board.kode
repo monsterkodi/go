@@ -11,7 +11,7 @@ kxk = require 'kxk'
 
 function Board
 
-    @: (parent, @size=19) ->
+    @: (parent, @size=19, @human) ->
         
         @div = elem 'div' class:'board'   parent:parent
         @img = elem 'img' class:'wood'    src:'../img/wood.png' parent:@div
@@ -25,17 +25,17 @@ function Board
         @width  = @height
         s = @height
         d = s/(@size+1)
-        h = 100/(@size+1)
+        h = 100/(@size+2)
         o = d
         
         @canvas = elem 'canvas' class:'lines' height:s, width:s, parent:@div
         @stn = elem 'div' class:'stones'  parent:@div
         @hlt = elem 'div' class:'highlts' parent:@div
-        @hover = elem 'div' class:'hover' parent:@hlt
-        @hover.style = "width:#{h}%; height:#{h}%; display:none;; border-radius:#{d/2}px;" 
+        @hover = elem 'div' class:"hover #{@human}" parent:@hlt
+        @hover.style = "width:#{h}%; height:#{h}%; display:none; border-radius:#{d/2}px;" 
 
-        @last = elem 'div' class:'last' parent:@hlt
-        @last.style = "width:10px; height:10px; display:initial; border-radius:10px;"
+        @last = elem 'div' class:"last #{@human}" parent:@hlt
+        @last.style = "width:10px; height:10px; display:none; border-radius:10px;"
         
         @ctx = @canvas.getContext '2d'
         @ctx.strokeStyle = 'black'
@@ -97,7 +97,7 @@ function Board
             p = @gnu.game.pos [c.x, c.y]
             if p in @gnu.game.all_legal()
                 @hover.style.display = 'none'
-                @gnu.humanMove c
+                @gnu.humanMove p
         
     lastMove: (color, c) ->
         

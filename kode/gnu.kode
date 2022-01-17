@@ -25,14 +25,18 @@ function GNU
             @send "genmove #{@color}" if @handicap > 1
         else
             @human = 'white'
-            @send "genmove #{@color}"
+            @send "genmove #{@color}" if @handicap < 2
             
-    humanMove: (c) ->
-        
-        p = c == 'pass' ? c : @game.pos [c.x, c.y]
+    humanMove: (p) ->
+
         @game.play @human, p
         @send "play #{@human} #{p}"
+        @calcscore()
         @send "genmove #{@color}"
+        
+    calcscore: ->
+        
+        @send 'estimate_score'
             
     send: (m) -> @msg.push m; @gnu.stdin.write m + '\n'
 
@@ -55,8 +59,6 @@ function GNU
             else if m.startsWith 'final_score'
                 log m, data
                 @game.finalScore data
-                @send 'final_status'
-                @send 'final_status_list'
             else if m.startsWith 'fixed_handicap'
                 for p in data.split ' '
                     @game.board.addStone @game.coord(p), 'black'

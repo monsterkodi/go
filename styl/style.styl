@@ -92,13 +92,21 @@ body
     fill-abs()
     
 .hover
-    border              1px solid
+    &.white
+        background-color    #fff8
+        border              2px solid #fff8
+    &.black
+        background-color    #0008
+        border              2px solid #0008
     position            absolute
     display             block
     transform           translate(-50%, -50%)
 
 .last
-    border              1px solid
+    &.white
+        border              1px solid #fff
+    &.black
+        border              2px solid #000
     position            absolute
     display             block
     transform           translate(-50%, -50%)
@@ -121,18 +129,12 @@ body
 
 .titlebar-title
     font                titlebarFont
-    // text-align          center
-    // display             flex
-    // flex-direction      row
     flex                1 1
     
-.spacer
-    flex                1 1
 .captures
-    // flex                0 0
     position            absolute
     left                50%
-    transform           translate(-50%, 0)
+    transform           translate(-50%, 30%)
             
 .quote
     opacity             0.5

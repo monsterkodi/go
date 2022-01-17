@@ -8,6 +8,7 @@
 
 kxk = require 'kxk'
 { args, kerror, keyinfo, klog, post, stash, win, elem, $ } = kxk
+{ opponent } = require './util'
 
 Board = require './board'
 Game  = require './game'
@@ -65,7 +66,7 @@ function MainWin extends win
         @main.innerHTML = ''
         r1 = elem 'div' class:'row' parent:@main
         r1.style = 'height:100%'
-        @board = new Board r1, @boardsize
+        @board = new Board r1, @boardsize, opponent @gnucolor
         @game = new Game @board
         @gnu = new GNU @game
         @board.gnu = @gnu
@@ -111,6 +112,8 @@ function MainWin extends win
             'revert'        ➜ return @restore()
             'new game'      ➜ return @newGame @boardsize
             'pass'          ➜ return @gnu.humanMove 'pass'
+            'genmove'       ➜ return @gnu.humanMove @game.genmove opponent @gnucolor
+            'calcscore'     ➜ return @gnu.calcscore()
             'black' 'white' ➜ return @newGame @boardsize, action, @handicap
             '9x9' '13x13' 
             '19x19'         ➜ return @newGame int(action), @gnucolor, @handicap

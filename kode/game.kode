@@ -7,7 +7,8 @@
 ###
 
 kxk = require 'kxk'
-{ elem, $ } = kxk
+{ randInt, elem, $ } = kxk
+{ opponent } = require './util'
 
 alpha = 'ABCDEFGHJKLMNOPQRST'
 stone = black:'○' white:'●' empty:' ' B:'○' W:'●' b:'○' w:'●'
@@ -158,7 +159,7 @@ function Game
             # log 'GAME.play' color, p
             @setStone c, color
             @moves.push color + ' ' + p
-            @removeDead @opponent color
+            @removeDead opponent color
             @board.lastMove color, c
             ''
         else
@@ -185,7 +186,7 @@ function Game
             c = @coord p
             if @liberties(c) < 1
                 g = @group c
-                @captures[@opponent color] += g.length
+                @captures[opponent color] += g.length
                 for dp in g
                     dc = @coord dp
                     @setStone dc, 'empty'
@@ -202,18 +203,7 @@ function Game
                 if s == @stoneAt [x,y]
                     l.push @pos [x,y]
         l
-        
-    opponent: (color) ->
-        
-        opp =
-            black: 'white'
-            B:     'white' 
-            b:     'white'
-            white: 'black'
-            W:     'black'
-            w:     'black'
-        opp[color]
-        
+                
     next: (num=1) ->
         
         for i in 0...num
