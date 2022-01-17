@@ -1,0 +1,67 @@
+###
+0000000     0000000    0000000   00000000   0000000  
+000   000  000   000  000   000  000   000  000   000
+0000000    000   000  000000000  0000000    000   000
+000   000  000   000  000   000  000   000  000   000
+0000000     0000000   000   000  000   000  0000000  
+###
+
+{ elem, randIntRange } = require 'kxk'
+
+function Board
+
+    @: (parent, @size=19) ->
+        
+        @div = elem 'div' class:'board'   parent:parent
+        @img = elem 'img' class:'wood'    src:'../img/wood.png' parent:@div
+        @shd = elem 'div' class:'shadows' parent:@div
+        
+        @height = 1000
+        @width  = @height
+        s = @height
+        
+        @canvas = elem 'canvas' class:'lines' height:s, width:s, parent:@div
+
+        @ctx = @canvas.getContext '2d'
+        @ctx.strokeStyle = 'black'
+        @ctx.lineWidth = @size == 19 ? 2 : @size == 13 ? 2.5 : 3
+        @ctx.lineCap = "round"
+
+        @ctx.fillStyle = '#f6c67111'
+        @ctx.rect 0,0,s,s
+        @ctx.fill()
+        
+        @ctx.fillStyle = 'black'
+        
+        d = s/(@size+1)
+        o = d
+        
+        for i in 0...@size
+            @ctx.beginPath()
+            @ctx.moveTo o+i*d, o
+            @ctx.lineTo o+i*d, s-o
+            @ctx.moveTo o, o+i*d
+            @ctx.lineTo s-o, o+i*d
+            @ctx.stroke()   
+            
+        for x in -1..1
+            for y in -1..1
+                @ctx.beginPath()
+                if @size >= 13
+                    @ctx.arc s/2+x*d*(int(-@size/2) + 3), s/2+y*d*(int(-@size/2) + 3), s/180, 0, 2 * Math.PI, false
+                else if x and y
+                    @ctx.arc s/2+x*d*(int(-@size/2) + 2), s/2+y*d*(int(-@size/2) + 2), s/180, 0, 2 * Math.PI, false
+                @ctx.fill()
+                                
+    addStone: (pos, black) ->
+        
+        d = 100/(@size+1)
+        src = "../img/stone_#{black ? 'black' : 'white' + randIntRange 1 15}.png" 
+        shadow = elem 'img' class:'shadow' src:'../img/stone_shadow.png', width:"auto", height:"#{d+1}%" parent:@shd
+        stone = elem 'img' class:'stone' src:src, width:"auto", height:"#{d}%" parent:@div
+        x = (pos[0]+0.5)*100/(@size+1)
+        y = (pos[1]+0.5)*100/(@size+1)
+        stone.style = "left:#{x}%; top:#{y}%;" 
+        shadow.style = "left:#{x}%; top:#{y}%;" 
+
+module.exports = Board

@@ -16,9 +16,9 @@ function Game
     @: -> 
         
         @boardsize 9
-        @play 'b' 'b1'
-        @play 'b' 'b2'
-        @play 'b' 'a2'
+        # @play 'b' 'b1'
+        # @play 'b' 'b2'
+        # @play 'b' 'a2'
     
     legal: (color, c) ->
         
@@ -66,7 +66,6 @@ function Game
                     gn.push n
         gn
         
-    poslist: (cl) -> cl.map @pos
         
     neighbors: (c) ->
         ns = []
@@ -140,10 +139,10 @@ function Game
         
     coord: (p) => [alpha.indexOf(p[0].toUpperCase()), @size-int(p[1..])]
     pos:   (c) => alpha[c[0]] + (@size-c[1])
+    poslist: (cl) -> cl.map @pos
     
     black: (p) -> @play 'B' p
     white: (p) -> @play 'W' p
-        
     color: (p) ->
         
         switch @stoneAt @coord p

@@ -41,7 +41,7 @@ function MainWin extends win
         
         @main =$ '#main'
         
-        if 1
+        if 0
             r1 = elem 'div' class:'row' parent:@main
             r2 = elem 'div' class:'row' parent:@main
             r1.style = 'height:50%'
@@ -56,7 +56,7 @@ function MainWin extends win
         else
             r1 = elem 'div' class:'row' parent:@main
             r1.style = 'height:100%'
-            @board1 = new Board r1, 19
+            @board1 = new Board r1, 9
         
         post.emit 'resize'
         
