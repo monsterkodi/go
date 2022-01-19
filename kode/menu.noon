@@ -7,6 +7,7 @@
 
 go
     new game                cmdctrl+n, n
+    undo                    cmdctrl+z
     pass                    p
     genmove                 g
     calcscore               c
@@ -42,6 +43,7 @@ window
     -
     toggle menu             alt+m
     toggle legend           alt+l
+    toggle liberties        cmdctrl+l
     fullscreen              alt+f    
     --
     minimize                alt+ctrl+shift+m

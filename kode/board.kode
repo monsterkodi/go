@@ -8,16 +8,16 @@
 
 kxk = require 'kxk'
 { elem, kpos, randIntRange, $ } = kxk
-{ alpha } = require './util'
+{ alpha, opponent } = require './util'
 
 function Board
 
     @: (parent, @size=19, @human) ->
         
-        @div = elem 'div' class:'board'   parent:parent
-        @img = elem 'img' class:'wood'    src:'../img/wood.png' parent:@div
-        @shd = elem 'div' class:'shadows' parent:@div
-        @lgd = elem 'div' class:'legends' parent:@div
+        @div = elem 'div' class:'board'     parent:parent
+        @img = elem 'img' class:'wood'      src:'../img/wood.png' parent:@div
+        @shd = elem 'div' class:'shadows'   parent:@div
+        @lgd = elem 'div' class:'legends'   parent:@div
         
         @div.addEventListener 'mousemove'  @onMouseMove
         @div.addEventListener 'mousedown'  @onMouseDown
@@ -32,12 +32,13 @@ function Board
         @lines()
         @legend()
         
-        @stn = elem 'div' class:'stones'  parent:@div
-        @hlt = elem 'div' class:'highlts' parent:@div
+        @stn = elem 'div' class:'stones'    parent:@div
+        @lib = elem 'div' class:'liberties' parent:@div
+        @hlt = elem 'div' class:'highlts'   parent:@div
         @hover = elem 'div' class:"hover #{@human}" parent:@hlt
-        @hover.style = "width:#{h}%; height:#{h}%; display:none; border-radius:#{d/2}px;" 
+        @hover.style = "width:#{h}%; height:#{h}%; display:none; border-radius:#{h/2}px;" 
 
-        @last = elem 'div' class:"last #{@human}" parent:@hlt
+        @last = elem 'div' class:"last" parent:@hlt
         @last.style = "width:10px; height:10px; display:none; border-radius:10px;"
         
     # 000      000  000   000  00000000   0000000  
@@ -113,9 +114,14 @@ function Board
             
     toggleLegend: ->
         
-        window.stash.set 'legend', not window.stash.get 'legend'            
+        window.stash.set 'legend' not window.stash.get 'legend'            
         @lgd.style.display = window.stash.get('legend') ? 'initial' : 'none'
-            
+
+    toggleLiberties: ->
+        
+        window.stash.set 'liberties' not window.stash.get 'liberties'            
+        @lib.style.display = window.stash.get('liberties') ? 'initial' : 'none'
+        
     # 00     00   0000000   000   000   0000000  00000000  
     # 000   000  000   000  000   000  000       000       
     # 000000000  000   000  000   000  0000000   0000000   
@@ -134,9 +140,9 @@ function Board
             @hover.style.display = 'none'
             return
 
-        if @gnu
-            p = @gnu.game.pos [c.x, c.y]
-            if not p in @gnu.game.all_legal()
+        if @game
+            p = @game.pos [c.x, c.y]
+            if not p in @game.all_legal()
                 @hover.style.display = 'none'
                 return
             
@@ -150,11 +156,11 @@ function Board
     onMouseDown: (event) =>
         
         c = @posAtEvent event
-        if @gnu
-            p = @gnu.game.pos [c.x, c.y]
-            if p in @gnu.game.all_legal()
+        if @game
+            p = @game.pos [c.x, c.y]
+            if p in @game.all_legal()
                 @hover.style.display = 'none'
-                @gnu.humanMove p
+                @gnu?.humanMove p
         
     # 000       0000000    0000000  000000000  
     # 000      000   000  000          000     
@@ -169,6 +175,11 @@ function Board
         @last.style.display = 'initial'
         @last.style.left = "#{p.x}%"
         @last.style.top  = "#{p.y}%"
+        @last.classList.remove 'black'
+        @last.classList.remove 'white'
+        @last.classList.add opponent color
+        
+        @liberties()
                 
     posAtEvent: (event) ->
         
@@ -187,13 +198,13 @@ function Board
     posToPrcnt: (c) ->
 
         kpos 100 * (c.x+1) / (@size+1), 100 * (c.y+1) / (@size+1)
-        
+                
     #  0000000  000000000   0000000   000   000  00000000  
     # 000          000     000   000  0000  000  000       
     # 0000000      000     000   000  000 0 000  0000000   
     #      000     000     000   000  000  0000  000       
     # 0000000      000      0000000   000   000  00000000  
-    
+        
     delStone: (c) ->
 
         while s = $ ".pos#{c[0]}_#{c[1]}"
@@ -212,5 +223,29 @@ function Board
 
         stone.style = "left:#{x}%; top:#{y}%;" 
         shadow.style = "left:#{x}%; top:#{y}%;" 
+       
+    clear: ->
+        
+        @last.style.display = 'none'
+        @shd.innerHTML = ''
+        @stn.innerHTML = ''
+        @lib.innerHTML = ''
+        
+    # 000      000  0000000    00000000  00000000   000000000  000  00000000   0000000  
+    # 000      000  000   000  000       000   000     000     000  000       000       
+    # 000      000  0000000    0000000   0000000       000     000  0000000   0000000   
+    # 000      000  000   000  000       000   000     000     000  000            000  
+    # 0000000  000  0000000    00000000  000   000     000     000  00000000  0000000   
+    
+    liberties: ->
+        
+        @lib.innerHTML = ''
+        if @game
+            for color in ['black' 'white']
+                for s in @game.allStones color
+                    c = @game.coord s
+                    l = elem 'div' class:"liberty #{color}" parent:@lib, text:@game.liberties c
+                    p = @coordToPrcnt c
+                    l.style = "left:#{p.x}%; top:#{p.y}%;" 
 
 module.exports = Board

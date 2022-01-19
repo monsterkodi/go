@@ -70,6 +70,7 @@ function MainWin extends win
         @game = new Game @board
         @gnu = new GNU @game
         @board.gnu = @gnu
+        @board.game = @game
         @gnu.newGame @boardsize, @gnucolor, @handicap
         
     onMove: => window.stash.set 'bounds' @getBounds()
@@ -108,19 +109,21 @@ function MainWin extends win
     onMenuAction: (action, args) =>
                
         switch action.toLowerCase()
-            'save'          ➜ return @saveStash()
-            'revert'        ➜ return @restore()
-            'new game'      ➜ return @newGame @boardsize
-            'pass'          ➜ return @gnu.humanMove 'pass'
-            'genmove'       ➜ return @gnu.humanMove @game.genmove opponent @gnucolor
-            'calcscore'     ➜ return @gnu.calcscore()
-            'toggle legend' ➜ return @board.toggleLegend()
-            'black' 'white' ➜ return @newGame @boardsize, action, @handicap
+            'save'              ➜ return @saveStash()
+            'revert'            ➜ return @restore()
+            'new game'          ➜ return @newGame @boardsize
+            'undo'              ➜ return @gnu.undo()
+            'pass'              ➜ return @gnu.humanMove 'pass'
+            'genmove'           ➜ return @gnu.humanMove @game.genmove opponent @gnucolor
+            'calcscore'         ➜ return @gnu.calcscore()
+            'toggle legend'     ➜ return @board.toggleLegend()
+            'toggle liberties'  ➜ return @board.toggleLiberties()
+            'black' 'white'     ➜ return @newGame @boardsize, action, @handicap
             '9x9' '13x13' 
-            '19x19'         ➜ return @newGame int(action), @gnucolor, @handicap
+            '19x19'             ➜ return @newGame int(action), @gnucolor, @handicap
             '0' '1' '2' 
             '3' '4' '5' 
-            '6' '7' '8' '9' ➜ return @newGame @boardsize, @gnucolor, int action
+            '6' '7' '8' '9'     ➜ return @newGame @boardsize, @gnucolor, int action
                         
         klog "menuAction '#{action}'" # args     
         super action, args

@@ -1,8 +1,8 @@
 // monsterkodi/kode 0.237.0
 
-var _k_ = {in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}}
+var _k_ = {in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}}
 
-var $, alpha, Board, elem, kpos, kxk, randIntRange
+var $, alpha, Board, elem, kpos, kxk, opponent, randIntRange
 
 kxk = require('kxk')
 elem = kxk.elem
@@ -11,6 +11,7 @@ randIntRange = kxk.randIntRange
 $ = kxk.$
 
 alpha = require('./util').alpha
+opponent = require('./util').opponent
 
 
 Board = (function ()
@@ -40,10 +41,11 @@ Board = (function ()
         this.lines()
         this.legend()
         this.stn = elem('div',{class:'stones',parent:this.div})
+        this.lib = elem('div',{class:'liberties',parent:this.div})
         this.hlt = elem('div',{class:'highlts',parent:this.div})
         this.hover = elem('div',{class:`hover ${this.human}`,parent:this.hlt})
-        this.hover.style = `width:${h}%; height:${h}%; display:none; border-radius:${d / 2}px;`
-        this.last = elem('div',{class:`last ${this.human}`,parent:this.hlt})
+        this.hover.style = `width:${h}%; height:${h}%; display:none; border-radius:${h / 2}px;`
+        this.last = elem('div',{class:"last",parent:this.hlt})
         this.last.style = "width:10px; height:10px; display:none; border-radius:10px;"
     }
 
@@ -63,7 +65,7 @@ Board = (function ()
         this.ctx.rect(0,0,s,s)
         this.ctx.fill()
         this.ctx.fillStyle = 'black'
-        for (var _67_17_ = i = 0, _67_21_ = this.size; (_67_17_ <= _67_21_ ? i < this.size : i > this.size); (_67_17_ <= _67_21_ ? ++i : --i))
+        for (var _68_17_ = i = 0, _68_21_ = this.size; (_68_17_ <= _68_21_ ? i < this.size : i > this.size); (_68_17_ <= _68_21_ ? ++i : --i))
         {
             this.ctx.beginPath()
             this.ctx.moveTo(o + i * d,o)
@@ -95,7 +97,7 @@ Board = (function ()
         var d, n, x
 
         d = 100 / (this.size + 1)
-        for (var _94_17_ = x = 0, _94_21_ = this.size; (_94_17_ <= _94_21_ ? x < this.size : x > this.size); (_94_17_ <= _94_21_ ? ++x : --x))
+        for (var _95_17_ = x = 0, _95_21_ = this.size; (_95_17_ <= _95_21_ ? x < this.size : x > this.size); (_95_17_ <= _95_21_ ? ++x : --x))
         {
             n = elem('div',{class:'legend',text:alpha[x],parent:this.lgd})
             n.style.left = `${d * (x + 1)}%`
@@ -119,6 +121,12 @@ Board = (function ()
         return this.lgd.style.display = (window.stash.get('legend') ? 'initial' : 'none')
     }
 
+    Board.prototype["toggleLiberties"] = function ()
+    {
+        window.stash.set('liberties',!window.stash.get('liberties'))
+        return this.lib.style.display = (window.stash.get('liberties') ? 'initial' : 'none')
+    }
+
     Board.prototype["onMouseLeave"] = function (event)
     {
         return this.hover.style.display = 'none'
@@ -134,10 +142,10 @@ Board = (function ()
             this.hover.style.display = 'none'
             return
         }
-        if (this.gnu)
+        if (this.game)
         {
-            p = this.gnu.game.pos([c.x,c.y])
-            if (!(_k_.in(p,this.gnu.game.all_legal())))
+            p = this.game.pos([c.x,c.y])
+            if (!(_k_.in(p,this.game.all_legal())))
             {
                 this.hover.style.display = 'none'
                 return
@@ -151,16 +159,16 @@ Board = (function ()
 
     Board.prototype["onMouseDown"] = function (event)
     {
-        var c, p
+        var c, p, _163_20_
 
         c = this.posAtEvent(event)
-        if (this.gnu)
+        if (this.game)
         {
-            p = this.gnu.game.pos([c.x,c.y])
-            if (_k_.in(p,this.gnu.game.all_legal()))
+            p = this.game.pos([c.x,c.y])
+            if (_k_.in(p,this.game.all_legal()))
             {
                 this.hover.style.display = 'none'
-                return this.gnu.humanMove(p)
+                return (this.gnu != null ? this.gnu.humanMove(p) : undefined)
             }
         }
     }
@@ -172,7 +180,11 @@ Board = (function ()
         p = this.coordToPrcnt(c)
         this.last.style.display = 'initial'
         this.last.style.left = `${p.x}%`
-        return this.last.style.top = `${p.y}%`
+        this.last.style.top = `${p.y}%`
+        this.last.classList.remove('black')
+        this.last.classList.remove('white')
+        this.last.classList.add(opponent(color))
+        return this.liberties()
     }
 
     Board.prototype["posAtEvent"] = function (event)
@@ -225,6 +237,38 @@ Board = (function ()
         y = (c[1] + 0.5) * 100 / (this.size + 1)
         stone.style = `left:${x}%; top:${y}%;`
         return shadow.style = `left:${x}%; top:${y}%;`
+    }
+
+    Board.prototype["clear"] = function ()
+    {
+        this.last.style.display = 'none'
+        this.shd.innerHTML = ''
+        this.stn.innerHTML = ''
+        return this.lib.innerHTML = ''
+    }
+
+    Board.prototype["liberties"] = function ()
+    {
+        var c, color, l, p, s
+
+        this.lib.innerHTML = ''
+        if (this.game)
+        {
+            var list = ['black','white']
+            for (var _244_22_ = 0; _244_22_ < list.length; _244_22_++)
+            {
+                color = list[_244_22_]
+                var list1 = _k_.list(this.game.allStones(color))
+                for (var _245_22_ = 0; _245_22_ < list1.length; _245_22_++)
+                {
+                    s = list1[_245_22_]
+                    c = this.game.coord(s)
+                    l = elem('div',{class:`liberty ${color}`,parent:this.lib,text:this.game.liberties(c)})
+                    p = this.coordToPrcnt(c)
+                    l.style = `left:${p.x}%; top:${p.y}%;`
+                }
+            }
+        }
     }
 
     return Board

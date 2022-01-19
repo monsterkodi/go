@@ -84,6 +84,7 @@ MainWin = (function ()
         this.game = new Game(this.board)
         this.gnu = new GNU(this.game)
         this.board.gnu = this.gnu
+        this.board.game = this.game
         return this.gnu.newGame(this.boardsize,this.gnucolor,this.handicap)
     }
 
@@ -130,6 +131,9 @@ MainWin = (function ()
             case 'new game':
                 return this.newGame(this.boardsize)
 
+            case 'undo':
+                return this.gnu.undo()
+
             case 'pass':
                 return this.gnu.humanMove('pass')
 
@@ -141,6 +145,9 @@ MainWin = (function ()
 
             case 'toggle legend':
                 return this.board.toggleLegend()
+
+            case 'toggle liberties':
+                return this.board.toggleLiberties()
 
             case 'black':
             case 'white':

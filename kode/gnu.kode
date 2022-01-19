@@ -37,14 +37,30 @@ function GNU
     calcscore: ->
         
         @send 'estimate_score'
-            
+
+    undo: ->
+        
+        @send 'undo'
+        @send 'undo'
+        @game.moves.pop()
+        @game.moves.pop()
+        @send 'showboard'
+        
     send: (m) -> @msg.push m; @gnu.stdin.write m + '\n'
 
     onData: (chunk) =>
         data = String chunk
+        if @partial 
+            data = @partial + data
+            delete @partial
+            
         while data.startsWith '= \n\n'
             data = data[4..]
             @msg.shift()
+
+        if not data.endsWith '\n\n'
+            @partial = data
+            return
             
         if data[0] == '='
             m = @msg.shift()
@@ -62,6 +78,8 @@ function GNU
             else if m.startsWith 'fixed_handicap'
                 for p in data.split ' '
                     @game.board.addStone @game.coord(p), 'black'
+            else if m.startsWith 'showboard'
+                @game.show data
             else
                 log m, data
 

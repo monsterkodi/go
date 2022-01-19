@@ -60,6 +60,15 @@ GNU = (function ()
         return this.send('estimate_score')
     }
 
+    GNU.prototype["undo"] = function ()
+    {
+        this.send('undo')
+        this.send('undo')
+        this.game.moves.pop()
+        this.game.moves.pop()
+        return this.send('showboard')
+    }
+
     GNU.prototype["send"] = function (m)
     {
         this.msg.push(m)
@@ -71,10 +80,20 @@ GNU = (function ()
         var data, m, p
 
         data = String(chunk)
+        if (this.partial)
+        {
+            data = this.partial + data
+            delete this.partial
+        }
         while (data.startsWith('= \n\n'))
         {
             data = data.slice(4)
             this.msg.shift()
+        }
+        if (!data.endsWith('\n\n'))
+        {
+            this.partial = data
+            return
         }
         if (data[0] === '=')
         {
@@ -98,11 +117,15 @@ GNU = (function ()
             else if (m.startsWith('fixed_handicap'))
             {
                 var list = _k_.list(data.split(' '))
-                for (var _63_22_ = 0; _63_22_ < list.length; _63_22_++)
+                for (var _79_22_ = 0; _79_22_ < list.length; _79_22_++)
                 {
-                    p = list[_63_22_]
+                    p = list[_79_22_]
                     this.game.board.addStone(this.game.coord(p),'black')
                 }
+            }
+            else if (m.startsWith('showboard'))
+            {
+                return this.game.show(data)
             }
             else
             {

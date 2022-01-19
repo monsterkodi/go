@@ -12,7 +12,10 @@ kxk = require 'kxk'
 
 function Game
 
-    @: (@board) -> @boardsize @board.size
+    @: (@board) ->
+        
+        @moves = []
+        @boardsize @board.size
     
     # 000      00000000   0000000    0000000   000      
     # 000      000       000        000   000  000      
@@ -51,6 +54,24 @@ function Game
                 return n.length
         0
         
+    # 00000000  00000000   00000000  00000000  0000000     0000000   00     00   0000000  
+    # 000       000   000  000       000       000   000  000   000  000   000  000       
+    # 000000    0000000    0000000   0000000   000   000  000   000  000000000  0000000   
+    # 000       000   000  000       000       000   000  000   000  000 0 000       000  
+    # 000       000   000  00000000  00000000  0000000     0000000   000   000  0000000   
+    
+    free: (color, p) -> @freedoms color, @coord p
+    freedoms: (color, c) ->
+        
+        l = 0
+        for n in @neighbors c
+            s = @stoneAt n
+            if s == stone.empty then l++
+            else if s == stone[color]
+                if @liberties(n) > 1
+                    l++
+        l
+
     #  0000000   00000000    0000000   000   000  00000000   
     # 000        000   000  000   000  000   000  000   000  
     # 000  0000  0000000    000   000  000   000  00000000   
@@ -87,24 +108,6 @@ function Game
                 ns.push n
         ns
         
-    # 00000000  00000000   00000000  00000000  0000000     0000000   00     00   0000000  
-    # 000       000   000  000       000       000   000  000   000  000   000  000       
-    # 000000    0000000    0000000   0000000   000   000  000   000  000000000  0000000   
-    # 000       000   000  000       000       000   000  000   000  000 0 000       000  
-    # 000       000   000  00000000  00000000  0000000     0000000   000   000  0000000   
-    
-    free: (color, p) -> @freedoms color, @coord p
-    freedoms: (color, c) ->
-        
-        l = 0
-        for n in @neighbors c
-            s = @stoneAt n
-            if s == stone.empty then l++
-            else if s == stone[color]
-                if @liberties(n) > 1
-                    l++
-        l
-
     movecaptures: (color, c) ->
         
         m = stone[color]
@@ -174,12 +177,35 @@ function Game
             
     setStone: (c, color) ->
         
+        r = @rows[c[1]]
+        @rows[c[1]] = r.slice(0, c[0]) + stone[color] + r.slice(c[0]+1)
         if color == 'empty'
             @board.delStone c
         else
             @board.addStone c, color
-        r = @rows[c[1]]
-        @rows[c[1]] = r.slice(0, c[0]) + stone[color] + r.slice(c[0]+1)
+            
+    show: (data) ->
+
+        @board.clear()
+        @clearRows()
+        rows = data.split('\n')[2..]
+        rows = rows.map (r) => r[3..].split(' ').join('')
+        for y in 0...@size
+            row = rows[y]
+            for x in 0...@size
+                switch row[x]
+                    'X' ➜ @setStone [x,y] 'black'
+                    'O' ➜ @setStone [x,y] 'white'
+                 
+            if 'hascaptured' in row
+                captured = int row.split('hascaptured')[1]
+                if 'WHITE' in row
+                    @captures.white = captured
+                else
+                    @captures.black = captured
+                    
+        @board.liberties()
+        @updateTitle()
             
     # 00000000   00000000  00     00   0000000   000   000  00000000  0000000    00000000   0000000   0000000    
     # 000   000  000       000   000  000   000  000   000  000       000   000  000       000   000  000   000  
@@ -189,7 +215,7 @@ function Game
     
     removeDead: (color) ->
         
-        for p in @allstones color
+        for p in @allStones color
             c = @coord p
             if @liberties(c) < 1
                 g = @group c
@@ -201,7 +227,7 @@ function Game
                 @removeDead()
                 return
         
-    allstones: (color) ->
+    allStones: (color) ->
         
         s = stone[color]
         l = []
@@ -243,12 +269,16 @@ function Game
     clear_board: ->
         
         @captures = black:0 white:0
-        @rows = []
-        for y in 0...@size
-            @rows.push rpad @size, ''
+        @clearRows()
         @moves = []
         @updateTitle()
         ''
+    
+    clearRows: ->
+        
+        @rows = []
+        for y in 0...@size
+            @rows.push rpad @size, ''
         
     #  0000000  000   000   0000000   000   000  0000000     0000000    0000000   00000000   0000000    
     # 000       000   000  000   000  000 0 000  000   000  000   000  000   000  000   000  000   000  
