@@ -15,6 +15,11 @@ class Util
     static alpha = 'ABCDEFGHJKLMNOPQRST'
 
     static stone = {black:'○',white:'●',empty:' ',B:'○',W:'●',b:'○',w:'●'}
+
+    static splice (s, i, n, r = '')
+    {
+        return s.slice(0,i) + r + s.slice(i + n)
+    }
 }
 
 module.exports = Util

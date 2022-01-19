@@ -8,9 +8,10 @@
 
 kxk = require 'kxk'
 { randInt, elem, $ } = kxk
-{ opponent, alpha, stone } = require './util'
+{ opponent, alpha, stone, splice } = require './util'
+Score = require './score'
 
-function Game
+function Game extends Score
 
     @: (@board) ->
         
@@ -20,7 +21,7 @@ function Game
     save: ->
         
         window.stash.set 'moves' @moves
-        window.stash.set 'rows'  @rows
+        window.stash.set 'grid'  @grid
     
     # 000      00000000   0000000    0000000   000      
     # 000      000       000        000   000  000      
@@ -173,7 +174,6 @@ function Game
             
         c = @coord p
         if @valid c
-            # log 'GAME.play' color, p
             @setStone c, color
             @moves.push color + ' ' + p
             @removeDead opponent color
@@ -182,31 +182,43 @@ function Game
         else
             '? invalid color or coordinate'
             
+    #  0000000  00000000  000000000   0000000  000000000   0000000   000   000  00000000  
+    # 000       000          000     000          000     000   000  0000  000  000       
+    # 0000000   0000000      000     0000000      000     000   000  000 0 000  0000000   
+    #      000  000          000          000     000     000   000  000  0000  000       
+    # 0000000   00000000     000     0000000      000      0000000   000   000  00000000  
+    
     setStone: (c, color) ->
         
-        r = @rows[c[1]]
-        @rows[c[1]] = r.slice(0, c[0]) + stone[color] + r.slice(c[0]+1)
+        @grid = splice @grid, @gridx(c), 1, stone[color]
         if color == 'empty'
             @board.delStone c
         else
             @board.addStone c, color
             
+            
+    #  0000000  000   000   0000000   000   000  
+    # 000       000   000  000   000  000 0 000  
+    # 0000000   000000000  000   000  000000000  
+    #      000  000   000  000   000  000   000  
+    # 0000000   000   000   0000000   00     00  
+    
     show: (data) ->
 
         @board.clear()
-        @clearRows()
-        rows = data.split('\n')[2..]
-        rows = rows.map (r) => r[3..].split(' ').join('')
+        @clearGrid()
+        rs = data.split('\n')[2..]
+        rs = rs.map (r) => r[3..].split(' ').join('')
         for y in 0...@size
-            row = rows[y]
+            r = rs[y]
             for x in 0...@size
-                switch row[x]
+                switch r[x]
                     'X' ➜ @setStone [x,y] 'black'
                     'O' ➜ @setStone [x,y] 'white'
                  
-            if 'hascaptured' in row
-                captured = int row.split('hascaptured')[1]
-                if 'WHITE' in row
+            if 'hascaptured' in r
+                captured = int r.split('hascaptured')[1]
+                if 'WHITE' in r
                     @captures.white = captured
                 else
                     @captures.black = captured
@@ -250,7 +262,8 @@ function Game
             @genmove()
         @showboard()
     
-    stoneAt: (c) => @rows[c[1]][c[0]]
+    gridx:   (c) -> c[0]+(@size+1)*c[1]
+    stoneAt: (c) => @grid[@gridx c]
     valid: (c) => 0 <= c[0] < @size and 0 <= c[1] < @size   
     coord: (p) => [alpha.indexOf(p[0].toUpperCase()), @size-int(p[1..])]
     pos:   (c) => alpha[c[0]] + (@size-c[1])
@@ -276,16 +289,17 @@ function Game
     clear_board: ->
         
         @captures = black:0 white:0
-        @clearRows()
+        @clearGrid()
         @moves = []
         @updateTitle()
         ''
     
-    clearRows: ->
+    clearGrid: ->
         
-        @rows = []
+        @grid = ''
         for y in 0...@size
-            @rows.push rpad @size, ''
+            @grid += rpad @size, ''
+            @grid += '\n' if y < @size-1
         
     #  0000000  000   000   0000000   000   000  0000000     0000000    0000000   00000000   0000000    
     # 000       000   000  000   000  000 0 000  000   000  000   000  000   000  000   000  000   000  
@@ -319,11 +333,12 @@ function Game
         log @showboard()
         log 'white' @allStones('w').length, @allStones 'w'
         log 'black' @allStones('b').length, @allStones 'b'
-        
+        log @grid
         
     setScore: (@score) -> 
     
         log @score
+        @calcScore()
         @updateTitle()
         
     # 000   000  00000000   0000000     0000000   000000000  00000000  000000000  000  000000000  000      00000000  
