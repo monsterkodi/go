@@ -8,6 +8,7 @@
 go
     new game                cmdctrl+n, n
     undo                    cmdctrl+z
+    redo                    cmdctrl+shift+z
     pass                    p
     genmove                 g
     calcscore               c

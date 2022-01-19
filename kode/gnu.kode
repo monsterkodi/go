@@ -29,6 +29,7 @@ function GNU
             
     humanMove: (p) ->
 
+        delete @redos
         @game.play @human, p
         @send "play #{@human} #{p}"
         @calcscore()
@@ -40,11 +41,26 @@ function GNU
 
     undo: ->
         
+        return if @game.moves.length < 2
         @send 'undo'
         @send 'undo'
-        @game.moves.pop()
-        @game.moves.pop()
+        @redos ?= []
+        @redos.unshift @game.moves.pop()
+        @redos.unshift @game.moves.pop()
         @send 'showboard'
+        
+    redo: ->
+        
+        return if empty @redos
+        move = @redos.shift()
+        [color, p] = move.split ' '
+        @game.play color, p
+        @send "play #{color} #{p}"
+        return if empty @redos
+        move = @redos.shift()
+        [color, p] = move.split ' '
+        @game.play color, p
+        @send "play #{color} #{p}"
         
     send: (m) -> @msg.push m; @gnu.stdin.write m + '\n'
 

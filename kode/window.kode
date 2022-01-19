@@ -113,6 +113,7 @@ function MainWin extends win
             'revert'            ➜ return @restore()
             'new game'          ➜ return @newGame @boardsize
             'undo'              ➜ return @gnu.undo()
+            'redo'              ➜ return @gnu.redo()
             'pass'              ➜ return @gnu.humanMove 'pass'
             'genmove'           ➜ return @gnu.humanMove @game.genmove opponent @gnucolor
             'calcscore'         ➜ return @gnu.calcscore()

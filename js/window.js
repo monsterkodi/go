@@ -134,6 +134,9 @@ MainWin = (function ()
             case 'undo':
                 return this.gnu.undo()
 
+            case 'redo':
+                return this.gnu.redo()
+
             case 'pass':
                 return this.gnu.humanMove('pass')
 
