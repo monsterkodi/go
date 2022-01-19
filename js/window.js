@@ -99,6 +99,7 @@ MainWin = (function ()
             this.game.play(c,p)
             this.gnu.send(`play ${c} ${p}`)
         }
+        return this.game.dump()
     }
 
     MainWin.prototype["onMove"] = function ()

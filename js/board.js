@@ -135,7 +135,7 @@ Board = (function ()
 
     Board.prototype["onMouseMove"] = function (event)
     {
-        var c, p
+        var c, legal, p
 
         c = this.posAtEvent(event)
         if (c.x < 0 || c.y < 0 || c.x >= this.size || c.y >= this.size)
@@ -145,8 +145,8 @@ Board = (function ()
         }
         if (this.game)
         {
-            p = this.game.pos([c.x,c.y])
-            if (!(_k_.in(p,this.game.all_legal())))
+            legal = this.game.legal(this.human,[c.x,c.y])
+            if (!legal)
             {
                 this.hover.style.display = 'none'
                 return

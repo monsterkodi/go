@@ -30,7 +30,9 @@ function Game
     
     legal: (color, c) ->
         
-        @stoneAt(c) == stone.empty and (@freedoms(color, c) or @movecaptures(color, c))
+        fr = @freedoms color, c
+        mc = @movecaptures color, c
+        @stoneAt(c) == stone.empty and (fr or mc)
         
     all_legal: (color) ->
         
@@ -67,7 +69,7 @@ function Game
     
     free: (color, p) -> @freedoms color, @coord p
     freedoms: (color, c) ->
-        
+
         l = 0
         for n in @neighbors c
             s = @stoneAt n
@@ -114,7 +116,7 @@ function Game
         ns
         
     movecaptures: (color, c) ->
-        
+
         m = stone[color]
         for n in @neighbors c
             s = @stoneAt n
@@ -311,6 +313,13 @@ function Game
         b += alpha.slice(0,@size) each (v) -> s + v
         b += '\n'
         b
+        
+    dump: ->
+        
+        log @showboard()
+        log 'white' @allStones('w').length, @allStones 'w'
+        log 'black' @allStones('b').length, @allStones 'b'
+        
         
     setScore: (@score) -> 
     

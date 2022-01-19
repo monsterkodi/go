@@ -48,6 +48,7 @@ function GNU
         @redos.unshift @game.moves.pop()
         @redos.unshift @game.moves.pop()
         @send 'showboard'
+        @calcscore()
         
     redo: ->
         
@@ -68,8 +69,8 @@ function GNU
         
         data = String chunk
         
-        log data
-        log @msg
+        # log data
+        # log @msg
         
         if @partial 
             data = @partial + data
@@ -99,6 +100,7 @@ function GNU
             else if m.startsWith 'fixed_handicap'
                 for p in data.split ' '
                     @game.setStone @game.coord(p), 'black'
+                @game.dump()
             else if m.startsWith 'estimate_score'
                 @game.setScore data.split(' ')[0]
             else if m.startsWith 'showboard'

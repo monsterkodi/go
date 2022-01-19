@@ -74,7 +74,8 @@ GNU = (function ()
         this.redos = ((_47_15_=this.redos) != null ? _47_15_ : [])
         this.redos.unshift(this.game.moves.pop())
         this.redos.unshift(this.game.moves.pop())
-        return this.send('showboard')
+        this.send('showboard')
+        return this.calcscore()
     }
 
     GNU.prototype["redo"] = function ()
@@ -86,7 +87,7 @@ GNU = (function ()
             return
         }
         move = this.redos.shift()
-        var _56_19_ = move.split(' '); color = _56_19_[0]; p = _56_19_[1]
+        var _57_19_ = move.split(' '); color = _57_19_[0]; p = _57_19_[1]
 
         this.game.play(color,p)
         this.send(`play ${color} ${p}`)
@@ -95,7 +96,7 @@ GNU = (function ()
             return
         }
         move = this.redos.shift()
-        var _61_19_ = move.split(' '); color = _61_19_[0]; p = _61_19_[1]
+        var _62_19_ = move.split(' '); color = _62_19_[0]; p = _62_19_[1]
 
         this.game.play(color,p)
         return this.send(`play ${color} ${p}`)
@@ -112,8 +113,6 @@ GNU = (function ()
         var data, m, p
 
         data = String(chunk)
-        console.log(data)
-        console.log(this.msg)
         if (this.partial)
         {
             data = this.partial + data
@@ -150,11 +149,12 @@ GNU = (function ()
             else if (m.startsWith('fixed_handicap'))
             {
                 var list = _k_.list(data.split(' '))
-                for (var _100_22_ = 0; _100_22_ < list.length; _100_22_++)
+                for (var _101_22_ = 0; _101_22_ < list.length; _101_22_++)
                 {
-                    p = list[_100_22_]
+                    p = list[_101_22_]
                     this.game.setStone(this.game.coord(p),'black')
                 }
+                return this.game.dump()
             }
             else if (m.startsWith('estimate_score'))
             {

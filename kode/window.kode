@@ -82,6 +82,8 @@ function MainWin extends win
             [c, p] = m.split ' '
             @game.play c, p
             @gnu.send "play #{c} #{p}"
+         
+        @game.dump()
         
     onMove: => window.stash.set 'bounds' @getBounds()
     
