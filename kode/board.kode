@@ -36,8 +36,10 @@ function Board
         @lib = elem 'div' class:'liberties' parent:@div
         @hlt = elem 'div' class:'highlts'   parent:@div
         @hover = elem 'div' class:"hover #{@human}" parent:@hlt
-        @hover.style = "width:#{h}%; height:#{h}%; display:none; border-radius:#{h/2}px;" 
+        @hover.style = "width:#{h}%; height:#{h}%; display:none; border-radius:#{d/2}px;" 
 
+        @lib.style.display = window.stash.get('liberties') ? 'initial' : 'none'
+        
         @last = elem 'div' class:"last" parent:@hlt
         @last.style = "width:10px; height:10px; display:none; border-radius:10px;"
         
@@ -216,13 +218,15 @@ function Board
         stn = color
         stn += randIntRange 1 15 if color == 'white'
         src = "../img/stone_#{stn}.png" 
-        shadow = elem 'img' class:"shadow pos#{c[0]}_#{c[1]}" src:'../img/stone_shadow.png', width:"auto", height:"#{d+1}%" parent:@shd
+        shadow = elem 'img' class:"shadow pos#{c[0]}_#{c[1]}" src:'../img/stone_shadow.png', width:"auto", height:"#{d}%" parent:@shd
         stone = elem 'img' class:"stone pos#{c[0]}_#{c[1]}" src:src, width:"auto", height:"#{d}%" parent:@stn
         x = (c[0]+0.5)*100/(@size+1)
         y = (c[1]+0.5)*100/(@size+1)
 
         stone.style = "left:#{x}%; top:#{y}%;" 
-        shadow.style = "left:#{x}%; top:#{y}%;" 
+        o = @size == 19 ? 0.5 : @size == 13 ? 0.8 : 1.0
+        shadow.style = "left:#{x+10.0/@size}%; top:#{y+10.0/@size}%; opacity:#{o};"
+        @liberties()
        
     clear: ->
         

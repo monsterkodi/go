@@ -59,10 +59,15 @@ function MainWin extends win
             @board5 = new Board r2, 13
             @board6 = new Board r2, 9
         else
-            @newGame 9
+            @newGame window.stash.get('boardsize', 9), window.stash.get('gnucolor' 'white'), window.stash.get('handicap' 0), window.stash.get('moves' [])
         
-    newGame: (@boardsize=9, @gnucolor='black', @handicap=0) ->
-        # log @boardsize
+    newGame: (@boardsize=9, @gnucolor='black', @handicap=0, moves=[]) ->
+
+        window.stash.set 'boardsize' @boardsize
+        window.stash.set 'gnucolor'  @gnucolor
+        window.stash.set 'handicap'  @handicap
+        window.stash.set 'moves'     moves
+        
         @main.innerHTML = ''
         r1 = elem 'div' class:'row' parent:@main
         r1.style = 'height:100%'
@@ -71,7 +76,12 @@ function MainWin extends win
         @gnu = new GNU @game
         @board.gnu = @gnu
         @board.game = @game
-        @gnu.newGame @boardsize, @gnucolor, @handicap
+        @gnu.newGame @boardsize, @gnucolor, @handicap, empty moves
+        
+        for m in moves
+            [c, p] = m.split ' '
+            @game.play c, p
+            @gnu.send "play #{c} #{p}"
         
     onMove: => window.stash.set 'bounds' @getBounds()
     
@@ -109,9 +119,8 @@ function MainWin extends win
     onMenuAction: (action, args) =>
                
         switch action.toLowerCase()
-            'save'              ➜ return @saveStash()
+            'save'              ➜ return @game.save(); @saveStash()
             'revert'            ➜ return @restore()
-            'new game'          ➜ return @newGame @boardsize
             'undo'              ➜ return @gnu.undo()
             'redo'              ➜ return @gnu.redo()
             'pass'              ➜ return @gnu.humanMove 'pass'
@@ -119,6 +128,7 @@ function MainWin extends win
             'calcscore'         ➜ return @gnu.calcscore()
             'toggle legend'     ➜ return @board.toggleLegend()
             'toggle liberties'  ➜ return @board.toggleLiberties()
+            'new game'          ➜ return @newGame @boardsize, @gnucolor, @handicap
             'black' 'white'     ➜ return @newGame @boardsize, action, @handicap
             '9x9' '13x13' 
             '19x19'             ➜ return @newGame int(action), @gnucolor, @handicap

@@ -14,12 +14,12 @@ GNU = (function ()
         this.game = game
     
         this["onData"] = this["onData"].bind(this)
+        this.msg = []
         this.gnu = childp.spawn('/usr/local/bin/gnugo',['--mode','gtp'])
         this.gnu.stdout.on('data',this.onData)
-        this.msg = []
     }
 
-    GNU.prototype["newGame"] = function (boardsize, color = 'white', handicap = 0)
+    GNU.prototype["newGame"] = function (boardsize, color, handicap, genmove)
     {
         this.color = color
         this.handicap = handicap
@@ -32,7 +32,7 @@ GNU = (function ()
         if (this.color === 'white')
         {
             this.human = 'black'
-            if (this.handicap > 1)
+            if (genmove && this.handicap > 1)
             {
                 return this.send(`genmove ${this.color}`)
             }
@@ -40,7 +40,7 @@ GNU = (function ()
         else
         {
             this.human = 'white'
-            if (this.handicap < 2)
+            if (genmove && this.handicap < 2)
             {
                 return this.send(`genmove ${this.color}`)
             }
@@ -112,6 +112,8 @@ GNU = (function ()
         var data, m, p
 
         data = String(chunk)
+        console.log(data)
+        console.log(this.msg)
         if (this.partial)
         {
             data = this.partial + data
@@ -134,7 +136,6 @@ GNU = (function ()
             if (m.startsWith('genmove'))
             {
                 p = data.split('\n')[0]
-                console.log('play',this.color,p)
                 if (_k_.in(p,['PASS','resign']))
                 {
                     this.send('final_score')
@@ -149,11 +150,15 @@ GNU = (function ()
             else if (m.startsWith('fixed_handicap'))
             {
                 var list = _k_.list(data.split(' '))
-                for (var _95_22_ = 0; _95_22_ < list.length; _95_22_++)
+                for (var _100_22_ = 0; _100_22_ < list.length; _100_22_++)
                 {
-                    p = list[_95_22_]
-                    this.game.board.addStone(this.game.coord(p),'black')
+                    p = list[_100_22_]
+                    this.game.setStone(this.game.coord(p),'black')
                 }
+            }
+            else if (m.startsWith('estimate_score'))
+            {
+                return this.game.setScore(data.split(' ')[0])
             }
             else if (m.startsWith('showboard'))
             {

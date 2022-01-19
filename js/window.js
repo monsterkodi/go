@@ -1,6 +1,6 @@
 // monsterkodi/kode 0.237.0
 
-var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}}
+var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}}
 
 var $, args, Board, elem, Game, GNU, kerror, keyinfo, klog, kxk, MainWin, opponent, post, stash, win
 
@@ -65,18 +65,22 @@ MainWin = (function ()
         }
         else
         {
-            return this.newGame(9)
+            return this.newGame(window.stash.get('boardsize',9),window.stash.get('gnucolor','white'),window.stash.get('handicap',0),window.stash.get('moves',[]))
         }
     }
 
-    MainWin.prototype["newGame"] = function (boardsize = 9, gnucolor = 'black', handicap = 0)
+    MainWin.prototype["newGame"] = function (boardsize = 9, gnucolor = 'black', handicap = 0, moves = [])
     {
-        var r1
+        var c, m, p, r1
 
         this.boardsize = boardsize
         this.gnucolor = gnucolor
         this.handicap = handicap
     
+        window.stash.set('boardsize',this.boardsize)
+        window.stash.set('gnucolor',this.gnucolor)
+        window.stash.set('handicap',this.handicap)
+        window.stash.set('moves',moves)
         this.main.innerHTML = ''
         r1 = elem('div',{class:'row',parent:this.main})
         r1.style = 'height:100%'
@@ -85,7 +89,16 @@ MainWin = (function ()
         this.gnu = new GNU(this.game)
         this.board.gnu = this.gnu
         this.board.game = this.game
-        return this.gnu.newGame(this.boardsize,this.gnucolor,this.handicap)
+        this.gnu.newGame(this.boardsize,this.gnucolor,this.handicap,_k_.empty(moves))
+        var list = _k_.list(moves)
+        for (var _81_14_ = 0; _81_14_ < list.length; _81_14_++)
+        {
+            m = list[_81_14_]
+            var _82_19_ = m.split(' '); c = _82_19_[0]; p = _82_19_[1]
+
+            this.game.play(c,p)
+            this.gnu.send(`play ${c} ${p}`)
+        }
     }
 
     MainWin.prototype["onMove"] = function ()
@@ -123,13 +136,10 @@ MainWin = (function ()
         switch (action.toLowerCase())
         {
             case 'save':
-                return this.saveStash()
+                return this.game.save()
 
             case 'revert':
                 return this.restore()
-
-            case 'new game':
-                return this.newGame(this.boardsize)
 
             case 'undo':
                 return this.gnu.undo()
@@ -151,6 +161,9 @@ MainWin = (function ()
 
             case 'toggle liberties':
                 return this.board.toggleLiberties()
+
+            case 'new game':
+                return this.newGame(this.boardsize,this.gnucolor,this.handicap)
 
             case 'black':
             case 'white':

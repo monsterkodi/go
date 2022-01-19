@@ -44,7 +44,8 @@ Board = (function ()
         this.lib = elem('div',{class:'liberties',parent:this.div})
         this.hlt = elem('div',{class:'highlts',parent:this.div})
         this.hover = elem('div',{class:`hover ${this.human}`,parent:this.hlt})
-        this.hover.style = `width:${h}%; height:${h}%; display:none; border-radius:${h / 2}px;`
+        this.hover.style = `width:${h}%; height:${h}%; display:none; border-radius:${d / 2}px;`
+        this.lib.style.display = (window.stash.get('liberties') ? 'initial' : 'none')
         this.last = elem('div',{class:"last",parent:this.hlt})
         this.last.style = "width:10px; height:10px; display:none; border-radius:10px;"
     }
@@ -65,7 +66,7 @@ Board = (function ()
         this.ctx.rect(0,0,s,s)
         this.ctx.fill()
         this.ctx.fillStyle = 'black'
-        for (var _68_17_ = i = 0, _68_21_ = this.size; (_68_17_ <= _68_21_ ? i < this.size : i > this.size); (_68_17_ <= _68_21_ ? ++i : --i))
+        for (var _70_17_ = i = 0, _70_21_ = this.size; (_70_17_ <= _70_21_ ? i < this.size : i > this.size); (_70_17_ <= _70_21_ ? ++i : --i))
         {
             this.ctx.beginPath()
             this.ctx.moveTo(o + i * d,o)
@@ -97,7 +98,7 @@ Board = (function ()
         var d, n, x
 
         d = 100 / (this.size + 1)
-        for (var _95_17_ = x = 0, _95_21_ = this.size; (_95_17_ <= _95_21_ ? x < this.size : x > this.size); (_95_17_ <= _95_21_ ? ++x : --x))
+        for (var _97_17_ = x = 0, _97_21_ = this.size; (_97_17_ <= _97_21_ ? x < this.size : x > this.size); (_97_17_ <= _97_21_ ? ++x : --x))
         {
             n = elem('div',{class:'legend',text:alpha[x],parent:this.lgd})
             n.style.left = `${d * (x + 1)}%`
@@ -159,7 +160,7 @@ Board = (function ()
 
     Board.prototype["onMouseDown"] = function (event)
     {
-        var c, p, _163_20_
+        var c, p, _165_20_
 
         c = this.posAtEvent(event)
         if (this.game)
@@ -222,7 +223,7 @@ Board = (function ()
 
     Board.prototype["addStone"] = function (c, color = 'black')
     {
-        var d, shadow, src, stn, stone, x, y
+        var d, o, shadow, src, stn, stone, x, y
 
         d = 100 / (this.size + 1)
         stn = color
@@ -231,12 +232,14 @@ Board = (function ()
             stn += randIntRange(1,15)
         }
         src = `../img/stone_${stn}.png`
-        shadow = elem('img',{class:`shadow pos${c[0]}_${c[1]}`,src:'../img/stone_shadow.png',width:"auto",height:`${d + 1}%`,parent:this.shd})
+        shadow = elem('img',{class:`shadow pos${c[0]}_${c[1]}`,src:'../img/stone_shadow.png',width:"auto",height:`${d}%`,parent:this.shd})
         stone = elem('img',{class:`stone pos${c[0]}_${c[1]}`,src:src,width:"auto",height:`${d}%`,parent:this.stn})
         x = (c[0] + 0.5) * 100 / (this.size + 1)
         y = (c[1] + 0.5) * 100 / (this.size + 1)
         stone.style = `left:${x}%; top:${y}%;`
-        return shadow.style = `left:${x}%; top:${y}%;`
+        o = (this.size === 19 ? 0.5 : (this.size === 13 ? 0.8 : 1.0))
+        shadow.style = `left:${x + 10.0 / this.size}%; top:${y + 10.0 / this.size}%; opacity:${o};`
+        return this.liberties()
     }
 
     Board.prototype["clear"] = function ()
@@ -255,13 +258,13 @@ Board = (function ()
         if (this.game)
         {
             var list = ['black','white']
-            for (var _244_22_ = 0; _244_22_ < list.length; _244_22_++)
+            for (var _248_22_ = 0; _248_22_ < list.length; _248_22_++)
             {
-                color = list[_244_22_]
+                color = list[_248_22_]
                 var list1 = _k_.list(this.game.allStones(color))
-                for (var _245_22_ = 0; _245_22_ < list1.length; _245_22_++)
+                for (var _249_22_ = 0; _249_22_ < list1.length; _249_22_++)
                 {
-                    s = list1[_245_22_]
+                    s = list1[_249_22_]
                     c = this.game.coord(s)
                     l = elem('div',{class:`liberty ${color}`,parent:this.lib,text:this.game.liberties(c)})
                     p = this.coordToPrcnt(c)

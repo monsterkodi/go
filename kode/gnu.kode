@@ -12,20 +12,20 @@ function GNU
 
     @: (@game) ->
         
+        @msg = []
         @gnu = childp.spawn '/usr/local/bin/gnugo' ['--mode' 'gtp']
         @gnu.stdout.on 'data' @onData
-        @msg = []
         
-    newGame: (boardsize, @color='white', @handicap=0) ->
+    newGame: (boardsize, @color, @handicap, genmove) ->
         
         @send "boardsize #{boardsize}"
         @send "fixed_handicap #{handicap}" if @handicap > 1
         if @color == 'white'
             @human = 'black'
-            @send "genmove #{@color}" if @handicap > 1
+            @send "genmove #{@color}" if genmove and @handicap > 1
         else
             @human = 'white'
-            @send "genmove #{@color}" if @handicap < 2
+            @send "genmove #{@color}" if genmove and @handicap < 2
             
     humanMove: (p) ->
 
@@ -65,7 +65,12 @@ function GNU
     send: (m) -> @msg.push m; @gnu.stdin.write m + '\n'
 
     onData: (chunk) =>
+        
         data = String chunk
+        
+        log data
+        log @msg
+        
         if @partial 
             data = @partial + data
             delete @partial
@@ -84,7 +89,7 @@ function GNU
             # log m, data
             if m.startsWith 'genmove'
                 p = data.split('\n')[0]
-                log 'play' @color, p
+                # log 'play' @color, p
                 if p in ['PASS' 'resign']
                     @send 'final_score'
                 @game.play @color, p
@@ -93,7 +98,9 @@ function GNU
                 @game.finalScore data
             else if m.startsWith 'fixed_handicap'
                 for p in data.split ' '
-                    @game.board.addStone @game.coord(p), 'black'
+                    @game.setStone @game.coord(p), 'black'
+            else if m.startsWith 'estimate_score'
+                @game.setScore data.split(' ')[0]
             else if m.startsWith 'showboard'
                 @game.show data
             else
