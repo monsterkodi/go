@@ -16,6 +16,20 @@ class Util
 
     static stone = {black:'○',white:'●',empty:' ',B:'○',W:'●',b:'○',w:'●'}
 
+    static stoneColor (s)
+    {
+        switch (s)
+        {
+            case '○':
+                return 'black'
+
+            case '●':
+                return 'white'
+
+        }
+
+    }
+
     static splice (s, i, n, r = '')
     {
         return s.slice(0,i) + r + s.slice(i + n)

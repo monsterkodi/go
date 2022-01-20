@@ -252,7 +252,7 @@ Board = (function ()
 
     Board.prototype["liberties"] = function ()
     {
-        var c, color, l, p, s
+        var c, color, e, l, p, s, x, y
 
         this.lib.innerHTML = ''
         if (this.game)
@@ -269,6 +269,18 @@ Board = (function ()
                     l = elem('div',{class:`liberty ${color}`,parent:this.lib,text:this.game.liberties(c)})
                     p = this.coordToPrcnt(c)
                     l.style = `left:${p.x}%; top:${p.y}%;`
+                }
+            }
+            for (var _255_21_ = y = 0, _255_25_ = this.size; (_255_21_ <= _255_25_ ? y < this.size : y > this.size); (_255_21_ <= _255_25_ ? ++y : --y))
+            {
+                for (var _256_25_ = x = 0, _256_29_ = this.size; (_256_25_ <= _256_29_ ? x < this.size : x > this.size); (_256_25_ <= _256_29_ ? ++x : --x))
+                {
+                    if (color = this.game.isEye([x,y]))
+                    {
+                        e = elem('div',{class:`eye ${color}`,parent:this.lib})
+                        p = this.coordToPrcnt([x,y])
+                        e.style = `left:${p.x}%; top:${p.y}%;`
+                    }
                 }
             }
         }

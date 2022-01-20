@@ -7,9 +7,9 @@
 
 go
     save                    cmdctrl+s
-    new game                cmdctrl+n, n
-    undo                    cmdctrl+z
-    redo                    cmdctrl+shift+z
+    new game                n
+    undo                    u
+    redo                    r
     pass                    p
     genmove                 g
     calcscore               c

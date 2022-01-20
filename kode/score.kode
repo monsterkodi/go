@@ -6,12 +6,43 @@
 0000000    0000000   0000000   000   000  00000000
 ###
 
+{stoneColor} = require './util'
+
 function Score
 
-    dead: ->
+    rayColor: (c, d) ->
+        n = [c[0]+d[0], c[1]+d[1]]
+        s = @stoneAt n
+        if s == ' '
+            @rayColor n, d
+        else
+            s
+
+    rayColors: (c) ->
+
+        rc = []
+        for r in [[1 0] [1 1] [0 1] [-1 1] [-1 0] [-1 -1] [0 -1] [1 -1]]
+            rc.push @rayColor c, r
+        rc
+        
+    isEye: (c) ->
+        if ' ' == @stoneAt c
+            rc = @rayColors c
+            p = rc.filter((r) -> r?).join ''
+            if not '○●' in p and not '●○' in p and p.length > 2
+                return stoneColor p[0]
 
     calcScore: ->
         
-        log @grid
-
+        gs = '○':{} '●':{}
+        for y in 0...@size
+            for x in 0...@size
+                c = [x,y]
+                @isEye c
+                s = @stoneAt c
+                if ' ' != s
+                    g = @group c
+                    g.sort()
+                    gs[s][g.join ' '] = 1
+                
 module.exports = Score

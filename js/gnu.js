@@ -139,7 +139,8 @@ GNU = (function ()
                 {
                     this.send('final_score')
                 }
-                return this.game.play(this.color,p)
+                this.game.play(this.color,p)
+                return this.game.calcScore()
             }
             else if (m.startsWith('final_score'))
             {
@@ -149,9 +150,9 @@ GNU = (function ()
             else if (m.startsWith('fixed_handicap'))
             {
                 var list = _k_.list(data.split(' '))
-                for (var _101_22_ = 0; _101_22_ < list.length; _101_22_++)
+                for (var _102_22_ = 0; _102_22_ < list.length; _102_22_++)
                 {
-                    p = list[_101_22_]
+                    p = list[_102_22_]
                     this.game.setStone(this.game.coord(p),'black')
                 }
                 return this.game.dump()

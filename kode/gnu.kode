@@ -94,6 +94,7 @@ function GNU
                 if p in ['PASS' 'resign']
                     @send 'final_score'
                 @game.play @color, p
+                @game.calcScore()
             else if m.startsWith 'final_score'
                 log m, data
                 @game.finalScore data

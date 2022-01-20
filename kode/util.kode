@@ -22,6 +22,11 @@ class Util
     @alpha: 'ABCDEFGHJKLMNOPQRST'
     @stone: black:'○' white:'●' empty:' ' B:'○' W:'●' b:'○' w:'●'
     
+    @stoneColor: (s) -> 
+        switch s 
+            '○' ➜ 'black' 
+            '●' ➜ 'white'
+    
     @splice: (s, i, n, r='') -> s.slice(0,i) + r + s.slice(i+n)
 
 module.exports = Util

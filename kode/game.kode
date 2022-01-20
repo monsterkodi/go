@@ -87,6 +87,7 @@ function Game extends Score
     #  0000000   000   000   0000000    0000000   000        
     
     group: (c) ->
+        
         s = @stoneAt c
         g = [@pos c]
         f = [@pos c]
@@ -100,6 +101,7 @@ function Game extends Score
         g
         
     group_neighbors: (g) ->
+        
         gn = []
         for p in g
             for n in @poslist @neighbors @coord p
@@ -263,7 +265,7 @@ function Game extends Score
         @showboard()
     
     gridx:   (c) -> c[0]+(@size+1)*c[1]
-    stoneAt: (c) => @grid[@gridx c]
+    stoneAt: (c) => @grid[@gridx c] if @valid c
     valid: (c) => 0 <= c[0] < @size and 0 <= c[1] < @size   
     coord: (p) => [alpha.indexOf(p[0].toUpperCase()), @size-int(p[1..])]
     pos:   (c) => alpha[c[0]] + (@size-c[1])

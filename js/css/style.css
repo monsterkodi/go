@@ -108,6 +108,7 @@ body {
 .last.black {
   border: 1px solid #000;
 }
+.eye,
 .liberty,
 .legend {
   position: absolute;
@@ -118,6 +119,16 @@ body {
 }
 .liberty.black {
   color: #fff;
+}
+.eye.white {
+  background-color: #fff;
+}
+.eye.black {
+  background-color: #000;
+}
+.eye {
+  width: 10px;
+  height: 10px;
 }
 #titlebar {
   display: flex;

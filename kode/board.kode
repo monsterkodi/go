@@ -251,5 +251,13 @@ function Board
                     l = elem 'div' class:"liberty #{color}" parent:@lib, text:@game.liberties c
                     p = @coordToPrcnt c
                     l.style = "left:#{p.x}%; top:#{p.y}%;" 
+                    
+            for y in 0...@size
+                for x in 0...@size
+                    if color = @game.isEye [x,y]
+                        e = elem 'div' class:"eye #{color}" parent:@lib
+                        p = @coordToPrcnt [x,y]
+                        e.style = "left:#{p.x}%; top:#{p.y}%;" 
+                            
 
 module.exports = Board
