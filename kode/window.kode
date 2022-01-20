@@ -130,6 +130,7 @@ function MainWin extends win
             'calcscore'         ➜ return @gnu.calcscore()
             'toggle legend'     ➜ return @board.toggleLegend()
             'toggle liberties'  ➜ return @board.toggleLiberties()
+            'toggle territory'  ➜ return @board.toggleTerritory()
             'new game'          ➜ return @newGame @boardsize, @gnucolor, @handicap
             'black' 'white'     ➜ return @newGame @boardsize, action, @handicap
             '9x9' '13x13' 

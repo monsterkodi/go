@@ -19,10 +19,9 @@ function Score
     
     calcScore: ->
         
-        log('%c groups' 'font-size: 24px; color:red;')
-        grps = @allGroups()
+        # log('%c score' 'font-size: 24px; color:red;')
         gr = new Grid @size
-        for s,gl of grps
+        for s,gl of @allGroups()
             for g in gl
                 t = s
                 if s == stone.empty

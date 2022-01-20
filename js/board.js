@@ -43,6 +43,7 @@ Board = (function ()
         this.legend()
         this.stn = elem('div',{class:'stones',parent:this.div})
         this.lib = elem('div',{class:'liberties',parent:this.div})
+        this.trr = elem('div',{class:'territory',parent:this.div})
         this.hlt = elem('div',{class:'highlts',parent:this.div})
         this.hover = elem('div',{class:`hover ${this.human}`,parent:this.hlt})
         this.hover.style = `width:${h}%; height:${h}%; display:none; border-radius:${d / 2}px;`
@@ -67,7 +68,7 @@ Board = (function ()
         this.ctx.rect(0,0,s,s)
         this.ctx.fill()
         this.ctx.fillStyle = 'black'
-        for (var _70_17_ = i = 0, _70_21_ = this.size; (_70_17_ <= _70_21_ ? i < this.size : i > this.size); (_70_17_ <= _70_21_ ? ++i : --i))
+        for (var _71_17_ = i = 0, _71_21_ = this.size; (_71_17_ <= _71_21_ ? i < this.size : i > this.size); (_71_17_ <= _71_21_ ? ++i : --i))
         {
             this.ctx.beginPath()
             this.ctx.moveTo(o + i * d,o)
@@ -99,7 +100,7 @@ Board = (function ()
         var d, n, x
 
         d = 100 / (this.size + 1)
-        for (var _97_17_ = x = 0, _97_21_ = this.size; (_97_17_ <= _97_21_ ? x < this.size : x > this.size); (_97_17_ <= _97_21_ ? ++x : --x))
+        for (var _98_17_ = x = 0, _98_21_ = this.size; (_98_17_ <= _98_21_ ? x < this.size : x > this.size); (_98_17_ <= _98_21_ ? ++x : --x))
         {
             n = elem('div',{class:'legend',text:alpha[x],parent:this.lgd})
             n.style.left = `${d * (x + 1)}%`
@@ -127,6 +128,12 @@ Board = (function ()
     {
         window.stash.set('liberties',!window.stash.get('liberties'))
         return this.lib.style.display = (window.stash.get('liberties') ? 'initial' : 'none')
+    }
+
+    Board.prototype["toggleTerritory"] = function ()
+    {
+        window.stash.set('territory',!window.stash.get('territory'))
+        return this.trr.style.display = (window.stash.get('territory') ? 'initial' : 'none')
     }
 
     Board.prototype["onMouseLeave"] = function (event)
@@ -161,7 +168,7 @@ Board = (function ()
 
     Board.prototype["onMouseDown"] = function (event)
     {
-        var c, p, _165_20_
+        var c, p, _171_20_
 
         c = this.posAtEvent(event)
         if (this.game)
@@ -185,8 +192,7 @@ Board = (function ()
         this.last.style.top = `${p.y}%`
         this.last.classList.remove('black')
         this.last.classList.remove('white')
-        this.last.classList.add(opponent(color))
-        return this.liberties()
+        return this.last.classList.add(opponent(color))
     }
 
     Board.prototype["posAtEvent"] = function (event)
@@ -240,7 +246,7 @@ Board = (function ()
         stone.style = `left:${x}%; top:${y}%;`
         o = (this.size === 19 ? 0.5 : (this.size === 13 ? 0.8 : 1.0))
         shadow.style = `left:${x + 10.0 / this.size}%; top:${y + 10.0 / this.size}%; opacity:${o};`
-        return this.liberties()
+        return this.annotate()
     }
 
     Board.prototype["clear"] = function ()
@@ -251,37 +257,56 @@ Board = (function ()
         return this.lib.innerHTML = ''
     }
 
+    Board.prototype["annotate"] = function ()
+    {
+        this.liberties()
+        return this.territory()
+    }
+
     Board.prototype["liberties"] = function ()
     {
-        var c, color, e, l, p, s, scgr, x, y
+        var c, color, l, p, s
 
         this.lib.innerHTML = ''
         if (this.game)
         {
             var list = ['black','white']
-            for (var _248_22_ = 0; _248_22_ < list.length; _248_22_++)
+            for (var _268_22_ = 0; _268_22_ < list.length; _268_22_++)
             {
-                color = list[_248_22_]
+                color = list[_268_22_]
                 var list1 = _k_.list(this.game.allStones(color))
-                for (var _249_22_ = 0; _249_22_ < list1.length; _249_22_++)
+                for (var _269_22_ = 0; _269_22_ < list1.length; _269_22_++)
                 {
-                    s = list1[_249_22_]
+                    s = list1[_269_22_]
                     c = this.game.coord(s)
                     l = elem('div',{class:`liberty ${color}`,parent:this.lib,text:this.game.liberties(c)})
                     p = this.coordToPrcnt(c)
                     l.style = `left:${p.x}%; top:${p.y}%;`
                 }
             }
-            scgr = this.game.calcScore()
-            for (var _257_21_ = y = 0, _257_25_ = this.size; (_257_21_ <= _257_25_ ? y < this.size : y > this.size); (_257_21_ <= _257_25_ ? ++y : --y))
+        }
+    }
+
+    Board.prototype["territory"] = function ()
+    {
+        var c, e, p, scgr, x, y
+
+        this.trr.innerHTML = ''
+        if (this.game)
+        {
+            if (this.game.moves.length > 1)
             {
-                for (var _258_25_ = x = 0, _258_29_ = this.size; (_258_25_ <= _258_29_ ? x < this.size : x > this.size); (_258_25_ <= _258_29_ ? ++x : --x))
+                scgr = this.game.calcScore()
+                for (var _287_25_ = y = 0, _287_29_ = this.size; (_287_25_ <= _287_29_ ? y < this.size : y > this.size); (_287_25_ <= _287_29_ ? ++y : --y))
                 {
-                    if (_k_.in((c = scgr.at(x,y)),'wb'))
+                    for (var _288_29_ = x = 0, _288_33_ = this.size; (_288_29_ <= _288_33_ ? x < this.size : x > this.size); (_288_29_ <= _288_33_ ? ++x : --x))
                     {
-                        e = elem('div',{class:`eye ${colorName(c)}`,parent:this.lib})
-                        p = this.coordToPrcnt([x,y])
-                        e.style = `left:${p.x}%; top:${p.y}%;`
+                        if (_k_.in((c = scgr.at(x,y)),'wb'))
+                        {
+                            e = elem('div',{class:`eye ${colorName(c)}`,parent:this.trr})
+                            p = this.coordToPrcnt([x,y])
+                            e.style = `left:${p.x}%; top:${p.y}%;`
+                        }
                     }
                 }
             }

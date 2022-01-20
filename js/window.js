@@ -163,6 +163,9 @@ MainWin = (function ()
             case 'toggle liberties':
                 return this.board.toggleLiberties()
 
+            case 'toggle territory':
+                return this.board.toggleTerritory()
+
             case 'new game':
                 return this.newGame(this.boardsize,this.gnucolor,this.handicap)
 

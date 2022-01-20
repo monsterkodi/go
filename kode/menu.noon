@@ -46,6 +46,7 @@ window
     toggle menu             alt+m
     toggle legend           alt+l
     toggle liberties        cmdctrl+l
+    toggle territory        cmdctrl+t
     fullscreen              alt+f    
     --
     minimize                alt+ctrl+shift+m
