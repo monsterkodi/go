@@ -282,7 +282,7 @@ Game = (function ()
         {
             this.setStone(c,color)
             this.moves.push(color + ' ' + p)
-            this.removeDead(opponent(color))
+            this.capture(opponent(color))
             this.board.lastMove(color,c)
             return ''
         }
@@ -349,7 +349,7 @@ Game = (function ()
         return this.updateTitle()
     }
 
-    Game.prototype["removeDead"] = function (color)
+    Game.prototype["capture"] = function (color)
     {
         var c, dc, dp, g, p
 
@@ -370,7 +370,7 @@ Game = (function ()
                     this.setStone(dc,'empty')
                 }
                 this.updateTitle()
-                this.removeDead()
+                this.capture()
                 return
             }
         }

@@ -10,7 +10,7 @@
 
 function Grid
 
-    @: (@size=0) -> @clear() # if @size then @clear() else @grid = ''
+    @: (@size=0) -> @clear()
 
     #  0000000  000      00000000   0000000   00000000   
     # 000       000      000       000   000  000   000  
