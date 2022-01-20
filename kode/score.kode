@@ -6,43 +6,78 @@
 0000000    0000000   0000000   000   000  00000000
 ###
 
-{stoneColor} = require './util'
+{ stoneColor, stone, alpha } = require './util'
+Grid = require './grid'
 
 function Score
 
     rayColor: (c, d) ->
         n = [c[0]+d[0], c[1]+d[1]]
         s = @stoneAt n
-        if s == ' '
-            @rayColor n, d
-        else
-            s
+        s == stone.empty ? @rayColor(n, d) : s
 
     rayColors: (c) ->
 
-        rc = []
-        for r in [[1 0] [1 1] [0 1] [-1 1] [-1 0] [-1 -1] [0 -1] [1 -1]]
-            rc.push @rayColor c, r
-        rc
+        [[1 0] [0 1] [-1 0] [0 -1]].map (r) => @rayColor c, r
         
     isEye: (c) ->
-        if ' ' == @stoneAt c
+        if stone.empty == @stoneAt c
             rc = @rayColors c
             p = rc.filter((r) -> r?).join ''
-            if not '○●' in p and not '●○' in p and p.length > 2
-                return stoneColor p[0]
+            if not '○●' in p and not '●○' in p and p.length > 0
+                stoneColor p[0]
 
-    calcScore: ->
+    potentialOwner: (c) ->
+        if stone.empty == @stoneAt c
+            rc = @rayColors c
+            p = rc.filter((r) -> r?).join ''
+            if not '○●' in p and not '●○' in p and p.length > 0
+                p[0]
+          
+    areaColor: (g) ->
         
-        gs = '○':{} '●':{}
+        cl = g.map (p) => @potentialOwner @coord p
+        sl = cl.filter((r) -> r?).join ''
+        if not '○●' in sl and not '●○' in sl and sl.length > 0
+            stoneColor(sl[0])[0]
+        else
+            '.'
+                
+    allPos: ->
+        p = []
         for y in 0...@size
             for x in 0...@size
-                c = [x,y]
-                @isEye c
-                s = @stoneAt c
-                if ' ' != s
-                    g = @group c
-                    g.sort()
-                    gs[s][g.join ' '] = 1
+                p.push alpha[x]+(@size-y)
+        p
+        
+    allGroups: ->
+
+        grps = '○':[] '●':[] ' ':[]
+        allp = @allPos()
+        while allp.length
+            p = allp.pop()
+            s = @stoneAt p
+            g = @group @coord p
+            for gp in g
+                if 0 <= i = allp.indexOf gp
+                    allp.splice i, 1
+            grps[s].push g.sort()
+        grps
+                
+    calcScore: ->
+        
+        log('%c groups' 'font-size: 24px; color:red;')
+        grps = @allGroups()
+        gr = new Grid @size
+        for s,gl of grps
+            for g in gl
+                t = s
+                if s == stone.empty
+                    t = @areaColor g
+                log t, g.join ' '
+                for p in g
+                    gr.set p, t
+        log gr.grid
+        gr
                 
 module.exports = Score

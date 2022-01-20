@@ -2,7 +2,7 @@
 
 var _k_ = {in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}}
 
-var $, alpha, Board, elem, kpos, kxk, opponent, randIntRange
+var $, alpha, Board, colorName, elem, kpos, kxk, opponent, randIntRange
 
 kxk = require('kxk')
 elem = kxk.elem
@@ -12,6 +12,7 @@ $ = kxk.$
 
 alpha = require('./util').alpha
 opponent = require('./util').opponent
+colorName = require('./util').colorName
 
 
 Board = (function ()
@@ -252,7 +253,7 @@ Board = (function ()
 
     Board.prototype["liberties"] = function ()
     {
-        var c, color, e, l, p, s, x, y
+        var c, color, e, l, p, s, scgr, x, y
 
         this.lib.innerHTML = ''
         if (this.game)
@@ -271,13 +272,14 @@ Board = (function ()
                     l.style = `left:${p.x}%; top:${p.y}%;`
                 }
             }
-            for (var _255_21_ = y = 0, _255_25_ = this.size; (_255_21_ <= _255_25_ ? y < this.size : y > this.size); (_255_21_ <= _255_25_ ? ++y : --y))
+            scgr = this.game.calcScore()
+            for (var _257_21_ = y = 0, _257_25_ = this.size; (_257_21_ <= _257_25_ ? y < this.size : y > this.size); (_257_21_ <= _257_25_ ? ++y : --y))
             {
-                for (var _256_25_ = x = 0, _256_29_ = this.size; (_256_25_ <= _256_29_ ? x < this.size : x > this.size); (_256_25_ <= _256_29_ ? ++x : --x))
+                for (var _258_25_ = x = 0, _258_29_ = this.size; (_258_25_ <= _258_29_ ? x < this.size : x > this.size); (_258_25_ <= _258_29_ ? ++x : --x))
                 {
-                    if (color = this.game.isEye([x,y]))
+                    if (_k_.in((c = scgr.at(x,y)),'wb'))
                     {
-                        e = elem('div',{class:`eye ${color}`,parent:this.lib})
+                        e = elem('div',{class:`eye ${colorName(c)}`,parent:this.lib})
                         p = this.coordToPrcnt([x,y])
                         e.style = `left:${p.x}%; top:${p.y}%;`
                     }

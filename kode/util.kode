@@ -19,6 +19,19 @@ class Util
             w:     'black'
         opp[color]
         
+    @colorName: (color) ->
+        
+        opp =
+            black: 'black'
+            B:     'black' 
+            b:     'black'
+            '○':   'black'
+            '●':   'white'
+            white: 'white'
+            W:     'white'
+            w:     'white'
+        opp[color]
+        
     @alpha: 'ABCDEFGHJKLMNOPQRST'
     @stone: black:'○' white:'●' empty:' ' B:'○' W:'●' b:'○' w:'●'
     
@@ -26,7 +39,7 @@ class Util
         switch s 
             '○' ➜ 'black' 
             '●' ➜ 'white'
-    
+            
     @splice: (s, i, n, r='') -> s.slice(0,i) + r + s.slice(i+n)
 
 module.exports = Util

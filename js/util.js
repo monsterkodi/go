@@ -12,6 +12,14 @@ class Util
         return opp[color]
     }
 
+    static colorName (color)
+    {
+        var opp
+
+        opp = {black:'black',B:'black',b:'black','○':'black','●':'white',white:'white',W:'white',w:'white'}
+        return opp[color]
+    }
+
     static alpha = 'ABCDEFGHJKLMNOPQRST'
 
     static stone = {black:'○',white:'●',empty:' ',B:'○',W:'●',b:'○',w:'●'}

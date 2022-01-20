@@ -8,7 +8,7 @@
 
 kxk = require 'kxk'
 { elem, kpos, randIntRange, $ } = kxk
-{ alpha, opponent } = require './util'
+{ alpha, opponent, colorName } = require './util'
 
 function Board
 
@@ -252,12 +252,14 @@ function Board
                     p = @coordToPrcnt c
                     l.style = "left:#{p.x}%; top:#{p.y}%;" 
                     
+            scgr = @game.calcScore()
+                    
             for y in 0...@size
                 for x in 0...@size
-                    if color = @game.isEye [x,y]
-                        e = elem 'div' class:"eye #{color}" parent:@lib
+                    # if color = @game.isEye [x,y]
+                    if (c = scgr.at(x,y)) in 'wb'
+                        e = elem 'div' class:"eye #{colorName c}" parent:@lib
                         p = @coordToPrcnt [x,y]
                         e.style = "left:#{p.x}%; top:#{p.y}%;" 
-                            
 
 module.exports = Board

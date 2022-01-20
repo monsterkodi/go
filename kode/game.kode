@@ -7,21 +7,27 @@
 ###
 
 kxk = require 'kxk'
+
 { randInt, elem, $ } = kxk
-{ opponent, alpha, stone, splice } = require './util'
+{ opponent, alpha, stone } = require './util'
+
 Score = require './score'
+Grid  = require './grid'
 
 function Game extends Score
 
     @: (@board) ->
         
+        @grid  = new Grid()
         @moves = []
         @boardsize @board.size
         
+    boardsize: (@size) -> @clear_board()
+    
     save: ->
         
         window.stash.set 'moves' @moves
-        window.stash.set 'grid'  @grid
+        window.stash.set 'grid'  @grid.grid
     
     # 000      00000000   0000000    0000000   000      
     # 000      000       000        000   000  000      
@@ -192,12 +198,11 @@ function Game extends Score
     
     setStone: (c, color) ->
         
-        @grid = splice @grid, @gridx(c), 1, stone[color]
+        @grid.set c, stone[color]
         if color == 'empty'
             @board.delStone c
         else
             @board.addStone c, color
-            
             
     #  0000000  000   000   0000000   000   000  
     # 000       000   000  000   000  000 0 000  
@@ -208,7 +213,7 @@ function Game extends Score
     show: (data) ->
 
         @board.clear()
-        @clearGrid()
+        @grid.clear()
         rs = data.split('\n')[2..]
         rs = rs.map (r) => r[3..].split(' ').join('')
         for y in 0...@size
@@ -254,7 +259,7 @@ function Game extends Score
         l = []
         for y in 0...@size
             for x in 0...@size
-                if s == @stoneAt [x,y]
+                if s == @stoneAt x,y
                     l.push @pos [x,y]
         l
                 
@@ -264,9 +269,8 @@ function Game extends Score
             @genmove()
         @showboard()
     
-    gridx:   (c) -> c[0]+(@size+1)*c[1]
-    stoneAt: (c) => @grid[@gridx c] if @valid c
-    valid: (c) => 0 <= c[0] < @size and 0 <= c[1] < @size   
+    stoneAt: (x,y) => @grid.at x,y
+    valid: (c) => 0 <= c[0] < @size and 0 <= c[1] < @size
     coord: (p) => [alpha.indexOf(p[0].toUpperCase()), @size-int(p[1..])]
     pos:   (c) => alpha[c[0]] + (@size-c[1])
     poslist: (cl) -> cl.map @pos
@@ -280,8 +284,6 @@ function Game extends Score
             '●' ➜ 'white'
                 ➜ 'empty'
         
-    boardsize: (@size) -> @clear_board()
-
     #  0000000  000      00000000   0000000   00000000           0000000     0000000    0000000   00000000   0000000    
     # 000       000      000       000   000  000   000          000   000  000   000  000   000  000   000  000   000  
     # 000       000      0000000   000000000  0000000            0000000    000   000  000000000  0000000    000   000  
@@ -291,18 +293,11 @@ function Game extends Score
     clear_board: ->
         
         @captures = black:0 white:0
-        @clearGrid()
+        @grid.clear @size
         @moves = []
         @updateTitle()
         ''
-    
-    clearGrid: ->
-        
-        @grid = ''
-        for y in 0...@size
-            @grid += rpad @size, ''
-            @grid += '\n' if y < @size-1
-        
+            
     #  0000000  000   000   0000000   000   000  0000000     0000000    0000000   00000000   0000000    
     # 000       000   000  000   000  000 0 000  000   000  000   000  000   000  000   000  000   000  
     # 0000000   000000000  000   000  000000000  0000000    000   000  000000000  0000000    000   000  
@@ -320,7 +315,7 @@ function Game extends Score
             b += lpad 2, i
             b += s
             for x in 0...@size
-                b += @stoneAt([x,y]) + s
+                b += @stoneAt(x,y) + s
             b += i
             b += '\n'
             y++
@@ -335,7 +330,7 @@ function Game extends Score
         log @showboard()
         log 'white' @allStones('w').length, @allStones 'w'
         log 'black' @allStones('b').length, @allStones 'b'
-        log @grid
+        log @grid.grid
         
     setScore: (@score) -> 
     
