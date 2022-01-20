@@ -11,45 +11,34 @@ Grid = require './grid'
 
 function Score
 
-    rayColor: (c, d) ->
-        n = [c[0]+d[0], c[1]+d[1]]
-        s = @stoneAt n
-        s == stone.empty ? @rayColor(n, d) : s
-
-    rayColors: (c) ->
-
-        [[1 0] [0 1] [-1 0] [0 -1]].map (r) => @rayColor c, r
+    #  0000000   0000000   0000000   00000000   00000000  
+    # 000       000       000   000  000   000  000       
+    # 0000000   000       000   000  0000000    0000000   
+    #      000  000       000   000  000   000  000       
+    # 0000000    0000000   0000000   000   000  00000000  
+    
+    calcScore: ->
         
-    isEye: (c) ->
-        if stone.empty == @stoneAt c
-            rc = @rayColors c
-            p = rc.filter((r) -> r?).join ''
-            if not '○●' in p and not '●○' in p and p.length > 0
-                stoneColor p[0]
+        log('%c groups' 'font-size: 24px; color:red;')
+        grps = @allGroups()
+        gr = new Grid @size
+        for s,gl of grps
+            for g in gl
+                t = s
+                if s == stone.empty
+                    t = @areaColor g
+                # log t, g.join ' '
+                for p in g
+                    gr.set p, t
+        # log gr.grid
+        gr
 
-    potentialOwner: (c) ->
-        if stone.empty == @stoneAt c
-            rc = @rayColors c
-            p = rc.filter((r) -> r?).join ''
-            if not '○●' in p and not '●○' in p and p.length > 0
-                p[0]
-          
-    areaColor: (g) ->
-        
-        cl = g.map (p) => @potentialOwner @coord p
-        sl = cl.filter((r) -> r?).join ''
-        if not '○●' in sl and not '●○' in sl and sl.length > 0
-            stoneColor(sl[0])[0]
-        else
-            '.'
-                
-    allPos: ->
-        p = []
-        for y in 0...@size
-            for x in 0...@size
-                p.push alpha[x]+(@size-y)
-        p
-        
+    #  0000000   00000000    0000000   000   000  00000000    0000000  
+    # 000        000   000  000   000  000   000  000   000  000       
+    # 000  0000  0000000    000   000  000   000  00000000   0000000   
+    # 000   000  000   000  000   000  000   000  000             000  
+    #  0000000   000   000   0000000    0000000   000        0000000   
+    
     allGroups: ->
 
         grps = '○':[] '●':[] ' ':[]
@@ -63,21 +52,61 @@ function Score
                     allp.splice i, 1
             grps[s].push g.sort()
         grps
-                
-    calcScore: ->
         
-        log('%c groups' 'font-size: 24px; color:red;')
-        grps = @allGroups()
-        gr = new Grid @size
-        for s,gl of grps
-            for g in gl
-                t = s
-                if s == stone.empty
-                    t = @areaColor g
-                log t, g.join ' '
-                for p in g
-                    gr.set p, t
-        log gr.grid
-        gr
-                
+    #  0000000   00000000   00000000   0000000   
+    # 000   000  000   000  000       000   000  
+    # 000000000  0000000    0000000   000000000  
+    # 000   000  000   000  000       000   000  
+    # 000   000  000   000  00000000  000   000  
+    
+    areaColor: (g) ->
+        
+        cl = g.map (p) => @potentialOwner @coord p
+        sl = cl.filter((r) -> r?).join ''
+        if not '○●' in sl and not '●○' in sl and sl.length > 0
+            stoneColor(sl[0])[0]
+        else
+            '.'
+            
+    #  0000000   000   000  000   000  00000000  00000000   
+    # 000   000  000 0 000  0000  000  000       000   000  
+    # 000   000  000000000  000 0 000  0000000   0000000    
+    # 000   000  000   000  000  0000  000       000   000  
+    #  0000000   00     00  000   000  00000000  000   000  
+    
+    potentialOwner: (c) ->
+        if stone.empty == @stoneAt c
+            rc = @rayColors c
+            p = rc.filter((r) -> r?).join ''
+            if not '○●' in p and not '●○' in p and p.length > 0
+                p[0]
+        
+    # 00000000    0000000   000   000  
+    # 000   000  000   000   000 000   
+    # 0000000    000000000    00000    
+    # 000   000  000   000     000     
+    # 000   000  000   000     000     
+    
+    rayColor: (c, d) ->
+        n = [c[0]+d[0], c[1]+d[1]]
+        s = @stoneAt n
+        s == stone.empty ? @rayColor(n, d) : s
+
+    rayColors: (c) ->
+
+        [[1 0] [0 1] [-1 0] [0 -1]].map (r) => @rayColor c, r
+                                  
+    #  0000000   000      000      00000000    0000000    0000000  
+    # 000   000  000      000      000   000  000   000  000       
+    # 000000000  000      000      00000000   000   000  0000000   
+    # 000   000  000      000      000        000   000       000  
+    # 000   000  0000000  0000000  000         0000000   0000000   
+    
+    allPos: ->
+        p = []
+        for y in 0...@size
+            for x in 0...@size
+                p.push alpha[x]+(@size-y)
+        p
+                                        
 module.exports = Score
