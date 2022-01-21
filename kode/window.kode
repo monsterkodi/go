@@ -71,7 +71,7 @@ function MainWin extends win
         @main.innerHTML = ''
         r1 = elem 'div' class:'row' parent:@main
         r1.style = 'height:100%'
-        @board = new Board r1, @boardsize, opponent @gnucolor
+        @board = new Board r1, @boardsize, opponent[@gnucolor]
         @game = new Game @board
         @gnu = new GNU @game
         @board.gnu = @gnu
@@ -84,6 +84,9 @@ function MainWin extends win
             @gnu.send "play #{c} #{p}"
          
         @game.dump()
+        
+        if valid(moves) and @game.moves[-1].split(' ')[0] != @gnucolor 
+            @gnu.send "genmove #{@gnucolor}"
         
     onMove: => window.stash.set 'bounds' @getBounds()
     
@@ -126,7 +129,7 @@ function MainWin extends win
             'undo'              ➜ return @gnu.undo()
             'redo'              ➜ return @gnu.redo()
             'pass'              ➜ return @gnu.humanMove 'pass'
-            'genmove'           ➜ return @gnu.humanMove @game.genmove opponent @gnucolor
+            'genmove'           ➜ return @gnu.humanMove @game.genmove opponent[@gnucolor]
             'calcscore'         ➜ return @gnu.calcscore()
             'toggle legend'     ➜ return @board.toggleLegend()
             'toggle liberties'  ➜ return @board.toggleLiberties()

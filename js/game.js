@@ -86,7 +86,7 @@ Game = (function ()
             s = this.stoneAt(n)
             if (s !== 'empty' && s !== m)
             {
-                if (1 === this.freedoms(opponent(color),n))
+                if (1 === this.freedoms(opponent[color],n))
                 {
                     return true
                 }
@@ -153,10 +153,11 @@ Game = (function ()
         c = this.coord(p)
         if (this.valid(c))
         {
-            this.setStone(c,color)
+            this.setStone(c,stone[color])
             this.moves.push(color + ' ' + p)
-            this.capture(opponent(color))
+            this.capture(opponent[color])
             this.board.lastMove(color,c)
+            this.updateTitle()
             return ''
         }
         else
@@ -165,16 +166,16 @@ Game = (function ()
         }
     }
 
-    Game.prototype["setStone"] = function (c, color)
+    Game.prototype["setStone"] = function (c, s)
     {
-        this.grid.set(c,stone[color])
-        if (color === 'empty')
+        this.grid.set(c,s)
+        if (s === stone.empty)
         {
             return this.board.delStone(c)
         }
         else
         {
-            return this.board.addStone(c,color)
+            return this.board.addStone(c,s)
         }
     }
 
@@ -189,18 +190,18 @@ Game = (function ()
         {
             return r.slice(3).split(' ').join('')
         }).bind(this))
-        for (var _146_17_ = y = 0, _146_21_ = this.size; (_146_17_ <= _146_21_ ? y < this.size : y > this.size); (_146_17_ <= _146_21_ ? ++y : --y))
+        for (var _147_17_ = y = 0, _147_21_ = this.size; (_147_17_ <= _147_21_ ? y < this.size : y > this.size); (_147_17_ <= _147_21_ ? ++y : --y))
         {
             r = rs[y]
-            for (var _148_21_ = x = 0, _148_25_ = this.size; (_148_21_ <= _148_25_ ? x < this.size : x > this.size); (_148_21_ <= _148_25_ ? ++x : --x))
+            for (var _149_21_ = x = 0, _149_25_ = this.size; (_149_21_ <= _149_25_ ? x < this.size : x > this.size); (_149_21_ <= _149_25_ ? ++x : --x))
             {
                 switch (r[x])
                 {
                     case 'X':
-                        this.setStone([x,y],'black')
+                        this.setStone([x,y],stone.black)
                         break
                     case 'O':
-                        this.setStone([x,y],'white')
+                        this.setStone([x,y],stone.white)
                         break
                 }
 
@@ -227,23 +228,22 @@ Game = (function ()
         var c, dc, dp, g, p
 
         var list = _k_.list(this.allStones(color))
-        for (var _171_14_ = 0; _171_14_ < list.length; _171_14_++)
+        for (var _172_14_ = 0; _172_14_ < list.length; _172_14_++)
         {
-            p = list[_171_14_]
+            p = list[_172_14_]
             c = this.coord(p)
             if (this.liberties(c) < 1)
             {
                 g = this.group(c)
-                this.captures[opponent(color)] += g.length
+                this.captures[opponent[color]] += g.length
                 var list1 = _k_.list(g)
-                for (var _176_23_ = 0; _176_23_ < list1.length; _176_23_++)
+                for (var _177_23_ = 0; _177_23_ < list1.length; _177_23_++)
                 {
-                    dp = list1[_176_23_]
+                    dp = list1[_177_23_]
                     dc = this.coord(dp)
-                    this.setStone(dc,'empty')
+                    this.setStone(dc,stone.empty)
                 }
-                this.updateTitle()
-                this.capture()
+                this.capture(color)
                 return
             }
         }

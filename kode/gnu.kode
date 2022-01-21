@@ -7,18 +7,23 @@
 ###
 
 { childp } = require 'kxk'
+{ stone }  = require './util'
 
 function GNU
 
     @: (@game) ->
         
         @msg = []
-        @gnu = childp.spawn '/usr/local/bin/gnugo' ['--mode' 'gtp' '--level' '20']
+        @gnu = childp.spawn '/usr/local/bin/gnugo' [
+            '--mode' 'gtp' 
+            '--autolevel' 
+            ]
         @gnu.stdout.on 'data' @onData
         
     newGame: (boardsize, @color, @handicap, genmove) ->
         
         @send "boardsize #{boardsize}"
+        @send "time_settings 300 10 3"
         @send "fixed_handicap #{handicap}" if @handicap > 1
         if @color == 'white'
             @human = 'black'
@@ -100,7 +105,7 @@ function GNU
                 @game.finalScore data
             else if m.startsWith 'fixed_handicap'
                 for p in data.split ' '
-                    @game.setStone @game.coord(p), 'black'
+                    @game.setStone @game.coord(p), stone.black
                 @game.dump()
             else if m.startsWith 'estimate_score'
                 @game.setScore data.split(' ')[0]

@@ -4,39 +4,13 @@ var _k_
 
 class Util
 {
-    static opponent (color)
-    {
-        var opp
+    static stone = {empty:' ',black:'○',white:'●',B:'○',b:'○',W:'●',w:'●'}
 
-        opp = {black:'white',B:'white',b:'white',white:'black',W:'black',w:'black'}
-        return opp[color]
-    }
+    static opponent = {black:'white',B:'white',b:'white',white:'black',W:'black',w:'black'}
 
-    static colorName (color)
-    {
-        var opp
-
-        opp = {black:'black',B:'black',b:'black','○':'black','●':'white',white:'white',W:'white',w:'white'}
-        return opp[color]
-    }
+    static stoneColor = {black:'black',B:'black',b:'black','○':'black','●':'white',white:'white',W:'white',w:'white'}
 
     static alpha = 'ABCDEFGHJKLMNOPQRST'
-
-    static stone = {black:'○',white:'●',empty:' ',B:'○',W:'●',b:'○',w:'●'}
-
-    static stoneColor (s)
-    {
-        switch (s)
-        {
-            case '○':
-                return 'black'
-
-            case '●':
-                return 'white'
-
-        }
-
-    }
 
     static splice (s, i, n, r = '')
     {

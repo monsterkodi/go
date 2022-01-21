@@ -84,7 +84,7 @@ MainWin = (function ()
         this.main.innerHTML = ''
         r1 = elem('div',{class:'row',parent:this.main})
         r1.style = 'height:100%'
-        this.board = new Board(r1,this.boardsize,opponent(this.gnucolor))
+        this.board = new Board(r1,this.boardsize,opponent[this.gnucolor])
         this.game = new Game(this.board)
         this.gnu = new GNU(this.game)
         this.board.gnu = this.gnu
@@ -99,7 +99,11 @@ MainWin = (function ()
             this.game.play(c,p)
             this.gnu.send(`play ${c} ${p}`)
         }
-        return this.game.dump()
+        this.game.dump()
+        if (!_k_.empty((moves)) && this.game.moves.slice(-1)[0].split(' ')[0] !== this.gnucolor)
+        {
+            return this.gnu.send(`genmove ${this.gnucolor}`)
+        }
     }
 
     MainWin.prototype["onMove"] = function ()
@@ -152,7 +156,7 @@ MainWin = (function ()
                 return this.gnu.humanMove('pass')
 
             case 'genmove':
-                return this.gnu.humanMove(this.game.genmove(opponent(this.gnucolor)))
+                return this.gnu.humanMove(this.game.genmove(opponent[this.gnucolor]))
 
             case 'calcscore':
                 return this.gnu.calcscore()

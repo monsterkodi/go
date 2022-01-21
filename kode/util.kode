@@ -8,38 +8,35 @@
 
 class Util
 
-    @opponent: (color) ->
+    @stone: 
+        empty:' ' 
+        black:'○' 
+        white:'●' 
+        B:'○' 
+        b:'○' 
+        W:'●' 
+        w:'●'
         
-        opp =
-            black: 'white'
-            B:     'white' 
-            b:     'white'
-            white: 'black'
-            W:     'black'
-            w:     'black'
-        opp[color]
+    @opponent: 
+        black: 'white'
+        B:     'white' 
+        b:     'white'
+        white: 'black'
+        W:     'black'
+        w:     'black'
         
-    @colorName: (color) ->
-        
-        opp =
-            black: 'black'
-            B:     'black' 
-            b:     'black'
-            '○':   'black'
-            '●':   'white'
-            white: 'white'
-            W:     'white'
-            w:     'white'
-        opp[color]
+    @stoneColor: 
+        black: 'black'
+        B:     'black' 
+        b:     'black'
+        '○':   'black'
+        '●':   'white'
+        white: 'white'
+        W:     'white'
+        w:     'white'
         
     @alpha: 'ABCDEFGHJKLMNOPQRST'
-    @stone: black:'○' white:'●' empty:' ' B:'○' W:'●' b:'○' w:'●'
     
-    @stoneColor: (s) -> 
-        switch s 
-            '○' ➜ 'black' 
-            '●' ➜ 'white'
-            
     @splice: (s, i, n, r='') -> s.slice(0,i) + r + s.slice(i+n)
 
 module.exports = Util

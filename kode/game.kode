@@ -57,7 +57,7 @@ function Game extends Score
         for n in @neighbors c
             s = @stoneAt n
             if s != 'empty' and s != m
-                if 1 == @freedoms opponent(color), n
+                if 1 == @freedoms opponent[color], n
                     return true
         false            
         
@@ -109,10 +109,11 @@ function Game extends Score
             
         c = @coord p
         if @valid c
-            @setStone c, color
+            @setStone c, stone[color]
             @moves.push color + ' ' + p
-            @capture opponent color
+            @capture opponent[color]
             @board.lastMove color, c
+            @updateTitle()
             ''
         else
             '? invalid color or coordinate'
@@ -123,13 +124,13 @@ function Game extends Score
     #      000  000          000          000     000     000   000  000  0000  000       
     # 0000000   00000000     000     0000000      000      0000000   000   000  00000000  
     
-    setStone: (c, color) ->
+    setStone: (c, s) ->
         
-        @grid.set c, stone[color]
-        if color == 'empty'
+        @grid.set c, s
+        if s == stone.empty
             @board.delStone c
         else
-            @board.addStone c, color
+            @board.addStone c, s
             
     #  0000000  000   000   0000000   000   000  
     # 000       000   000  000   000  000 0 000  
@@ -147,8 +148,8 @@ function Game extends Score
             r = rs[y]
             for x in 0...@size
                 switch r[x]
-                    'X' ➜ @setStone [x,y] 'black'
-                    'O' ➜ @setStone [x,y] 'white'
+                    'X' ➜ @setStone [x,y] stone.black
+                    'O' ➜ @setStone [x,y] stone.white
                  
             if 'hascaptured' in r
                 captured = int r.split('hascaptured')[1]
@@ -172,12 +173,11 @@ function Game extends Score
             c = @coord p
             if @liberties(c) < 1
                 g = @group c
-                @captures[opponent color] += g.length
+                @captures[opponent[color]] += g.length
                 for dp in g
                     dc = @coord dp
-                    @setStone dc, 'empty'
-                @updateTitle()
-                @capture()
+                    @setStone dc, stone.empty
+                @capture color
                 return
         
     allStones: (color) ->

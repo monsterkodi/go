@@ -2,7 +2,7 @@
 
 var _k_ = {in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}}
 
-var $, alpha, Board, colorName, elem, kpos, kxk, opponent, randIntRange
+var $, alpha, Board, elem, kpos, kxk, opponent, randIntRange, stone, stoneColor
 
 kxk = require('kxk')
 elem = kxk.elem
@@ -10,9 +10,10 @@ kpos = kxk.kpos
 randIntRange = kxk.randIntRange
 $ = kxk.$
 
+stone = require('./util').stone
+stoneColor = require('./util').stoneColor
 alpha = require('./util').alpha
 opponent = require('./util').opponent
-colorName = require('./util').colorName
 
 
 Board = (function ()
@@ -45,8 +46,8 @@ Board = (function ()
         this.lib = elem('div',{class:'liberties',parent:this.div})
         this.trr = elem('div',{class:'territory',parent:this.div})
         this.hlt = elem('div',{class:'highlts',parent:this.div})
-        this.hover = elem('div',{class:`hover ${this.human}`,parent:this.hlt})
-        this.hover.style = `width:${h}%; height:${h}%; display:none;`
+        this.hvr = elem('div',{class:`hover ${this.human}`,parent:this.hlt})
+        this.hvr.style = `width:${h}%; height:${h}%; display:none;`
         this.lib.style.display = (window.stash.get('liberties') ? 'initial' : 'none')
         this.last = elem('div',{class:"last",parent:this.hlt})
         this.last.style = "width:10px; height:10px; display:none; border-radius:10px;"
@@ -138,7 +139,7 @@ Board = (function ()
 
     Board.prototype["onMouseLeave"] = function (event)
     {
-        return this.hover.style.display = 'none'
+        return this.hvr.style.display = 'none'
     }
 
     Board.prototype["onMouseMove"] = function (event)
@@ -146,7 +147,7 @@ Board = (function ()
         var c, p
 
         c = this.posAtEvent(event)
-        this.hover.style.display = 'none'
+        this.hvr.style.display = 'none'
         if (c.x < 0 || c.y < 0 || c.x >= this.size || c.y >= this.size)
         {
             return
@@ -162,24 +163,28 @@ Board = (function ()
                 return
             }
         }
-        this.hover.style.display = 'initial'
+        this.hvr.style.display = 'initial'
         p = this.posToPrcnt(c)
-        this.hover.style.left = `${p.x}%`
-        this.hover.style.top = `${p.y}%`
-        return this.hover.style.borderRadius = `${0.5 * this.div.getBoundingClientRect().height / (this.size + 1)}px`
+        this.hvr.style.left = `${p.x}%`
+        this.hvr.style.top = `${p.y}%`
+        return this.hvr.style.borderRadius = `${0.5 * this.div.getBoundingClientRect().height / (this.size + 1)}px`
     }
 
     Board.prototype["onMouseDown"] = function (event)
     {
-        var c, p, _169_20_
+        var c, p, _170_20_
 
         c = this.posAtEvent(event)
         if (this.game)
         {
             p = this.game.pos([c.x,c.y])
+            if (this.game.moves.length && this.game.moves.slice(-1)[0].startsWith(this.human))
+            {
+                return
+            }
             if (_k_.in(p,this.game.all_legal()))
             {
-                this.hover.style.display = 'none'
+                this.hvr.style.display = 'none'
                 return (this.gnu != null ? this.gnu.humanMove(p) : undefined)
             }
         }
@@ -195,7 +200,7 @@ Board = (function ()
         this.last.style.top = `${p.y}%`
         this.last.classList.remove('black')
         this.last.classList.remove('white')
-        return this.last.classList.add(opponent(color))
+        return this.last.classList.add(opponent[color])
     }
 
     Board.prototype["posAtEvent"] = function (event)
@@ -231,24 +236,23 @@ Board = (function ()
         }
     }
 
-    Board.prototype["addStone"] = function (c, color = 'black')
+    Board.prototype["addStone"] = function (c, s = stone.black)
     {
-        var d, o, shadow, src, stn, stone, x, y
+        var cn, d, o, shd, src, stn, x, y
 
         d = 100 / (this.size + 1)
-        stn = color
-        if (color === 'white')
+        cn = stoneColor[s]
+        if (cn === 'white')
         {
-            stn += randIntRange(1,15)
+            cn += randIntRange(1,15)
         }
-        src = `../img/stone_${stn}.png`
-        shadow = elem('img',{class:`shadow pos${c[0]}_${c[1]}`,src:'../img/stone_shadow.png',width:"auto",height:`${d}%`,parent:this.shd})
-        stone = elem('img',{class:`stone pos${c[0]}_${c[1]}`,src:src,width:"auto",height:`${d}%`,parent:this.stn})
+        src = `../img/stone_${cn}.png`
+        shd = elem('img',{class:`shadow pos${c[0]}_${c[1]}`,src:'../img/stone_shadow.png',width:"auto",height:`${d}%`,parent:this.shd})
+        stn = elem('img',{class:`stone pos${c[0]}_${c[1]}`,src:src,width:"auto",height:`${d}%`,parent:this.stn})
         x = (c[0] + 0.5) * 100 / (this.size + 1)
         y = (c[1] + 0.5) * 100 / (this.size + 1)
-        stone.style = `left:${x}%; top:${y}%;`
-        o = (this.size === 19 ? 0.5 : (this.size === 13 ? 0.8 : 1.0))
-        shadow.style = `left:${x + 10.0 / this.size}%; top:${y + 10.0 / this.size}%; opacity:${o};`
+        stn.style = `left:${x}%; top:${y}%;`
+        shd.style = `left:${x + 10.0 / this.size}%; top:${y + 10.0 / this.size}%; opacity:${o = (this.size === 19 ? 0.5 : (this.size === 13 ? 0.8 : 1.0))};`
         return this.annotate()
     }
 
