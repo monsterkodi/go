@@ -32,6 +32,7 @@ function MainWin extends win
         window.stash = new stash "win/#{@id}" separator:'▸'
         post.setMaxListeners 20
         
+        window.onresize = @onResize
         window.onload = @onLoad
                                     
     # 000       0000000    0000000   0000000    
@@ -88,7 +89,10 @@ function MainWin extends win
         if valid(moves) and @game.moves[-1].split(' ')[0] != @gnucolor 
             @gnu.send "genmove #{@gnucolor}"
         
-    onMove: => window.stash.set 'bounds' @getBounds()
+    onMove: => 
+    
+        log 'onMove'
+        window.stash.set 'bounds' @getBounds()
     
     onResize: =>
         

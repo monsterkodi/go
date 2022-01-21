@@ -7,12 +7,8 @@
 ###
 
 { stoneColor, stone, alpha } = require './util'
-{ noon } = require 'kxk'
+{ kstr, noon } = require 'kxk'
 Grid = require './grid'
-
-kstrcnt = (s, c) ->
-    m = s.match(new RegExp(c, 'g'))
-    m? ? m.length : 0
 
 function Score
 
@@ -26,37 +22,46 @@ function Score
         
         grid  = new Grid @size
         allg  = @allGroups()
-        grps  = []
-        areas = []
+        @grps  = []
+        @areas = []
         for s,gl of allg
             for g in gl
                 if s == stone.empty
-                    areas.push 
+                    @areas.push 
                         area:  g
                         key:   g.join ' '
                         grps:  []
                         color: @areaColor g
                         state: 'neutral'
-                    for p in g ➜ grid.set p, areas[-1].color
+                    for p in g ➜ grid.set p, @areas[-1].color
                 else
-                    grps.push
+                    n = @group_neighbors g
+                    @grps.push
                         stone: s
                         group: g
                         areas: []
-                        neighbors: @group_neighbors g
+                        libs:  n.filter((p) => stone.empty == @stoneAt @coord p).length
+                        neighbors: n
                         key:   g.join ' '
                         state: 'unknown'
                     for p in g ➜ grid.set p, s
              
         log grid.toString()
-        
+                
         log '%c areas' 'font-size: 20px; color:red;'
-        log noon areas
+        log noon @areas
         log '%c groups' 'font-size: 20px; color:green;'
-        log noon grps 
+        log noon @grps 
         
-        w = kstrcnt grid.grid, 'w'
-        b = kstrcnt grid.grid, 'b'
+        for g in @grps
+            if g.libs == 1
+                log 'dead' noon g
+                g.state = 'dead'
+                for n in g.neighbors
+                    log n, @countlib(n), @stoneAt n
+        
+        w = kstr.cnt grid.grid, 'w'
+        b = kstr.cnt grid.grid, 'b'
         log w, b
         grid
         
@@ -86,6 +91,7 @@ function Score
     #  0000000   00     00  000   000  00000000  000   000  
     
     potentialOwner: (c) ->
+        
         if stone.empty == @stoneAt c
             rc = @rayColors c
             p = rc.filter((r) -> r?).join ''
@@ -100,6 +106,7 @@ function Score
     # 000   000  000   000     000     
     
     rayColor: (c, d) ->
+        
         n = [c[0]+d[0], c[1]+d[1]]
         s = @stoneAt n
         s == stone.empty ? @rayColor(n, d) : s
@@ -116,6 +123,7 @@ function Score
     
     countlib: (p) -> @liberties @coord p
     liberties: (c) ->
+        
         if @valid c
             s = @stoneAt c
             if s != stone.empty
@@ -193,13 +201,46 @@ function Score
         gn
         
     neighbors: (c) ->
+        
         ns = []
         for [x,y] in [[-1 0] [1 0] [0 -1] [0 1]]
             n = [c[0]+x, c[1]+y]
             if @valid n
                 ns.push n
         ns
-                                                          
+              
+    # 000      00000000   0000000    0000000   000      
+    # 000      000       000        000   000  000      
+    # 000      0000000   000  0000  000000000  000      
+    # 000      000       000   000  000   000  000      
+    # 0000000  00000000   0000000   000   000  0000000  
+    
+    legal: (color, c) ->
+        
+        fr = @freedoms color, c
+        mc = @movecaptures color, c
+        @stoneAt(c) == stone.empty and (fr or mc)
+        
+    all_legal: (color) ->
+        
+        color ?= @nextColor()
+        l = []
+        for y in 0...@size
+            for x in 0...@size
+                if @legal color, [x,y]
+                    l.push @pos [x,y]
+        l
+                
+    movecaptures: (color, c) ->
+
+        m = stone[color]
+        for n in @neighbors c
+            s = @stoneAt n
+            if s != 'empty' and s != m
+                if 1 == @freedoms opponent[color], n
+                    return true
+        false            
+        
     #  0000000   000      000      00000000    0000000    0000000  
     # 000   000  000      000      000   000  000   000  000       
     # 000000000  000      000      00000000   000   000  0000000   
@@ -207,10 +248,33 @@ function Score
     # 000   000  0000000  0000000  000         0000000   0000000   
     
     allPos: ->
+        
         p = []
         for y in 0...@size
             for x in 0...@size
                 p.push alpha[x]+(@size-y)
         p
+       
+    #  0000000  000000000   0000000   000   000  00000000   0000000
+    # 000          000     000   000  0000  000  000       000     
+    # 0000000      000     000   000  000 0 000  0000000   0000000 
+    #      000     000     000   000  000  0000  000            000
+    # 0000000      000      0000000   000   000  00000000  0000000 
+    
+    allStones: (color) ->
+        
+        s = stone[color]
+        l = []
+        for y in 0...@size
+            for x in 0...@size
+                if s == @stoneAt x,y
+                    l.push @pos [x,y]
+        l
+        
+    stoneAt: (x,y) => @grid.at x,y
+    valid:   (c)   => 0 <= c[0] < @size and 0 <= c[1] < @size
+    coord:   (p)   => [alpha.indexOf(p[0].toUpperCase()), @size-int(p[1..])]
+    pos:     (c)   => alpha[c[0]] + (@size-c[1])
+    poslist: (cl)  -> cl.map @pos
                                         
 module.exports = Score

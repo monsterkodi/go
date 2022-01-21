@@ -49,23 +49,28 @@ body {
 .board {
   position: relative;
 }
-.wood {
+.wood,
+.blank {
   height: 100%;
+}
+.blank {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  top: 0;
+  background-color: #666;
 }
 .lines {
   position: absolute;
   height: 100%;
   left: 0;
 }
-.shadows {
-  display: contents;
-}
+.shadows,
 .stones {
   display: contents;
 }
-.shadow {
-  position: absolute;
-}
+.shadow,
 .stone {
   position: absolute;
 }
@@ -103,10 +108,12 @@ body {
   transform: translate(-50%, -50%);
 }
 .last.white {
-  border: 1px solid #fff;
+  border: 5px solid #f0dc6e;
+  opacity: 0.2;
 }
 .last.black {
-  border: 1px solid #000;
+  border: 5px solid #f0c832;
+  opacity: 0.4;
 }
 .eye,
 .liberty,

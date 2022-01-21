@@ -41,6 +41,7 @@ MainWin = (function ()
         post.on('saveStash',this.saveStash)
         window.stash = new stash(`win/${this.id}`,{separator:'▸'})
         post.setMaxListeners(20)
+        window.onresize = this.onResize
         window.onload = this.onLoad
     }
 
@@ -91,10 +92,10 @@ MainWin = (function ()
         this.board.game = this.game
         this.gnu.newGame(this.boardsize,this.gnucolor,this.handicap,_k_.empty(moves))
         var list = _k_.list(moves)
-        for (var _81_14_ = 0; _81_14_ < list.length; _81_14_++)
+        for (var _82_14_ = 0; _82_14_ < list.length; _82_14_++)
         {
-            m = list[_81_14_]
-            var _82_19_ = m.split(' '); c = _82_19_[0]; p = _82_19_[1]
+            m = list[_82_14_]
+            var _83_19_ = m.split(' '); c = _83_19_[0]; p = _83_19_[1]
 
             this.game.play(c,p)
             this.gnu.send(`play ${c} ${p}`)
@@ -108,6 +109,7 @@ MainWin = (function ()
 
     MainWin.prototype["onMove"] = function ()
     {
+        console.log('onMove')
         return window.stash.set('bounds',this.getBounds())
     }
 
