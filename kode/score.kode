@@ -29,7 +29,7 @@ function Score
                 # log t, g.join ' '
                 for p in g
                     gr.set p, t
-        # log gr.grid
+        log gr.toString()
         gr
 
     # 000      000  0000000    00000000  00000000   000000000  000  00000000   0000000  
@@ -116,7 +116,6 @@ function Score
                     gn.push n
         gn
         
-        
     neighbors: (c) ->
         ns = []
         for [x,y] in [[-1 0] [1 0] [0 -1] [0 1]]
@@ -136,7 +135,11 @@ function Score
         cl = g.map (p) => @potentialOwner @coord p
         sl = cl.filter((r) -> r?).join ''
         if not '○●' in sl and not '●○' in sl and sl.length > 0
-            stoneColor(sl[0])[0]
+            c = stoneColor(sl[0])[0]
+            if sl.length == g.length
+                c
+            else
+                '.'
         else
             '.'
             
@@ -151,6 +154,7 @@ function Score
             rc = @rayColors c
             p = rc.filter((r) -> r?).join ''
             if not '○●' in p and not '●○' in p and p.length > 0
+                # log 'pot' @pos(c), p[0]
                 p[0]
         
     # 00000000    0000000   000   000  

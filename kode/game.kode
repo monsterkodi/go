@@ -257,7 +257,7 @@ function Game extends Score
         log @showboard()
         log 'white' @allStones('w').length, @allStones 'w'
         log 'black' @allStones('b').length, @allStones 'b'
-        log @grid.grid
+        log @grid.toString()
         
     setScore: (@score) -> 
     

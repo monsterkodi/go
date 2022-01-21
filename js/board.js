@@ -38,7 +38,7 @@ Board = (function ()
         this.width = this.height
         s = this.height
         d = s / (this.size + 1)
-        h = 100 / (this.size + 2)
+        h = 90 / (this.size + 1)
         this.lines()
         this.legend()
         this.stn = elem('div',{class:'stones',parent:this.div})
@@ -46,7 +46,7 @@ Board = (function ()
         this.trr = elem('div',{class:'territory',parent:this.div})
         this.hlt = elem('div',{class:'highlts',parent:this.div})
         this.hover = elem('div',{class:`hover ${this.human}`,parent:this.hlt})
-        this.hover.style = `width:${h}%; height:${h}%; display:none; border-radius:${d / 2}px;`
+        this.hover.style = `width:${h}%; height:${h}%; display:none;`
         this.lib.style.display = (window.stash.get('liberties') ? 'initial' : 'none')
         this.last = elem('div',{class:"last",parent:this.hlt})
         this.last.style = "width:10px; height:10px; display:none; border-radius:10px;"
@@ -143,32 +143,35 @@ Board = (function ()
 
     Board.prototype["onMouseMove"] = function (event)
     {
-        var c, legal, p
+        var c, p
 
         c = this.posAtEvent(event)
+        this.hover.style.display = 'none'
         if (c.x < 0 || c.y < 0 || c.x >= this.size || c.y >= this.size)
         {
-            this.hover.style.display = 'none'
             return
         }
         if (this.game)
         {
-            legal = this.game.legal(this.human,[c.x,c.y])
-            if (!legal)
+            if (this.game.moves.length && this.game.moves.slice(-1)[0].startsWith(this.human))
             {
-                this.hover.style.display = 'none'
+                return
+            }
+            if (!this.game.legal(this.human,[c.x,c.y]))
+            {
                 return
             }
         }
         this.hover.style.display = 'initial'
         p = this.posToPrcnt(c)
         this.hover.style.left = `${p.x}%`
-        return this.hover.style.top = `${p.y}%`
+        this.hover.style.top = `${p.y}%`
+        return this.hover.style.borderRadius = `${0.5 * this.div.getBoundingClientRect().height / (this.size + 1)}px`
     }
 
     Board.prototype["onMouseDown"] = function (event)
     {
-        var c, p, _171_20_
+        var c, p, _169_20_
 
         c = this.posAtEvent(event)
         if (this.game)
@@ -271,13 +274,13 @@ Board = (function ()
         if (this.game)
         {
             var list = ['black','white']
-            for (var _268_22_ = 0; _268_22_ < list.length; _268_22_++)
+            for (var _266_22_ = 0; _266_22_ < list.length; _266_22_++)
             {
-                color = list[_268_22_]
+                color = list[_266_22_]
                 var list1 = _k_.list(this.game.allStones(color))
-                for (var _269_22_ = 0; _269_22_ < list1.length; _269_22_++)
+                for (var _267_22_ = 0; _267_22_ < list1.length; _267_22_++)
                 {
-                    s = list1[_269_22_]
+                    s = list1[_267_22_]
                     c = this.game.coord(s)
                     l = elem('div',{class:`liberty ${color}`,parent:this.lib,text:this.game.liberties(c)})
                     p = this.coordToPrcnt(c)
@@ -289,7 +292,7 @@ Board = (function ()
 
     Board.prototype["territory"] = function ()
     {
-        var c, e, p, scgr, x, y
+        var c, e, p, s, scgr, x, y
 
         this.trr.innerHTML = ''
         if (this.game)
@@ -297,15 +300,17 @@ Board = (function ()
             if (this.game.moves.length > 1)
             {
                 scgr = this.game.calcScore()
-                for (var _287_25_ = y = 0, _287_29_ = this.size; (_287_25_ <= _287_29_ ? y < this.size : y > this.size); (_287_25_ <= _287_29_ ? ++y : --y))
+                for (var _285_25_ = y = 0, _285_29_ = this.size; (_285_25_ <= _285_29_ ? y < this.size : y > this.size); (_285_25_ <= _285_29_ ? ++y : --y))
                 {
-                    for (var _288_29_ = x = 0, _288_33_ = this.size; (_288_29_ <= _288_33_ ? x < this.size : x > this.size); (_288_29_ <= _288_33_ ? ++x : --x))
+                    for (var _286_29_ = x = 0, _286_33_ = this.size; (_286_29_ <= _286_33_ ? x < this.size : x > this.size); (_286_29_ <= _286_33_ ? ++x : --x))
                     {
-                        if (_k_.in((c = scgr.at(x,y)),'wb'))
+                        if (_k_.in((c = scgr.at(x,y)),'wbWB'))
                         {
-                            e = elem('div',{class:`eye ${colorName(c)}`,parent:this.trr})
+                            e = elem('div',{class:`eye ${c}`,parent:this.trr})
                             p = this.coordToPrcnt([x,y])
-                            e.style = `left:${p.x}%; top:${p.y}%;`
+                            s = 15 / (this.size + 1)
+                            s = s.toFixed(2)
+                            e.style = `left:${p.x}%; top:${p.y}%; width:${s}%; height:${s}%;`
                         }
                     }
                 }

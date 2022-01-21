@@ -40,6 +40,7 @@ Score = (function ()
                 }
             }
         }
+        console.log(gr.toString())
         return gr
     }
 
@@ -182,10 +183,10 @@ Score = (function ()
 
         ns = []
         var list = [[-1,0],[1,0],[0,-1],[0,1]]
-        for (var _122_18_ = 0; _122_18_ < list.length; _122_18_++)
+        for (var _121_18_ = 0; _121_18_ < list.length; _121_18_++)
         {
-            x = list[_122_18_][0]
-            y = list[_122_18_][1]
+            x = list[_121_18_][0]
+            y = list[_121_18_][1]
             n = [c[0] + x,c[1] + y]
             if (this.valid(n))
             {
@@ -197,7 +198,7 @@ Score = (function ()
 
     Score.prototype["areaColor"] = function (g)
     {
-        var cl, sl
+        var c, cl, sl
 
         cl = g.map((function (p)
         {
@@ -209,7 +210,15 @@ Score = (function ()
         }).join('')
         if (!(_k_.in('○●',sl)) && !(_k_.in('●○',sl)) && sl.length > 0)
         {
-            return stoneColor(sl[0])[0]
+            c = stoneColor(sl[0])[0]
+            if (sl.length === g.length)
+            {
+                return c
+            }
+            else
+            {
+                return '.'
+            }
         }
         else
         {
@@ -257,9 +266,9 @@ Score = (function ()
         var p, x, y
 
         p = []
-        for (var _179_17_ = y = 0, _179_21_ = this.size; (_179_17_ <= _179_21_ ? y < this.size : y > this.size); (_179_17_ <= _179_21_ ? ++y : --y))
+        for (var _183_17_ = y = 0, _183_21_ = this.size; (_183_17_ <= _183_21_ ? y < this.size : y > this.size); (_183_17_ <= _183_21_ ? ++y : --y))
         {
-            for (var _180_21_ = x = 0, _180_25_ = this.size; (_180_21_ <= _180_25_ ? x < this.size : x > this.size); (_180_21_ <= _180_25_ ? ++x : --x))
+            for (var _184_21_ = x = 0, _184_25_ = this.size; (_184_21_ <= _184_25_ ? x < this.size : x > this.size); (_184_21_ <= _184_25_ ? ++x : --x))
             {
                 p.push(alpha[x] + (this.size - y))
             }

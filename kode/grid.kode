@@ -79,7 +79,7 @@ function Grid
     #      000     000     000   000  000  000  0000  000   000  
     # 0000000      000     000   000  000  000   000   0000000   
     
-    toString: -> @grid
+    toString: -> @grid each (v) -> ' ' + v
     toJSON: -> @grid
 
 module.exports = Grid

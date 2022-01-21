@@ -399,7 +399,7 @@ Game = (function ()
         console.log(this.showboard())
         console.log('white',this.allStones('w').length,this.allStones('w'))
         console.log('black',this.allStones('b').length,this.allStones('b'))
-        console.log(this.grid.grid)
+        console.log(this.grid.toString())
     }
 
     Game.prototype["setScore"] = function (score)

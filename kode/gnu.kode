@@ -13,7 +13,7 @@ function GNU
     @: (@game) ->
         
         @msg = []
-        @gnu = childp.spawn '/usr/local/bin/gnugo' ['--mode' 'gtp']
+        @gnu = childp.spawn '/usr/local/bin/gnugo' ['--mode' 'gtp' '--level' '20']
         @gnu.stdout.on 'data' @onData
         
     newGame: (boardsize, @color, @handicap, genmove) ->

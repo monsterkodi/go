@@ -15,7 +15,7 @@ GNU = (function ()
     
         this["onData"] = this["onData"].bind(this)
         this.msg = []
-        this.gnu = childp.spawn('/usr/local/bin/gnugo',['--mode','gtp'])
+        this.gnu = childp.spawn('/usr/local/bin/gnugo',['--mode','gtp','--level','20'])
         this.gnu.stdout.on('data',this.onData)
     }
 

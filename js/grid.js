@@ -1,6 +1,6 @@
 // monsterkodi/kode 0.237.0
 
-var _k_ = {rpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s+=c} return s}, isArr: function (o) {return Array.isArray(o)}, isStr: function (o) {return typeof o === 'string' || o instanceof String}}
+var _k_ = {rpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s+=c} return s}, isArr: function (o) {return Array.isArray(o)}, isStr: function (o) {return typeof o === 'string' || o instanceof String}, each_r: function (o) {return o instanceof Array ? [] : typeof o == 'string' ? o.split('') : {}}}
 
 var alpha, Grid, splice
 
@@ -91,7 +91,21 @@ Grid = (function ()
 
     Grid.prototype["toString"] = function ()
     {
-        return this.grid
+        return         (function (o) {
+            var r_82_23_ = _k_.each_r(o)
+            for (var k in o)
+            {   
+                var m = (function (v)
+            {
+                return ' ' + v
+            })(o[k])
+                if (m != null)
+                {
+                    r_82_23_[k] = m
+                }
+            }
+            return typeof o == 'string' ? r_82_23_.join('') : r_82_23_
+        })(this.grid)
     }
 
     Grid.prototype["toJSON"] = function ()

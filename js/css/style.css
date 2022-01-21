@@ -120,15 +120,13 @@ body {
 .liberty.black {
   color: #fff;
 }
-.eye.white {
+.eye.w,
+.eye.W {
   background-color: #fff;
 }
-.eye.black {
+.eye.b,
+.eye.B {
   background-color: #000;
-}
-.eye {
-  width: 10px;
-  height: 10px;
 }
 #titlebar {
   display: flex;
