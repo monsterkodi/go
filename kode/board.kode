@@ -83,14 +83,15 @@ function Board
             @ctx.lineTo s-o, o+i*d
             @ctx.stroke()   
             
-        for x in -1..1
-            for y in -1..1
-                @ctx.beginPath()
-                if @size >= 13
-                    @ctx.arc s/2+x*d*(int(-@size/2) + 3), s/2+y*d*(int(-@size/2) + 3), s/180, 0, 2 * Math.PI, false
-                else if x and y
-                    @ctx.arc s/2+x*d*(int(-@size/2) + 2), s/2+y*d*(int(-@size/2) + 2), s/180, 0, 2 * Math.PI, false
-                @ctx.fill()
+        if @size >= 9
+            for x in -1..1
+                for y in -1..1
+                    @ctx.beginPath()
+                    if @size >= 13
+                        @ctx.arc s/2+x*d*(int(-@size/2) + 3), s/2+y*d*(int(-@size/2) + 3), s/180, 0, 2 * Math.PI, false
+                    else if x and y
+                        @ctx.arc s/2+x*d*(int(-@size/2) + 2), s/2+y*d*(int(-@size/2) + 2), s/180, 0, 2 * Math.PI, false
+                    @ctx.fill()
                 
     # 000      00000000   0000000   00000000  000   000  0000000    
     # 000      000       000        000       0000  000  000   000  
@@ -235,13 +236,13 @@ function Board
         cn = stoneColor[s]
         cn += randIntRange 1 15 if cn == 'white'
         src = "../img/stone_#{cn}.png" 
-        shd = elem 'img' class:"shadow pos#{c[0]}_#{c[1]}" src:'../img/stone_shadow.png', width:"auto", height:"#{d}%" parent:@shd
+        shd = elem 'img' class:"shadow pos#{c[0]}_#{c[1]}" src:'../img/stone_shadow.png', width:"auto", height:"#{1.15*d}%" parent:@shd
         stn = elem 'img' class:"stone pos#{c[0]}_#{c[1]}" src:src, width:"auto", height:"#{d}%" parent:@stn
         x = (c[0]+0.5)*100/(@size+1)
         y = (c[1]+0.5)*100/(@size+1)
 
         stn.style = "left:#{x}%; top:#{y}%;" 
-        shd.style = "left:#{x+10.0/@size}%; top:#{y+10.0/@size}%; opacity:#{o = @size == 19 ? 0.5 : @size == 13 ? 0.8 : 1.0};"
+        shd.style = "left:#{x}%; top:#{y}%; opacity:#{o = @size == 19 ? 0.5 : @size == 13 ? 0.6 : 0.7};"
         
         @annotate()
        
@@ -293,22 +294,20 @@ function Board
         @trr.innerHTML = ''
         if @game
             if @game.moves.length > 1
-                scgr = @game.calcScore()
-                for y in 0...@size
-                    for x in 0...@size
-                        if (c = scgr.at(x,y)) in 'wbWB'
-                            e = elem 'div' class:"eye #{c}" parent:@trr
-                            p = @coordToPrcnt [x,y]
+                            
+                for a in @game.areas
+                    if a.color in 'wbWB'
+                        for p in a.area
+                            e = elem 'div' class:"eye #{a.color}" parent:@trr
+                            r = @coordToPrcnt @game.coord p
                             s = 15/(@size+1)
                             s = s.toFixed 2
-                            e.style = "left:#{p.x}%; top:#{p.y}%; width:#{s}%; height:#{s}%;" 
+                            e.style = "left:#{r.x}%; top:#{r.y}%; width:#{s}%; height:#{s}%;" 
+                    
 
-                # log 'DEAD' @game.grps
                 for g in @game.grps
-                    # log 'g' g
                     if g.state == 'dead'
                         for p in g.group
-                            log 'mark dead' p
                             e = elem 'div' class:"eye #{opponent[stoneColor[g.stone]][0]}" parent:@trr
                             r = @coordToPrcnt @game.coord p
                             s = 15/(@size+1)

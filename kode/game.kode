@@ -16,9 +16,10 @@ Grid  = require './grid'
 
 function Game extends Score
 
-    @: (@board) ->
+    @: (board) ->
         
-        @grid  = new Grid()
+        super board.size
+        @board = board
         @moves = []
         @boardsize @board.size
         
@@ -81,6 +82,7 @@ function Game extends Score
             @moves.push color + ' ' + p
             @capture opponent[color]
             @board.lastMove()
+            @board.annotate()
             @updateTitle()
             ''
         else

@@ -6,11 +6,15 @@
 0000000    0000000   0000000   000   000  00000000
 ###
 
-{ stoneColor, stone, alpha } = require './util'
-{ kstr, noon } = require 'kxk'
+{ stoneColor, stone, alpha, opponent } = require './util'
+{ noon } = require 'kxk'
 Grid = require './grid'
 
 function Score
+
+    @: (@size) ->
+        
+        @grid = new Grid @size
 
     #  0000000   0000000   0000000   00000000   00000000  
     # 000       000       000   000  000   000  000       
@@ -20,11 +24,12 @@ function Score
     
     calcScore: ->
         
-        grid  = new Grid @size
-        allg  = @allGroups()
+        ● calcScore
+        
         @grps  = []
         @areas = []
-        for s,gl of allg
+        
+        for s,gl of @allGroups()
             for g in gl
                 if s == stone.empty
                     @areas.push 
@@ -33,7 +38,6 @@ function Score
                         grps:  []
                         color: @areaColor g
                         state: 'neutral'
-                    for p in g ➜ grid.set p, @areas[-1].color
                 else
                     n = @group_neighbors g
                     @grps.push
@@ -44,26 +48,18 @@ function Score
                         neighbors: n
                         key:   g.join ' '
                         state: 'unknown'
-                    for p in g ➜ grid.set p, s
              
-        log grid.toString()
-                
-        log '%c areas' 'font-size: 20px; color:red;'
-        log noon @areas
-        log '%c groups' 'font-size: 20px; color:green;'
-        log noon @grps 
+        # log '%c areas' 'font-size: 20px; color:red;'
+        # log noon @areas
+        # log '%c groups' 'font-size: 20px; color:green;'
+        # log noon @grps 
         
         for g in @grps
             if g.libs == 1
-                log 'dead' noon g
+                # log 'dead' noon g
                 g.state = 'dead'
                 for n in g.neighbors
                     log n, @countlib(n), @stoneAt n
-        
-        w = kstr.cnt grid.grid, 'w'
-        b = kstr.cnt grid.grid, 'b'
-        log w, b
-        grid
         
     #  0000000   00000000   00000000   0000000   
     # 000   000  000   000  000       000   000  

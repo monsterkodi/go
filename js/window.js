@@ -30,7 +30,6 @@ MainWin = (function ()
         this["saveStash"] = this["saveStash"].bind(this)
         this["restore"] = this["restore"].bind(this)
         this["onResize"] = this["onResize"].bind(this)
-        this["onMove"] = this["onMove"].bind(this)
         this["onLoad"] = this["onLoad"].bind(this)
         MainWin.__super__.constructor.call(this,{dir:__dirname,pkg:require('../package.json'),menu:'../kode/menu.noon',icon:'../img/mini.png',prefsSeperator:'▸',onLoad:this.onLoad})
         post.on('alert',function (msg)
@@ -92,10 +91,10 @@ MainWin = (function ()
         this.board.game = this.game
         this.gnu.newGame(this.boardsize,this.gnucolor,this.handicap,_k_.empty(moves))
         var list = _k_.list(moves)
-        for (var _82_14_ = 0; _82_14_ < list.length; _82_14_++)
+        for (var _89_14_ = 0; _89_14_ < list.length; _89_14_++)
         {
-            m = list[_82_14_]
-            var _83_19_ = m.split(' '); c = _83_19_[0]; p = _83_19_[1]
+            m = list[_89_14_]
+            var _90_19_ = m.split(' '); c = _90_19_[0]; p = _90_19_[1]
 
             this.game.play(c,p)
             this.gnu.send(`play ${c} ${p}`)
@@ -105,12 +104,6 @@ MainWin = (function ()
         {
             return this.gnu.send(`genmove ${this.gnucolor}`)
         }
-    }
-
-    MainWin.prototype["onMove"] = function ()
-    {
-        console.log('onMove')
-        return window.stash.set('bounds',this.getBounds())
     }
 
     MainWin.prototype["onResize"] = function ()
@@ -143,7 +136,8 @@ MainWin = (function ()
         switch (action.toLowerCase())
         {
             case 'save':
-                return this.game.save()
+                this.game.save()
+                return this.saveStash()
 
             case 'revert':
                 return this.restore()
@@ -179,6 +173,7 @@ MainWin = (function ()
             case 'white':
                 return this.newGame(this.boardsize,action,this.handicap)
 
+            case '7x7':
             case '9x9':
             case '13x13':
             case '19x19':
@@ -196,10 +191,11 @@ MainWin = (function ()
             case '9':
                 return this.newGame(this.boardsize,this.gnucolor,parseInt(action))
 
+            default:
+                klog(`menuAction '${action}'`)
+                return MainWin.__super__.onMenuAction.call(this,action,args)
         }
 
-        klog(`menuAction '${action}'`)
-        return MainWin.__super__.onMenuAction.call(this,action,args)
     }
 
     return MainWin

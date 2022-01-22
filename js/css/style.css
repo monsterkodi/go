@@ -109,18 +109,18 @@ body {
 }
 .last.white {
   border: 5px solid #f0dc6e;
-  opacity: 0.2;
+  opacity: 0.5;
 }
 .last.black {
-  border: 5px solid #f0c832;
-  opacity: 0.4;
+  border: 5px solid #966400;
+  opacity: 0.5;
 }
 .eye,
 .liberty,
 .legend {
   position: absolute;
   color: #000;
-  font-size: 10px;
+  font-size: 11px;
   font-family: titlebarFont;
   transform: translate(-50%, -50%);
 }

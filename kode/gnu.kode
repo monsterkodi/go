@@ -100,6 +100,8 @@ function GNU
                     @send 'final_score'
                 @game.play @color, p
                 @game.calcScore()
+                @game.board.annotate()
+                @game.updateTitle()
             else if m.startsWith 'final_score'
                 log m, data
                 @game.finalScore data

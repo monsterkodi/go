@@ -21,12 +21,11 @@ Game = (function ()
     _k_.extend(Game, Score)
     function Game (board)
     {
-        this.board = board
+        Game.__super__.constructor.call(this,board.size)
     
-        this.grid = new Grid()
+        this.board = board
         this.moves = []
         this.boardsize(this.board.size)
-        return Game.__super__.constructor.apply(this, arguments)
     }
 
     Game.prototype["boardsize"] = function (size)
@@ -104,6 +103,7 @@ Game = (function ()
             this.moves.push(color + ' ' + p)
             this.capture(opponent[color])
             this.board.lastMove()
+            this.board.annotate()
             this.updateTitle()
             return ''
         }
@@ -137,10 +137,10 @@ Game = (function ()
         {
             return r.slice(3).split(' ').join('')
         }).bind(this))
-        for (var _115_17_ = y = 0, _115_21_ = this.size; (_115_17_ <= _115_21_ ? y < this.size : y > this.size); (_115_17_ <= _115_21_ ? ++y : --y))
+        for (var _117_17_ = y = 0, _117_21_ = this.size; (_117_17_ <= _117_21_ ? y < this.size : y > this.size); (_117_17_ <= _117_21_ ? ++y : --y))
         {
             r = rs[y]
-            for (var _117_21_ = x = 0, _117_25_ = this.size; (_117_21_ <= _117_25_ ? x < this.size : x > this.size); (_117_21_ <= _117_25_ ? ++x : --x))
+            for (var _119_21_ = x = 0, _119_25_ = this.size; (_119_21_ <= _119_25_ ? x < this.size : x > this.size); (_119_21_ <= _119_25_ ? ++x : --x))
             {
                 switch (r[x])
                 {
@@ -175,18 +175,18 @@ Game = (function ()
         var c, dc, dp, g, p
 
         var list = _k_.list(this.allStones(color))
-        for (var _140_14_ = 0; _140_14_ < list.length; _140_14_++)
+        for (var _142_14_ = 0; _142_14_ < list.length; _142_14_++)
         {
-            p = list[_140_14_]
+            p = list[_142_14_]
             c = this.coord(p)
             if (this.liberties(c) < 1)
             {
                 g = this.group(c)
                 this.captures[opponent[color]] += g.length
                 var list1 = _k_.list(g)
-                for (var _145_23_ = 0; _145_23_ < list1.length; _145_23_++)
+                for (var _147_23_ = 0; _147_23_ < list1.length; _147_23_++)
                 {
-                    dp = list1[_145_23_]
+                    dp = list1[_147_23_]
                     dc = this.coord(dp)
                     this.setStone(dc,stone.empty)
                 }
@@ -200,7 +200,7 @@ Game = (function ()
     {
         var i
 
-        for (var _153_17_ = i = 0, _153_21_ = num; (_153_17_ <= _153_21_ ? i < num : i > num); (_153_17_ <= _153_21_ ? ++i : --i))
+        for (var _155_17_ = i = 0, _155_21_ = num; (_155_17_ <= _155_21_ ? i < num : i > num); (_155_17_ <= _155_21_ ? ++i : --i))
         {
             this.genmove()
         }
@@ -249,7 +249,7 @@ Game = (function ()
         s = ' '
         b = '  '
         b += (function (o) {
-            var r_190_34_ = _k_.each_r(o)
+            var r_192_34_ = _k_.each_r(o)
             for (var k in o)
             {   
                 var m = (function (v)
@@ -258,18 +258,18 @@ Game = (function ()
             })(o[k])
                 if (m != null)
                 {
-                    r_190_34_[k] = m
+                    r_192_34_[k] = m
                 }
             }
-            return typeof o == 'string' ? r_190_34_.join('') : r_190_34_
+            return typeof o == 'string' ? r_192_34_.join('') : r_192_34_
         })(alpha.slice(0,this.size))
         b += '\n'
         y = 0
-        for (var _193_17_ = i = this.size, _193_24_ = 1; (_193_17_ <= _193_24_ ? i <= 1 : i >= 1); (_193_17_ <= _193_24_ ? ++i : --i))
+        for (var _195_17_ = i = this.size, _195_24_ = 1; (_195_17_ <= _195_24_ ? i <= 1 : i >= 1); (_195_17_ <= _195_24_ ? ++i : --i))
         {
             b += _k_.lpad(2,i)
             b += s
-            for (var _196_21_ = x = 0, _196_25_ = this.size; (_196_21_ <= _196_25_ ? x < this.size : x > this.size); (_196_21_ <= _196_25_ ? ++x : --x))
+            for (var _198_21_ = x = 0, _198_25_ = this.size; (_198_21_ <= _198_25_ ? x < this.size : x > this.size); (_198_21_ <= _198_25_ ? ++x : --x))
             {
                 b += this.stoneAt(x,y) + s
             }
@@ -279,7 +279,7 @@ Game = (function ()
         }
         b += '  '
         b += (function (o) {
-            var r_203_34_ = _k_.each_r(o)
+            var r_205_34_ = _k_.each_r(o)
             for (var k in o)
             {   
                 var m = (function (v)
@@ -288,10 +288,10 @@ Game = (function ()
             })(o[k])
                 if (m != null)
                 {
-                    r_203_34_[k] = m
+                    r_205_34_[k] = m
                 }
             }
-            return typeof o == 'string' ? r_203_34_.join('') : r_203_34_
+            return typeof o == 'string' ? r_205_34_.join('') : r_205_34_
         })(alpha.slice(0,this.size))
         b += '\n'
         return b
@@ -317,7 +317,7 @@ Game = (function ()
 
     Game.prototype["updateTitle"] = function ()
     {
-        var bs, t, td, ws, _233_19_, _234_19_
+        var bs, t, td, ws, _235_19_, _236_19_
 
         t = $('.titlebar-title')
         t.innerHTML = ''

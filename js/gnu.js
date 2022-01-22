@@ -143,7 +143,9 @@ GNU = (function ()
                     this.send('final_score')
                 }
                 this.game.play(this.color,p)
-                return this.game.calcScore()
+                this.game.calcScore()
+                this.game.board.annotate()
+                return this.game.updateTitle()
             }
             else if (m.startsWith('final_score'))
             {
@@ -153,9 +155,9 @@ GNU = (function ()
             else if (m.startsWith('fixed_handicap'))
             {
                 var list = _k_.list(data.split(' '))
-                for (var _107_22_ = 0; _107_22_ < list.length; _107_22_++)
+                for (var _109_22_ = 0; _109_22_ < list.length; _109_22_++)
                 {
-                    p = list[_107_22_]
+                    p = list[_109_22_]
                     this.game.setStone(this.game.coord(p),stone.black)
                 }
                 return this.game.dump()

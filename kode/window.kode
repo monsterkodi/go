@@ -62,6 +62,12 @@ function MainWin extends win
         else
             @newGame window.stash.get('boardsize', 9), window.stash.get('gnucolor' 'white'), window.stash.get('handicap' 0), window.stash.get('moves' [])
         
+    # 000   000  00000000  000   000         0000000    0000000   00     00  00000000  
+    # 0000  000  000       000 0 000        000        000   000  000   000  000       
+    # 000 0 000  0000000   000000000        000  0000  000000000  000000000  0000000   
+    # 000  0000  000       000   000        000   000  000   000  000 0 000  000       
+    # 000   000  00000000  00     00         0000000   000   000  000   000  00000000  
+    
     newGame: (@boardsize=9, @gnucolor='black', @handicap=0, moves=[]) ->
 
         window.stash.set 'boardsize' @boardsize
@@ -72,9 +78,10 @@ function MainWin extends win
         @main.innerHTML = ''
         r1 = elem 'div' class:'row' parent:@main
         r1.style = 'height:100%'
+        
         @board = new Board r1, @boardsize, opponent[@gnucolor]
-        @game = new Game @board
-        @gnu = new GNU @game
+        @game  = new Game @board
+        @gnu   = new GNU @game
         @board.gnu = @gnu
         @board.game = @game
         @gnu.newGame @boardsize, @gnucolor, @handicap, empty moves
@@ -89,11 +96,6 @@ function MainWin extends win
         if valid(moves) and @game.moves[-1].split(' ')[0] != @gnucolor 
             @gnu.send "genmove #{@gnucolor}"
         
-    onMove: => 
-    
-        log 'onMove'
-        window.stash.set 'bounds' @getBounds()
-    
     onResize: =>
         
         window.stash.set 'bounds' @getBounds()
@@ -128,25 +130,25 @@ function MainWin extends win
     onMenuAction: (action, args) =>
                
         switch action.toLowerCase()
-            'save'              ➜ return @game.save(); @saveStash()
-            'revert'            ➜ return @restore()
-            'undo'              ➜ return @gnu.undo()
-            'redo'              ➜ return @gnu.redo()
-            'pass'              ➜ return @gnu.humanMove 'pass'
-            'genmove'           ➜ return @gnu.humanMove @game.genmove opponent[@gnucolor]
-            'calcscore'         ➜ return @gnu.calcscore()
-            'toggle legend'     ➜ return @board.toggleLegend()
-            'toggle liberties'  ➜ return @board.toggleLiberties()
-            'toggle territory'  ➜ return @board.toggleTerritory()
-            'new game'          ➜ return @newGame @boardsize, @gnucolor, @handicap
-            'black' 'white'     ➜ return @newGame @boardsize, action, @handicap
-            '9x9' '13x13' 
-            '19x19'             ➜ return @newGame int(action), @gnucolor, @handicap
+            'save'              ➜ @game.save(); @saveStash()
+            'revert'            ➜ @restore()
+            'undo'              ➜ @gnu.undo()
+            'redo'              ➜ @gnu.redo()
+            'pass'              ➜ @gnu.humanMove 'pass'
+            'genmove'           ➜ @gnu.humanMove @game.genmove opponent[@gnucolor]
+            'calcscore'         ➜ @gnu.calcscore()
+            'toggle legend'     ➜ @board.toggleLegend()
+            'toggle liberties'  ➜ @board.toggleLiberties()
+            'toggle territory'  ➜ @board.toggleTerritory()
+            'new game'          ➜ @newGame @boardsize, @gnucolor, @handicap
+            'black' 'white'     ➜ @newGame @boardsize, action, @handicap
+            '7x7' '9x9' '13x13' 
+            '19x19'             ➜ @newGame int(action), @gnucolor, @handicap
             '0' '1' '2' 
             '3' '4' '5' 
-            '6' '7' '8' '9'     ➜ return @newGame @boardsize, @gnucolor, int action
-                        
-        klog "menuAction '#{action}'" # args     
-        super action, args
+            '6' '7' '8' '9'     ➜ @newGame @boardsize, @gnucolor, int action
+                                ➜
+                                  klog "menuAction '#{action}'" # args     
+                                  super action, args
            
 new MainWin            

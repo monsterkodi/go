@@ -17,6 +17,7 @@ go
         black               b
         white               w
     boardsize 
+        7x7                 t
         9x9                 s
         13x13               m  
         19x19               l  
