@@ -106,22 +106,21 @@ Grid = (function ()
 
         b = (this.size > 9 ? 2 : 1)
         p = _k_.lpad(b,'')
-        s = p + ' ' + (function (o) {
-            var r_93_39_ = _k_.each_r(o)
+        s = p + (function (o) {
+            var r_93_33_ = _k_.each_r(o)
             for (var k in o)
             {   
                 var m = ((function (v)
             {
-                return v + ' '
+                return ' ' + v
             }).bind(this))(o[k])
                 if (m != null)
                 {
-                    r_93_39_[k] = m
+                    r_93_33_[k] = m
                 }
             }
-            return typeof o == 'string' ? r_93_39_.join('') : r_93_39_
+            return typeof o == 'string' ? r_93_33_.join('') : r_93_33_
         })(alpha.slice(0, typeof this.size === 'number' ? this.size : -1))
-        s += p
         rows = this.grid.split('\n')
         var list = _k_.list(rows)
         for (ri = 0; ri < list.length; ri++)
@@ -142,25 +141,24 @@ Grid = (function ()
                     }
                 }
                 return typeof o == 'string' ? r_98_47_.join('') : r_98_47_
-            })(row)) + _k_.rpad(b,this.size - ri)
+            })(row)) + (this.size - ri)
         }
         s += '\n'
-        s += p + ' ' + (function (o) {
-            var r_100_40_ = _k_.each_r(o)
+        s += p + (function (o) {
+            var r_100_34_ = _k_.each_r(o)
             for (var k in o)
             {   
                 var m = ((function (v)
             {
-                return v + ' '
+                return ' ' + v
             }).bind(this))(o[k])
                 if (m != null)
                 {
-                    r_100_40_[k] = m
+                    r_100_34_[k] = m
                 }
             }
-            return typeof o == 'string' ? r_100_40_.join('') : r_100_40_
+            return typeof o == 'string' ? r_100_34_.join('') : r_100_34_
         })(alpha.slice(0, typeof this.size === 'number' ? this.size : -1))
-        s += p
         return s
     }
 

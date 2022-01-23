@@ -87,11 +87,8 @@ function Score
             # log noon @grps
             # log noon @areas
             for g in @grps
-                if g.eyes.length < 1
-                    a = @areas[g.areas[0]]
-                    # if a.color == stoneColor[g.stone][0] and a.area.length >= 6
-                        # log 'alive' a
-                        # continue
+                if g.eyes.length < 2
+                    a = g.eyes.length ? @areas[g.eyes[0]] : @areas[g.areas[0]]
                     for gi in a.grps
                         o = @grps[gi]
                         if o.stone != g.stone and o.eyes.length > 1
@@ -429,6 +426,12 @@ function Score
     pos:     (c)   => alpha[c[0]] + (@size-c[1])
     poslist: (cl)  -> cl.map @pos
     
+    #  0000000   00000000   00000000   0000000    0000000  000000000  00000000   000  000   000   0000000   
+    # 000   000  000   000  000       000   000  000          000     000   000  000  0000  000  000        
+    # 000000000  0000000    0000000   000000000  0000000      000     0000000    000  000 0 000  000  0000  
+    # 000   000  000   000  000       000   000       000     000     000   000  000  000  0000  000   000  
+    # 000   000  000   000  00000000  000   000  0000000      000     000   000  000  000   000   0000000   
+    
     areaString: ->
         
         g = new Grid @grid.toString()
@@ -437,6 +440,12 @@ function Score
                 g.set aa, a.color
         g.toString()
 
+    # 0000000    00000000   0000000   0000000     0000000  000000000  00000000   000  000   000   0000000   
+    # 000   000  000       000   000  000   000  000          000     000   000  000  0000  000  000        
+    # 000   000  0000000   000000000  000   000  0000000      000     0000000    000  000 0 000  000  0000  
+    # 000   000  000       000   000  000   000       000     000     000   000  000  000  0000  000   000  
+    # 0000000    00000000  000   000  0000000    0000000      000     000   000  000  000   000   0000000   
+    
     deadString: ->
         
         g = new Grid @grid.toString()

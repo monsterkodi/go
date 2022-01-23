@@ -8,19 +8,19 @@ Grid  = require '../grid'
         g = new Grid 5
         g.toString().split('\n') ▸
             [
-            '  A B C D E  '
+            '  A B C D E'
             '5           5'
             '4           4'
             '3           3'
             '2           2'
             '1           1'
-            '  A B C D E  '
+            '  A B C D E'
             ]
     
         g = new Grid 7
         g.toString().split('\n') ▸
             [
-            '  A B C D E F G  '
+            '  A B C D E F G'
             '7               7'
             '6               6'
             '5               5'
@@ -28,13 +28,13 @@ Grid  = require '../grid'
             '3               3'
             '2               2'
             '1               1'
-            '  A B C D E F G  '
+            '  A B C D E F G'
             ]
     
         g = new Grid 9
         g.toString().split('\n') ▸
             [
-            '  A B C D E F G H J  '
+            '  A B C D E F G H J'
             '9                   9'
             '8                   8'
             '7                   7'
@@ -44,33 +44,33 @@ Grid  = require '../grid'
             '3                   3'
             '2                   2'
             '1                   1'
-            '  A B C D E F G H J  '
+            '  A B C D E F G H J'
             ]
     
         g = new Grid 13
         g.toString().split('\n') ▸
             [
-            '   A B C D E F G H J K L M N   '
+            '   A B C D E F G H J K L M N'
             '13                           13'
             '12                           12'
             '11                           11'
             '10                           10'
-            ' 9                           9 '
-            ' 8                           8 '
-            ' 7                           7 '
-            ' 6                           6 '
-            ' 5                           5 '
-            ' 4                           4 '
-            ' 3                           3 '
-            ' 2                           2 '
-            ' 1                           1 '
-            '   A B C D E F G H J K L M N   '
+            ' 9                           9'
+            ' 8                           8'
+            ' 7                           7'
+            ' 6                           6'
+            ' 5                           5'
+            ' 4                           4'
+            ' 3                           3'
+            ' 2                           2'
+            ' 1                           1'
+            '   A B C D E F G H J K L M N'
             ]
     
         g = new Grid 19
         g.toString().split('\n') ▸
             [
-            '   A B C D E F G H J K L M N O P Q R S T   '
+            '   A B C D E F G H J K L M N O P Q R S T'
             '19                                       19'
             '18                                       18'
             '17                                       17'
@@ -81,16 +81,16 @@ Grid  = require '../grid'
             '12                                       12'
             '11                                       11'
             '10                                       10'
-            ' 9                                       9 '
-            ' 8                                       8 '
-            ' 7                                       7 '
-            ' 6                                       6 '
-            ' 5                                       5 '
-            ' 4                                       4 '
-            ' 3                                       3 '
-            ' 2                                       2 '
-            ' 1                                       1 '
-            '   A B C D E F G H J K L M N O P Q R S T   '
+            ' 9                                       9'
+            ' 8                                       8'
+            ' 7                                       7'
+            ' 6                                       6'
+            ' 5                                       5'
+            ' 4                                       4'
+            ' 3                                       3'
+            ' 2                                       2'
+            ' 1                                       1'
+            '   A B C D E F G H J K L M N O P Q R S T'
             ]
 
     ▸ fromString
@@ -109,13 +109,13 @@ Grid  = require '../grid'
             
         g.toString().split('\n') ▸
             [
-            '  A B C D E  '
+            '  A B C D E'
             '5 ●         5'
             '4           4'
             '3           3'
             '2           2'
             '1         ○ 1'
-            '  A B C D E  '
+            '  A B C D E'
             ]
 
         g.fromString [
@@ -129,13 +129,13 @@ Grid  = require '../grid'
             
         g.toString().split('\n') ▸
             [
-            '  A B C D E  '
+            '  A B C D E'
             '5 ●       ● 5'
             '4           4'
             '3           3'
             '2           2'
             '1 ●       ○ 1'
-            '  A B C D E  '
+            '  A B C D E'
             ]
 
         g.fromString [
@@ -148,12 +148,12 @@ Grid  = require '../grid'
             
         g.toString().split('\n') ▸
             [
-            '  A B C D E  '
+            '  A B C D E'
             '5 ○       ● 5'
             '4           4'
             '3           3'
             '2           2'
             '1 ●       ○ 1'
-            '  A B C D E  '
+            '  A B C D E'
             ]
             

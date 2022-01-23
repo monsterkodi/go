@@ -1,11 +1,11 @@
 
 Score = require '../score'
 
-scr = (b) -> 
+scr = (b) ->
     s = new Score b
     r = s.calcScore()
     r
-    
+
 ars = (b) ->
     s = new Score b
     # log b
@@ -16,24 +16,45 @@ ded = (b) ->
     s = new Score b
     r = s.calcScore()
     s.deadString()
-    
+
 ▸ test
-    
-    ars """
-          A B C D E
-        5   ●       5
-        4   ○ ● ● ● 4
-        3   ○ ●     3
-        2   ○ ●     2
-        1 ○ ○ ●     1
-          A B C D E
-        """ ▸
-        """
-          A B C D E  
-        5 w ● w w w 5
-        4 w ○ ● ● ● 4
-        3 w ○ ● w w 3
-        2 w ○ ● w w 2
-        1 ○ ○ ● w w 1
-          A B C D E  
-        """        
+
+    # ded """
+          # A B C D E
+        # 5     ● ○ ○ 5
+        # 4 ● ● ● ● ○ 4
+        # 3 ○ ○ ○ ○ ○ 3
+        # 2           2
+        # 1           1
+          # A B C D E
+        # """ ▸
+        # """
+          # A B C D E
+        # 5     X ○ ○ 5
+        # 4 X X X X ○ 4
+        # 3 ○ ○ ○ ○ ○ 3
+        # 2           2
+        # 1           1
+          # A B C D E
+        # """
+        
+    # ars """
+          # A B C D E
+        # 5   ●   ○ ○ 5
+        # 4   ●   ○   4
+        # 3   ●   ○   3
+        # 2   ●   ○   2
+        # 1   ●   ○   1
+          # A B C D E
+        # """ ▸
+        # """
+          # A B C D E
+        # 5 w ● ? ○ ○ 5
+        # 4 w ● ? ○ b 4
+        # 3 w ● ? ○ b 3
+        # 2 w ● ? ○ b 2
+        # 1 w ● ? ○ b 1
+          # A B C D E
+        # """
+        
+        

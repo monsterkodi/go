@@ -90,15 +90,15 @@ function Grid
         
         b = @size > 9 ? 2 : 1
         p = lpad b, ''
-        s = p + ' ' + alpha[0...@size] each (v) => v+' ' 
-        s += p
+        s = p + alpha[0...@size] each (v) => ' ' + v 
+        # s += p
         rows = @grid.split '\n'
         for row,ri in rows
             s += '\n'
-            s += lpad(b,@size-ri) + ' ' + (row each (v) => v + ' ') + rpad(b, @size-ri)
+            s += lpad(b,@size-ri) + ' ' + (row each (v) => v + ' ') + (@size-ri) # rpad(b, @size-ri)
         s += '\n'
-        s += p + ' ' + alpha[0...@size] each (v) => v+' ' 
-        s += p
+        s += p + alpha[0...@size] each (v) => ' ' + v 
+        # s += p
         s
 
     fromString: (str) ->
