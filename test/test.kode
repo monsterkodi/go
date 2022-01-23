@@ -1,81 +1,38 @@
 
 Score = require '../js/Score'
-Grid  = require '../js/Grid'
 
 scr = (b) -> 
     s = new Score b
-    s.calcScore()
+    r = s.calcScore()
+    r
+    
+ars = (b) ->
+    s = new Score b
+    r = s.calcScore()
+    s.areaString()
 
-▸ score
+ded = (b) ->
+    s = new Score b
+    r = s.calcScore()
+    s.deadString()
     
-    scr """
-          ●           ● ●
-          ○ ● ● ● ● ● ● ●
-          ○ ○ ● ○ ○ ○ ○ ●
-          ○ ● ● ○ ● ○   ○
-        ○ ○ ○ ● ○ ● ○ ○ ○
-        ○ ● ● ○ ○ ● ○   ○
-        ●   ● ○ ○ ● ● ○ ○
-          ● ● ● ○   ● ● ○
-          ● ○ ○ ○     ●  
-        """ ▸ 'X+1'
+▸ test
     
-    scr """
-        .              
-          ● ○     ●    
-          ● ○ ● ● ○ ● ●
-          ○ ● ●   ○ ○ ●
-          ○ ○ ● ○ ○ ○ ●
-                ○ ● ○ ●
-              ○ ○ ● ●  
-              ○   ○ ● ●
-                ○   ○  
-        """ ▸ 'X+1'
-    
-    scr """
-        
-        ● ● ○ ●   ●    
-        ○ ● ○ ● ● ○ ● ●
-        ○ ○ ● ● ● ○ ○ ●
-          ○ ○ ● ○ ○ ○ ●
-              ○ ○ ● ○ ●
-              ○ ○ ● ●  
-              ○   ○ ● ●
-                ○ ○ ○ ●
-        """ ▸ 'X+1'
-        
-▸ grid
-    
-    g = new Grid 9
-    g.toString().split('\n') ▸
-        [
-          '                  '
-          '                  '
-          '                  '
-          '                  '
-          '                  '
-          '                  '
-          '                  '
-          '                  '
-          '                  '
-        ]
-
-    g = new Grid 13
-    g.toString().split('\n') ▸
-        [
-          '                          '
-          '                          '
-          '                          '
-          '                          '
-          '                          '
-          '                          '
-          '                          '
-          '                          '
-          '                          '
-          '                          '
-          '                          '
-          '                          '
-          '                          '
-        ]
-        
-        
+    ars """
+          A B C D E
+        5   ●       5
+        4   ○ ● ● ● 4
+        3   ○ ●     3
+        2   ○ ●     2
+        1 ○ ○ ●     1
+          A B C D E
+        """ ▸
+        """
+          A B C D E
+        5 w ● w w w 5
+        4 w ○ ● ● ● 4
+        3 w ○ ● w w 3
+        2 w ○ ● w w 2
+        1 ○ ○ ● w w 1
+          A B C D E
+        """        

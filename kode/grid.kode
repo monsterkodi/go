@@ -12,7 +12,6 @@ function Grid
 
     @: (a=0) -> 
         if a is str
-            @size = a.split('\n').length
             @fromString a
         else
             @size = a
@@ -64,7 +63,7 @@ function Grid
     # 000   000     000     
     # 000   000     000     
     
-    at: (x,y) -> 
+    at: (x,y) ->
         
         i = @idx x,y
         if i?
@@ -87,13 +86,37 @@ function Grid
     #      000     000     000   000  000  000  0000  000   000  
     # 0000000      000     000   000  000  000   000   0000000   
     
-    toString: -> @grid each (v) -> v != '\n' ? (v + ' ') : v
+    toString: ->
+        
+        b = @size > 9 ? 2 : 1
+        p = lpad b, ''
+        s = p + ' ' + alpha[0...@size] each (v) => v+' ' 
+        s += p
+        rows = @grid.split '\n'
+        for row,ri in rows
+            s += '\n'
+            s += lpad(b,@size-ri) + ' ' + (row each (v) => v + ' ') + rpad(b, @size-ri)
+        s += '\n'
+        s += p + ' ' + alpha[0...@size] each (v) => v+' ' 
+        s += p
+        s
 
     fromString: (str) ->
         
-        @clear()
-        
         spl = str.split '\n'
+
+        while trim(spl[-1]).length == 0
+            spl.pop()
+        if ltrim(spl[0])[0] == 'A'
+            spl.shift()
+            spl.pop()
+            t = spl[-1][0] != ' ' ? 2 : 3
+            spl = spl.map (s) -> s[t..]
+            spl = spl.map (s) -> s[...spl.length*2]
+        
+        @size = spl.length
+        @clear()
+            
         for y in 0...@size
             if y < spl.length
                 for x in 0...@size

@@ -1,6 +1,6 @@
 // monsterkodi/kode 0.237.0
 
-var _k_ = {isStr: function (o) {return typeof o === 'string' || o instanceof String}, rpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s+=c} return s}, isArr: function (o) {return Array.isArray(o)}, each_r: function (o) {return o instanceof Array ? [] : typeof o == 'string' ? o.split('') : {}}}
+var _k_ = {isStr: function (o) {return typeof o === 'string' || o instanceof String}, rpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s+=c} return s}, isArr: function (o) {return Array.isArray(o)}, lpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s=c+s} return s}, each_r: function (o) {return o instanceof Array ? [] : typeof o == 'string' ? o.split('') : {}}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, trim: function (s,c=' ') {return _k_.ltrim(_k_.rtrim(s,c),c)}, ltrim: function (s,c=' ') { while (_k_.in(s[0],c)) { s = s.slice(1) } return s}, rtrim: function (s,c=' ') {while (_k_.in(s.slice(-1)[0],c)) { s = s.slice(0, s.length - 1) } return s}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}}
 
 var alpha, Grid, splice
 
@@ -14,7 +14,6 @@ Grid = (function ()
     {
         if (_k_.isStr(a))
         {
-            this.size = a.split('\n').length
             this.fromString(a)
         }
         else
@@ -38,7 +37,7 @@ Grid = (function ()
             this.size = size
         }
         this.grid = ''
-        for (var _33_17_ = y = 0, _33_21_ = this.size; (_33_17_ <= _33_21_ ? y < this.size : y > this.size); (_33_17_ <= _33_21_ ? ++y : --y))
+        for (var _32_17_ = y = 0, _32_21_ = this.size; (_32_17_ <= _32_21_ ? y < this.size : y > this.size); (_32_17_ <= _32_21_ ? ++y : --y))
         {
             this.grid += _k_.rpad(this.size,'')
             if (y < this.size - 1)
@@ -95,7 +94,7 @@ Grid = (function ()
     {
         if (!(c != null))
         {
-            var _81_29_ = [y,undefined]; c = _81_29_[0]; y = _81_29_[1]
+            var _80_29_ = [y,undefined]; c = _80_29_[0]; y = _80_29_[1]
 
         }
         return this.grid = splice(this.grid,this.idx(x,y),1,c)
@@ -103,34 +102,98 @@ Grid = (function ()
 
     Grid.prototype["toString"] = function ()
     {
-        return         (function (o) {
-            var r_90_23_ = _k_.each_r(o)
+        var b, p, ri, row, rows, s
+
+        b = (this.size > 9 ? 2 : 1)
+        p = _k_.lpad(b,'')
+        s = p + ' ' + (function (o) {
+            var r_93_39_ = _k_.each_r(o)
             for (var k in o)
             {   
-                var m = (function (v)
+                var m = ((function (v)
             {
-                return (v !== '\n' ? (v + ' ') : v)
-            })(o[k])
+                return v + ' '
+            }).bind(this))(o[k])
                 if (m != null)
                 {
-                    r_90_23_[k] = m
+                    r_93_39_[k] = m
                 }
             }
-            return typeof o == 'string' ? r_90_23_.join('') : r_90_23_
-        })(this.grid)
+            return typeof o == 'string' ? r_93_39_.join('') : r_93_39_
+        })(alpha.slice(0, typeof this.size === 'number' ? this.size : -1))
+        s += p
+        rows = this.grid.split('\n')
+        var list = _k_.list(rows)
+        for (ri = 0; ri < list.length; ri++)
+        {
+            row = list[ri]
+            s += '\n'
+            s += _k_.lpad(b,this.size - ri) + ' ' + (            (function (o) {
+                var r_98_47_ = _k_.each_r(o)
+                for (var k in o)
+                {   
+                    var m = ((function (v)
+                {
+                    return v + ' '
+                }).bind(this))(o[k])
+                    if (m != null)
+                    {
+                        r_98_47_[k] = m
+                    }
+                }
+                return typeof o == 'string' ? r_98_47_.join('') : r_98_47_
+            })(row)) + _k_.rpad(b,this.size - ri)
+        }
+        s += '\n'
+        s += p + ' ' + (function (o) {
+            var r_100_40_ = _k_.each_r(o)
+            for (var k in o)
+            {   
+                var m = ((function (v)
+            {
+                return v + ' '
+            }).bind(this))(o[k])
+                if (m != null)
+                {
+                    r_100_40_[k] = m
+                }
+            }
+            return typeof o == 'string' ? r_100_40_.join('') : r_100_40_
+        })(alpha.slice(0, typeof this.size === 'number' ? this.size : -1))
+        s += p
+        return s
     }
 
     Grid.prototype["fromString"] = function (str)
     {
-        var c, spl, x, y
+        var c, spl, t, x, y
 
-        this.clear()
         spl = str.split('\n')
-        for (var _97_17_ = y = 0, _97_21_ = this.size; (_97_17_ <= _97_21_ ? y < this.size : y > this.size); (_97_17_ <= _97_21_ ? ++y : --y))
+        while (_k_.trim(spl.slice(-1)[0]).length === 0)
+        {
+            spl.pop()
+        }
+        if (_k_.ltrim(spl[0])[0] === 'A')
+        {
+            spl.shift()
+            spl.pop()
+            t = (spl.slice(-1)[0][0] !== ' ' ? 2 : 3)
+            spl = spl.map(function (s)
+            {
+                return s.slice(t)
+            })
+            spl = spl.map(function (s)
+            {
+                return s.slice(0, spl.length * 2)
+            })
+        }
+        this.size = spl.length
+        this.clear()
+        for (var _120_17_ = y = 0, _120_21_ = this.size; (_120_17_ <= _120_21_ ? y < this.size : y > this.size); (_120_17_ <= _120_21_ ? ++y : --y))
         {
             if (y < spl.length)
             {
-                for (var _99_25_ = x = 0, _99_29_ = this.size; (_99_25_ <= _99_29_ ? x < this.size : x > this.size); (_99_25_ <= _99_29_ ? ++x : --x))
+                for (var _122_25_ = x = 0, _122_29_ = this.size; (_122_25_ <= _122_29_ ? x < this.size : x > this.size); (_122_25_ <= _122_29_ ? ++x : --x))
                 {
                     if (x * 2 < spl[y].length)
                     {

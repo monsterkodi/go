@@ -84,7 +84,7 @@ function Score
         if root
             @linkAreas()
             # log noon @grps
-            log noon @areas
+            # log noon @areas
             for g in @grps
                 if g.eyes.length < 1
                     a = @areas[g.areas[0]]
@@ -109,7 +109,9 @@ function Score
                     
             final = score.calcScore @
             
-            # log final.grid.grid
+            # log 'final grid' 
+            # log final.grid.toString()
+            # log 'final score' final
             
             for a in final.areas
                 if a.color != '.'
@@ -124,11 +126,11 @@ function Score
                 a.color = final.areaAt(a.area[0]).color
                     
             if final.captures.white > final.captures.black
-                @finalScore = 'W+'+(final.captures.white-final.captures.black)
+                finalScore = 'W+'+(final.captures.white-final.captures.black)
             else
-                @finalScore = 'B+'+(final.captures.black-final.captures.white)
+                finalScore = 'B+'+(final.captures.black-final.captures.white)
                 
-            @finalScore
+            finalScore
                 
         else if dead
             final
@@ -174,10 +176,12 @@ function Score
         sl = cl.filter((r) -> r?).join ''
         if not '○●' in sl and not '●○' in sl and sl.length > 0
             c = stoneColor[sl[0]][0]
-            if sl.length == g.length
-                c
-            else
-                '.'
+            # if sl.length == g.length
+                # c
+            # else
+                # log 'sl' sl, sl.length, g.length
+                # log 'cl' cl
+                # '?'
         else
             '.'
 
@@ -191,6 +195,7 @@ function Score
         
         if stone.empty == @stoneAt c
             rc = @rayColors c
+            # log rc, c
             p = rc.filter((r) -> r?).join ''
             if not '○●' in p and not '●○' in p and p.length > 0
                 # log 'pot' @pos(c), p[0]
@@ -351,6 +356,7 @@ function Score
             for x in 0...@size
                 p.push alpha[x]+(@size-y)
         p
+        
        
     #  0000000  000000000   0000000   000   000  00000000   0000000
     # 000          000     000   000  0000  000  000       000     
@@ -373,5 +379,21 @@ function Score
     coord:   (p)   => [alpha.indexOf(p[0].toUpperCase()), @size-int(p[1..])]
     pos:     (c)   => alpha[c[0]] + (@size-c[1])
     poslist: (cl)  -> cl.map @pos
-                                        
+    
+    areaString: ->
+        
+        g = new Grid @grid.toString()
+        for a in @areas
+            for aa in a.area
+                g.set aa, a.color
+        g.toString()
+
+    deadString: ->
+        
+        g = new Grid @grid.toString()
+        for gr in @grps
+            for gg in gr.group
+                g.set gg, 'X' if gr.state == 'dead'
+        g.toString()
+        
 module.exports = Score
