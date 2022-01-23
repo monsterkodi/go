@@ -1,5 +1,5 @@
 
-Grid  = require '../js/Grid'
+Grid  = require '../grid'
 
 ▸ grid
             

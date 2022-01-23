@@ -8,6 +8,7 @@
 
 { stoneColor, stone, alpha, opponent } = require './util'
 { noon } = require 'kxk'
+{ min } = Math
 Grid = require './grid'
 
 function Score
@@ -94,10 +95,12 @@ function Score
                     for gi in a.grps
                         o = @grps[gi]
                         if o.stone != g.stone and o.eyes.length > 1
-                            log 'dead' g.group[0]
+                            # log 'dead' g.group[0]
                             markDead g
                             break
-                    # if not dead then log 'check shape'
+                    if not dead 
+                        if @deadShape a
+                            markDead g
             if dead
                 final = score.calcScore @
                 
@@ -174,7 +177,9 @@ function Score
         
         cl = g.map (p) => @potentialOwner @coord p
         sl = cl.filter((r) -> r?).join ''
-        if not '○●' in sl and not '●○' in sl and sl.length > 0
+        if '?' in sl
+            '?'
+        else if not '○●' in sl and not '●○' in sl and sl.length > 0
             c = stoneColor[sl[0]][0]
             # if sl.length == g.length
                 # c
@@ -184,6 +189,46 @@ function Score
                 # '?'
         else
             '.'
+            
+    # 0000000    00000000   0000000   0000000     0000000  000   000   0000000   00000000   00000000  
+    # 000   000  000       000   000  000   000  000       000   000  000   000  000   000  000       
+    # 000   000  0000000   000000000  000   000  0000000   000000000  000000000  00000000   0000000   
+    # 000   000  000       000   000  000   000       000  000   000  000   000  000        000       
+    # 0000000    00000000  000   000  0000000    0000000   000   000  000   000  000        00000000  
+    
+    deadShape: (a) ->
+        
+        if a.area.length < 6
+            
+            af = a.area.filter (p) => '?' != @potentialOwner @coord p
+            if af.length < 4 ➜ return true
+            cs = @minCoords af.map @coord
+            ss = cs.map((c) -> ''+c[0]+c[1]).join ' '
+            return ss in [
+                '00 01 11 02 12'
+                '10 01 11 02 12'
+                '00 10 20 11 21'
+                '01 10 20 11 21'
+                '00 10 01 11 20'
+                '00 10 01 11 21'
+                '00 10 01 11 02'
+                '00 10 01 11 12'
+                '00 10 01 11'
+                ]
+        false
+        
+    minCoords: (cs) ->
+        
+        mx = my = Infinity
+        for c in cs
+            mx = min c[0], mx
+            my = min c[1], my
+        cs = cs.map (c) -> [c[0]-mx, c[1]-my]
+        cs.sort (a,b) -> 
+            if a[1] != b[1]
+                a[1] - b[1]
+            else
+                a[0] - b[0]
 
     #  0000000   000   000  000   000  00000000  00000000   
     # 000   000  000 0 000  0000  000  000       000   000  
@@ -197,9 +242,13 @@ function Score
             rc = @rayColors c
             # log rc, c
             p = rc.filter((r) -> r?).join ''
-            if not '○●' in p and not '●○' in p and p.length > 0
+            if '○●' in p or '●○' in p 
+                '?'
+            else if p.length
                 # log 'pot' @pos(c), p[0]
                 p[0]
+            # else
+                # log c, rc
         
     # 00000000    0000000   000   000  
     # 000   000  000   000   000 000   

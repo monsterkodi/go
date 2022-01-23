@@ -1,5 +1,5 @@
 
-Score = require '../js/Score'
+Score = require '../score'
 
 scr = (b) -> 
     s = new Score b
@@ -29,11 +29,11 @@ ded = (b) ->
         """ ▸
         """
           A B C D E  
-        5 w ● . ○ ○ 5
-        4 w ● . ○ b 4
-        3 w ● . ○ b 3
-        2 w ● . ○ b 2
-        1 w ● . ○ b 1
+        5 w ● ? ○ ○ 5
+        4 w ● ? ○ b 4
+        3 w ● ? ○ b 3
+        2 w ● ? ○ b 2
+        1 w ● ? ○ b 1
           A B C D E  
         """
 
@@ -57,13 +57,13 @@ ded = (b) ->
           A B C D E
         """ ▸
         """
-          A B C D E
+          A B C D E  
         5 w ● w w w 5
         4 w ○ ● ● ● 4
         3 w ○ ● w w 3
         2 w ○ ● w w 2
         1 ○ ○ ● w w 1
-          A B C D E
+          A B C D E  
         """
         
     scr """
