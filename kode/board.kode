@@ -236,8 +236,8 @@ function Board
         cn = stoneColor[s]
         cn += randIntRange 1 15 if cn == 'white'
         src = "../img/stone_#{cn}.png" 
-        shd = elem 'img' class:"shadow pos#{c[0]}_#{c[1]}" src:'../img/stone_shadow.png', width:"auto", height:"#{1.15*d}%" parent:@shd
         stn = elem 'img' class:"stone pos#{c[0]}_#{c[1]}" src:src, width:"auto", height:"#{d}%" parent:@stn
+        shd = elem 'img' class:"shadow pos#{c[0]}_#{c[1]}" src:'../img/stone_shadow.png', width:"auto", height:"#{1.15*d}%" parent:@shd
         x = (c[0]+0.5)*100/(@size+1)
         y = (c[1]+0.5)*100/(@size+1)
 

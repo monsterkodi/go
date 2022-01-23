@@ -12,9 +12,10 @@ Grid = require './grid'
 
 function Score
 
-    @: (@size) ->
+    @: (a) ->
         
-        @grid = new Grid @size
+        @grid = new Grid a
+        @size = @grid.size
         @captures = black:0 white:0
         
     clone: ->
@@ -43,7 +44,7 @@ function Score
     
     calcScore: (root) ->
         
-        ● calcScore
+        # ● calcScore
         
         @grps  = []
         @areas = []
@@ -64,6 +65,7 @@ function Score
                         stone: s
                         group: g
                         areas: []
+                        eyes: []
                         libs:  n.filter((p) => stone.empty == @stoneAt @coord p).length
                         neighbors: n
                         key:   g.join ' '
@@ -81,12 +83,18 @@ function Score
             
         if root
             @linkAreas()
+            # log noon @grps
+            log noon @areas
             for g in @grps
-                if g.areas.length == 1
+                if g.eyes.length < 1
                     a = @areas[g.areas[0]]
+                    # if a.color == stoneColor[g.stone][0] and a.area.length >= 6
+                        # log 'alive' a
+                        # continue
                     for gi in a.grps
                         o = @grps[gi]
-                        if o.stone != g.stone and o.areas.length > 1
+                        if o.stone != g.stone and o.eyes.length > 1
+                            log 'dead' g.group[0]
                             markDead g
                             break
                     # if not dead then log 'check shape'
@@ -116,11 +124,11 @@ function Score
                 a.color = final.areaAt(a.area[0]).color
                     
             if final.captures.white > final.captures.black
-                finalScore = 'W+'+(final.captures.white-final.captures.black)
+                @finalScore = 'W+'+(final.captures.white-final.captures.black)
             else
-                finalScore = 'B+'+(final.captures.black-final.captures.white)
+                @finalScore = 'B+'+(final.captures.black-final.captures.white)
                 
-            dbg finalScore
+            @finalScore
                 
         else if dead
             final
@@ -144,6 +152,9 @@ function Score
                         a.grps.push gi
                     if ai not in g.areas
                         g.areas.push ai
+                    if a.color == stoneColor[g.stone][0]
+                        if ai not in g.eyes
+                            g.eyes.push ai
     
     areaAt: (p) ->
         

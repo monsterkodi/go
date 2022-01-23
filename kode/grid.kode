@@ -10,7 +10,13 @@
 
 function Grid
 
-    @: (@size=0) -> @clear()
+    @: (a=0) -> 
+        if a is str
+            @size = a.split('\n').length
+            @fromString a
+        else
+            @size = a
+            @clear()
 
     #  0000000  000      00000000   0000000   00000000   
     # 000       000      000       000   000  000   000  
@@ -71,7 +77,7 @@ function Grid
     # 0000000   00000000     000     
     
     set: (x,y,c) ->
-        
+
         if not c? then [c,y] = [y, undefined]
         @grid = splice @grid, @idx(x,y), 1, c
         
@@ -81,7 +87,19 @@ function Grid
     #      000     000     000   000  000  000  0000  000   000  
     # 0000000      000     000   000  000  000   000   0000000   
     
-    toString: -> @grid each (v) -> ' ' + v
-    toJSON: -> @grid
+    toString: -> @grid each (v) -> v != '\n' ? (v + ' ') : v
 
+    fromString: (str) ->
+        
+        @clear()
+        
+        spl = str.split '\n'
+        for y in 0...@size
+            if y < spl.length
+                for x in 0...@size
+                    if x*2 < spl[y].length
+                        c = spl[y][x*2] 
+                        c = ' ' if c == '.'
+                        @set x, y, c
+        
 module.exports = Grid

@@ -269,8 +269,8 @@ Board = (function ()
             cn += randIntRange(1,15)
         }
         src = `../img/stone_${cn}.png`
-        shd = elem('img',{class:`shadow pos${c[0]}_${c[1]}`,src:'../img/stone_shadow.png',width:"auto",height:`${1.15 * d}%`,parent:this.shd})
         stn = elem('img',{class:`stone pos${c[0]}_${c[1]}`,src:src,width:"auto",height:`${d}%`,parent:this.stn})
+        shd = elem('img',{class:`shadow pos${c[0]}_${c[1]}`,src:'../img/stone_shadow.png',width:"auto",height:`${1.15 * d}%`,parent:this.shd})
         x = (c[0] + 0.5) * 100 / (this.size + 1)
         y = (c[1] + 0.5) * 100 / (this.size + 1)
         stn.style = `left:${x}%; top:${y}%;`

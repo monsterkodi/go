@@ -92,8 +92,6 @@ function MainWin extends win
             @game.play c, p
             @gnu.send "play #{c} #{p}"
          
-        # @game.dump()
-        
         if valid moves
 
             if score = window.stash.get 'score'

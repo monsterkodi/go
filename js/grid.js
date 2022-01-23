@@ -1,6 +1,6 @@
 // monsterkodi/kode 0.237.0
 
-var _k_ = {rpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s+=c} return s}, isArr: function (o) {return Array.isArray(o)}, isStr: function (o) {return typeof o === 'string' || o instanceof String}, each_r: function (o) {return o instanceof Array ? [] : typeof o == 'string' ? o.split('') : {}}}
+var _k_ = {isStr: function (o) {return typeof o === 'string' || o instanceof String}, rpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s+=c} return s}, isArr: function (o) {return Array.isArray(o)}, each_r: function (o) {return o instanceof Array ? [] : typeof o == 'string' ? o.split('') : {}}}
 
 var alpha, Grid, splice
 
@@ -10,11 +10,18 @@ alpha = require('./util').alpha
 
 Grid = (function ()
 {
-    function Grid (size = 0)
+    function Grid (a = 0)
     {
-        this.size = size
-    
-        this.clear()
+        if (_k_.isStr(a))
+        {
+            this.size = a.split('\n').length
+            this.fromString(a)
+        }
+        else
+        {
+            this.size = a
+            this.clear()
+        }
     }
 
     Grid.prototype["copy"] = function (g)
@@ -31,7 +38,7 @@ Grid = (function ()
             this.size = size
         }
         this.grid = ''
-        for (var _27_17_ = y = 0, _27_21_ = this.size; (_27_17_ <= _27_21_ ? y < this.size : y > this.size); (_27_17_ <= _27_21_ ? ++y : --y))
+        for (var _33_17_ = y = 0, _33_21_ = this.size; (_33_17_ <= _33_21_ ? y < this.size : y > this.size); (_33_17_ <= _33_21_ ? ++y : --y))
         {
             this.grid += _k_.rpad(this.size,'')
             if (y < this.size - 1)
@@ -88,7 +95,7 @@ Grid = (function ()
     {
         if (!(c != null))
         {
-            var _75_29_ = [y,undefined]; c = _75_29_[0]; y = _75_29_[1]
+            var _81_29_ = [y,undefined]; c = _81_29_[0]; y = _81_29_[1]
 
         }
         return this.grid = splice(this.grid,this.idx(x,y),1,c)
@@ -97,25 +104,46 @@ Grid = (function ()
     Grid.prototype["toString"] = function ()
     {
         return         (function (o) {
-            var r_84_23_ = _k_.each_r(o)
+            var r_90_23_ = _k_.each_r(o)
             for (var k in o)
             {   
                 var m = (function (v)
             {
-                return ' ' + v
+                return (v !== '\n' ? (v + ' ') : v)
             })(o[k])
                 if (m != null)
                 {
-                    r_84_23_[k] = m
+                    r_90_23_[k] = m
                 }
             }
-            return typeof o == 'string' ? r_84_23_.join('') : r_84_23_
+            return typeof o == 'string' ? r_90_23_.join('') : r_90_23_
         })(this.grid)
     }
 
-    Grid.prototype["toJSON"] = function ()
+    Grid.prototype["fromString"] = function (str)
     {
-        return this.grid
+        var c, spl, x, y
+
+        this.clear()
+        spl = str.split('\n')
+        for (var _97_17_ = y = 0, _97_21_ = this.size; (_97_17_ <= _97_21_ ? y < this.size : y > this.size); (_97_17_ <= _97_21_ ? ++y : --y))
+        {
+            if (y < spl.length)
+            {
+                for (var _99_25_ = x = 0, _99_29_ = this.size; (_99_25_ <= _99_29_ ? x < this.size : x > this.size); (_99_25_ <= _99_29_ ? ++x : --x))
+                {
+                    if (x * 2 < spl[y].length)
+                    {
+                        c = spl[y][x * 2]
+                        if (c === '.')
+                        {
+                            c = ' '
+                        }
+                        this.set(x,y,c)
+                    }
+                }
+            }
+        }
     }
 
     return Grid
