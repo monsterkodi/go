@@ -1,6 +1,6 @@
 // monsterkodi/kode 0.237.0
 
-var _k_ = {isStr: function (o) {return typeof o === 'string' || o instanceof String}, rpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s+=c} return s}, isArr: function (o) {return Array.isArray(o)}, lpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s=c+s} return s}, each_r: function (o) {return o instanceof Array ? [] : typeof o == 'string' ? o.split('') : {}}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, trim: function (s,c=' ') {return _k_.ltrim(_k_.rtrim(s,c),c)}, ltrim: function (s,c=' ') { while (_k_.in(s[0],c)) { s = s.slice(1) } return s}, rtrim: function (s,c=' ') {while (_k_.in(s.slice(-1)[0],c)) { s = s.slice(0, s.length - 1) } return s}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}}
+var _k_ = {isStr: function (o) {return typeof o === 'string' || o instanceof String}, rpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s+=c} return s}, isArr: function (o) {return Array.isArray(o)}, lpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s=c+s} return s}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, each_r: function (o) {return o instanceof Array ? [] : typeof o == 'string' ? o.split('') : {}}, trim: function (s,c=' ') {return _k_.ltrim(_k_.rtrim(s,c),c)}, ltrim: function (s,c=' ') { while (_k_.in(s[0],c)) { s = s.slice(1) } return s}, rtrim: function (s,c=' ') {while (_k_.in(s.slice(-1)[0],c)) { s = s.slice(0, s.length - 1) } return s}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}}
 
 var alpha, Grid, splice
 
@@ -100,35 +100,19 @@ Grid = (function ()
         return this.grid = splice(this.grid,this.idx(x,y),1,c)
     }
 
-    Grid.prototype["toString"] = function ()
+    Grid.prototype["toString"] = function (legend)
     {
-        var b, p, ri, row, rows, s
+        var ri, row, rows, s
 
-        b = (this.size > 9 ? 2 : 1)
-        p = _k_.lpad(b,'')
-        s = p + (function (o) {
-            var r_93_33_ = _k_.each_r(o)
-            for (var k in o)
-            {   
-                var m = ((function (v)
-            {
-                return ' ' + v
-            }).bind(this))(o[k])
-                if (m != null)
-                {
-                    r_93_33_[k] = m
-                }
-            }
-            return typeof o == 'string' ? r_93_33_.join('') : r_93_33_
-        })(alpha.slice(0, typeof this.size === 'number' ? this.size : -1))
+        s = '┌─' + _k_.lpad(this.size * 2,'','─') + '┐'
         rows = this.grid.split('\n')
         var list = _k_.list(rows)
         for (ri = 0; ri < list.length; ri++)
         {
             row = list[ri]
-            s += '\n'
-            s += _k_.lpad(b,this.size - ri) + ' ' + (            (function (o) {
-                var r_98_47_ = _k_.each_r(o)
+            s += '\n│ '
+            s += (function (o) {
+                var r_114_21_ = _k_.each_r(o)
                 for (var k in o)
                 {   
                     var m = ((function (v)
@@ -137,28 +121,37 @@ Grid = (function ()
                 }).bind(this))(o[k])
                     if (m != null)
                     {
-                        r_98_47_[k] = m
+                        r_114_21_[k] = m
                     }
                 }
-                return typeof o == 'string' ? r_98_47_.join('') : r_98_47_
-            })(row)) + (this.size - ri)
+                return typeof o == 'string' ? r_114_21_.join('') : r_114_21_
+            })(row)
+            s += '│'
+            if (legend)
+            {
+                s += _k_.lpad(2,this.size - ri)
+            }
         }
         s += '\n'
-        s += p + (function (o) {
-            var r_100_34_ = _k_.each_r(o)
-            for (var k in o)
-            {   
-                var m = ((function (v)
-            {
-                return ' ' + v
-            }).bind(this))(o[k])
-                if (m != null)
+        s += '└─' + _k_.lpad(this.size * 2,'','─') + '┘'
+        if (legend)
+        {
+            s += '\n ' + (function (o) {
+                var r_120_42_ = _k_.each_r(o)
+                for (var k in o)
+                {   
+                    var m = ((function (v)
                 {
-                    r_100_34_[k] = m
+                    return ' ' + v
+                }).bind(this))(o[k])
+                    if (m != null)
+                    {
+                        r_120_42_[k] = m
+                    }
                 }
-            }
-            return typeof o == 'string' ? r_100_34_.join('') : r_100_34_
-        })(alpha.slice(0, typeof this.size === 'number' ? this.size : -1))
+                return typeof o == 'string' ? r_120_42_.join('') : r_120_42_
+            })(alpha.slice(0, typeof this.size === 'number' ? this.size : -1))
+        }
         return s
     }
 
@@ -185,13 +178,26 @@ Grid = (function ()
                 return s.slice(0, spl.length * 2)
             })
         }
+        else if (spl[0][0] === '┌')
+        {
+            spl.shift()
+            spl.pop()
+            spl = spl.map(function (s)
+            {
+                return s.slice(2)
+            })
+            spl = spl.map(function (s)
+            {
+                return s.slice(0, spl.length * 2)
+            })
+        }
         this.size = spl.length
         this.clear()
-        for (var _120_17_ = y = 0, _120_21_ = this.size; (_120_17_ <= _120_21_ ? y < this.size : y > this.size); (_120_17_ <= _120_21_ ? ++y : --y))
+        for (var _152_17_ = y = 0, _152_21_ = this.size; (_152_17_ <= _152_21_ ? y < this.size : y > this.size); (_152_17_ <= _152_21_ ? ++y : --y))
         {
             if (y < spl.length)
             {
-                for (var _122_25_ = x = 0, _122_29_ = this.size; (_122_25_ <= _122_29_ ? x < this.size : x > this.size); (_122_25_ <= _122_29_ ? ++x : --x))
+                for (var _154_25_ = x = 0, _154_29_ = this.size; (_154_25_ <= _154_29_ ? x < this.size : x > this.size); (_154_25_ <= _154_29_ ? ++x : --x))
                 {
                     if (x * 2 < spl[y].length)
                     {
