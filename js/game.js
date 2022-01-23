@@ -38,7 +38,7 @@ Game = (function ()
     Game.prototype["save"] = function ()
     {
         window.stash.set('moves',this.moves)
-        return window.stash.set('grid',this.grid.grid)
+        return window.stash.set('grid',this.grid.toString())
     }
 
     Game.prototype["move_history"] = function ()

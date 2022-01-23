@@ -113,7 +113,7 @@ function Grid
             s += '\n│ '
             s += row each (v) => v + ' '
             s += '│' 
-            s += lpad(2, @size-ri) if legend
+            s += ' ' + (@size-ri) if legend
         s += '\n'
         s += '└─' + lpad(@size*2, '' '─') + '┘'
         if legend

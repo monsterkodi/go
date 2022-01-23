@@ -28,7 +28,7 @@ function Game extends Score
     save: ->
         
         window.stash.set 'moves' @moves
-        window.stash.set 'grid'  @grid.grid
+        window.stash.set 'grid'  @grid.toString()
             
     move_history: -> @moves.join '\n'
             

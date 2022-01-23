@@ -129,7 +129,7 @@ Grid = (function ()
             s += '│'
             if (legend)
             {
-                s += _k_.lpad(2,this.size - ri)
+                s += ' ' + (this.size - ri)
             }
         }
         s += '\n'

@@ -75,12 +75,17 @@ function Score
         dead = false
         score = @clone()
         
-        markDead = (g) ->
+        markDead = (g,r) =>
+            # log 'dead:' r, g
+            
             dead = true
             g.state = 'dead'
             for p in g.group
                 score.captures[opponent[g.stone]]++
                 score.grid.set p, stone.empty
+                
+            # log @deadString 1
+            # log @areaString 1
             
         if root
             @linkAreas()
@@ -92,12 +97,27 @@ function Score
                     for gi in a.grps
                         o = @grps[gi]
                         if o.stone != g.stone and o.eyes.length > 1
-                            # log 'dead' g.group[0]
-                            markDead g
-                            break
+                            if not @potentialGroup g 
+                                markDead g, 'dead no eyes and no potential'
+                                break
+                                
                     if not dead 
-                        if @deadShape a
-                            markDead g
+                        if g.areas.length == 1 and @deadShape a
+                            markDead g, 'dead shape'
+                            
+                    if not dead
+                        canMakeEye = false
+                        for ai in g.areas
+                            if not @deadShape @areas[ai]
+                                canMakeEye = true
+                                break
+
+                        if not canMakeEye
+                            if g.areas.length == 2
+                                for ai in g.areas
+                                    if ai not in g.eyes
+                                        if not @potentialEye g, @areas[ai]
+                                            markDead g, 'no potential 2nd eye'
             if dead
                 final = score.calcScore @
                 
@@ -227,11 +247,11 @@ function Score
             else
                 a[0] - b[0]
 
-    #  0000000   000   000  000   000  00000000  00000000   
-    # 000   000  000 0 000  0000  000  000       000   000  
-    # 000   000  000000000  000 0 000  0000000   0000000    
-    # 000   000  000   000  000  0000  000       000   000  
-    #  0000000   00     00  000   000  00000000  000   000  
+    # 00000000    0000000   000000000  00000000  000   000  000000000  000   0000000   000      
+    # 000   000  000   000     000     000       0000  000     000     000  000   000  000      
+    # 00000000   000   000     000     0000000   000 0 000     000     000  000000000  000      
+    # 000        000   000     000     000       000  0000     000     000  000   000  000      
+    # 000         0000000      000     00000000  000   000     000     000  000   000  0000000  
     
     potentialOwner: (c) ->
         
@@ -246,6 +266,23 @@ function Score
                 p[0]
             # else
                 # log c, rc
+                
+    potentialGroup: (g) ->
+        
+        for n in g.neighbors
+            if @stoneAt(n) == stone.empty and g.stone == @potentialOwner @coord n
+                # log 'hasPotential' n, g
+                return true
+                
+    potentialEye: (g, a) ->
+        
+        if a.area.length < 2 ➜ return false
+        if a.area.length == 2
+            cnt = '○':0 '●':0 ' ':0
+            for n in a.neighbors
+                cnt[@stoneAt n]++
+            if cnt['○'] == cnt['●'] ➜ return false
+        true
         
     # 00000000    0000000   000   000  
     # 000   000  000   000   000 000   
@@ -432,13 +469,13 @@ function Score
     # 000   000  000   000  000       000   000       000     000     000   000  000  000  0000  000   000  
     # 000   000  000   000  00000000  000   000  0000000      000     000   000  000  000   000   0000000   
     
-    areaString: ->
+    areaString: (legend) ->
         
         g = new Grid @grid.toString()
         for a in @areas
             for aa in a.area
                 g.set aa, a.color
-        g.toString()
+        g.toString legend
 
     # 0000000    00000000   0000000   0000000     0000000  000000000  00000000   000  000   000   0000000   
     # 000   000  000       000   000  000   000  000          000     000   000  000  0000  000  000        
@@ -446,12 +483,12 @@ function Score
     # 000   000  000       000   000  000   000       000     000     000   000  000  000  0000  000   000  
     # 0000000    00000000  000   000  0000000    0000000      000     000   000  000  000   000   0000000   
     
-    deadString: ->
+    deadString: (legend) ->
         
         g = new Grid @grid.toString()
         for gr in @grps
             for gg in gr.group
                 g.set gg, 'X' if gr.state == 'dead'
-        g.toString()
+        g.toString legend
         
 module.exports = Score
