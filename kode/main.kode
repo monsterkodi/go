@@ -38,7 +38,6 @@ class Main extends app
         
         post.on 'menuAction' @onMenuAction
         
-    # onShow: => 
     hideDock: -> 
                 
     #  0000000   000   000  000  000000000  

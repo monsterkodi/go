@@ -102,15 +102,15 @@ function GNU
                 @game.calcScore()
                 @game.board.annotate()
                 @game.updateTitle()
-            else if m.startsWith 'final_score'
-                log m, data
-                @game.finalScore data
             else if m.startsWith 'fixed_handicap'
                 for p in data.split ' '
                     @game.setStone @game.coord(p), stone.black
-                @game.dump()
+                # @game.dump()
             else if m.startsWith 'estimate_score'
                 @game.setScore data.split(' ')[0]
+            else if m.startsWith 'final_score'
+                log m, data
+                @game.finalScore data
             else if m.startsWith 'showboard'
                 @game.show data
             else

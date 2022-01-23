@@ -164,7 +164,7 @@ function Game extends Score
             '○' ➜ 'black'
             '●' ➜ 'white'
                 ➜ 'empty'
-        
+
     #  0000000  000      00000000   0000000   00000000 
     # 000       000      000       000   000  000   000
     # 000       000      0000000   000000000  0000000  
@@ -173,9 +173,8 @@ function Game extends Score
     
     clear_board: ->
         
-        @captures = black:0 white:0
-        @grid.clear @size
         @moves = []
+        @clear()
         @updateTitle()
         ''
             
@@ -240,6 +239,7 @@ function Game extends Score
         
     finalScore: (score) ->
         
+        window.stash.set 'score' trim score 
         t =$ '.titlebar-title'
         t.innerHTML = ''
         td = elem 'div' class:'captures' text:score, parent:t

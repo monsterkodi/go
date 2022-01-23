@@ -71,12 +71,16 @@ MainWin = (function ()
 
     MainWin.prototype["newGame"] = function (boardsize = 9, gnucolor = 'black', handicap = 0, moves = [])
     {
-        var c, m, p, r1
+        var c, m, p, r1, score
 
         this.boardsize = boardsize
         this.gnucolor = gnucolor
         this.handicap = handicap
     
+        if (_k_.empty(moves))
+        {
+            window.stash.del('score')
+        }
         window.stash.set('boardsize',this.boardsize)
         window.stash.set('gnucolor',this.gnucolor)
         window.stash.set('handicap',this.handicap)
@@ -91,18 +95,24 @@ MainWin = (function ()
         this.board.game = this.game
         this.gnu.newGame(this.boardsize,this.gnucolor,this.handicap,_k_.empty(moves))
         var list = _k_.list(moves)
-        for (var _89_14_ = 0; _89_14_ < list.length; _89_14_++)
+        for (var _90_14_ = 0; _90_14_ < list.length; _90_14_++)
         {
-            m = list[_89_14_]
-            var _90_19_ = m.split(' '); c = _90_19_[0]; p = _90_19_[1]
+            m = list[_90_14_]
+            var _91_19_ = m.split(' '); c = _91_19_[0]; p = _91_19_[1]
 
             this.game.play(c,p)
             this.gnu.send(`play ${c} ${p}`)
         }
-        this.game.dump()
-        if (!_k_.empty((moves)) && this.game.moves.slice(-1)[0].split(' ')[0] !== this.gnucolor)
+        if (!_k_.empty(moves))
         {
-            return this.gnu.send(`genmove ${this.gnucolor}`)
+            if (score = window.stash.get('score'))
+            {
+                this.game.finalScore(score)
+            }
+            if (this.game.moves.slice(-1)[0].split(' ')[0] !== this.gnucolor)
+            {
+                return this.gnu.send(`genmove ${this.gnucolor}`)
+            }
         }
     }
 

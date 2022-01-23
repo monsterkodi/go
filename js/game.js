@@ -1,6 +1,6 @@
 // monsterkodi/kode 0.237.0
 
-var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, each_r: function (o) {return o instanceof Array ? [] : typeof o == 'string' ? o.split('') : {}}, lpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s=c+s} return s}}
+var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, each_r: function (o) {return o instanceof Array ? [] : typeof o == 'string' ? o.split('') : {}}, lpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s=c+s} return s}, trim: function (s,c=' ') {return _k_.ltrim(_k_.rtrim(s,c),c)}, ltrim: function (s,c=' ') { while (_k_.in(s[0],c)) { s = s.slice(1) } return s}, rtrim: function (s,c=' ') {while (_k_.in(s.slice(-1)[0],c)) { s = s.slice(0, s.length - 1) } return s}}
 
 var $, alpha, elem, Game, Grid, kxk, opponent, randInt, Score, stone
 
@@ -235,9 +235,8 @@ Game = (function ()
 
     Game.prototype["clear_board"] = function ()
     {
-        this.captures = {black:0,white:0}
-        this.grid.clear(this.size)
         this.moves = []
+        this.clear()
         this.updateTitle()
         return ''
     }
@@ -249,7 +248,7 @@ Game = (function ()
         s = ' '
         b = '  '
         b += (function (o) {
-            var r_192_34_ = _k_.each_r(o)
+            var r_191_34_ = _k_.each_r(o)
             for (var k in o)
             {   
                 var m = (function (v)
@@ -258,18 +257,18 @@ Game = (function ()
             })(o[k])
                 if (m != null)
                 {
-                    r_192_34_[k] = m
+                    r_191_34_[k] = m
                 }
             }
-            return typeof o == 'string' ? r_192_34_.join('') : r_192_34_
+            return typeof o == 'string' ? r_191_34_.join('') : r_191_34_
         })(alpha.slice(0,this.size))
         b += '\n'
         y = 0
-        for (var _195_17_ = i = this.size, _195_24_ = 1; (_195_17_ <= _195_24_ ? i <= 1 : i >= 1); (_195_17_ <= _195_24_ ? ++i : --i))
+        for (var _194_17_ = i = this.size, _194_24_ = 1; (_194_17_ <= _194_24_ ? i <= 1 : i >= 1); (_194_17_ <= _194_24_ ? ++i : --i))
         {
             b += _k_.lpad(2,i)
             b += s
-            for (var _198_21_ = x = 0, _198_25_ = this.size; (_198_21_ <= _198_25_ ? x < this.size : x > this.size); (_198_21_ <= _198_25_ ? ++x : --x))
+            for (var _197_21_ = x = 0, _197_25_ = this.size; (_197_21_ <= _197_25_ ? x < this.size : x > this.size); (_197_21_ <= _197_25_ ? ++x : --x))
             {
                 b += this.stoneAt(x,y) + s
             }
@@ -279,7 +278,7 @@ Game = (function ()
         }
         b += '  '
         b += (function (o) {
-            var r_205_34_ = _k_.each_r(o)
+            var r_204_34_ = _k_.each_r(o)
             for (var k in o)
             {   
                 var m = (function (v)
@@ -288,10 +287,10 @@ Game = (function ()
             })(o[k])
                 if (m != null)
                 {
-                    r_205_34_[k] = m
+                    r_204_34_[k] = m
                 }
             }
-            return typeof o == 'string' ? r_205_34_.join('') : r_205_34_
+            return typeof o == 'string' ? r_204_34_.join('') : r_204_34_
         })(alpha.slice(0,this.size))
         b += '\n'
         return b
@@ -317,7 +316,7 @@ Game = (function ()
 
     Game.prototype["updateTitle"] = function ()
     {
-        var bs, t, td, ws, _235_19_, _236_19_
+        var bs, t, td, ws, _234_19_, _235_19_
 
         t = $('.titlebar-title')
         t.innerHTML = ''
@@ -332,6 +331,7 @@ Game = (function ()
     {
         var t, td
 
+        window.stash.set('score',_k_.trim(score))
         t = $('.titlebar-title')
         t.innerHTML = ''
         return td = elem('div',{class:'captures',text:score,parent:t})

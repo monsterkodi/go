@@ -18,6 +18,8 @@ function Grid
     # 000       000      000       000   000  000   000  
     #  0000000  0000000  00000000  000   000  000   000  
     
+    copy: (g) -> @grid = g.grid
+    
     clear: (size) ->
         
         @size = size if size?

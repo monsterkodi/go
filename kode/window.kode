@@ -70,6 +70,7 @@ function MainWin extends win
     
     newGame: (@boardsize=9, @gnucolor='black', @handicap=0, moves=[]) ->
 
+        window.stash.del 'score' if empty moves
         window.stash.set 'boardsize' @boardsize
         window.stash.set 'gnucolor'  @gnucolor
         window.stash.set 'handicap'  @handicap
@@ -91,10 +92,15 @@ function MainWin extends win
             @game.play c, p
             @gnu.send "play #{c} #{p}"
          
-        @game.dump()
+        # @game.dump()
         
-        if valid(moves) and @game.moves[-1].split(' ')[0] != @gnucolor 
-            @gnu.send "genmove #{@gnucolor}"
+        if valid moves
+
+            if score = window.stash.get 'score'
+                @game.finalScore score
+                
+            if @game.moves[-1].split(' ')[0] != @gnucolor 
+                @gnu.send "genmove #{@gnucolor}"
         
     onResize: =>
         

@@ -147,24 +147,23 @@ GNU = (function ()
                 this.game.board.annotate()
                 return this.game.updateTitle()
             }
-            else if (m.startsWith('final_score'))
-            {
-                console.log(m,data)
-                return this.game.finalScore(data)
-            }
             else if (m.startsWith('fixed_handicap'))
             {
                 var list = _k_.list(data.split(' '))
-                for (var _109_22_ = 0; _109_22_ < list.length; _109_22_++)
+                for (var _106_22_ = 0; _106_22_ < list.length; _106_22_++)
                 {
-                    p = list[_109_22_]
+                    p = list[_106_22_]
                     this.game.setStone(this.game.coord(p),stone.black)
                 }
-                return this.game.dump()
             }
             else if (m.startsWith('estimate_score'))
             {
                 return this.game.setScore(data.split(' ')[0])
+            }
+            else if (m.startsWith('final_score'))
+            {
+                console.log(m,data)
+                return this.game.finalScore(data)
             }
             else if (m.startsWith('showboard'))
             {

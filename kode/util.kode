@@ -21,6 +21,8 @@ class Util
         black: 'white'
         B:     'white' 
         b:     'white'
+        '○':   'white'
+        '●':   'black'
         white: 'black'
         W:     'black'
         w:     'black'

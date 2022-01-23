@@ -15,14 +15,33 @@ function Score
     @: (@size) ->
         
         @grid = new Grid @size
+        @captures = black:0 white:0
+        
+    clone: ->
+        
+        s = new Score @size
+        s.captures = copy @captures
+        s.grid.copy @grid 
+        s
 
-    #  0000000   0000000   0000000   00000000   00000000  
-    # 000       000       000   000  000   000  000       
-    # 0000000   000       000   000  0000000    0000000   
-    #      000  000       000   000  000   000  000       
-    # 0000000    0000000   0000000   000   000  00000000  
+    #  0000000  000      00000000   0000000   00000000   
+    # 000       000      000       000   000  000   000  
+    # 000       000      0000000   000000000  0000000    
+    # 000       000      000       000   000  000   000  
+    #  0000000  0000000  00000000  000   000  000   000  
     
-    calcScore: ->
+    clear: ->
+        
+        @captures = black:0 white:0
+        @grid.clear @size
+        
+    #  0000000   0000000   000       0000000  
+    # 000       000   000  000      000       
+    # 000       000000000  000      000       
+    # 000       000   000  000      000       
+    #  0000000  000   000  0000000   0000000  
+    
+    calcScore: (root) ->
         
         ● calcScore
         
@@ -31,6 +50,7 @@ function Score
         
         for s,gl of @allGroups()
             for g in gl
+                n = @group_neighbors g
                 if s == stone.empty
                     @areas.push 
                         area:  g
@@ -38,8 +58,8 @@ function Score
                         grps:  []
                         color: @areaColor g
                         state: 'neutral'
+                        neighbors: n
                 else
-                    n = @group_neighbors g
                     @grps.push
                         stone: s
                         group: g
@@ -48,25 +68,95 @@ function Score
                         neighbors: n
                         key:   g.join ' '
                         state: 'unknown'
-             
-        # log '%c areas' 'font-size: 20px; color:red;'
-        # log noon @areas
-        # log '%c groups' 'font-size: 20px; color:green;'
-        # log noon @grps 
+                        
+        dead = false
+        score = @clone()
         
-        for g in @grps
-            if g.libs == 1
-                # log 'dead' noon g
-                g.state = 'dead'
-                for n in g.neighbors
-                    log n, @countlib(n), @stoneAt n
-        
+        markDead = (g) ->
+            dead = true
+            g.state = 'dead'
+            for p in g.group
+                score.captures[opponent[g.stone]]++
+                score.grid.set p, stone.empty
+            
+        if root
+            @linkAreas()
+            for g in @grps
+                if g.areas.length == 1
+                    a = @areas[g.areas[0]]
+                    for gi in a.grps
+                        o = @grps[gi]
+                        if o.stone != g.stone and o.areas.length > 1
+                            markDead g
+                            break
+                    # if not dead then log 'check shape'
+            if dead
+                final = score.calcScore @
+                
+        if not root
+                    
+            for g in @grps
+                if g.libs == 1
+                    markDead g
+                    
+            final = score.calcScore @
+            
+            # log final.grid.grid
+            
+            for a in final.areas
+                if a.color != '.'
+                    final.captures[stoneColor[a.color]] += a.area.length
+                    
+            for g in @grps
+                if g.state == 'unknown'
+                    if stone.empty == final.grid.at g.group[0]
+                        g.state = 'dead'
+                        
+            for a in @areas
+                a.color = final.areaAt(a.area[0]).color
+                    
+            if final.captures.white > final.captures.black
+                finalScore = 'W+'+(final.captures.white-final.captures.black)
+            else
+                finalScore = 'B+'+(final.captures.black-final.captures.white)
+                
+            dbg finalScore
+                
+        else if dead
+            final
+        else
+            @
+            
     #  0000000   00000000   00000000   0000000   
     # 000   000  000   000  000       000   000  
     # 000000000  0000000    0000000   000000000  
     # 000   000  000   000  000       000   000  
     # 000   000  000   000  00000000  000   000  
+
+    linkAreas: ->
+        
+        for a in @areas
+            ai = @areas.indexOf a
+            for n in a.neighbors
+                if g = @groupAt n
+                    gi = @grps.indexOf g
+                    if gi not in a.grps
+                        a.grps.push gi
+                    if ai not in g.areas
+                        g.areas.push ai
     
+    areaAt: (p) ->
+        
+        for g in @areas
+            if p in g.area
+                return g
+
+    groupAt: (p) ->
+        
+        for g in @grps
+            if p in g.group
+                return g
+                
     areaColor: (g) ->
         
         cl = g.map (p) => @potentialOwner @coord p

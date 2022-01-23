@@ -6,7 +6,7 @@ class Util
 {
     static stone = {empty:' ',black:'○',white:'●',B:'○',b:'○',W:'●',w:'●'}
 
-    static opponent = {black:'white',B:'white',b:'white',white:'black',W:'black',w:'black'}
+    static opponent = {black:'white',B:'white',b:'white','○':'white','●':'black',white:'black',W:'black',w:'black'}
 
     static stoneColor = {black:'black',B:'black',b:'black','○':'black','●':'white',white:'white',W:'white',w:'white'}
 

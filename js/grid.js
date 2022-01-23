@@ -17,6 +17,11 @@ Grid = (function ()
         this.clear()
     }
 
+    Grid.prototype["copy"] = function (g)
+    {
+        return this.grid = g.grid
+    }
+
     Grid.prototype["clear"] = function (size)
     {
         var y
@@ -26,7 +31,7 @@ Grid = (function ()
             this.size = size
         }
         this.grid = ''
-        for (var _25_17_ = y = 0, _25_21_ = this.size; (_25_17_ <= _25_21_ ? y < this.size : y > this.size); (_25_17_ <= _25_21_ ? ++y : --y))
+        for (var _27_17_ = y = 0, _27_21_ = this.size; (_27_17_ <= _27_21_ ? y < this.size : y > this.size); (_27_17_ <= _27_21_ ? ++y : --y))
         {
             this.grid += _k_.rpad(this.size,'')
             if (y < this.size - 1)
@@ -83,7 +88,7 @@ Grid = (function ()
     {
         if (!(c != null))
         {
-            var _73_29_ = [y,undefined]; c = _73_29_[0]; y = _73_29_[1]
+            var _75_29_ = [y,undefined]; c = _75_29_[0]; y = _75_29_[1]
 
         }
         return this.grid = splice(this.grid,this.idx(x,y),1,c)
@@ -92,7 +97,7 @@ Grid = (function ()
     Grid.prototype["toString"] = function ()
     {
         return         (function (o) {
-            var r_82_23_ = _k_.each_r(o)
+            var r_84_23_ = _k_.each_r(o)
             for (var k in o)
             {   
                 var m = (function (v)
@@ -101,10 +106,10 @@ Grid = (function ()
             })(o[k])
                 if (m != null)
                 {
-                    r_82_23_[k] = m
+                    r_84_23_[k] = m
                 }
             }
-            return typeof o == 'string' ? r_82_23_.join('') : r_82_23_
+            return typeof o == 'string' ? r_84_23_.join('') : r_84_23_
         })(this.grid)
     }
 
