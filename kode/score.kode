@@ -77,7 +77,7 @@ function Score
         score = @clone()
         
         markDead = (g,r) =>
-            # log 'dead:' r, g
+            log 'dead:' r, g
             
             dead = true
             g.state = 'dead'
@@ -85,7 +85,7 @@ function Score
                 score.captures[opponent[g.stone]]++
                 score.grid.set p, stone.empty
                 
-            # log @deadString 1
+            log @deadString 1
             # log @areaString 1
             
         if root

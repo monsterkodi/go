@@ -77,6 +77,7 @@ Score = (function ()
         {
             var p
 
+            console.log('dead:',r,g)
             dead = true
             g.state = 'dead'
             var list1 = _k_.list(g.group)
@@ -86,6 +87,7 @@ Score = (function ()
                 score.captures[opponent[g.stone]]++
                 score.grid.set(p,stone.empty)
             }
+            console.log(this.deadString(1))
         }).bind(this)
         if (root)
         {
