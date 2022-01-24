@@ -23,40 +23,49 @@ function Grid
     # 000       000      000       000   000  000   000  
     #  0000000  0000000  00000000  000   000  000   000  
     
-    copy: (g) -> @grid = g.grid
+    copy: (g) ->
+        
+        @size = g.size
+        @rows = clone g.rows
     
     clear: (size) ->
         
         @size = size if size?
-        @grid = ''
+        @rows = []
         for y in 0...@size
-            @grid += rpad @size, ''
-            @grid += '\n' if y < @size-1
+            row = []
+            for x in 0...@size
+                row.push ' '
+            @rows.push row
         @
     
-    # 000  0000000    000   000  
-    # 000  000   000   000 000   
-    # 000  000   000    00000    
-    # 000  000   000   000 000   
-    # 000  0000000    000   000  
+    # 00000000    0000000   000   000   0000000   0000000   000      
+    # 000   000  000   000  000 0 000  000       000   000  000      
+    # 0000000    000   000  000000000  000       000   000  000      
+    # 000   000  000   000  000   000  000       000   000  000      
+    # 000   000   0000000   00     00   0000000   0000000   0000000  
     
-    idx: (x,y) ->
+    rowCol: (x,y) ->
         
         if not y?
             if 
                 x is arr
-                    y = x[1]
-                    x = x[0] 
+                    c = x[0] 
+                    r = x[1]
                 x is str
-                    y = @size - int x[1..]
-                    x = alpha.indexOf x[0].toUpperCase()
-        if not y?
-            if x < @size*@size
-                x
+                    c = alpha.indexOf x[0].toUpperCase()
+                    r = @size - int x[1..]
+                else
+                    dbg 'dafuk'
         else
-            if 0 <= x < @size and 0 <= y < @size
-                x+(@size+1)*y
-                
+            c = x
+            r = y
+            
+        if 0 <= c < @size and 0 <= r < @size
+            [r,c]
+        else
+            []
+
     #  0000000   000000000  
     # 000   000     000     
     # 000000000     000     
@@ -65,9 +74,9 @@ function Grid
     
     at: (x,y) ->
         
-        i = @idx x,y
-        if i?
-            @grid[i]
+        [r,c] = @rowCol x,y
+        if r?
+            @rows[r][c]
         
     #  0000000  00000000  000000000  
     # 000       000          000     
@@ -75,50 +84,13 @@ function Grid
     #      000  000          000     
     # 0000000   00000000     000     
     
-    set: (x,y,c) ->
+    set: (x,y,s) ->
 
-        if not c? then [c,y] = [y, undefined]
-        @grid = splice @grid, @idx(x,y), 1, c
+        if not s? then [s,y] = [y, undefined]
         
-    #  0000000  000000000  00000000   000  000   000   0000000   
-    # 000          000     000   000  000  0000  000  000        
-    # 0000000      000     0000000    000  000 0 000  000  0000  
-    #      000     000     000   000  000  000  0000  000   000  
-    # 0000000      000     000   000  000  000   000   0000000   
-    
-    # toString: ->
-#         
-        # b = @size > 9 ? 2 : 1
-        # p = lpad b, ''
-        # s = p + alpha[0...@size] each (v) => ' ' + v 
-        # rows = @grid.split '\n'
-        # for row,ri in rows
-            # s += '\n'
-            # s += lpad(b,@size-ri) + ' ' + (row each (v) => v + ' ') + (@size-ri) # rpad(b, @size-ri)
-        # s += '\n'
-        # s += p + alpha[0...@size] each (v) => ' ' + v 
-        # s
-
-    # 000000000   0000000    0000000  000000000  00000000   000  000   000   0000000   
-    #    000     000   000  000          000     000   000  000  0000  000  000        
-    #    000     000   000  0000000      000     0000000    000  000 0 000  000  0000  
-    #    000     000   000       000     000     000   000  000  000  0000  000   000  
-    #    000      0000000   0000000      000     000   000  000  000   000   0000000   
-    
-    toString: (legend) ->
-        
-        s = '┌─' + lpad(@size*2, '' '─') + '┐'
-        rows = @grid.split '\n'
-        for row,ri in rows
-            s += '\n│ '
-            s += row each (v) => v + ' '
-            s += '│' 
-            s += ' ' + (@size-ri) if legend
-        s += '\n'
-        s += '└─' + lpad(@size*2, '' '─') + '┘'
-        if legend
-            s += '\n ' + alpha[0...@size] each (v) => ' ' + v 
-        s
+        [r,c] = @rowCol x,y
+        if r?
+            @rows[r][c] = s
         
     # 00000000  00000000    0000000   00     00   0000000  000000000  00000000   000  000   000   0000000   
     # 000       000   000  000   000  000   000  000          000     000   000  000  0000  000  000        
@@ -156,5 +128,39 @@ function Grid
                         c = spl[y][x*2] 
                         c = ' ' if c == '.'
                         @set x, y, c
+
+    # 000000000   0000000    0000000  000000000  00000000   000  000   000   0000000   
+    #    000     000   000  000          000     000   000  000  0000  000  000        
+    #    000     000   000  0000000      000     0000000    000  000 0 000  000  0000  
+    #    000     000   000       000     000     000   000  000  000  0000  000   000  
+    #    000      0000000   0000000      000     000   000  000  000   000   0000000   
+    
+    toString: (legend) ->
+        
+        s = '┌─' + lpad(@size*2, '' '─') + '┐'
+        for row,ri in @rows
+            s += '\n│ '
+            s += (row each (v) => v + ' ').join ''
+            s += '│' 
+            s += ' ' + (@size-ri) if legend
+        s += '\n'
+        s += '└─' + lpad(@size*2, '' '─') + '┘'
+        if legend
+            s += '\n ' + alpha[0...@size] each (v) => ' ' + v 
+        s
+
+    toAnsi: (legend) ->
+        
+        s = w2 '┌─' + lpad(@size*2, '' '─') + '┐'
+        for row,ri in @rows
+            s += w2 '\n│ '
+            s += (row each (v) => v + ' ').join ''
+            s += w2 '│' 
+            s += ' ' + w3(@size-ri) if legend
+        s += '\n'
+        s += w2 '└─' + lpad(@size*2, '' '─') + '┘'
+        if legend
+            s += w3 '\n ' + alpha[0...@size] each (v) => ' ' + v 
+        s
         
 module.exports = Grid
