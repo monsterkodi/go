@@ -10,6 +10,10 @@
       "icon": "img/app.icns"
     }
   },
+  "scripts": {
+    "test": "kode -t  kode/test/*.kode",
+    "watch": "kode -wt kode/test/*.kode kode/*.kode"
+  },
   "dependencies": {
     "kxk": "monsterkodi/kxk",
     "readline-sync": "^1.4.10"

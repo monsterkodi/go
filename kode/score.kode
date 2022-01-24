@@ -52,7 +52,7 @@ function Score
         
         for s,gl of @allGroups()
             for g in gl
-                n = @group_neighbors g
+                n = @groupNeighbors g
                 if s == stone.empty
                     @areas.push 
                         area:  g
@@ -69,6 +69,7 @@ function Score
                         eyes: []
                         libs:  n.filter((p) => stone.empty == @stoneAt @coord p).length
                         neighbors: n
+                        diagonals: @groupDiagonals g, n
                         key:   g.join ' '
                         state: 'unknown'
                         
@@ -93,6 +94,10 @@ function Score
             # log noon @areas
             for g in @grps
                 if g.eyes.length < 2
+                    
+                    if @potentialConnection g
+                        continue
+                        
                     a = g.eyes.length ? @areas[g.eyes[0]] : @areas[g.areas[0]]
                     for gi in a.grps
                         o = @grps[gi]
@@ -111,7 +116,7 @@ function Score
                             if not @deadShape @areas[ai]
                                 canMakeEye = true
                                 break
-
+                                
                         if not canMakeEye
                             if g.areas.length == 2
                                 for ai in g.areas
@@ -128,11 +133,7 @@ function Score
                     markDead g
                     
             final = score.calcScore @
-            
-            # log 'final grid' 
-            # log final.grid.toString()
-            # log 'final score' final
-            
+                        
             for a in final.areas
                 if a.color != '.'
                     final.captures[stoneColor[a.color]] += a.area.length
@@ -198,12 +199,6 @@ function Score
             '?'
         else if not '○●' in sl and not '●○' in sl and sl.length > 0
             c = stoneColor[sl[0]][0]
-            # if sl.length == g.length
-                # c
-            # else
-                # log 'sl' sl, sl.length, g.length
-                # log 'cl' cl
-                # '?'
         else
             '.'
             
@@ -257,21 +252,16 @@ function Score
         
         if stone.empty == @stoneAt c
             rc = @rayColors c
-            # log rc, c
             p = rc.filter((r) -> r?).join ''
             if '○●' in p or '●○' in p 
                 '?'
             else if p.length
-                # log 'pot' @pos(c), p[0]
                 p[0]
-            # else
-                # log c, rc
                 
     potentialGroup: (g) ->
         
         for n in g.neighbors
             if @stoneAt(n) == stone.empty and g.stone == @potentialOwner @coord n
-                # log 'hasPotential' n, g
                 return true
                 
     potentialEye: (g, a) ->
@@ -283,6 +273,15 @@ function Score
                 cnt[@stoneAt n]++
             if cnt['○'] == cnt['●'] ➜ return false
         true
+        
+    potentialConnection: (g) ->
+        
+        for d in g.diagonals
+            if g.stone == @stoneAt d
+                for n in @posNeighbors d
+                    if n in g.neighbors and stone.empty == @stoneAt n
+                        return true
+        false
         
     # 00000000    0000000   000   000  
     # 000   000  000   000   000 000   
@@ -313,7 +312,7 @@ function Score
             s = @stoneAt c
             if s != stone.empty
                 g = @group c
-                n = @group_neighbors g
+                n = @groupNeighbors g
                 n = n.filter (p) => stone.empty == @stoneAt @coord p
                 return n.length
         0
@@ -376,14 +375,18 @@ function Score
     # 000  0000  000       000  000   000  000   000  000   000  000   000  000   000       000  
     # 000   000  00000000  000   0000000   000   000  0000000     0000000   000   000  0000000   
     
-    group_neighbors: (g) ->
+    groupNeighbors: (g) ->
         
         gn = []
         for p in g
-            for n in @poslist @neighbors @coord p
+            for n in @posNeighbors p
                 if n not in g and n not in gn
                     gn.push n
         gn
+    
+    posNeighbors: (p) ->
+        
+        @poslist @neighbors @coord p
         
     neighbors: (c) ->
         
@@ -393,7 +396,31 @@ function Score
             if @valid n
                 ns.push n
         ns
-              
+
+    # 0000000    000   0000000    0000000    0000000   000   000   0000000   000       0000000  
+    # 000   000  000  000   000  000        000   000  0000  000  000   000  000      000       
+    # 000   000  000  000000000  000  0000  000   000  000 0 000  000000000  000      0000000   
+    # 000   000  000  000   000  000   000  000   000  000  0000  000   000  000           000  
+    # 0000000    000  000   000   0000000    0000000   000   000  000   000  0000000  0000000   
+    
+    groupDiagonals: (g, n) ->
+        
+        dn = []
+        for p in g
+            for d in @poslist @diagonals @coord p
+                if d not in g and d not in dn and d not in n
+                    dn.push d
+        dn
+        
+    diagonals: (c) ->
+        
+        ns = []
+        for [x,y] in [[-1 -1] [1 1] [-1 1] [1 -1]]
+            n = [c[0]+x, c[1]+y]
+            if @valid n
+                ns.push n
+        ns
+        
     # 000      00000000   0000000    0000000   000      
     # 000      000       000        000   000  000      
     # 000      0000000   000  0000  000000000  000      
