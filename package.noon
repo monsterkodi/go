@@ -1,5 +1,5 @@
 name            go
-version         0.3.0
+version         0.4.0
 main            js/main.js
 author          monsterkodi
 license         Unlicense
@@ -11,6 +11,7 @@ scripts
                 test    kode -t  kode/test/*.kode
                 watch   kode -wt kode/test/*.kode kode/*.kode
 dependencies
+                @sabaki/sgf     ^3.4.7
                 kxk             monsterkodi/kxk
                 readline-sync   ^1.4.10
 devDependencies

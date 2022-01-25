@@ -308,9 +308,7 @@ Game = (function ()
     {
         this.score = score
     
-        console.log('game.setScore',this.score)
-        this.calcScore()
-        return this.board.annotate()
+        return this.calcScore()
     }
 
     Game.prototype["updateTitle"] = function ()

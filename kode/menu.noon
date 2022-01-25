@@ -11,8 +11,8 @@ go
     save                    cmdctrl+s
     save as ...             cmdctrl+shift+s
     ---
-    first move              up
-    last move               down
+    first move              down
+    last move               up
     undo                    left
     redo                    right
     ----

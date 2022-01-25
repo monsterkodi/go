@@ -55,9 +55,7 @@ function GNU
     undo: ->
         
         return if empty @game.moves
-        if valid @msg
-            log 'skip undo' @msg
-            return
+        return if valid @msg
         
         @redos ?= []
         @send 'undo'
@@ -78,15 +76,14 @@ function GNU
     redo: ->
         
         return if empty @redos
-        if valid @msg
-            log 'skip redo' @msg
-            return
+        return if valid @msg
         
         move = @redos.shift()
+        # log 'redo' move
         [color, p] = move.split ' '
         @game.play color, p
         @send "play #{color} #{p}"
-        @calcscore()
+        @calcscore() if @game.moves.length > 2
         
     send: (m) -> @msg.push m; @gnu.stdin.write m + '\n'
 

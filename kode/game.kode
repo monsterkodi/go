@@ -214,9 +214,9 @@ function Game extends Score
         
     setScore: (@score) -> 
     
-        log 'game.setScore' @score
+        # log 'game.setScore' @score
         @calcScore()
-        @board.annotate()
+        # @board.annotate()
         
     # 000000000  000  000000000  000      00000000  
     #    000     000     000     000      000       

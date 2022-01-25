@@ -77,7 +77,7 @@ GNU = (function ()
 
     GNU.prototype["undo"] = function ()
     {
-        var _62_15_
+        var _60_15_
 
         if (_k_.empty(this.game.moves))
         {
@@ -85,10 +85,9 @@ GNU = (function ()
         }
         if (!_k_.empty(this.msg))
         {
-            console.log('skip undo',this.msg)
             return
         }
-        this.redos = ((_62_15_=this.redos) != null ? _62_15_ : [])
+        this.redos = ((_60_15_=this.redos) != null ? _60_15_ : [])
         this.send('undo')
         this.redos.unshift(this.game.moves.pop())
         this.send('showboard')
@@ -106,7 +105,7 @@ GNU = (function ()
         while (!_k_.empty(this.redos))
         {
             move = this.redos.shift()
-            var _73_23_ = move.split(' '); color = _73_23_[0]; p = _73_23_[1]
+            var _71_23_ = move.split(' '); color = _71_23_[0]; p = _71_23_[1]
 
             this.game.play(color,p)
             this.send(`play ${color} ${p}`)
@@ -124,15 +123,17 @@ GNU = (function ()
         }
         if (!_k_.empty(this.msg))
         {
-            console.log('skip redo',this.msg)
             return
         }
         move = this.redos.shift()
-        var _86_19_ = move.split(' '); color = _86_19_[0]; p = _86_19_[1]
+        var _83_19_ = move.split(' '); color = _83_19_[0]; p = _83_19_[1]
 
         this.game.play(color,p)
         this.send(`play ${color} ${p}`)
-        return this.calcscore()
+        if (this.game.moves.length > 2)
+        {
+            return this.calcscore()
+        }
     }
 
     GNU.prototype["send"] = function (m)
@@ -179,9 +180,9 @@ GNU = (function ()
             else if (m.startsWith('fixed_handicap'))
             {
                 var list = _k_.list(data.split(' '))
-                for (var _123_22_ = 0; _123_22_ < list.length; _123_22_++)
+                for (var _120_22_ = 0; _120_22_ < list.length; _120_22_++)
                 {
-                    p = list[_123_22_]
+                    p = list[_120_22_]
                     this.game.setStone(this.game.coord(p),stone.black)
                 }
             }

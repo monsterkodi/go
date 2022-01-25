@@ -42,6 +42,7 @@ function Board
         @hvr = elem 'div' class:"hover #{@human}" parent:@hlt
         @hvr.style = "width:#{h}%; height:#{h}%; display:none;" 
 
+        @num.style.display = window.stash.get('numbers') ? 'initial' : 'none'
         @lib.style.display = window.stash.get('liberties') ? 'initial' : 'none'
         
         @lst = elem 'div' class:"last" parent:@hlt
@@ -140,7 +141,7 @@ function Board
             
     toggleLiberties: ->
         
-        window.stash.set 'liberties' not window.stash.get 'liberties'            
+        window.stash.set 'liberties' not window.stash.get 'liberties'
         @lib.style.display = window.stash.get('liberties') ? 'initial' : 'none'
         if window.stash.get('liberties') and window.stash.get 'numbers'
             @toggleNumbers()
@@ -204,7 +205,7 @@ function Board
         
         return if empty @game?.moves
         [color, p] = @game.moves[-1].split ' '
-        log 'lastmove' color, p
+
         r = @coordToPrcnt @game.coord p
         d = @div.getBoundingClientRect().height/(@size+1)
         @lst.style.left         = "#{r.x}%"
