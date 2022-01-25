@@ -102,9 +102,7 @@ Game = (function ()
             this.setStone(c,stone[color])
             this.moves.push(color + ' ' + p)
             this.capture(opponent[color])
-            this.board.lastMove()
             this.board.annotate()
-            this.updateTitle()
             return ''
         }
         else
@@ -130,17 +128,17 @@ Game = (function ()
     {
         var captured, r, rs, x, y
 
-        this.board.clear()
         this.grid.clear()
+        this.board.clear()
         rs = data.split('\n').slice(2)
         rs = rs.map((function (r)
         {
             return r.slice(3).split(' ').join('')
         }).bind(this))
-        for (var _117_17_ = y = 0, _117_21_ = this.size; (_117_17_ <= _117_21_ ? y < this.size : y > this.size); (_117_17_ <= _117_21_ ? ++y : --y))
+        for (var _115_17_ = y = 0, _115_21_ = this.size; (_115_17_ <= _115_21_ ? y < this.size : y > this.size); (_115_17_ <= _115_21_ ? ++y : --y))
         {
             r = rs[y]
-            for (var _119_21_ = x = 0, _119_25_ = this.size; (_119_21_ <= _119_25_ ? x < this.size : x > this.size); (_119_21_ <= _119_25_ ? ++x : --x))
+            for (var _117_21_ = x = 0, _117_25_ = this.size; (_117_21_ <= _117_25_ ? x < this.size : x > this.size); (_117_21_ <= _117_25_ ? ++x : --x))
             {
                 switch (r[x])
                 {
@@ -166,8 +164,7 @@ Game = (function ()
                 }
             }
         }
-        this.board.liberties()
-        return this.updateTitle()
+        return this.board.annotate()
     }
 
     Game.prototype["capture"] = function (color)
@@ -175,18 +172,18 @@ Game = (function ()
         var c, dc, dp, g, p
 
         var list = _k_.list(this.allStones(color))
-        for (var _142_14_ = 0; _142_14_ < list.length; _142_14_++)
+        for (var _139_14_ = 0; _139_14_ < list.length; _139_14_++)
         {
-            p = list[_142_14_]
+            p = list[_139_14_]
             c = this.coord(p)
             if (this.liberties(c) < 1)
             {
                 g = this.group(c)
                 this.captures[opponent[color]] += g.length
                 var list1 = _k_.list(g)
-                for (var _147_23_ = 0; _147_23_ < list1.length; _147_23_++)
+                for (var _144_23_ = 0; _144_23_ < list1.length; _144_23_++)
                 {
-                    dp = list1[_147_23_]
+                    dp = list1[_144_23_]
                     dc = this.coord(dp)
                     this.setStone(dc,stone.empty)
                 }
@@ -200,7 +197,7 @@ Game = (function ()
     {
         var i
 
-        for (var _155_17_ = i = 0, _155_21_ = num; (_155_17_ <= _155_21_ ? i < num : i > num); (_155_17_ <= _155_21_ ? ++i : --i))
+        for (var _152_17_ = i = 0, _152_21_ = num; (_152_17_ <= _152_21_ ? i < num : i > num); (_152_17_ <= _152_21_ ? ++i : --i))
         {
             this.genmove()
         }
@@ -235,8 +232,11 @@ Game = (function ()
 
     Game.prototype["clear_board"] = function ()
     {
+        delete this.redos
         this.moves = []
         this.clear()
+        this.grid.clear()
+        this.board.clear()
         this.updateTitle()
         return ''
     }
@@ -310,13 +310,12 @@ Game = (function ()
     
         console.log('game.setScore',this.score)
         this.calcScore()
-        this.board.annotate()
-        return this.updateTitle()
+        return this.board.annotate()
     }
 
     Game.prototype["updateTitle"] = function ()
     {
-        var bs, t, td, ws, _234_19_, _235_19_
+        var bs, t, td, ws, _233_19_, _234_19_
 
         t = $('.titlebar-title')
         t.innerHTML = ''

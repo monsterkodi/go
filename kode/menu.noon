@@ -11,8 +11,11 @@ go
     save                    cmdctrl+s
     save as ...             cmdctrl+shift+s
     ---
+    first move              up
+    last move               down
     undo                    left
     redo                    right
+    ----
     pass                    p
     genmove                 g
     calcscore               c

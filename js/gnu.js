@@ -17,7 +17,7 @@ GNU = (function ()
     
         this["onData"] = this["onData"].bind(this)
         this.msg = []
-        this.gnu = childp.spawn('/usr/local/bin/gnugo',['--mode','gtp','--autolevel'])
+        this.gnu = childp.spawn('/usr/local/bin/gnugo',['--mode','gtp','--autolevel','--never-resign'])
         this.gnu.stdout.on('data',this.onData)
     }
 
@@ -64,20 +64,53 @@ GNU = (function ()
         return this.send('estimate_score')
     }
 
-    GNU.prototype["undo"] = function ()
+    GNU.prototype["firstMove"] = function ()
     {
-        var _52_15_
-
-        if (this.game.moves.length < 2)
+        if (_k_.empty(this.game.moves))
         {
             return
         }
+        this.redos = this.game.moves.concat(this.redos)
+        this.send(`boardsize ${this.game.size}`)
+        return this.game.clear_board()
+    }
+
+    GNU.prototype["undo"] = function ()
+    {
+        var _62_15_
+
+        if (_k_.empty(this.game.moves))
+        {
+            return
+        }
+        if (!_k_.empty(this.msg))
+        {
+            console.log('skip undo',this.msg)
+            return
+        }
+        this.redos = ((_62_15_=this.redos) != null ? _62_15_ : [])
         this.send('undo')
-        this.send('undo')
-        this.redos = ((_52_15_=this.redos) != null ? _52_15_ : [])
-        this.redos.unshift(this.game.moves.pop())
         this.redos.unshift(this.game.moves.pop())
         this.send('showboard')
+        return this.calcscore()
+    }
+
+    GNU.prototype["lastMove"] = function ()
+    {
+        var color, move, p
+
+        if (_k_.empty(this.redos))
+        {
+            return
+        }
+        while (!_k_.empty(this.redos))
+        {
+            move = this.redos.shift()
+            var _73_23_ = move.split(' '); color = _73_23_[0]; p = _73_23_[1]
+
+            this.game.play(color,p)
+            this.send(`play ${color} ${p}`)
+        }
         return this.calcscore()
     }
 
@@ -89,20 +122,17 @@ GNU = (function ()
         {
             return
         }
-        move = this.redos.shift()
-        var _62_19_ = move.split(' '); color = _62_19_[0]; p = _62_19_[1]
-
-        this.game.play(color,p)
-        this.send(`play ${color} ${p}`)
-        if (_k_.empty(this.redos))
+        if (!_k_.empty(this.msg))
         {
+            console.log('skip redo',this.msg)
             return
         }
         move = this.redos.shift()
-        var _67_19_ = move.split(' '); color = _67_19_[0]; p = _67_19_[1]
+        var _86_19_ = move.split(' '); color = _86_19_[0]; p = _86_19_[1]
 
         this.game.play(color,p)
-        return this.send(`play ${color} ${p}`)
+        this.send(`play ${color} ${p}`)
+        return this.calcscore()
     }
 
     GNU.prototype["send"] = function (m)
@@ -144,15 +174,14 @@ GNU = (function ()
                 }
                 this.game.play(this.color,p)
                 this.game.calcScore()
-                this.game.board.annotate()
-                return this.game.updateTitle()
+                return this.game.board.annotate()
             }
             else if (m.startsWith('fixed_handicap'))
             {
                 var list = _k_.list(data.split(' '))
-                for (var _106_22_ = 0; _106_22_ < list.length; _106_22_++)
+                for (var _123_22_ = 0; _123_22_ < list.length; _123_22_++)
                 {
-                    p = list[_106_22_]
+                    p = list[_123_22_]
                     this.game.setStone(this.game.coord(p),stone.black)
                 }
             }
@@ -162,7 +191,6 @@ GNU = (function ()
             }
             else if (m.startsWith('final_score'))
             {
-                console.log(m,data)
                 return this.game.finalScore(data)
             }
             else if (m.startsWith('showboard'))
@@ -173,6 +201,11 @@ GNU = (function ()
             {
                 console.log(m,data)
             }
+        }
+        else
+        {
+            m = this.msg.shift()
+            console.error(m,data)
         }
     }
 

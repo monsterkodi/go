@@ -51,7 +51,6 @@ function Board
         
     onResize: =>
         
-        @lastMove()
         @annotate()
         
     # 000      000  000   000  00000000   0000000  
@@ -205,16 +204,16 @@ function Board
         
         return if empty @game?.moves
         [color, p] = @game.moves[-1].split ' '
+        log 'lastmove' color, p
         r = @coordToPrcnt @game.coord p
         d = @div.getBoundingClientRect().height/(@size+1)
-        @lst.style.display = 'initial'
-        # @lst.style.opacity = '0.25'
-        @lst.style.left = "#{r.x}%"
-        @lst.style.top  = "#{r.y}%"
-        @lst.style.width = "#{0.5*d}px"
-        @lst.style.height = "#{0.5*d}px"
+        @lst.style.left         = "#{r.x}%"
+        @lst.style.top          = "#{r.y}%"
+        @lst.style.width        = "#{0.5*d}px"
+        @lst.style.height       = "#{0.5*d}px"
         @lst.style.borderRadius = "#{0.5*d}px"
-        @lst.style.borderWidth = "#{0.1*d}px"
+        @lst.style.borderWidth  = "#{0.1*d}px"
+        @lst.style.display = 'initial'
         @lst.classList.remove 'black'
         @lst.classList.remove 'white'
         @lst.classList.add opponent[color]
@@ -252,7 +251,7 @@ function Board
         
         d = 100/(@size+1)
         cn = stoneColor[s]
-        cn += randIntRange 1 15 if cn == 'white'
+        cn += 1+(c[0]+c[1])%15 if cn == 'white'
         src = "../img/stone_#{cn}.png" 
         stn = elem 'img' class:"stone pos#{c[0]}_#{c[1]}" src:src, width:"auto", height:"#{d}%" parent:@stn
         shd = elem 'img' class:"shadow pos#{c[0]}_#{c[1]}" src:'../img/stone_shadow.png', width:"auto", height:"#{1.15*d}%" parent:@shd
@@ -262,14 +261,14 @@ function Board
         stn.style = "left:#{x}%; top:#{y}%;" 
         shd.style = "left:#{x}%; top:#{y}%; opacity:#{o = @size == 19 ? 0.5 : @size == 13 ? 0.6 : 0.7};"
         
-        @annotate()
-       
     clear: ->
         
         @lst.style.display = 'none'
-        @shd.innerHTML = ''
-        @stn.innerHTML = ''
+        @trr.innerHTML = ''
+        @num.innerHTML = ''
         @lib.innerHTML = ''
+        @stn.innerHTML = ''
+        @shd.innerHTML = ''
         
     ###
      0000000   000   000  000   000   0000000   000000000   0000000   000000000  00000000  
@@ -281,9 +280,11 @@ function Board
     
     annotate: ->
         
+        @lastMove()
         @numbers()
         @liberties()
         @territory()
+        @game.updateTitle()
     
     # 000   000  000   000  00     00  0000000    00000000  00000000    0000000  
     # 0000  000  000   000  000   000  000   000  000       000   000  000       

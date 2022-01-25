@@ -16,7 +16,7 @@ function SGF
     @load: (file) ->
         
         nodes = sgf.parseFile file
-        log noon nodes
+        # log noon nodes
         moves = []
         n = node = nodes[0]
         

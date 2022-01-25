@@ -149,6 +149,8 @@ function MainWin extends win
             'revert'            ➜ @restore()
             'undo'              ➜ @gnu.undo()
             'redo'              ➜ @gnu.redo()
+            'first move'        ➜ @gnu.firstMove()
+            'last move'         ➜ @gnu.lastMove()
             'pass'              ➜ @gnu.humanMove 'pass'
             'genmove'           ➜ @gnu.humanMove @game.genmove opponent[@gnucolor]
             'calcscore'         ➜ @gnu.calcscore()

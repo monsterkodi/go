@@ -81,9 +81,7 @@ function Game extends Score
             @setStone c, stone[color]
             @moves.push color + ' ' + p
             @capture opponent[color]
-            @board.lastMove()
             @board.annotate()
-            @updateTitle()
             ''
         else
             '? invalid color or coordinate'
@@ -110,8 +108,8 @@ function Game extends Score
     
     show: (data) ->
 
-        @board.clear()
         @grid.clear()
+        @board.clear()
         rs = data.split('\n')[2..]
         rs = rs.map (r) => r[3..].split(' ').join('')
         for y in 0...@size
@@ -128,8 +126,7 @@ function Game extends Score
                 else
                     @captures.black = captured
                     
-        @board.liberties()
-        @updateTitle()
+        @board.annotate()
             
     #  0000000   0000000   00000000   000000000  000   000  00000000   00000000
     # 000       000   000  000   000     000     000   000  000   000  000     
@@ -173,8 +170,11 @@ function Game extends Score
     
     clear_board: ->
         
+        delete @redos
         @moves = []
         @clear()
+        @grid.clear()
+        @board.clear()
         @updateTitle()
         ''
             
@@ -217,7 +217,6 @@ function Game extends Score
         log 'game.setScore' @score
         @calcScore()
         @board.annotate()
-        @updateTitle()
         
     # 000000000  000  000000000  000      00000000  
     #    000     000     000     000      000       

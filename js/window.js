@@ -177,6 +177,12 @@ MainWin = (function ()
             case 'redo':
                 return this.gnu.redo()
 
+            case 'first move':
+                return this.gnu.firstMove()
+
+            case 'last move':
+                return this.gnu.lastMove()
+
             case 'pass':
                 return this.gnu.humanMove('pass')
 

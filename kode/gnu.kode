@@ -17,6 +17,7 @@ function GNU
         @gnu = childp.spawn '/usr/local/bin/gnugo' [
             '--mode' 'gtp' 
             '--autolevel' 
+            '--never-resign'
             ]
         @gnu.stdout.on 'data' @onData
         
@@ -44,29 +45,48 @@ function GNU
         
         @send 'estimate_score'
 
+    firstMove: ->
+        
+        return if empty @game.moves
+        @redos = @game.moves.concat @redos
+        @send "boardsize #{@game.size}"
+        @game.clear_board()
+                
     undo: ->
         
-        return if @game.moves.length < 2
-        @send 'undo'
-        @send 'undo'
+        return if empty @game.moves
+        if valid @msg
+            log 'skip undo' @msg
+            return
+        
         @redos ?= []
-        @redos.unshift @game.moves.pop()
+        @send 'undo'
         @redos.unshift @game.moves.pop()
         @send 'showboard'
         @calcscore()
         
+    lastMove: ->
+
+        return if empty @redos
+        while valid @redos
+            move = @redos.shift()
+            [color, p] = move.split ' '
+            @game.play color, p
+            @send "play #{color} #{p}"
+        @calcscore()
+            
     redo: ->
         
         return if empty @redos
+        if valid @msg
+            log 'skip redo' @msg
+            return
+        
         move = @redos.shift()
         [color, p] = move.split ' '
         @game.play color, p
         @send "play #{color} #{p}"
-        return if empty @redos
-        move = @redos.shift()
-        [color, p] = move.split ' '
-        @game.play color, p
-        @send "play #{color} #{p}"
+        @calcscore()
         
     send: (m) -> @msg.push m; @gnu.stdin.write m + '\n'
 
@@ -74,13 +94,10 @@ function GNU
         
         data = String chunk
         
-        # log data
-        # log @msg
-        
         if @partial 
             data = @partial + data
             delete @partial
-            
+                    
         while data.startsWith '= \n\n'
             data = data[4..]
             @msg.shift()
@@ -88,20 +105,20 @@ function GNU
         if not data.endsWith '\n\n'
             @partial = data
             return
+     
+        # log @msg
+        # log data
             
         if data[0] == '='
             m = @msg.shift()
             data = data[2..]
-            # log m, data
             if m.startsWith 'genmove'
                 p = data.split('\n')[0]
-                # log 'play' @color, p
                 if p in ['PASS' 'resign']
                     @send 'final_score'
                 @game.play @color, p
                 @game.calcScore()
                 @game.board.annotate()
-                @game.updateTitle()
             else if m.startsWith 'fixed_handicap'
                 for p in data.split ' '
                     @game.setStone @game.coord(p), stone.black
@@ -109,11 +126,13 @@ function GNU
             else if m.startsWith 'estimate_score'
                 @game.setScore data.split(' ')[0]
             else if m.startsWith 'final_score'
-                log m, data
                 @game.finalScore data
             else if m.startsWith 'showboard'
                 @game.show data
             else
                 log m, data
+        else
+            m = @msg.shift()
+            error m, data
 
 module.exports = GNU
