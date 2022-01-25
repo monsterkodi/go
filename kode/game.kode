@@ -242,6 +242,10 @@ function Game extends Score
         window.stash.set 'score' trim score 
         t =$ '.titlebar-title'
         t.innerHTML = ''
-        td = elem 'div' class:'captures' text:score, parent:t
+        td = elem 'div' class:'captures' parent:t
+        
+        elem 'span' {class:'player black' text:@info.players[0] + ' ', parent:td} if valid @info.players
+        elem 'span'  class:"score  #{score[0] == 'B' ? 'black' : 'white'}" text:score, parent:td
+        elem 'span' {class:'player white' text:' ' + @info.players[1], parent:td} if valid @info.players
         
 module.exports = Game

@@ -12,9 +12,24 @@ class Util
 
     static alpha = 'ABCDEFGHJKLMNOPQRST'
 
+    static ilpha = 'abcdefghijklmnopqrs'
+
     static splice (s, i, n, r = '')
     {
         return s.slice(0,i) + r + s.slice(i + n)
+    }
+
+    static sgfToAlphaNum (sgf, size = 19)
+    {
+        if (sgf.length === 2)
+        {
+            return Util.alpha[Util.ilpha.indexOf(sgf[0])] + (size - Util.ilpha.indexOf(sgf[1]))
+        }
+        else
+        {
+            console.log(`sgf? '${sgf}' ${sgf.length} ${Array.isArray(sgf)}`)
+            return sgf
+        }
     }
 }
 

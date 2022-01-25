@@ -1,0 +1,71 @@
+###
+ 0000000   0000000   00000000
+000       000        000     
+0000000   000  0000  000000  
+     000  000   000  000     
+0000000    0000000   000     
+###
+
+sgf = require '@sabaki/sgf'
+kxk = require 'kxk'
+{ slash, post } = kxk
+{ sgfToAlphaNum } = require './util'
+
+function SGF
+
+    @load: (file) ->
+        
+        nodes = sgf.parseFile file
+        log noon nodes
+        moves = []
+        n = node = nodes[0]
+        
+        size = node.data.SZ ? int(node.data.SZ[0]) : 19
+        
+        while valid n.children
+            if 
+                n.data.B ➜ moves.push sgfToAlphaNum n.data.B[0], size
+                n.data.W ➜ moves.push sgfToAlphaNum n.data.W[0], size
+            n = n.children[0]
+            
+            
+        info = 
+            score:   node.data.RE?[0]
+            players:[node.data.PB[0] + ' ' + (node.data.BR[0] ? ''), node.data.PW[0] + ' ' + (node.data.WR[0] ? '')]
+            komi:    node.data.KM?[0] ? 0
+
+        post.emit 'newGame' size, 'white' 0 moves, info
+        nodes
+
+    @save: (file) ->
+        
+        nodes = [] # TODO
+        slash.writeText file, sgf.stringify nodes
+        
+    @openDialog: ->
+        
+        cb = (files) -> 
+            if valid files
+                file = files[0]
+                window.stash.set('openFilePath' slash.dir file)
+                SGF.load file
+        
+        window.win?.openFileDialog(
+            title: 'Open File'
+            defaultPath: window.stash.get 'openFilePath' '.'
+            properties: ['openFile' 'multiSelections'] 
+            cb: cb
+            )
+            
+    @saveAsDialog: ->
+        
+        cb = (file) =>
+            @save file
+        
+        window.win?.saveFileDialog(
+            title: 'Save As SGF' 
+            defaultPath: window.stash.get 'openFilePath' '.'
+            cb: cb
+            )
+            
+module.exports = SGF

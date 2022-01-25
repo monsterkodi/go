@@ -1,0 +1,514 @@
+[2022-01-25 03:23:01.468] <leelaz>    (in) : name
+[2022-01-25 03:23:01.469] <leelaz>    (in) : version
+[2022-01-25 03:23:01.469] <leelaz>    (in) : protocol_version
+[2022-01-25 03:23:01.470] <leelaz>    (in) : list_commands
+[2022-01-25 03:23:01.470] <leelaz>  (meta) : Engine Started
+[2022-01-25 03:23:01.492] <leelaz>   (err) : Using OpenCL batch size of 5
+[2022-01-25 03:23:01.492] <leelaz>   (err) : Using 10 thread(s).
+[2022-01-25 03:23:01.492] <leelaz>   (err) : RNG seed: 5971004704537476283
+[2022-01-25 03:23:01.494] <leelaz>   (err) : BLAS Core: built-in Eigen 3.3.7 library.
+[2022-01-25 03:23:03.446] <leelaz>   (err) : Detecting residual layers...v1...256 channels...40 blocks.
+[2022-01-25 03:23:06.010] <leelaz>   (err) : Initializing OpenCL (autodetecting precision).
+[2022-01-25 03:23:06.015] <leelaz>   (err) : Detected 1 OpenCL platforms.
+[2022-01-25 03:23:06.016] <leelaz>   (err) : Platform version: OpenCL 1.2 (Oct  1 2021 19:40:58)
+[2022-01-25 03:23:06.016] <leelaz>   (err) : Platform profile: FULL_PROFILE
+[2022-01-25 03:23:06.016] <leelaz>   (err) : Platform name:    Apple
+[2022-01-25 03:23:06.016] <leelaz>   (err) : Platform vendor:  Apple
+[2022-01-25 03:23:06.058] <leelaz>   (err) : Device ID:     0
+[2022-01-25 03:23:06.058] <leelaz>   (err) : Device name:   Apple M1
+[2022-01-25 03:23:06.058] <leelaz>   (err) : Device type:   GPU
+[2022-01-25 03:23:06.059] <leelaz>   (err) : Device vendor: Apple
+[2022-01-25 03:23:06.059] <leelaz>   (err) : Device driver: 1.2 1.0
+[2022-01-25 03:23:06.059] <leelaz>   (err) : Device speed:  1000 MHz
+[2022-01-25 03:23:06.059] <leelaz>   (err) : Device cores:  8 CU
+[2022-01-25 03:23:06.059] <leelaz>   (err) : Device score:  112
+[2022-01-25 03:23:06.059] <leelaz>   (err) : Selected platform: Apple
+[2022-01-25 03:23:06.059] <leelaz>   (err) : Selected device: Apple M1
+[2022-01-25 03:23:06.059] <leelaz>   (err) : with OpenCL 1.2 capability.
+[2022-01-25 03:23:06.062] <leelaz>   (err) : Half precision compute support: No.
+[2022-01-25 03:23:06.172] <leelaz>   (err) : Tensor Core support: UNSUPPORTED (log once): buildComputeProgram: cl2Metal failed
+[2022-01-25 03:23:06.175] <leelaz>   (err) : No.
+[2022-01-25 03:23:06.175] <leelaz>   (err) : Detected 1 OpenCL platforms.
+[2022-01-25 03:23:06.175] <leelaz>   (err) : Platform version: OpenCL 1.2 (Oct  1 2021 19:40:58)
+[2022-01-25 03:23:06.175] <leelaz>   (err) : Platform profile: FULL_PROFILE
+[2022-01-25 03:23:06.175] <leelaz>   (err) : Platform name:    Apple
+[2022-01-25 03:23:06.175] <leelaz>   (err) : Platform vendor:  Apple
+[2022-01-25 03:23:06.176] <leelaz>   (err) : Device ID:     0
+[2022-01-25 03:23:06.176] <leelaz>   (err) : Device name:   Apple M1
+[2022-01-25 03:23:06.176] <leelaz>   (err) : Device type:   GPU
+[2022-01-25 03:23:06.176] <leelaz>   (err) : Device vendor: Apple
+[2022-01-25 03:23:06.176] <leelaz>   (err) : Device driver: 1.2 1.0
+[2022-01-25 03:23:06.176] <leelaz>   (err) : Device speed:  1000 MHz
+[2022-01-25 03:23:06.176] <leelaz>   (err) : Device cores:  8 CU
+[2022-01-25 03:23:06.176] <leelaz>   (err) : Device score:  112
+[2022-01-25 03:23:06.176] <leelaz>   (err) : Selected platform: Apple
+[2022-01-25 03:23:06.176] <leelaz>   (err) : Selected device: Apple M1
+[2022-01-25 03:23:06.176] <leelaz>   (err) : with OpenCL 1.2 capability.
+[2022-01-25 03:23:06.176] <leelaz>   (err) : Half precision compute support: No.
+[2022-01-25 03:23:06.180] <leelaz>   (err) : Tensor Core support: No.
+[2022-01-25 03:23:06.180] <leelaz>   (err) : Loaded existing SGEMM tuning.
+[2022-01-25 03:23:06.415] <leelaz>   (err) : Wavefront/Warp size: 32
+[2022-01-25 03:23:06.415] <leelaz>   (err) : Max workgroup size: 256
+[2022-01-25 03:23:06.415] <leelaz>   (err) : Max workgroup dimensions: 256 256 256 
+[2022-01-25 03:23:08.676] <leelaz>   (err) : Loaded existing SGEMM tuning.
+[2022-01-25 03:23:08.900] <leelaz>   (err) : Wavefront/Warp size: 32
+[2022-01-25 03:23:08.900] <leelaz>   (err) : Max workgroup size: 256
+[2022-01-25 03:23:08.900] <leelaz>   (err) : Max workgroup dimensions: 256 256 256 
+[2022-01-25 03:23:10.570] <leelaz>   (err) : Using OpenCL half precision (at least 5% faster than single).
+[2022-01-25 03:23:10.571] <leelaz>   (err) : Setting max tree size to 3736 MiB and cache size to 415 MiB.
+[2022-01-25 03:23:10.585] <leelaz>   (out) : = Leela Zero
+[2022-01-25 03:23:10.586] <leelaz>   (out) : 
+[2022-01-25 03:23:10.586] <leelaz>   (out) : = 0.17
+[2022-01-25 03:23:10.587] <leelaz>   (out) : 
+[2022-01-25 03:23:10.587] <leelaz>   (out) : = 2
+[2022-01-25 03:23:10.587] <leelaz>   (out) : 
+[2022-01-25 03:23:10.588] <leelaz>   (out) : = protocol_version
+[2022-01-25 03:23:10.588] <leelaz>   (out) : name
+[2022-01-25 03:23:10.588] <leelaz>   (out) : version
+[2022-01-25 03:23:10.588] <leelaz>   (out) : quit
+[2022-01-25 03:23:10.588] <leelaz>   (out) : known_command
+[2022-01-25 03:23:10.588] <leelaz>   (out) : list_commands
+[2022-01-25 03:23:10.589] <leelaz>   (out) : boardsize
+[2022-01-25 03:23:10.589] <leelaz>   (out) : clear_board
+[2022-01-25 03:23:10.589] <leelaz>   (out) : komi
+[2022-01-25 03:23:10.589] <leelaz>   (out) : play
+[2022-01-25 03:23:10.589] <leelaz>   (out) : genmove
+[2022-01-25 03:23:10.589] <leelaz>   (out) : showboard
+[2022-01-25 03:23:10.589] <leelaz>   (out) : undo
+[2022-01-25 03:23:10.590] <leelaz>   (out) : final_score
+[2022-01-25 03:23:10.590] <leelaz>   (out) : final_status_list
+[2022-01-25 03:23:10.590] <leelaz>   (out) : time_settings
+[2022-01-25 03:23:10.590] <leelaz>   (out) : time_left
+[2022-01-25 03:23:10.590] <leelaz>   (out) : fixed_handicap
+[2022-01-25 03:23:10.590] <leelaz>   (out) : last_move
+[2022-01-25 03:23:10.590] <leelaz>   (out) : move_history
+[2022-01-25 03:23:10.590] <leelaz>   (out) : place_free_handicap
+[2022-01-25 03:23:10.591] <leelaz>   (out) : set_free_handicap
+[2022-01-25 03:23:10.591] <leelaz>   (out) : loadsgf
+[2022-01-25 03:23:10.591] <leelaz>   (out) : printsgf
+[2022-01-25 03:23:10.591] <leelaz>   (out) : kgs-genmove_cleanup
+[2022-01-25 03:23:10.591] <leelaz>   (out) : kgs-time_settings
+[2022-01-25 03:23:10.591] <leelaz>   (out) : kgs-game_over
+[2022-01-25 03:23:10.591] <leelaz>   (out) : heatmap
+[2022-01-25 03:23:10.591] <leelaz>   (out) : lz-analyze
+[2022-01-25 03:23:10.592] <leelaz>   (out) : lz-genmove_analyze
+[2022-01-25 03:23:10.592] <leelaz>   (out) : lz-memory_report
+[2022-01-25 03:23:10.592] <leelaz>   (out) : lz-setoption
+[2022-01-25 03:23:10.592] <leelaz>   (out) : gomill-explain_last_move
+[2022-01-25 03:23:10.592] <leelaz>   (out) : 
+[2022-01-25 03:23:52.395] <leelaz>    (in) : show_commands
+[2022-01-25 03:23:52.405] <leelaz>   (out) : ? unknown command
+[2022-01-25 03:23:52.405] <leelaz>   (out) : 
+[2022-01-25 03:23:56.568] <leelaz>    (in) : list_comands
+[2022-01-25 03:23:56.575] <leelaz>   (out) : ? unknown command
+[2022-01-25 03:23:56.576] <leelaz>   (out) : 
+[2022-01-25 03:23:59.526] <leelaz>    (in) : help
+[2022-01-25 03:23:59.537] <leelaz>   (out) : ? unknown command
+[2022-01-25 03:23:59.538] <leelaz>   (out) : 
+[2022-01-25 03:24:28.180] <leelaz>    (in) : showboard
+[2022-01-25 03:24:28.183] <leelaz>   (out) : = 
+[2022-01-25 03:24:28.184] <leelaz>   (out) : 
+[2022-01-25 03:24:28.185] <leelaz>   (err) : 
+[2022-01-25 03:24:28.186] <leelaz>   (err) : Passes: 0            Black (X) Prisoners: 0
+[2022-01-25 03:24:28.186] <leelaz>   (err) : Black (X) to move    White (O) Prisoners: 0
+[2022-01-25 03:24:28.186] <leelaz>   (err) : 
+[2022-01-25 03:24:28.186] <leelaz>   (err) :    a b c d e f g h j k l m n o p q r s t 
+[2022-01-25 03:24:28.186] <leelaz>   (err) : 19 . . . . . . . . . . . . . . . . . . . 19
+[2022-01-25 03:24:28.186] <leelaz>   (err) : 18 . . . . . . . . . . . . . . . . . . . 18
+[2022-01-25 03:24:28.186] <leelaz>   (err) : 17 . . . . . . . . . . . . . . . . . . . 17
+[2022-01-25 03:24:28.186] <leelaz>   (err) : 16 . . . + . . . . . + . . . . . + . . . 16
+[2022-01-25 03:24:28.186] <leelaz>   (err) : 15 . . . . . . . . . . . . . . . . . . . 15
+[2022-01-25 03:24:28.186] <leelaz>   (err) : 14 . . . . . . . . . . . . . . . . . . . 14
+[2022-01-25 03:24:28.186] <leelaz>   (err) : 13 . . . . . . . . . . . . . . . . . . . 13
+[2022-01-25 03:24:28.186] <leelaz>   (err) : 12 . . . . . . . . . . . . . . . . . . . 12
+[2022-01-25 03:24:28.186] <leelaz>   (err) : 11 . . . . . . . . . . . . . . . . . . . 11
+[2022-01-25 03:24:28.186] <leelaz>   (err) : 10 . . . + . . . . . + . . . . . + . . . 10
+[2022-01-25 03:24:28.186] <leelaz>   (err) :  9 . . . . . . . . . . . . . . . . . . .  9
+[2022-01-25 03:24:28.187] <leelaz>   (err) :  8 . . . . . . . . . . . . . . . . . . .  8
+[2022-01-25 03:24:28.187] <leelaz>   (err) :  7 . . . . . . . . . . . . . . . . . . .  7
+[2022-01-25 03:24:28.187] <leelaz>   (err) :  6 . . . . . . . . . . . . . . . . . . .  6
+[2022-01-25 03:24:28.187] <leelaz>   (err) :  5 . . . . . . . . . . . . . . . . . . .  5
+[2022-01-25 03:24:28.187] <leelaz>   (err) :  4 . . . + . . . . . + . . . . . + . . .  4
+[2022-01-25 03:24:28.187] <leelaz>   (err) :  3 . . . . . . . . . . . . . . . . . . .  3
+[2022-01-25 03:24:28.187] <leelaz>   (err) :  2 . . . . . . . . . . . . . . . . . . .  2
+[2022-01-25 03:24:28.187] <leelaz>   (err) :  1 . . . . . . . . . . . . . . . . . . .  1
+[2022-01-25 03:24:28.187] <leelaz>   (err) :    a b c d e f g h j k l m n o p q r s t 
+[2022-01-25 03:24:28.187] <leelaz>   (err) : 
+[2022-01-25 03:24:28.187] <leelaz>   (err) : Hash: 9A930BE1616C538E Ko-Hash: A14C933E7669946D
+[2022-01-25 03:24:28.187] <leelaz>   (err) : 
+[2022-01-25 03:24:28.187] <leelaz>   (err) : Black time: 01:00:00
+[2022-01-25 03:24:28.187] <leelaz>   (err) : White time: 01:00:00
+[2022-01-25 03:24:28.187] <leelaz>   (err) : 
+[2022-01-25 03:24:47.411] <leelaz>    (in) : boardsize 9
+[2022-01-25 03:24:47.430] <leelaz>   (out) : ? unacceptable size
+[2022-01-25 03:24:47.430] <leelaz>   (out) : 
+[2022-01-25 03:24:57.194] <leelaz>    (in) : quit
+[2022-01-25 03:24:57.198] <leelaz>   (out) : = 
+[2022-01-25 03:24:57.198] <leelaz>   (out) : 
+[2022-01-25 03:24:57.241] <leelaz>  (meta) : Engine Stopped
+[2022-01-25 03:25:05.807] <gnugo>    (in) : name
+[2022-01-25 03:25:05.808] <gnugo>    (in) : version
+[2022-01-25 03:25:05.809] <gnugo>    (in) : protocol_version
+[2022-01-25 03:25:05.809] <gnugo>    (in) : list_commands
+[2022-01-25 03:25:05.809] <gnugo>  (meta) : Engine Started
+[2022-01-25 03:25:05.819] <gnugo>   (out) : = GNU Go
+[2022-01-25 03:25:05.819] <gnugo>   (out) : 
+[2022-01-25 03:25:05.819] <gnugo>   (out) : = 3.8
+[2022-01-25 03:25:05.820] <gnugo>   (out) : 
+[2022-01-25 03:25:05.820] <gnugo>   (out) : = 2
+[2022-01-25 03:25:05.820] <gnugo>   (out) : 
+[2022-01-25 03:25:05.820] <gnugo>   (out) : = aa_confirm_safety
+[2022-01-25 03:25:05.820] <gnugo>   (out) : accurate_approxlib
+[2022-01-25 03:25:05.820] <gnugo>   (out) : accuratelib
+[2022-01-25 03:25:05.820] <gnugo>   (out) : advance_random_seed
+[2022-01-25 03:25:05.820] <gnugo>   (out) : all_legal
+[2022-01-25 03:25:05.820] <gnugo>   (out) : all_move_values
+[2022-01-25 03:25:05.820] <gnugo>   (out) : analyze_eyegraph
+[2022-01-25 03:25:05.820] <gnugo>   (out) : analyze_semeai
+[2022-01-25 03:25:05.821] <gnugo>   (out) : analyze_semeai_after_move
+[2022-01-25 03:25:05.821] <gnugo>   (out) : attack
+[2022-01-25 03:25:05.821] <gnugo>   (out) : attack_either
+[2022-01-25 03:25:05.821] <gnugo>   (out) : black
+[2022-01-25 03:25:05.821] <gnugo>   (out) : block_off
+[2022-01-25 03:25:05.821] <gnugo>   (out) : boardsize
+[2022-01-25 03:25:05.821] <gnugo>   (out) : break_in
+[2022-01-25 03:25:05.821] <gnugo>   (out) : captures
+[2022-01-25 03:25:05.821] <gnugo>   (out) : clear_board
+[2022-01-25 03:25:05.821] <gnugo>   (out) : clear_cache
+[2022-01-25 03:25:05.822] <gnugo>   (out) : color
+[2022-01-25 03:25:05.822] <gnugo>   (out) : combination_attack
+[2022-01-25 03:25:05.822] <gnugo>   (out) : combination_defend
+[2022-01-25 03:25:05.822] <gnugo>   (out) : connect
+[2022-01-25 03:25:05.822] <gnugo>   (out) : countlib
+[2022-01-25 03:25:05.822] <gnugo>   (out) : cputime
+[2022-01-25 03:25:05.822] <gnugo>   (out) : decrease_depths
+[2022-01-25 03:25:05.822] <gnugo>   (out) : defend
+[2022-01-25 03:25:05.822] <gnugo>   (out) : defend_both
+[2022-01-25 03:25:05.822] <gnugo>   (out) : disconnect
+[2022-01-25 03:25:05.822] <gnugo>   (out) : does_attack
+[2022-01-25 03:25:05.822] <gnugo>   (out) : does_defend
+[2022-01-25 03:25:05.823] <gnugo>   (out) : does_surround
+[2022-01-25 03:25:05.823] <gnugo>   (out) : dragon_data
+[2022-01-25 03:25:05.823] <gnugo>   (out) : dragon_status
+[2022-01-25 03:25:05.823] <gnugo>   (out) : dragon_stones
+[2022-01-25 03:25:05.823] <gnugo>   (out) : draw_search_area
+[2022-01-25 03:25:05.823] <gnugo>   (out) : dump_stack
+[2022-01-25 03:25:05.823] <gnugo>   (out) : echo
+[2022-01-25 03:25:05.823] <gnugo>   (out) : echo_err
+[2022-01-25 03:25:05.823] <gnugo>   (out) : estimate_score
+[2022-01-25 03:25:05.823] <gnugo>   (out) : eval_eye
+[2022-01-25 03:25:05.823] <gnugo>   (out) : experimental_score
+[2022-01-25 03:25:05.823] <gnugo>   (out) : eye_data
+[2022-01-25 03:25:05.823] <gnugo>   (out) : final_score
+[2022-01-25 03:25:05.823] <gnugo>   (out) : final_status
+[2022-01-25 03:25:05.823] <gnugo>   (out) : final_status_list
+[2022-01-25 03:25:05.823] <gnugo>   (out) : findlib
+[2022-01-25 03:25:05.823] <gnugo>   (out) : finish_sgftrace
+[2022-01-25 03:25:05.824] <gnugo>   (out) : fixed_handicap
+[2022-01-25 03:25:05.824] <gnugo>   (out) : followup_influence
+[2022-01-25 03:25:05.824] <gnugo>   (out) : genmove
+[2022-01-25 03:25:05.827] <gnugo>   (out) : genmove_black
+[2022-01-25 03:25:05.827] <gnugo>   (out) : genmove_white
+[2022-01-25 03:25:05.827] <gnugo>   (out) : get_connection_node_counter
+[2022-01-25 03:25:05.827] <gnugo>   (out) : get_handicap
+[2022-01-25 03:25:05.827] <gnugo>   (out) : get_komi
+[2022-01-25 03:25:05.827] <gnugo>   (out) : get_life_node_counter
+[2022-01-25 03:25:05.827] <gnugo>   (out) : get_owl_node_counter
+[2022-01-25 03:25:05.827] <gnugo>   (out) : get_random_seed
+[2022-01-25 03:25:05.827] <gnugo>   (out) : get_reading_node_counter
+[2022-01-25 03:25:05.827] <gnugo>   (out) : get_trymove_counter
+[2022-01-25 03:25:05.828] <gnugo>   (out) : gg-undo
+[2022-01-25 03:25:05.828] <gnugo>   (out) : gg_genmove
+[2022-01-25 03:25:05.828] <gnugo>   (out) : half_eye_data
+[2022-01-25 03:25:05.828] <gnugo>   (out) : help
+[2022-01-25 03:25:05.828] <gnugo>   (out) : increase_depths
+[2022-01-25 03:25:05.828] <gnugo>   (out) : initial_influence
+[2022-01-25 03:25:05.828] <gnugo>   (out) : invariant_hash_for_moves
+[2022-01-25 03:25:05.828] <gnugo>   (out) : invariant_hash
+[2022-01-25 03:25:05.828] <gnugo>   (out) : is_legal
+[2022-01-25 03:25:05.828] <gnugo>   (out) : is_surrounded
+[2022-01-25 03:25:05.828] <gnugo>   (out) : kgs-genmove_cleanup
+[2022-01-25 03:25:05.828] <gnugo>   (out) : known_command
+[2022-01-25 03:25:05.828] <gnugo>   (out) : komi
+[2022-01-25 03:25:05.828] <gnugo>   (out) : ladder_attack
+[2022-01-25 03:25:05.828] <gnugo>   (out) : last_move
+[2022-01-25 03:25:05.828] <gnugo>   (out) : level
+[2022-01-25 03:25:05.828] <gnugo>   (out) : limit_search
+[2022-01-25 03:25:05.829] <gnugo>   (out) : list_commands
+[2022-01-25 03:25:05.829] <gnugo>   (out) : list_stones
+[2022-01-25 03:25:05.829] <gnugo>   (out) : loadsgf
+[2022-01-25 03:25:05.829] <gnugo>   (out) : move_influence
+[2022-01-25 03:25:05.829] <gnugo>   (out) : move_probabilities
+[2022-01-25 03:25:05.829] <gnugo>   (out) : move_reasons
+[2022-01-25 03:25:05.829] <gnugo>   (out) : move_uncertainty
+[2022-01-25 03:25:05.829] <gnugo>   (out) : move_history
+[2022-01-25 03:25:05.829] <gnugo>   (out) : name
+[2022-01-25 03:25:05.829] <gnugo>   (out) : new_score
+[2022-01-25 03:25:05.829] <gnugo>   (out) : orientation
+[2022-01-25 03:25:05.829] <gnugo>   (out) : owl_attack
+[2022-01-25 03:25:05.829] <gnugo>   (out) : owl_connection_defends
+[2022-01-25 03:25:05.829] <gnugo>   (out) : owl_defend
+[2022-01-25 03:25:05.829] <gnugo>   (out) : owl_does_attack
+[2022-01-25 03:25:05.829] <gnugo>   (out) : owl_does_defend
+[2022-01-25 03:25:05.829] <gnugo>   (out) : owl_substantial
+[2022-01-25 03:25:05.830] <gnugo>   (out) : owl_threaten_attack
+[2022-01-25 03:25:05.830] <gnugo>   (out) : owl_threaten_defense
+[2022-01-25 03:25:05.830] <gnugo>   (out) : place_free_handicap
+[2022-01-25 03:25:05.830] <gnugo>   (out) : play
+[2022-01-25 03:25:05.830] <gnugo>   (out) : popgo
+[2022-01-25 03:25:05.830] <gnugo>   (out) : printsgf
+[2022-01-25 03:25:05.830] <gnugo>   (out) : protocol_version
+[2022-01-25 03:25:05.830] <gnugo>   (out) : query_boardsize
+[2022-01-25 03:25:05.830] <gnugo>   (out) : query_orientation
+[2022-01-25 03:25:05.830] <gnugo>   (out) : quit
+[2022-01-25 03:25:05.830] <gnugo>   (out) : reg_genmove
+[2022-01-25 03:25:05.830] <gnugo>   (out) : report_uncertainty
+[2022-01-25 03:25:05.830] <gnugo>   (out) : reset_connection_node_counter
+[2022-01-25 03:25:05.830] <gnugo>   (out) : reset_life_node_counter
+[2022-01-25 03:25:05.830] <gnugo>   (out) : reset_owl_node_counter
+[2022-01-25 03:25:05.830] <gnugo>   (out) : reset_reading_node_counter
+[2022-01-25 03:25:05.830] <gnugo>   (out) : reset_search_mask
+[2022-01-25 03:25:05.830] <gnugo>   (out) : reset_trymove_counter
+[2022-01-25 03:25:05.831] <gnugo>   (out) : restricted_genmove
+[2022-01-25 03:25:05.831] <gnugo>   (out) : same_dragon
+[2022-01-25 03:25:05.831] <gnugo>   (out) : set_free_handicap
+[2022-01-25 03:25:05.831] <gnugo>   (out) : set_random_seed
+[2022-01-25 03:25:05.831] <gnugo>   (out) : set_search_diamond
+[2022-01-25 03:25:05.831] <gnugo>   (out) : set_search_limit
+[2022-01-25 03:25:05.831] <gnugo>   (out) : showboard
+[2022-01-25 03:25:05.831] <gnugo>   (out) : start_sgftrace
+[2022-01-25 03:25:05.831] <gnugo>   (out) : surround_map
+[2022-01-25 03:25:05.832] <gnugo>   (out) : tactical_analyze_semeai
+[2022-01-25 03:25:05.832] <gnugo>   (out) : test_eyeshape
+[2022-01-25 03:25:05.832] <gnugo>   (out) : time_left
+[2022-01-25 03:25:05.832] <gnugo>   (out) : time_settings
+[2022-01-25 03:25:05.832] <gnugo>   (out) : top_moves
+[2022-01-25 03:25:05.832] <gnugo>   (out) : top_moves_black
+[2022-01-25 03:25:05.832] <gnugo>   (out) : top_moves_white
+[2022-01-25 03:25:05.832] <gnugo>   (out) : tryko
+[2022-01-25 03:25:05.832] <gnugo>   (out) : trymove
+[2022-01-25 03:25:05.832] <gnugo>   (out) : tune_move_ordering
+[2022-01-25 03:25:05.832] <gnugo>   (out) : unconditional_status
+[2022-01-25 03:25:05.832] <gnugo>   (out) : undo
+[2022-01-25 03:25:05.832] <gnugo>   (out) : version
+[2022-01-25 03:25:05.832] <gnugo>   (out) : white
+[2022-01-25 03:25:05.832] <gnugo>   (out) : worm_cutstone
+[2022-01-25 03:25:05.832] <gnugo>   (out) : worm_data
+[2022-01-25 03:25:05.833] <gnugo>   (out) : worm_stones
+[2022-01-25 03:25:05.833] <gnugo>   (out) : 
+[2022-01-25 03:25:13.145] <gnugo>    (in) : showboard
+[2022-01-25 03:25:13.154] <gnugo>   (out) : = 
+[2022-01-25 03:25:13.154] <gnugo>   (out) :    A B C D E F G H J K L M N O P Q R S T
+[2022-01-25 03:25:13.154] <gnugo>   (out) : 19 . . . . . . . . . . . . . . . . . . . 19
+[2022-01-25 03:25:13.154] <gnugo>   (out) : 18 . . . . . . . . . . . . . . . . . . . 18
+[2022-01-25 03:25:13.155] <gnugo>   (out) : 17 . . . . . . . . . . . . . . . . . . . 17
+[2022-01-25 03:25:13.155] <gnugo>   (out) : 16 . . . + . . . . . + . . . . . + . . . 16
+[2022-01-25 03:25:13.155] <gnugo>   (out) : 15 . . . . . . . . . . . . . . . . . . . 15
+[2022-01-25 03:25:13.155] <gnugo>   (out) : 14 . . . . . . . . . . . . . . . . . . . 14
+[2022-01-25 03:25:13.155] <gnugo>   (out) : 13 . . . . . . . . . . . . . . . . . . . 13
+[2022-01-25 03:25:13.155] <gnugo>   (out) : 12 . . . . . . . . . . . . . . . . . . . 12
+[2022-01-25 03:25:13.155] <gnugo>   (out) : 11 . . . . . . . . . . . . . . . . . . . 11     WHITE (O) has captured 0 stones
+[2022-01-25 03:25:13.155] <gnugo>   (out) : 10 . . . + . . . . . + . . . . . + . . . 10     BLACK (X) has captured 0 stones
+[2022-01-25 03:25:13.155] <gnugo>   (out) :  9 . . . . . . . . . . . . . . . . . . . 9
+[2022-01-25 03:25:13.156] <gnugo>   (out) :  8 . . . . . . . . . . . . . . . . . . . 8
+[2022-01-25 03:25:13.156] <gnugo>   (out) :  7 . . . . . . . . . . . . . . . . . . . 7
+[2022-01-25 03:25:13.156] <gnugo>   (out) :  6 . . . . . . . . . . . . . . . . . . . 6
+[2022-01-25 03:25:13.156] <gnugo>   (out) :  5 . . . . . . . . . . . . . . . . . . . 5
+[2022-01-25 03:25:13.156] <gnugo>   (out) :  4 . . . + . . . . . + . . . . . + . . . 4
+[2022-01-25 03:25:13.156] <gnugo>   (out) :  3 . . . . . . . . . . . . . . . . . . . 3
+[2022-01-25 03:25:13.156] <gnugo>   (out) :  2 . . . . . . . . . . . . . . . . . . . 2
+[2022-01-25 03:25:13.156] <gnugo>   (out) :  1 . . . . . . . . . . . . . . . . . . . 1
+[2022-01-25 03:25:13.156] <gnugo>   (out) :    A B C D E F G H J K L M N O P Q R S T
+[2022-01-25 03:25:13.156] <gnugo>   (out) : 
+[2022-01-25 03:25:17.729] <gnugo>    (in) : boardsize
+[2022-01-25 03:25:17.736] <gnugo>   (out) : ? boardsize not an integer
+[2022-01-25 03:25:17.736] <gnugo>   (out) : 
+[2022-01-25 03:25:20.213] <gnugo>    (in) : boardsize 9
+[2022-01-25 03:25:20.224] <gnugo>   (out) : = 
+[2022-01-25 03:25:20.224] <gnugo>   (out) : 
+[2022-01-25 03:25:23.343] <gnugo>    (in) : showboard
+[2022-01-25 03:25:23.354] <gnugo>   (out) : = 
+[2022-01-25 03:25:23.355] <gnugo>   (out) :    A B C D E F G H J
+[2022-01-25 03:25:23.355] <gnugo>   (out) :  9 . . . . . . . . . 9
+[2022-01-25 03:25:23.355] <gnugo>   (out) :  8 . . . . . . . . . 8
+[2022-01-25 03:25:23.356] <gnugo>   (out) :  7 . . + . . . + . . 7
+[2022-01-25 03:25:23.356] <gnugo>   (out) :  6 . . . . . . . . . 6
+[2022-01-25 03:25:23.356] <gnugo>   (out) :  5 . . . . + . . . . 5
+[2022-01-25 03:25:23.356] <gnugo>   (out) :  4 . . . . . . . . . 4
+[2022-01-25 03:25:23.357] <gnugo>   (out) :  3 . . + . . . + . . 3
+[2022-01-25 03:25:23.357] <gnugo>   (out) :  2 . . . . . . . . . 2     WHITE (O) has captured 0 stones
+[2022-01-25 03:25:23.357] <gnugo>   (out) :  1 . . . . . . . . . 1     BLACK (X) has captured 0 stones
+[2022-01-25 03:25:23.357] <gnugo>   (out) :    A B C D E F G H J
+[2022-01-25 03:25:23.358] <gnugo>   (out) : 
+[2022-01-25 03:25:35.076] <gnugo>    (in) : pla black G6
+[2022-01-25 03:25:35.090] <gnugo>   (out) : ? unknown command
+[2022-01-25 03:25:35.091] <gnugo>   (out) : 
+[2022-01-25 03:25:39.673] <gnugo>    (in) : play black G6
+[2022-01-25 03:25:39.680] <gnugo>   (out) : = 
+[2022-01-25 03:25:39.681] <gnugo>   (out) : 
+[2022-01-25 03:25:42.340] <gnugo>    (in) : showboard
+[2022-01-25 03:25:42.350] <gnugo>   (out) : = 
+[2022-01-25 03:25:42.350] <gnugo>   (out) :    A B C D E F G H J
+[2022-01-25 03:25:42.350] <gnugo>   (out) :  9 . . . . . . . . . 9
+[2022-01-25 03:25:42.351] <gnugo>   (out) :  8 . . . . . . . . . 8
+[2022-01-25 03:25:42.351] <gnugo>   (out) :  7 . . + . . . + . . 7
+[2022-01-25 03:25:42.351] <gnugo>   (out) :  6 . . . . . . X . . 6
+[2022-01-25 03:25:42.351] <gnugo>   (out) :  5 . . . . + . . . . 5
+[2022-01-25 03:25:42.352] <gnugo>   (out) :  4 . . . . . . . . . 4
+[2022-01-25 03:25:42.352] <gnugo>   (out) :  3 . . + . . . + . . 3
+[2022-01-25 03:25:42.352] <gnugo>   (out) :  2 . . . . . . . . . 2     WHITE (O) has captured 0 stones
+[2022-01-25 03:25:42.352] <gnugo>   (out) :  1 . . . . . . . . . 1     BLACK (X) has captured 0 stones
+[2022-01-25 03:25:42.353] <gnugo>   (out) :    A B C D E F G H J
+[2022-01-25 03:25:42.353] <gnugo>   (out) : 
+[2022-01-25 03:25:51.214] <gnugo>    (in) : play white F5
+[2022-01-25 03:25:51.226] <gnugo>   (out) : = 
+[2022-01-25 03:25:51.226] <gnugo>   (out) : 
+[2022-01-25 03:25:54.241] <gnugo>    (in) : score
+[2022-01-25 03:25:54.252] <gnugo>   (out) : ? unknown command
+[2022-01-25 03:25:54.253] <gnugo>   (out) : 
+[2022-01-25 03:26:02.739] <gnugo>    (in) : list_commands
+[2022-01-25 03:26:02.746] <gnugo>   (out) : = aa_confirm_safety
+[2022-01-25 03:26:02.747] <gnugo>   (out) : accurate_approxlib
+[2022-01-25 03:26:02.747] <gnugo>   (out) : accuratelib
+[2022-01-25 03:26:02.747] <gnugo>   (out) : advance_random_seed
+[2022-01-25 03:26:02.747] <gnugo>   (out) : all_legal
+[2022-01-25 03:26:02.747] <gnugo>   (out) : all_move_values
+[2022-01-25 03:26:02.747] <gnugo>   (out) : analyze_eyegraph
+[2022-01-25 03:26:02.747] <gnugo>   (out) : analyze_semeai
+[2022-01-25 03:26:02.747] <gnugo>   (out) : analyze_semeai_after_move
+[2022-01-25 03:26:02.747] <gnugo>   (out) : attack
+[2022-01-25 03:26:02.748] <gnugo>   (out) : attack_either
+[2022-01-25 03:26:02.749] <gnugo>   (out) : black
+[2022-01-25 03:26:02.749] <gnugo>   (out) : block_off
+[2022-01-25 03:26:02.749] <gnugo>   (out) : boardsize
+[2022-01-25 03:26:02.750] <gnugo>   (out) : break_in
+[2022-01-25 03:26:02.750] <gnugo>   (out) : captures
+[2022-01-25 03:26:02.750] <gnugo>   (out) : clear_board
+[2022-01-25 03:26:02.750] <gnugo>   (out) : clear_cache
+[2022-01-25 03:26:02.750] <gnugo>   (out) : color
+[2022-01-25 03:26:02.750] <gnugo>   (out) : combination_attack
+[2022-01-25 03:26:02.750] <gnugo>   (out) : combination_defend
+[2022-01-25 03:26:02.750] <gnugo>   (out) : connect
+[2022-01-25 03:26:02.750] <gnugo>   (out) : countlib
+[2022-01-25 03:26:02.750] <gnugo>   (out) : cputime
+[2022-01-25 03:26:02.750] <gnugo>   (out) : decrease_depths
+[2022-01-25 03:26:02.750] <gnugo>   (out) : defend
+[2022-01-25 03:26:02.751] <gnugo>   (out) : defend_both
+[2022-01-25 03:26:02.751] <gnugo>   (out) : disconnect
+[2022-01-25 03:26:02.751] <gnugo>   (out) : does_attack
+[2022-01-25 03:26:02.751] <gnugo>   (out) : does_defend
+[2022-01-25 03:26:02.751] <gnugo>   (out) : does_surround
+[2022-01-25 03:26:02.751] <gnugo>   (out) : dragon_data
+[2022-01-25 03:26:02.751] <gnugo>   (out) : dragon_status
+[2022-01-25 03:26:02.751] <gnugo>   (out) : dragon_stones
+[2022-01-25 03:26:02.751] <gnugo>   (out) : draw_search_area
+[2022-01-25 03:26:02.751] <gnugo>   (out) : dump_stack
+[2022-01-25 03:26:02.752] <gnugo>   (out) : echo
+[2022-01-25 03:26:02.752] <gnugo>   (out) : echo_err
+[2022-01-25 03:26:02.752] <gnugo>   (out) : estimate_score
+[2022-01-25 03:26:02.752] <gnugo>   (out) : eval_eye
+[2022-01-25 03:26:02.752] <gnugo>   (out) : experimental_score
+[2022-01-25 03:26:02.752] <gnugo>   (out) : eye_data
+[2022-01-25 03:26:02.752] <gnugo>   (out) : final_score
+[2022-01-25 03:26:02.752] <gnugo>   (out) : final_status
+[2022-01-25 03:26:02.752] <gnugo>   (out) : final_status_list
+[2022-01-25 03:26:02.752] <gnugo>   (out) : findlib
+[2022-01-25 03:26:02.752] <gnugo>   (out) : finish_sgftrace
+[2022-01-25 03:26:02.752] <gnugo>   (out) : fixed_handicap
+[2022-01-25 03:26:02.752] <gnugo>   (out) : followup_influence
+[2022-01-25 03:26:02.752] <gnugo>   (out) : genmove
+[2022-01-25 03:26:02.753] <gnugo>   (out) : genmove_black
+[2022-01-25 03:26:02.753] <gnugo>   (out) : genmove_white
+[2022-01-25 03:26:02.753] <gnugo>   (out) : get_connection_node_counter
+[2022-01-25 03:26:02.753] <gnugo>   (out) : get_handicap
+[2022-01-25 03:26:02.753] <gnugo>   (out) : get_komi
+[2022-01-25 03:26:02.753] <gnugo>   (out) : get_life_node_counter
+[2022-01-25 03:26:02.753] <gnugo>   (out) : get_owl_node_counter
+[2022-01-25 03:26:02.753] <gnugo>   (out) : get_random_seed
+[2022-01-25 03:26:02.753] <gnugo>   (out) : get_reading_node_counter
+[2022-01-25 03:26:02.753] <gnugo>   (out) : get_trymove_counter
+[2022-01-25 03:26:02.753] <gnugo>   (out) : gg-undo
+[2022-01-25 03:26:02.753] <gnugo>   (out) : gg_genmove
+[2022-01-25 03:26:02.753] <gnugo>   (out) : half_eye_data
+[2022-01-25 03:26:02.753] <gnugo>   (out) : help
+[2022-01-25 03:26:02.754] <gnugo>   (out) : increase_depths
+[2022-01-25 03:26:02.754] <gnugo>   (out) : initial_influence
+[2022-01-25 03:26:02.754] <gnugo>   (out) : invariant_hash_for_moves
+[2022-01-25 03:26:02.754] <gnugo>   (out) : invariant_hash
+[2022-01-25 03:26:02.754] <gnugo>   (out) : is_legal
+[2022-01-25 03:26:02.754] <gnugo>   (out) : is_surrounded
+[2022-01-25 03:26:02.754] <gnugo>   (out) : kgs-genmove_cleanup
+[2022-01-25 03:26:02.754] <gnugo>   (out) : known_command
+[2022-01-25 03:26:02.754] <gnugo>   (out) : komi
+[2022-01-25 03:26:02.754] <gnugo>   (out) : ladder_attack
+[2022-01-25 03:26:02.754] <gnugo>   (out) : last_move
+[2022-01-25 03:26:02.754] <gnugo>   (out) : level
+[2022-01-25 03:26:02.754] <gnugo>   (out) : limit_search
+[2022-01-25 03:26:02.754] <gnugo>   (out) : list_commands
+[2022-01-25 03:26:02.755] <gnugo>   (out) : list_stones
+[2022-01-25 03:26:02.755] <gnugo>   (out) : loadsgf
+[2022-01-25 03:26:02.755] <gnugo>   (out) : move_influence
+[2022-01-25 03:26:02.755] <gnugo>   (out) : move_probabilities
+[2022-01-25 03:26:02.755] <gnugo>   (out) : move_reasons
+[2022-01-25 03:26:02.755] <gnugo>   (out) : move_uncertainty
+[2022-01-25 03:26:02.755] <gnugo>   (out) : move_history
+[2022-01-25 03:26:02.755] <gnugo>   (out) : name
+[2022-01-25 03:26:02.755] <gnugo>   (out) : new_score
+[2022-01-25 03:26:02.755] <gnugo>   (out) : orientation
+[2022-01-25 03:26:02.755] <gnugo>   (out) : owl_attack
+[2022-01-25 03:26:02.755] <gnugo>   (out) : owl_connection_defends
+[2022-01-25 03:26:02.755] <gnugo>   (out) : owl_defend
+[2022-01-25 03:26:02.756] <gnugo>   (out) : owl_does_attack
+[2022-01-25 03:26:02.756] <gnugo>   (out) : owl_does_defend
+[2022-01-25 03:26:02.756] <gnugo>   (out) : owl_substantial
+[2022-01-25 03:26:02.756] <gnugo>   (out) : owl_threaten_attack
+[2022-01-25 03:26:02.756] <gnugo>   (out) : owl_threaten_defense
+[2022-01-25 03:26:02.756] <gnugo>   (out) : place_free_handicap
+[2022-01-25 03:26:02.756] <gnugo>   (out) : play
+[2022-01-25 03:26:02.756] <gnugo>   (out) : popgo
+[2022-01-25 03:26:02.756] <gnugo>   (out) : printsgf
+[2022-01-25 03:26:02.756] <gnugo>   (out) : protocol_version
+[2022-01-25 03:26:02.756] <gnugo>   (out) : query_boardsize
+[2022-01-25 03:26:02.756] <gnugo>   (out) : query_orientation
+[2022-01-25 03:26:02.756] <gnugo>   (out) : quit
+[2022-01-25 03:26:02.756] <gnugo>   (out) : reg_genmove
+[2022-01-25 03:26:02.757] <gnugo>   (out) : report_uncertainty
+[2022-01-25 03:26:02.757] <gnugo>   (out) : reset_connection_node_counter
+[2022-01-25 03:26:02.757] <gnugo>   (out) : reset_life_node_counter
+[2022-01-25 03:26:02.757] <gnugo>   (out) : reset_owl_node_counter
+[2022-01-25 03:26:02.757] <gnugo>   (out) : reset_reading_node_counter
+[2022-01-25 03:26:02.757] <gnugo>   (out) : reset_search_mask
+[2022-01-25 03:26:02.757] <gnugo>   (out) : reset_trymove_counter
+[2022-01-25 03:26:02.757] <gnugo>   (out) : restricted_genmove
+[2022-01-25 03:26:02.757] <gnugo>   (out) : same_dragon
+[2022-01-25 03:26:02.758] <gnugo>   (out) : set_free_handicap
+[2022-01-25 03:26:02.758] <gnugo>   (out) : set_random_seed
+[2022-01-25 03:26:02.758] <gnugo>   (out) : set_search_diamond
+[2022-01-25 03:26:02.758] <gnugo>   (out) : set_search_limit
+[2022-01-25 03:26:02.758] <gnugo>   (out) : showboard
+[2022-01-25 03:26:02.758] <gnugo>   (out) : start_sgftrace
+[2022-01-25 03:26:02.758] <gnugo>   (out) : surround_map
+[2022-01-25 03:26:02.758] <gnugo>   (out) : tactical_analyze_semeai
+[2022-01-25 03:26:02.758] <gnugo>   (out) : test_eyeshape
+[2022-01-25 03:26:02.758] <gnugo>   (out) : time_left
+[2022-01-25 03:26:02.758] <gnugo>   (out) : time_settings
+[2022-01-25 03:26:02.758] <gnugo>   (out) : top_moves
+[2022-01-25 03:26:02.758] <gnugo>   (out) : top_moves_black
+[2022-01-25 03:26:02.758] <gnugo>   (out) : top_moves_white
+[2022-01-25 03:26:02.759] <gnugo>   (out) : tryko
+[2022-01-25 03:26:02.759] <gnugo>   (out) : trymove
+[2022-01-25 03:26:02.759] <gnugo>   (out) : tune_move_ordering
+[2022-01-25 03:26:02.759] <gnugo>   (out) : unconditional_status
+[2022-01-25 03:26:02.759] <gnugo>   (out) : undo
+[2022-01-25 03:26:02.759] <gnugo>   (out) : version
+[2022-01-25 03:26:02.759] <gnugo>   (out) : white
+[2022-01-25 03:26:02.759] <gnugo>   (out) : worm_cutstone
+[2022-01-25 03:26:02.759] <gnugo>   (out) : worm_data
+[2022-01-25 03:26:02.759] <gnugo>   (out) : worm_stones
+[2022-01-25 03:26:02.759] <gnugo>   (out) : 
+[2022-01-25 03:26:19.102] <gnugo>    (in) : estimate_score
+[2022-01-25 03:26:19.179] <gnugo>   (out) : = B+2.0 (upper bound: -2.0, lower: -2.0)
+[2022-01-25 03:26:19.180] <gnugo>   (out) : 
+[2022-01-25 03:26:38.274] <gnugo>    (in) : genmove black
+[2022-01-25 03:26:38.292] <gnugo>   (out) : = F6
+[2022-01-25 03:26:38.292] <gnugo>   (out) : 

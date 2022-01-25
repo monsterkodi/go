@@ -7,6 +7,7 @@
 ###
 
 kxk = require 'kxk'
+{ max } = Math
 { elem, kpos, post, randIntRange, $ } = kxk
 { stone, stoneColor, alpha, opponent } = require './util'
 
@@ -35,6 +36,7 @@ function Board
         
         @stn = elem 'div' class:'stones'    parent:@div
         @lib = elem 'div' class:'liberties' parent:@div
+        @num = elem 'div' class:'numbers'   parent:@div
         @trr = elem 'div' class:'territory' parent:@div
         @hlt = elem 'div' class:'highlts'   parent:@div
         @hvr = elem 'div' class:"hover #{@human}" parent:@hlt
@@ -50,6 +52,7 @@ function Board
     onResize: =>
         
         @lastMove()
+        @annotate()
         
     # 000      000  000   000  00000000   0000000  
     # 000      000  0000  000  000       000       
@@ -122,16 +125,31 @@ function Board
             n.style.top = "#{d*(x+1)}%"
             
             @lgd.style.display = window.stash.get('legend') ? 'initial' : 'none'
-            
-    toggleLegend: ->
+         
+    # 000000000   0000000    0000000    0000000   000      00000000  
+    #    000     000   000  000        000        000      000       
+    #    000     000   000  000  0000  000  0000  000      0000000   
+    #    000     000   000  000   000  000   000  000      000       
+    #    000      0000000    0000000    0000000   0000000  00000000  
+    
+    toggleNumbers: ->
         
-        window.stash.set 'legend' not window.stash.get 'legend'            
-        @lgd.style.display = window.stash.get('legend') ? 'initial' : 'none'
-
+        window.stash.set 'numbers' not window.stash.get 'numbers'
+        @num.style.display = window.stash.get('numbers') ? 'initial' : 'none'
+        if window.stash.get('numbers') and window.stash.get 'liberties'
+            @toggleLiberties()
+            
     toggleLiberties: ->
         
         window.stash.set 'liberties' not window.stash.get 'liberties'            
         @lib.style.display = window.stash.get('liberties') ? 'initial' : 'none'
+        if window.stash.get('liberties') and window.stash.get 'numbers'
+            @toggleNumbers()
+
+    toggleLegend: ->
+        
+        window.stash.set 'legend' not window.stash.get 'legend'            
+        @lgd.style.display = window.stash.get('legend') ? 'initial' : 'none'
 
     toggleTerritory: ->
         
@@ -263,9 +281,39 @@ function Board
     
     annotate: ->
         
+        @numbers()
         @liberties()
         @territory()
     
+    # 000   000  000   000  00     00  0000000    00000000  00000000    0000000  
+    # 0000  000  000   000  000   000  000   000  000       000   000  000       
+    # 000 0 000  000   000  000000000  0000000    0000000   0000000    0000000   
+    # 000  0000  000   000  000 0 000  000   000  000       000   000       000  
+    # 000   000   0000000   000   000  0000000    00000000  000   000  0000000   
+    
+    numbers: ->
+        
+        @num.innerHTML = ''
+        if @game
+            for m in @game.moves
+                [color, move] = m.split ' '
+                n = @game.moves.indexOf m
+                if not move?
+                    move = color 
+                    color = ['black''white'][n]
+                c = @game.coord move
+                l = elem 'div' class:"number #{color}" parent:@num, text:1+n
+                p = @coordToPrcnt c
+                l.style = "left:#{p.x}%; top:#{p.y}%;" 
+                s = @div.getBoundingClientRect().height/(@size+1)
+                s = max 16 int s/3
+                l.style.fontSize = "#{int(2*s/3)}px"
+                l.style.width = "#{s}px"
+                l.style.height = "#{s}px"
+                l.style.borderRadius = "#{s}px"
+                if stone.empty == @game.stoneAt move
+                    l.style.backgroundColor = color
+        
     # 000      000  0000000    00000000  00000000   000000000  000  00000000   0000000  
     # 000      000  000   000  000       000   000     000     000  000       000       
     # 000      000  0000000    0000000   0000000       000     000  0000000   0000000   
@@ -300,7 +348,7 @@ function Board
                         for p in a.area
                             e = elem 'div' class:"eye #{a.color}" parent:@trr
                             r = @coordToPrcnt @game.coord p
-                            s = 15/(@size+1)
+                            s = 22/(@size+1)
                             s = s.toFixed 2
                             e.style = "left:#{r.x}%; top:#{r.y}%; width:#{s}%; height:#{s}%;" 
                     
@@ -310,7 +358,7 @@ function Board
                         for p in g.group
                             e = elem 'div' class:"eye #{opponent[stoneColor[g.stone]][0]}" parent:@trr
                             r = @coordToPrcnt @game.coord p
-                            s = 15/(@size+1)
+                            s = 22/(@size+1)
                             s = s.toFixed 2
                             e.style = "left:#{r.x}%; top:#{r.y}%; width:#{s}%; height:#{s}%;" 
 

@@ -334,7 +334,16 @@ Game = (function ()
         window.stash.set('score',_k_.trim(score))
         t = $('.titlebar-title')
         t.innerHTML = ''
-        return td = elem('div',{class:'captures',text:score,parent:t})
+        td = elem('div',{class:'captures',parent:t})
+        if (!_k_.empty(this.info.players))
+        {
+            elem('span',{class:'player black',text:this.info.players[0] + ' ',parent:td})
+        }
+        elem('span',{class:`score  ${(score[0] === 'B' ? 'black' : 'white')}`,text:score,parent:td})
+        if (!_k_.empty(this.info.players))
+        {
+            return elem('span',{class:'player white',text:' ' + this.info.players[1],parent:td})
+        }
     }
 
     return Game

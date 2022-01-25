@@ -38,7 +38,16 @@ class Util
         w:     'white'
         
     @alpha: 'ABCDEFGHJKLMNOPQRST'
+    @ilpha: 'abcdefghijklmnopqrs'
     
     @splice: (s, i, n, r='') -> s.slice(0,i) + r + s.slice(i+n)
+    
+    @sgfToAlphaNum: (sgf, size=19) ->
+        
+        if sgf.length == 2
+            Util.alpha[Util.ilpha.indexOf(sgf[0])] + (size - Util.ilpha.indexOf(sgf[1]))
+        else
+            log "sgf? '#{sgf}' #{sgf.length} #{Array.isArray sgf}"
+            sgf
 
 module.exports = Util

@@ -15,6 +15,7 @@
     "watch": "kode -wt kode/test/*.kode kode/*.kode"
   },
   "dependencies": {
+    "@sabaki/sgf": "^3.4.7",
     "kxk": "monsterkodi/kxk",
     "readline-sync": "^1.4.10"
   },

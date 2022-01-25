@@ -6,8 +6,11 @@
 # 000   000  00000000  000   000   0000000
 
 go
-    save                    cmdctrl+s
     new game                n
+    open                    cmdctrl+o
+    save                    cmdctrl+s
+    save as ...             cmdctrl+shift+s
+    ---
     undo                    left
     redo                    right
     pass                    p
@@ -34,6 +37,12 @@ go
     -----
     about                   alt+cmdctrl+/
     quit                    cmdctrl+q
+    
+view
+    move number             alt+n
+    liberties               alt+l
+    legend                  cmdctrl+l
+    territory               cmdctrl+t
         
 # 000   000  000  000   000  0000000     0000000   000   000
 # 000 0 000  000  0000  000  000   000  000   000  000 0 000
@@ -45,9 +54,6 @@ window
     close                   cmdctrl+w
     -
     toggle menu             alt+m
-    toggle legend           alt+l
-    toggle liberties        cmdctrl+l
-    toggle territory        cmdctrl+t
     fullscreen              alt+f    
     --
     minimize                alt+ctrl+shift+m

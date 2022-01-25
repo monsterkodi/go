@@ -2,7 +2,7 @@
 
 var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}}
 
-var $, args, Board, elem, Game, GNU, kerror, keyinfo, klog, kxk, MainWin, opponent, post, stash, win
+var $, args, Board, elem, Game, GNU, kerror, keyinfo, klog, kxk, MainWin, opponent, post, SGF, stash, win
 
 kxk = require('kxk')
 args = kxk.args
@@ -20,6 +20,7 @@ opponent = require('./util').opponent
 Board = require('./board')
 Game = require('./game')
 GNU = require('./gnu')
+SGF = require('./sgf')
 
 MainWin = (function ()
 {
@@ -30,6 +31,7 @@ MainWin = (function ()
         this["saveStash"] = this["saveStash"].bind(this)
         this["restore"] = this["restore"].bind(this)
         this["onResize"] = this["onResize"].bind(this)
+        this["newGame"] = this["newGame"].bind(this)
         this["onLoad"] = this["onLoad"].bind(this)
         MainWin.__super__.constructor.call(this,{dir:__dirname,pkg:require('../package.json'),menu:'../kode/menu.noon',icon:'../img/mini.png',prefsSeperator:'▸',onLoad:this.onLoad})
         post.on('alert',function (msg)
@@ -38,6 +40,7 @@ MainWin = (function ()
             return kerror(msg)
         })
         post.on('saveStash',this.saveStash)
+        post.on('newGame',this.newGame)
         window.stash = new stash(`win/${this.id}`,{separator:'▸'})
         post.setMaxListeners(20)
         window.onresize = this.onResize
@@ -69,9 +72,9 @@ MainWin = (function ()
         }
     }
 
-    MainWin.prototype["newGame"] = function (boardsize = 9, gnucolor = 'black', handicap = 0, moves = [])
+    MainWin.prototype["newGame"] = function (boardsize = 9, gnucolor = 'black', handicap = 0, moves = [], info = {})
     {
-        var c, m, p, r1, score
+        var c, m, p, r1, score, _104_31_
 
         this.boardsize = boardsize
         this.gnucolor = gnucolor
@@ -94,24 +97,34 @@ MainWin = (function ()
         this.board.gnu = this.gnu
         this.board.game = this.game
         this.gnu.newGame(this.boardsize,this.gnucolor,this.handicap,_k_.empty(moves))
+        this.game.info = info
         var list = _k_.list(moves)
-        for (var _90_14_ = 0; _90_14_ < list.length; _90_14_++)
+        for (var _93_14_ = 0; _93_14_ < list.length; _93_14_++)
         {
-            m = list[_90_14_]
-            var _91_19_ = m.split(' '); c = _91_19_[0]; p = _91_19_[1]
+            m = list[_93_14_]
+            var _94_19_ = m.split(' '); c = _94_19_[0]; p = _94_19_[1]
 
+            if (!(p != null))
+            {
+                p = c
+                c = ['black','white'][moves.indexOf(m) % 2]
+            }
             this.game.play(c,p)
             this.gnu.send(`play ${c} ${p}`)
         }
         if (!_k_.empty(moves))
         {
-            if (score = window.stash.get('score'))
+            score = ((_104_31_=info.score) != null ? _104_31_ : window.stash.get('score'))
+            if (score)
             {
-                this.game.finalScore(score)
+                return this.game.finalScore(score)
             }
-            if (this.game.moves.slice(-1)[0].split(' ')[0] !== this.gnucolor)
+            else
             {
-                return this.gnu.send(`genmove ${this.gnucolor}`)
+                if (this.game.moves.slice(-1)[0].split(' ')[0] !== this.gnucolor)
+                {
+                    return this.gnu.send(`genmove ${this.gnucolor}`)
+                }
             }
         }
     }
@@ -149,6 +162,12 @@ MainWin = (function ()
                 this.game.save()
                 return this.saveStash()
 
+            case 'open':
+                return SGF.openDialog()
+
+            case 'save as ...':
+                return SGF.saveAsDialog()
+
             case 'revert':
                 return this.restore()
 
@@ -167,13 +186,16 @@ MainWin = (function ()
             case 'calcscore':
                 return this.gnu.calcscore()
 
-            case 'toggle legend':
+            case 'move number':
+                return this.board.toggleNumbers()
+
+            case 'legend':
                 return this.board.toggleLegend()
 
-            case 'toggle liberties':
+            case 'liberties':
                 return this.board.toggleLiberties()
 
-            case 'toggle territory':
+            case 'territory':
                 return this.board.toggleTerritory()
 
             case 'new game':

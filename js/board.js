@@ -1,10 +1,12 @@
 // monsterkodi/kode 0.237.0
 
-var _k_ = {in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}}
+var _k_ = {in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, max: function () { m = -Infinity; for (a of arguments) { if (a instanceof Array) {m = _k_.max.apply(_k_.max,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n > m ? n : m}}}; return m }}
 
 var $, alpha, Board, elem, kpos, kxk, opponent, post, randIntRange, stone, stoneColor
 
 kxk = require('kxk')
+max = Math.max
+
 elem = kxk.elem
 kpos = kxk.kpos
 post = kxk.post
@@ -46,6 +48,7 @@ Board = (function ()
         this.legend()
         this.stn = elem('div',{class:'stones',parent:this.div})
         this.lib = elem('div',{class:'liberties',parent:this.div})
+        this.num = elem('div',{class:'numbers',parent:this.div})
         this.trr = elem('div',{class:'territory',parent:this.div})
         this.hlt = elem('div',{class:'highlts',parent:this.div})
         this.hvr = elem('div',{class:`hover ${this.human}`,parent:this.hlt})
@@ -58,7 +61,8 @@ Board = (function ()
 
     Board.prototype["onResize"] = function ()
     {
-        return this.lastMove()
+        this.lastMove()
+        return this.annotate()
     }
 
     Board.prototype["lines"] = function ()
@@ -77,7 +81,7 @@ Board = (function ()
         this.ctx.rect(0,0,s,s)
         this.ctx.fill()
         this.ctx.fillStyle = 'black'
-        for (var _78_17_ = i = 0, _78_21_ = this.size; (_78_17_ <= _78_21_ ? i < this.size : i > this.size); (_78_17_ <= _78_21_ ? ++i : --i))
+        for (var _81_17_ = i = 0, _81_21_ = this.size; (_81_17_ <= _81_21_ ? i < this.size : i > this.size); (_81_17_ <= _81_21_ ? ++i : --i))
         {
             this.ctx.beginPath()
             this.ctx.moveTo(o + i * d,o)
@@ -112,7 +116,7 @@ Board = (function ()
         var d, n, x
 
         d = 100 / (this.size + 1)
-        for (var _106_17_ = x = 0, _106_21_ = this.size; (_106_17_ <= _106_21_ ? x < this.size : x > this.size); (_106_17_ <= _106_21_ ? ++x : --x))
+        for (var _109_17_ = x = 0, _109_21_ = this.size; (_109_17_ <= _109_21_ ? x < this.size : x > this.size); (_109_17_ <= _109_21_ ? ++x : --x))
         {
             n = elem('div',{class:'legend',text:alpha[x],parent:this.lgd})
             n.style.left = `${d * (x + 1)}%`
@@ -130,16 +134,30 @@ Board = (function ()
         }
     }
 
-    Board.prototype["toggleLegend"] = function ()
+    Board.prototype["toggleNumbers"] = function ()
     {
-        window.stash.set('legend',!window.stash.get('legend'))
-        return this.lgd.style.display = (window.stash.get('legend') ? 'initial' : 'none')
+        window.stash.set('numbers',!window.stash.get('numbers'))
+        this.num.style.display = (window.stash.get('numbers') ? 'initial' : 'none')
+        if (window.stash.get('numbers') && window.stash.get('liberties'))
+        {
+            return this.toggleLiberties()
+        }
     }
 
     Board.prototype["toggleLiberties"] = function ()
     {
         window.stash.set('liberties',!window.stash.get('liberties'))
-        return this.lib.style.display = (window.stash.get('liberties') ? 'initial' : 'none')
+        this.lib.style.display = (window.stash.get('liberties') ? 'initial' : 'none')
+        if (window.stash.get('liberties') && window.stash.get('numbers'))
+        {
+            return this.toggleNumbers()
+        }
+    }
+
+    Board.prototype["toggleLegend"] = function ()
+    {
+        window.stash.set('legend',!window.stash.get('legend'))
+        return this.lgd.style.display = (window.stash.get('legend') ? 'initial' : 'none')
     }
 
     Board.prototype["toggleTerritory"] = function ()
@@ -183,7 +201,7 @@ Board = (function ()
 
     Board.prototype["onMouseDown"] = function (event)
     {
-        var c, p, _178_20_
+        var c, p, _196_20_
 
         c = this.posAtEvent(event)
         if (this.game)
@@ -203,13 +221,13 @@ Board = (function ()
 
     Board.prototype["lastMove"] = function ()
     {
-        var color, d, p, r, _188_29_
+        var color, d, p, r, _206_29_
 
         if (_k_.empty((this.game != null ? this.game.moves : undefined)))
         {
             return
         }
-        var _189_19_ = this.game.moves.slice(-1)[0].split(' '); color = _189_19_[0]; p = _189_19_[1]
+        var _207_19_ = this.game.moves.slice(-1)[0].split(' '); color = _207_19_[0]; p = _207_19_[1]
 
         r = this.coordToPrcnt(this.game.coord(p))
         d = this.div.getBoundingClientRect().height / (this.size + 1)
@@ -288,8 +306,46 @@ Board = (function ()
 
     Board.prototype["annotate"] = function ()
     {
+        this.numbers()
         this.liberties()
         return this.territory()
+    }
+
+    Board.prototype["numbers"] = function ()
+    {
+        var c, color, l, m, move, n, p, s
+
+        this.num.innerHTML = ''
+        if (this.game)
+        {
+            var list = _k_.list(this.game.moves)
+            for (var _298_18_ = 0; _298_18_ < list.length; _298_18_++)
+            {
+                m = list[_298_18_]
+                var _299_30_ = m.split(' '); color = _299_30_[0]; move = _299_30_[1]
+
+                n = this.game.moves.indexOf(m)
+                if (!(move != null))
+                {
+                    move = color
+                    color = ['black','white'][n]
+                }
+                c = this.game.coord(move)
+                l = elem('div',{class:`number ${color}`,parent:this.num,text:1 + n})
+                p = this.coordToPrcnt(c)
+                l.style = `left:${p.x}%; top:${p.y}%;`
+                s = this.div.getBoundingClientRect().height / (this.size + 1)
+                s = _k_.max(16,parseInt(s / 3))
+                l.style.fontSize = `${parseInt(2 * s / 3)}px`
+                l.style.width = `${s}px`
+                l.style.height = `${s}px`
+                l.style.borderRadius = `${s}px`
+                if (stone.empty === this.game.stoneAt(move))
+                {
+                    l.style.backgroundColor = color
+                }
+            }
+        }
     }
 
     Board.prototype["liberties"] = function ()
@@ -300,13 +356,13 @@ Board = (function ()
         if (this.game)
         {
             var list = ['black','white']
-            for (var _279_22_ = 0; _279_22_ < list.length; _279_22_++)
+            for (var _327_22_ = 0; _327_22_ < list.length; _327_22_++)
             {
-                color = list[_279_22_]
+                color = list[_327_22_]
                 var list1 = _k_.list(this.game.allStones(color))
-                for (var _280_22_ = 0; _280_22_ < list1.length; _280_22_++)
+                for (var _328_22_ = 0; _328_22_ < list1.length; _328_22_++)
                 {
-                    s = list1[_280_22_]
+                    s = list1[_328_22_]
                     c = this.game.coord(s)
                     l = elem('div',{class:`liberty ${color}`,parent:this.lib,text:this.game.liberties(c)})
                     p = this.coordToPrcnt(c)
@@ -326,36 +382,36 @@ Board = (function ()
             if (this.game.moves.length > 1)
             {
                 var list = _k_.list(this.game.areas)
-                for (var _298_22_ = 0; _298_22_ < list.length; _298_22_++)
+                for (var _346_22_ = 0; _346_22_ < list.length; _346_22_++)
                 {
-                    a = list[_298_22_]
+                    a = list[_346_22_]
                     if (_k_.in(a.color,'wbWB'))
                     {
                         var list1 = _k_.list(a.area)
-                        for (var _300_30_ = 0; _300_30_ < list1.length; _300_30_++)
+                        for (var _348_30_ = 0; _348_30_ < list1.length; _348_30_++)
                         {
-                            p = list1[_300_30_]
+                            p = list1[_348_30_]
                             e = elem('div',{class:`eye ${a.color}`,parent:this.trr})
                             r = this.coordToPrcnt(this.game.coord(p))
-                            s = 15 / (this.size + 1)
+                            s = 22 / (this.size + 1)
                             s = s.toFixed(2)
                             e.style = `left:${r.x}%; top:${r.y}%; width:${s}%; height:${s}%;`
                         }
                     }
                 }
                 var list2 = _k_.list(this.game.grps)
-                for (var _308_22_ = 0; _308_22_ < list2.length; _308_22_++)
+                for (var _356_22_ = 0; _356_22_ < list2.length; _356_22_++)
                 {
-                    g = list2[_308_22_]
+                    g = list2[_356_22_]
                     if (g.state === 'dead')
                     {
                         var list3 = _k_.list(g.group)
-                        for (var _310_30_ = 0; _310_30_ < list3.length; _310_30_++)
+                        for (var _358_30_ = 0; _358_30_ < list3.length; _358_30_++)
                         {
-                            p = list3[_310_30_]
+                            p = list3[_358_30_]
                             e = elem('div',{class:`eye ${opponent[stoneColor[g.stone]][0]}`,parent:this.trr})
                             r = this.coordToPrcnt(this.game.coord(p))
-                            s = 15 / (this.size + 1)
+                            s = 22 / (this.size + 1)
                             s = s.toFixed(2)
                             e.style = `left:${r.x}%; top:${r.y}%; width:${s}%; height:${s}%;`
                         }

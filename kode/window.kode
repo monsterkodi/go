@@ -13,6 +13,7 @@ kxk = require 'kxk'
 Board = require './board'
 Game  = require './game'
 GNU   = require './gnu'
+SGF   = require './sgf'
 
 function MainWin extends win
     
@@ -28,13 +29,14 @@ function MainWin extends win
             
         post.on 'alert' (msg) -> window.alert(msg); kerror msg
         post.on 'saveStash'   @saveStash
+        post.on 'newGame'     @newGame
         
         window.stash = new stash "win/#{@id}" separator:'▸'
         post.setMaxListeners 20
         
         window.onresize = @onResize
         window.onload = @onLoad
-                                    
+        
     # 000       0000000    0000000   0000000    
     # 000      000   000  000   000  000   000  
     # 000      000   000  000000000  000   000  
@@ -68,7 +70,7 @@ function MainWin extends win
     # 000  0000  000       000   000        000   000  000   000  000 0 000  000       
     # 000   000  00000000  00     00         0000000   000   000  000   000  00000000  
     
-    newGame: (@boardsize=9, @gnucolor='black', @handicap=0, moves=[]) ->
+    newGame: (@boardsize=9, @gnucolor='black', @handicap=0, moves=[], info={}) =>
 
         window.stash.del 'score' if empty moves
         window.stash.set 'boardsize' @boardsize
@@ -86,19 +88,26 @@ function MainWin extends win
         @board.gnu = @gnu
         @board.game = @game
         @gnu.newGame @boardsize, @gnucolor, @handicap, empty moves
+        @game.info = info
         
         for m in moves
             [c, p] = m.split ' '
+            if not p?
+                p = c
+                c = ['black' 'white'][moves.indexOf(m)%2]
+            # log 'play' c,p
             @game.play c, p
             @gnu.send "play #{c} #{p}"
          
         if valid moves
+            
+            score = info.score ? window.stash.get 'score'
 
-            if score = window.stash.get 'score'
+            if score
                 @game.finalScore score
-                
-            if @game.moves[-1].split(' ')[0] != @gnucolor 
-                @gnu.send "genmove #{@gnucolor}"
+            else
+                if @game.moves[-1].split(' ')[0] != @gnucolor 
+                    @gnu.send "genmove #{@gnucolor}"
         
     onResize: =>
         
@@ -135,15 +144,18 @@ function MainWin extends win
                
         switch action.toLowerCase()
             'save'              ➜ @game.save(); @saveStash()
+            'open'              ➜ SGF.openDialog()
+            'save as ...'       ➜ SGF.saveAsDialog()
             'revert'            ➜ @restore()
             'undo'              ➜ @gnu.undo()
             'redo'              ➜ @gnu.redo()
             'pass'              ➜ @gnu.humanMove 'pass'
             'genmove'           ➜ @gnu.humanMove @game.genmove opponent[@gnucolor]
             'calcscore'         ➜ @gnu.calcscore()
-            'toggle legend'     ➜ @board.toggleLegend()
-            'toggle liberties'  ➜ @board.toggleLiberties()
-            'toggle territory'  ➜ @board.toggleTerritory()
+            'move number'       ➜ @board.toggleNumbers()
+            'legend'            ➜ @board.toggleLegend()
+            'liberties'         ➜ @board.toggleLiberties()
+            'territory'         ➜ @board.toggleTerritory()
             'new game'          ➜ @newGame @boardsize, @gnucolor, @handicap
             'black' 'white'     ➜ @newGame @boardsize, action, @handicap
             '7x7' '9x9' '13x13' 
