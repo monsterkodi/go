@@ -36,7 +36,7 @@ function Referee
     
     newGame: (gi={}) =>
 
-        log noon gi
+        # log noon gi
         
         @boardsize = gi.size     ? @boardsize
         @handicap  = gi.handicap ? @handicap
@@ -44,8 +44,9 @@ function Referee
         @black     = gi.black    ? @black
         moves      = gi.moves    ? []
         info       = gi.info     ? {}
-
-        log @boardsize, @handicap, info
+        @redos     = []
+        
+        # log @boardsize, @handicap, info
         
         window.stash.del 'score' if empty moves
         window.stash.set 'size'      @boardsize
@@ -72,58 +73,68 @@ function Referee
             @gnu.black.newGame @boardsize, 'black' @handicap
                         
         if valid moves
-        
-            for m in moves
-                [c, p] = m.split ' '
-                if not p?
-                    p = c
-                    c = ['black' 'white'][moves.indexOf(m)%2]
-                @game.play c, p
-                @gnu.black?.send "play #{c} #{p}"
-                @gnu.white?.send "play #{c} #{p}"
-            
-            score = info.score ? window.stash.get 'score'
-
-            if score
-                @game.finalScore score
-            else
-                @gnu[@game.nextColor()]?.genmove()
+            @replay moves
         else
             if @gnu.black and @handicap < 2
                 @gnu.black.genmove()
                 
             if @gnu.white and @handicap > 1
                 @gnu.white.genmove()
+            
+    # 00000000   00000000  00000000   000       0000000   000   000  
+    # 000   000  000       000   000  000      000   000   000 000   
+    # 0000000    0000000   00000000   000      000000000    00000    
+    # 000   000  000       000        000      000   000     000     
+    # 000   000  00000000  000        0000000  000   000     000     
+    
+    @replay: (moves) ->
+            
+        for m in moves
+            [c, p] = m.split ' '
+            if not p?
+                p = c
+                c = ['black' 'white'][moves.indexOf(m)%2]
+            @game.play c, p
+            @gnu.black?.send "play #{c} #{p}"
+            @gnu.white?.send "play #{c} #{p}"
+        
+        score = info.score ? window.stash.get 'score'
 
-    #  0000000   00000000  000   000  00     00   0000000   000   000  00000000  
-    # 000        000       0000  000  000   000  000   000  000   000  000       
-    # 000  0000  0000000   000 0 000  000000000  000   000   000 000   0000000   
-    # 000   000  000       000  0000  000 0 000  000   000     000     000       
-    #  0000000   00000000  000   000  000   000   0000000       0      00000000  
+        if score
+            @game.finalScore score
+        else
+            @gnu[@game.nextColor()]?.genmove()
+
+    # 00     00   0000000   000   000  00000000  
+    # 000   000  000   000  000   000  000       
+    # 000000000  000   000   000 000   0000000   
+    # 000 0 000  000   000     000     000       
+    # 000   000   0000000       0      00000000  
     
     genMove: -> @game.genmove @game.nextColor()
     
-    # 000   000  000   000  00     00   0000000   000   000  00     00   0000000   000   000  00000000  
-    # 000   000  000   000  000   000  000   000  0000  000  000   000  000   000  000   000  000       
-    # 000000000  000   000  000000000  000000000  000 0 000  000000000  000   000   000 000   0000000   
-    # 000   000  000   000  000 0 000  000   000  000  0000  000 0 000  000   000     000     000       
-    # 000   000   0000000   000   000  000   000  000   000  000   000   0000000       0      00000000  
-    
-    humanMove: (p) =>
+    humanMove: (p) => @handleMove p, 'human'
+                        
+    gnuMove: (p) => @handleMove p, 'gnu'
+        
+    handleMove: (p, player) ->
         
         lastColor = @game.lastColor()
         nextColor = @game.nextColor()
-        if @[nextColor] not in ['gnu']
-            @game.play nextColor, p
-            @gnu[lastColor]?.opponentMove p
-                
-    gnuMove: (p) =>
         
-        lastColor = @game.lastColor()
-        nextColor = @game.nextColor()
-        if @[nextColor] in ['gnu']
-            @gnu[lastColor]?.opponentMove p
-            @game.play nextColor, p
+        return error("wrong player: #{player}") if player == 'human' and @game.players[nextColor] in ['gnu']
+        return error("wrong player: #{player}") if player == 'gnu'   and @game.players[nextColor] != 'gnu'
+        
+        @game.play nextColor, p
+        @gnu[lastColor]?.opponentMove p
+            
+        if p in ['pass' 'resign']
+            @gnu.black?.send 'final_score'
+            @gnu.white?.send 'final_score'
+            
+        if p != 'resign'
+            if p != 'pass' or 'pass' not in @game.moves[-2]
+                @gnu[lastColor]?.genmove()
                             
     # 000   000  000   000  0000000     0000000   
     # 000   000  0000  000  000   000  000   000  
@@ -133,22 +144,60 @@ function Referee
     
     undo: ->
         
+        return if empty @game.moves
+        
+        return if valid @gnu.black?.msg
+        return if valid @gnu.white?.msg
+        
+        # log 'undo' @game.moves
+        
+        @redos ?= []
+        while @game.moves[-1].split(' ')[1] in ['pass' 'resign']
+            @redos.unshift @game.moves.pop() 
+            @gnu.black?.send 'undo'
+            @gnu.white?.send 'undo'
+            
+        @redos.unshift @game.moves.pop()
+        
+        # log 'undo' @game.moves, @redos
+        
         @gnu.black?.undo()
         @gnu.white?.undo()
             
     redo: ->
         
-        @gnu.black?.redo()
-        @gnu.white?.redo()
+        return if empty @redos
+        return if valid @gnu.black?.msg
+        return if valid @gnu.white?.msg
+        
+        move = @redos.shift()
+        [color, p] = move.split ' '
+        @game.play color, p
+        @gnu.black?.send "play #{color} #{p}"
+        @gnu.white?.send "play #{color} #{p}"
             
-    # 00     00   0000000   000   000  00000000  
-    # 000   000  000   000  000   000  000       
-    # 000000000  000   000   000 000   0000000   
-    # 000 0 000  000   000     000     000       
-    # 000   000   0000000       0      00000000  
+    # 00000000  000  00000000    0000000  000000000        000       0000000    0000000  000000000  
+    # 000       000  000   000  000          000           000      000   000  000          000     
+    # 000000    000  0000000    0000000      000           000      000000000  0000000      000     
+    # 000       000  000   000       000     000           000      000   000       000     000     
+    # 000       000  000   000  0000000      000           0000000  000   000  0000000      000    
     
     firstMove: ->
+        
+        return if empty @game.moves
+        @redos = @game.moves.concat @redos
+        @gnu.black?.send "boardsize #{@game.size}"
+        @gnu.white?.send "boardsize #{@game.size}"
+        @game.clear_board()
+        
     lastMove: ->
-                    
+
+        return if empty @redos
+        while valid @redos
+            move = @redos.shift()
+            [color, p] = move.split ' '
+            @game.play color, p
+            @gnu.black?.send "play #{color} #{p}"
+            @gnu.white?.send "play #{color} #{p}"
                     
 module.exports = Referee

@@ -1,6 +1,6 @@
 // monsterkodi/kode 0.237.0
 
-var _k_ = {noon: function (obj) { var pad = function (s, l) { while (s.length < l) { s += ' ' }; return s }; var esc = function (k, arry) { var es, sp; if (0 <= k.indexOf('\n')) { sp = k.split('\n'); es = sp.map(function (s) { return esc(s,arry) }); es.unshift('...'); es.push('...'); return es.join('\n') } if (k === '' || k === '...' || _k_.in(k[0],[' ','#','|']) || _k_.in(k[k.length - 1],[' ','#','|'])) { k = '|' + k + '|' } else if (arry && /  /.test(k)) { k = '|' + k + '|' }; return k }; var pretty = function (o, ind, seen) { var k, kl, l, v, mk = 4; if (Object.keys(o).length > 1) { for (k in o) { if (Object.hasOwn(o,k)) { kl = parseInt(Math.ceil((k.length + 2) / 4) * 4); mk = Math.max(mk,kl); if (mk > 32) { mk = 32; break } } } }; l = []; var keyValue = function (k, v) { var i, ks, s, vs; s = ind; k = esc(k,true); if (k.indexOf('  ') > 0 && k[0] !== '|') { k = `|${k}|` } else if (k[0] !== '|' && k[k.length - 1] === '|') { k = '|' + k } else if (k[0] === '|' && k[k.length - 1] !== '|') { k += '|' }; ks = pad(k,Math.max(mk,k.length + 2)); i = pad(ind + '    ',mk); s += ks; vs = toStr(v,i,false,seen); if (vs[0] === '\n') { while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) } }; s += vs; while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) }; return s }; for (k in o) { if (Object.hasOwn(o,k)) { l.push(keyValue(k,o[k])) } }; return l.join('\n') }; var toStr = function (o, ind = '', arry = false, seen = []) { var s, t, v; if (!(o != null)) { if (o === null) { return 'null' }; if (o === undefined) { return 'undefined' }; return '<?>' }; switch (t = typeof(o)) { case 'string': {return esc(o,arry)}; case 'object': { if (_k_.in(o,seen)) { return '<v>' }; seen.push(o); if ((o.constructor != null ? o.constructor.name : undefined) === 'Array') { s = ind !== '' && arry && '.' || ''; if (o.length && ind !== '') { s += '\n' }; s += (function () { var result = []; var list = _k_.list(o); for (var li = 0; li < list.length; li++)  { v = list[li];result.push(ind + toStr(v,ind + '    ',true,seen))  } return result }).bind(this)().join('\n') } else if ((o.constructor != null ? o.constructor.name : undefined) === 'RegExp') { return o.source } else { s = (arry && '.\n') || ((ind !== '') && '\n' || ''); s += pretty(o,ind,seen) }; return s } default: return String(o) }; return '<???>' }; return toStr(obj) }, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}}
+var _k_ = {empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}}
 
 var Board, elem, Game, GNU, kxk, opponent, post, Referee, SGF
 
@@ -35,16 +35,15 @@ Referee = (function ()
 
     Referee.prototype["newGame"] = function (gi = {})
     {
-        var c, info, m, moves, p, score, _41_33_, _42_33_, _43_33_, _44_33_, _45_33_, _46_33_, _82_26_, _83_26_, _85_31_
+        var info, moves, _41_33_, _42_33_, _43_33_, _44_33_, _45_33_, _46_33_
 
-        console.log(_k_.noon(gi))
         this.boardsize = ((_41_33_=gi.size) != null ? _41_33_ : this.boardsize)
         this.handicap = ((_42_33_=gi.handicap) != null ? _42_33_ : this.handicap)
         this.white = ((_43_33_=gi.white) != null ? _43_33_ : this.white)
         this.black = ((_44_33_=gi.black) != null ? _44_33_ : this.black)
         moves = ((_45_33_=gi.moves) != null ? _45_33_ : [])
         info = ((_46_33_=gi.info) != null ? _46_33_ : {})
-        console.log(this.boardsize,this.handicap,info)
+        this.redos = []
         if (_k_.empty(moves))
         {
             window.stash.del('score')
@@ -72,30 +71,7 @@ Referee = (function ()
         }
         if (!_k_.empty(moves))
         {
-            var list = _k_.list(moves)
-            for (var _76_18_ = 0; _76_18_ < list.length; _76_18_++)
-            {
-                m = list[_76_18_]
-                var _77_23_ = m.split(' '); c = _77_23_[0]; p = _77_23_[1]
-
-                if (!(p != null))
-                {
-                    p = c
-                    c = ['black','white'][moves.indexOf(m) % 2]
-                }
-                this.game.play(c,p)
-                (this.gnu.black != null ? this.gnu.black.send(`play ${c} ${p}`) : undefined)
-                (this.gnu.white != null ? this.gnu.white.send(`play ${c} ${p}`) : undefined)
-            }
-            score = ((_85_31_=info.score) != null ? _85_31_ : window.stash.get('score'))
-            if (score)
-            {
-                return this.game.finalScore(score)
-            }
-            else
-            {
-                return (this.gnu[this.game.nextColor()] != null ? this.gnu[this.game.nextColor()].genmove() : undefined)
-            }
+            return this.replay(moves)
         }
         else
         {
@@ -110,6 +86,36 @@ Referee = (function ()
         }
     }
 
+    Referee["replay"] = function (moves)
+    {
+        var c, m, p, score, _101_27_, _98_22_, _99_22_
+
+        var list = _k_.list(moves)
+        for (var _92_14_ = 0; _92_14_ < list.length; _92_14_++)
+        {
+            m = list[_92_14_]
+            var _93_19_ = m.split(' '); c = _93_19_[0]; p = _93_19_[1]
+
+            if (!(p != null))
+            {
+                p = c
+                c = ['black','white'][moves.indexOf(m) % 2]
+            }
+            this.game.play(c,p)
+            (this.gnu.black != null ? this.gnu.black.send(`play ${c} ${p}`) : undefined)
+            (this.gnu.white != null ? this.gnu.white.send(`play ${c} ${p}`) : undefined)
+        }
+        score = ((_101_27_=info.score) != null ? _101_27_ : window.stash.get('score'))
+        if (score)
+        {
+            return this.game.finalScore(score)
+        }
+        else
+        {
+            return (this.gnu[this.game.nextColor()] != null ? this.gnu[this.game.nextColor()].genmove() : undefined)
+        }
+    }
+
     Referee.prototype["genMove"] = function ()
     {
         return this.game.genmove(this.game.nextColor())
@@ -117,51 +123,128 @@ Referee = (function ()
 
     Referee.prototype["humanMove"] = function (p)
     {
-        var lastColor, nextColor
-
-        lastColor = this.game.lastColor()
-        nextColor = this.game.nextColor()
-        if (!(_k_.in(this[nextColor],['gnu'])))
-        {
-            this.game.play(nextColor,p)
-            return (this.gnu[lastColor] != null ? this.gnu[lastColor].opponentMove(p) : undefined)
-        }
+        return this.handleMove(p,'human')
     }
 
     Referee.prototype["gnuMove"] = function (p)
     {
-        var lastColor, nextColor
+        return this.handleMove(p,'gnu')
+    }
+
+    Referee.prototype["handleMove"] = function (p, player)
+    {
+        var lastColor, nextColor, _132_22_, _133_22_
 
         lastColor = this.game.lastColor()
         nextColor = this.game.nextColor()
-        if (_k_.in(this[nextColor],['gnu']))
+        if (player === 'human' && _k_.in(this.game.players[nextColor],['gnu']))
         {
-            ;(this.gnu[lastColor] != null ? this.gnu[lastColor].opponentMove(p) : undefined)
-            return this.game.play(nextColor,p)
+            return console.error(`wrong player: ${player}`)
+        }
+        if (player === 'gnu' && this.game.players[nextColor] !== 'gnu')
+        {
+            return console.error(`wrong player: ${player}`)
+        }
+        this.game.play(nextColor,p)
+        ;(this.gnu[lastColor] != null ? this.gnu[lastColor].opponentMove(p) : undefined)
+        if (_k_.in(p,['pass','resign']))
+        {
+            ;(this.gnu.black != null ? this.gnu.black.send('final_score') : undefined)
+            ;(this.gnu.white != null ? this.gnu.white.send('final_score') : undefined)
+        }
+        if (p !== 'resign')
+        {
+            if (p !== 'pass' || !(_k_.in('pass',this.game.moves.slice(-2,-1)[0])))
+            {
+                return (this.gnu[lastColor] != null ? this.gnu[lastColor].genmove() : undefined)
+            }
         }
     }
 
     Referee.prototype["undo"] = function ()
     {
-        var _136_18_, _137_18_
+        var _149_34_, _150_34_, _154_15_, _157_22_, _158_22_, _164_18_, _165_18_
 
+        if (_k_.empty(this.game.moves))
+        {
+            return
+        }
+        if (!_k_.empty((this.gnu.black != null ? this.gnu.black.msg : undefined)))
+        {
+            return
+        }
+        if (!_k_.empty((this.gnu.white != null ? this.gnu.white.msg : undefined)))
+        {
+            return
+        }
+        this.redos = ((_154_15_=this.redos) != null ? _154_15_ : [])
+        while (_k_.in(this.game.moves.slice(-1)[0].split(' ')[1],['pass','resign']))
+        {
+            this.redos.unshift(this.game.moves.pop())
+            ;(this.gnu.black != null ? this.gnu.black.send('undo') : undefined)
+            ;(this.gnu.white != null ? this.gnu.white.send('undo') : undefined)
+        }
+        this.redos.unshift(this.game.moves.pop())
         ;(this.gnu.black != null ? this.gnu.black.undo() : undefined)
         return (this.gnu.white != null ? this.gnu.white.undo() : undefined)
     }
 
     Referee.prototype["redo"] = function ()
     {
-        var _141_18_, _142_18_
+        var color, move, p, _170_34_, _171_34_, _176_18_, _177_18_
 
-        ;(this.gnu.black != null ? this.gnu.black.redo() : undefined)
-        return (this.gnu.white != null ? this.gnu.white.redo() : undefined)
+        if (_k_.empty(this.redos))
+        {
+            return
+        }
+        if (!_k_.empty((this.gnu.black != null ? this.gnu.black.msg : undefined)))
+        {
+            return
+        }
+        if (!_k_.empty((this.gnu.white != null ? this.gnu.white.msg : undefined)))
+        {
+            return
+        }
+        move = this.redos.shift()
+        var _174_19_ = move.split(' '); color = _174_19_[0]; p = _174_19_[1]
+
+        this.game.play(color,p)
+        ;(this.gnu.black != null ? this.gnu.black.send(`play ${color} ${p}`) : undefined)
+        return (this.gnu.white != null ? this.gnu.white.send(`play ${color} ${p}`) : undefined)
     }
 
     Referee.prototype["firstMove"] = function ()
-    {}
+    {
+        var _189_18_, _190_18_
+
+        if (_k_.empty(this.game.moves))
+        {
+            return
+        }
+        this.redos = this.game.moves.concat(this.redos)
+        ;(this.gnu.black != null ? this.gnu.black.send(`boardsize ${this.game.size}`) : undefined)
+        ;(this.gnu.white != null ? this.gnu.white.send(`boardsize ${this.game.size}`) : undefined)
+        return this.game.clear_board()
+    }
 
     Referee.prototype["lastMove"] = function ()
-    {}
+    {
+        var color, move, p, _200_22_, _201_22_
+
+        if (_k_.empty(this.redos))
+        {
+            return
+        }
+        while (!_k_.empty(this.redos))
+        {
+            move = this.redos.shift()
+            var _198_23_ = move.split(' '); color = _198_23_[0]; p = _198_23_[1]
+
+            this.game.play(color,p)
+            ;(this.gnu.black != null ? this.gnu.black.send(`play ${color} ${p}`) : undefined)
+            ;(this.gnu.white != null ? this.gnu.white.send(`play ${color} ${p}`) : undefined)
+        }
+    }
 
     return Referee
 })()

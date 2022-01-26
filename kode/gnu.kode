@@ -27,54 +27,23 @@ function GNU
         @send "time_settings 300 10 3"
         @send "fixed_handicap #{handicap}" if @handicap > 1
 
-    genmove: -> @send "genmove #{@color}"
+    genmove: -> 
+    
+        @send "genmove #{@color}"
         
     opponentMove: (p) ->
 
-        delete @redos
-        @send "play #{opponent[@color]} #{p}"
-        @send "genmove #{@color}"
+        @send "play #{opponent[@color]} #{p}"        
         
     estimateScore: ->
         
         @send 'estimate_score'
-
-    firstMove: ->
-        
-        return if empty @game.moves
-        @redos = @game.moves.concat @redos
-        @send "boardsize #{@game.size}"
-        @game.clear_board()
                 
     undo: ->
         
-        return if empty @game.moves
-        return if valid @msg
-        
-        @redos ?= []
         @send 'undo'
-        @redos.unshift @game.moves.pop()
         @send 'showboard'
-        
-    lastMove: ->
-
-        return if empty @redos
-        while valid @redos
-            move = @redos.shift()
-            [color, p] = move.split ' '
-            @game.play color, p
-            @send "play #{color} #{p}"
-            
-    redo: ->
-        
-        return if empty @redos
-        return if valid @msg
-        
-        move = @redos.shift()
-        [color, p] = move.split ' '
-        @game.play color, p
-        @send "play #{color} #{p}"
-        
+                    
     send: (m) -> @msg.push m; @gnu.stdin.write m + '\n'
 
     onData: (chunk) =>
@@ -98,8 +67,7 @@ function GNU
             data = data[2..]
             if m.startsWith 'genmove'
                 p = data.split('\n')[0]
-                if p in ['PASS' 'resign']
-                    @send 'final_score'
+                p = 'pass' if p == 'PASS'
                 post.emit 'gnuMove' p
             else if m.startsWith 'fixed_handicap'
                 for p in data.split ' '

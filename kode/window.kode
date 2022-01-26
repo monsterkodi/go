@@ -31,7 +31,7 @@ function MainWin extends win
         post.setMaxListeners 20
         
         window.onresize = @onResize
-        window.onload = @onLoad
+        window.onload   = @onLoad
         
         main =$ "#main"
         row = elem 'div' class:'row' parent:main, style:'height:100%'

@@ -1,6 +1,6 @@
 // monsterkodi/kode 0.237.0
 
-var _k_ = {empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}}
+var _k_ = {list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}}
 
 var childp, GNU, opponent, post, stone
 
@@ -43,9 +43,7 @@ GNU = (function ()
 
     GNU.prototype["opponentMove"] = function (p)
     {
-        delete this.redos
-        this.send(`play ${opponent[this.color]} ${p}`)
-        return this.send(`genmove ${this.color}`)
+        return this.send(`play ${opponent[this.color]} ${p}`)
     }
 
     GNU.prototype["estimateScore"] = function ()
@@ -53,70 +51,10 @@ GNU = (function ()
         return this.send('estimate_score')
     }
 
-    GNU.prototype["firstMove"] = function ()
-    {
-        if (_k_.empty(this.game.moves))
-        {
-            return
-        }
-        this.redos = this.game.moves.concat(this.redos)
-        this.send(`boardsize ${this.game.size}`)
-        return this.game.clear_board()
-    }
-
     GNU.prototype["undo"] = function ()
     {
-        var _54_15_
-
-        if (_k_.empty(this.game.moves))
-        {
-            return
-        }
-        if (!_k_.empty(this.msg))
-        {
-            return
-        }
-        this.redos = ((_54_15_=this.redos) != null ? _54_15_ : [])
         this.send('undo')
-        this.redos.unshift(this.game.moves.pop())
         return this.send('showboard')
-    }
-
-    GNU.prototype["lastMove"] = function ()
-    {
-        var color, move, p
-
-        if (_k_.empty(this.redos))
-        {
-            return
-        }
-        while (!_k_.empty(this.redos))
-        {
-            move = this.redos.shift()
-            var _64_23_ = move.split(' '); color = _64_23_[0]; p = _64_23_[1]
-
-            this.game.play(color,p)
-            this.send(`play ${color} ${p}`)
-        }
-    }
-
-    GNU.prototype["redo"] = function ()
-    {
-        var color, move, p
-
-        if (_k_.empty(this.redos))
-        {
-            return
-        }
-        if (!_k_.empty(this.msg))
-        {
-            return
-        }
-        move = this.redos.shift()
-        var _74_19_ = move.split(' '); color = _74_19_[0]; p = _74_19_[1]
-
-        this.game.play(color,p)
-        return this.send(`play ${color} ${p}`)
     }
 
     GNU.prototype["send"] = function (m)
@@ -152,18 +90,18 @@ GNU = (function ()
             if (m.startsWith('genmove'))
             {
                 p = data.split('\n')[0]
-                if (_k_.in(p,['PASS','resign']))
+                if (p === 'PASS')
                 {
-                    this.send('final_score')
+                    p = 'pass'
                 }
                 return post.emit('gnuMove',p)
             }
             else if (m.startsWith('fixed_handicap'))
             {
                 var list = _k_.list(data.split(' '))
-                for (var _105_22_ = 0; _105_22_ < list.length; _105_22_++)
+                for (var _73_22_ = 0; _73_22_ < list.length; _73_22_++)
                 {
-                    p = list[_105_22_]
+                    p = list[_73_22_]
                     this.game.setStone(this.game.coord(p),stone.black)
                 }
             }
