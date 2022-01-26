@@ -1,0 +1,154 @@
+###
+00000000   00000000  00000000  00000000  00000000   00000000  00000000  
+000   000  000       000       000       000   000  000       000       
+0000000    0000000   000000    0000000   0000000    0000000   0000000   
+000   000  000       000       000       000   000  000       000       
+000   000  00000000  000       00000000  000   000  00000000  00000000  
+###
+
+kxk = require 'kxk'
+{ elem, post } = kxk
+{ opponent }   = require './util'
+
+Board   = require './board'
+Game    = require './game'
+GNU     = require './gnu'
+SGF     = require './sgf'
+
+function Referee
+
+    @: (@parent)->
+        
+        @boardsize = window.stash.get 'boardsize'   19
+        @handicap  = window.stash.get 'handicap'    0
+        @white     = window.stash.get 'white'       'human'
+        @black     = window.stash.get 'black'       'human'
+        
+        post.on 'newGame'   @newGame
+        post.on 'humanMove' @humanMove
+        post.on 'gnuMove'   @gnuMove
+
+    # 000   000  00000000  000   000         0000000    0000000   00     00  00000000  
+    # 0000  000  000       000 0 000        000        000   000  000   000  000       
+    # 000 0 000  0000000   000000000        000  0000  000000000  000000000  0000000   
+    # 000  0000  000       000   000        000   000  000   000  000 0 000  000       
+    # 000   000  00000000  00     00         0000000   000   000  000   000  00000000  
+    
+    newGame: (gi={}) =>
+
+        log noon gi
+        
+        @boardsize = gi.size     ? @boardsize
+        @handicap  = gi.handicap ? @handicap
+        @white     = gi.white    ? @white
+        @black     = gi.black    ? @black
+        moves      = gi.moves    ? []
+        info       = gi.info     ? {}
+
+        log @boardsize, @handicap, info
+        
+        window.stash.del 'score' if empty moves
+        window.stash.set 'size'      @boardsize
+        window.stash.set 'white'     @white
+        window.stash.set 'black'     @black
+        window.stash.set 'handicap'  @handicap
+        window.stash.set 'moves'     moves
+                
+        @parent.innerHTML = ''
+                
+        @board = new Board @parent, @boardsize
+        @game  = new Game  @board, @white, @black
+        @board.game = @game
+        @game.info  = info
+        
+        @gnu = {}
+        
+        if @white == 'gnu'
+            @gnu.white = new GNU @game
+            @gnu.white.newGame @boardsize, 'white' @handicap
+            
+        if @black == 'gnu'
+            @gnu.black = new GNU @game
+            @gnu.black.newGame @boardsize, 'black' @handicap
+                        
+        if valid moves
+        
+            for m in moves
+                [c, p] = m.split ' '
+                if not p?
+                    p = c
+                    c = ['black' 'white'][moves.indexOf(m)%2]
+                @game.play c, p
+                @gnu.black?.send "play #{c} #{p}"
+                @gnu.white?.send "play #{c} #{p}"
+            
+            score = info.score ? window.stash.get 'score'
+
+            if score
+                @game.finalScore score
+            else
+                @gnu[@game.nextColor()]?.genmove()
+        else
+            if @gnu.black and @handicap < 2
+                @gnu.black.genmove()
+                
+            if @gnu.white and @handicap > 1
+                @gnu.white.genmove()
+
+    #  0000000   00000000  000   000  00     00   0000000   000   000  00000000  
+    # 000        000       0000  000  000   000  000   000  000   000  000       
+    # 000  0000  0000000   000 0 000  000000000  000   000   000 000   0000000   
+    # 000   000  000       000  0000  000 0 000  000   000     000     000       
+    #  0000000   00000000  000   000  000   000   0000000       0      00000000  
+    
+    genMove: -> @game.genmove @game.nextColor()
+    
+    # 000   000  000   000  00     00   0000000   000   000  00     00   0000000   000   000  00000000  
+    # 000   000  000   000  000   000  000   000  0000  000  000   000  000   000  000   000  000       
+    # 000000000  000   000  000000000  000000000  000 0 000  000000000  000   000   000 000   0000000   
+    # 000   000  000   000  000 0 000  000   000  000  0000  000 0 000  000   000     000     000       
+    # 000   000   0000000   000   000  000   000  000   000  000   000   0000000       0      00000000  
+    
+    humanMove: (p) =>
+        
+        lastColor = @game.lastColor()
+        nextColor = @game.nextColor()
+        if @[nextColor] not in ['gnu']
+            @game.play nextColor, p
+            @gnu[lastColor]?.opponentMove p
+                
+    gnuMove: (p) =>
+        
+        lastColor = @game.lastColor()
+        nextColor = @game.nextColor()
+        if @[nextColor] in ['gnu']
+            @gnu[lastColor]?.opponentMove p
+            @game.play nextColor, p
+                            
+    # 000   000  000   000  0000000     0000000   
+    # 000   000  0000  000  000   000  000   000  
+    # 000   000  000 0 000  000   000  000   000  
+    # 000   000  000  0000  000   000  000   000  
+    #  0000000   000   000  0000000     0000000   
+    
+    undo: ->
+        
+        @gnu.black?.undo()
+        @gnu.white?.undo()
+            
+    redo: ->
+        
+        @gnu.black?.redo()
+        @gnu.white?.redo()
+            
+    # 00     00   0000000   000   000  00000000  
+    # 000   000  000   000  000   000  000       
+    # 000000000  000   000   000 000   0000000   
+    # 000 0 000  000   000     000     000       
+    # 000   000   0000000       0      00000000  
+    
+    firstMove: ->
+    lastMove: ->
+                    
+                    
+module.exports = Referee

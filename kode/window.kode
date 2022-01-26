@@ -8,12 +8,9 @@
 
 kxk = require 'kxk'
 { args, kerror, keyinfo, klog, post, stash, win, elem, $ } = kxk
-{ opponent } = require './util'
 
-Board = require './board'
-Game  = require './game'
-GNU   = require './gnu'
-SGF   = require './sgf'
+Board   = require './board'
+Referee = require './referee'
 
 function MainWin extends win
     
@@ -29,13 +26,17 @@ function MainWin extends win
             
         post.on 'alert' (msg) -> window.alert(msg); kerror msg
         post.on 'saveStash'   @saveStash
-        post.on 'newGame'     @newGame
         
         window.stash = new stash "win/#{@id}" separator:'▸'
         post.setMaxListeners 20
         
         window.onresize = @onResize
         window.onload = @onLoad
+        
+        main =$ "#main"
+        row = elem 'div' class:'row' parent:main, style:'height:100%'
+        
+        @referee = new Referee row
         
     # 000       0000000    0000000   0000000    
     # 000      000   000  000   000  000   000  
@@ -47,68 +48,13 @@ function MainWin extends win
         
         @restore()
         
-        @main =$ '#main'
-        
-        if 0
-            r1 = elem 'div' class:'row' parent:@main
-            r2 = elem 'div' class:'row' parent:@main
-            r1.style = 'height:50%'
-            r2.style = 'height:50%'
-            
-            @board1 = new Board r1, 9
-            @board2 = new Board r1, 13
-            @board3 = new Board r1, 19
-            @board4 = new Board r2, 19
-            @board5 = new Board r2, 13
-            @board6 = new Board r2, 9
-        else
-            @newGame window.stash.get('boardsize', 9), window.stash.get('gnucolor' 'white'), window.stash.get('handicap' 0), window.stash.get('moves' [])
-        
-    # 000   000  00000000  000   000         0000000    0000000   00     00  00000000  
-    # 0000  000  000       000 0 000        000        000   000  000   000  000       
-    # 000 0 000  0000000   000000000        000  0000  000000000  000000000  0000000   
-    # 000  0000  000       000   000        000   000  000   000  000 0 000  000       
-    # 000   000  00000000  00     00         0000000   000   000  000   000  00000000  
-    
-    newGame: (@boardsize=9, @gnucolor='black', @handicap=0, moves=[], info={}) =>
-
-        window.stash.del 'score' if empty moves
-        window.stash.set 'boardsize' @boardsize
-        window.stash.set 'gnucolor'  @gnucolor
-        window.stash.set 'handicap'  @handicap
-        window.stash.set 'moves'     moves
-        
-        @main.innerHTML = ''
-        r1 = elem 'div' class:'row' parent:@main
-        r1.style = 'height:100%'
-        
-        @board = new Board r1, @boardsize, opponent[@gnucolor]
-        @game  = new Game @board
-        @gnu   = new GNU @game
-        @board.gnu = @gnu
-        @board.game = @game
-        @gnu.newGame @boardsize, @gnucolor, @handicap, empty moves
-        @game.info = info
-        
-        for m in moves
-            [c, p] = m.split ' '
-            if not p?
-                p = c
-                c = ['black' 'white'][moves.indexOf(m)%2]
-            # log 'play' c,p
-            @game.play c, p
-            @gnu.send "play #{c} #{p}"
-         
-        if valid moves
-            
-            score = info.score ? window.stash.get 'score'
-
-            if score
-                @game.finalScore score
-            else
-                if @game.moves[-1].split(' ')[0] != @gnucolor 
-                    @gnu.send "genmove #{@gnucolor}"
-        
+        @referee.newGame
+            black:    window.stash.get 'black'     'human'
+            white:    window.stash.get 'white'     'gnu'
+            size:     window.stash.get 'size'      9
+            handicap: window.stash.get 'handicap'  0
+            moves:    window.stash.get 'moves'     []
+                
     onResize: =>
         
         window.stash.set 'bounds' @getBounds()
@@ -122,9 +68,7 @@ function MainWin extends win
     
     restore: =>
     
-        if bounds = window.stash.get 'bounds'
-            @setBounds bounds
-    
+        if bounds = window.stash.get 'bounds' then @setBounds bounds
         post.emit 'restore'
    
     saveStash: =>
@@ -143,30 +87,30 @@ function MainWin extends win
     onMenuAction: (action, args) =>
                
         switch action.toLowerCase()
-            'save'              ➜ @game.save(); @saveStash()
-            'open'              ➜ SGF.openDialog()
-            'save as ...'       ➜ SGF.saveAsDialog()
-            'revert'            ➜ @restore()
-            'undo'              ➜ @gnu.undo()
-            'redo'              ➜ @gnu.redo()
-            'first move'        ➜ @gnu.firstMove()
-            'last move'         ➜ @gnu.lastMove()
-            'pass'              ➜ @gnu.humanMove 'pass'
-            'genmove'           ➜ @gnu.humanMove @game.genmove opponent[@gnucolor]
-            'calcscore'         ➜ @gnu.calcscore()
-            'move number'       ➜ @board.toggleNumbers()
-            'legend'            ➜ @board.toggleLegend()
-            'liberties'         ➜ @board.toggleLiberties()
-            'territory'         ➜ @board.toggleTerritory()
-            'new game'          ➜ @newGame @boardsize, @gnucolor, @handicap
-            'black' 'white'     ➜ @newGame @boardsize, action, @handicap
-            '7x7' '9x9' '13x13' 
-            '19x19'             ➜ @newGame int(action), @gnucolor, @handicap
-            '0' '1' '2' 
-            '3' '4' '5' 
-            '6' '7' '8' '9'     ➜ @newGame @boardsize, @gnucolor, int action
-                                ➜
-                                  klog "menuAction '#{action}'" # args     
-                                  super action, args
+            'save'                      ➜ @referee.game.save(); @saveStash()
+            'open'                      ➜ SGF.openDialog()
+            'save as ...'               ➜ SGF.saveAsDialog()
+            'undo'                      ➜ @referee.undo()
+            'redo'                      ➜ @referee.redo()
+            'first move'                ➜ @referee.firstMove()
+            'last move'                 ➜ @referee.lastMove()
+            'pass'                      ➜ @referee.humanMove 'pass'
+            'genmove'                   ➜ @referee.genMove()
+            'calcscore'                 ➜ @referee.gnu.calcscore()
+            'move number'               ➜ @referee.board.toggleNumbers()
+            'legend'                    ➜ @referee.board.toggleLegend()
+            'liberties'                 ➜ @referee.board.toggleLiberties()
+            'territory'                 ➜ @referee.board.toggleTerritory()
+            'new game'                  ➜ @referee.newGame()
+            'gnu human'                 ➜ @referee.newGame black:'gnu'   white:'human'
+            'human gnu'                 ➜ @referee.newGame black:'human' white:'gnu'
+            'human human'               ➜ @referee.newGame black:'human' white:'human'               
+            'gnu gnu'                   ➜ @referee.newGame black:'gnu'   white:'gnu'  
+            '7x7''9x9''13x13''19x19'    ➜ @referee.newGame size:int action
+            '0''1''2''3''4'
+            '5''6''7''8''9'             ➜ @referee.newGame handicap: int action
+                                        ➜
+                                          klog "menuAction '#{action}'" # args     
+                                          super action, args
            
 new MainWin            

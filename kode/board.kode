@@ -13,7 +13,7 @@ kxk = require 'kxk'
 
 function Board
 
-    @: (parent, @size=19, @human) ->
+    @: (parent, @size=19) ->
         
         @div = elem 'div' class:'board'     parent:parent
         @img = elem 'img' class:'wood'      src:'../img/wood.png' parent:@div
@@ -34,14 +34,17 @@ function Board
         @lines()
         @legend()
         
-        @stn = elem 'div' class:'stones'    parent:@div
-        @lib = elem 'div' class:'liberties' parent:@div
-        @num = elem 'div' class:'numbers'   parent:@div
-        @trr = elem 'div' class:'territory' parent:@div
-        @hlt = elem 'div' class:'highlts'   parent:@div
-        @hvr = elem 'div' class:"hover #{@human}" parent:@hlt
-        @hvr.style = "width:#{h}%; height:#{h}%; display:none;" 
-
+        @stn = elem 'div' class:'stones'      parent:@div
+        @lib = elem 'div' class:'liberties'   parent:@div
+        @num = elem 'div' class:'numbers'     parent:@div
+        @trr = elem 'div' class:'territory'   parent:@div
+        @hlt = elem 'div' class:'highlts'     parent:@div
+        @hvw = elem 'div' class:"hover white" parent:@hlt
+        @hvb = elem 'div' class:"hover black" parent:@hlt
+        @hvw.style = "width:#{h}%; height:#{h}%; display:none;" 
+        @hvb.style = "width:#{h}%; height:#{h}%; display:none;" 
+        @hvr = white:@hvw, black:@hvb
+        
         @num.style.display = window.stash.get('numbers') ? 'initial' : 'none'
         @lib.style.display = window.stash.get('liberties') ? 'initial' : 'none'
         
@@ -164,36 +167,42 @@ function Board
     
     onMouseLeave: (event) =>
         
-        @hvr.style.display = 'none'
+        @hvr.black.style.display = 'none'
+        @hvr.white.style.display = 'none'
         
     onMouseMove: (event) =>
         
         c = @posAtEvent event
         
-        @hvr.style.display = 'none'
-        return if c.x < 0 or c.y < 0 or c.x >= @size or c.y >= @size
+        @hvr.white.style.display = 'none'
+        @hvr.black.style.display = 'none'
+        
+        nextColor = @game.nextColor()
 
-        if @game
-            return if @game.moves.length and @game.moves[-1].startsWith @human
-            return if not @game.legal @human, [c.x, c.y]
-            
-        @hvr.style.display = 'initial'
+        return if @game.players[nextColor] in ['gnu']
+        return if c.x < 0 or c.y < 0 or c.x >= @size or c.y >= @size
+        return if not @game.legal nextColor, [c.x, c.y]
+        
+        hvr = @hvr[nextColor]
+        hvr.style.display = 'initial'
         
         p = @posToPrcnt c
         
-        @hvr.style.left = "#{p.x}%"
-        @hvr.style.top  = "#{p.y}%"
-        @hvr.style.borderRadius = "#{0.5*@div.getBoundingClientRect().height/(@size+1)}px"
+        hvr.style.left = "#{p.x}%"
+        hvr.style.top  = "#{p.y}%"
+        hvr.style.borderRadius = "#{0.5*@div.getBoundingClientRect().height/(@size+1)}px"
         
     onMouseDown: (event) =>
+
+        nextColor = @game.nextColor()
+        return if @[nextColor] in ['gnu']
         
         c = @posAtEvent event
         if @game
             p = @game.pos [c.x, c.y]
-            return if @game.moves.length and @game.moves[-1].startsWith @human
             if p in @game.all_legal()
-                @hvr.style.display = 'none'
-                @gnu?.humanMove p
+                @hvr[nextColor].style.display = 'none'
+                post.emit 'humanMove' p
         
     # 000       0000000    0000000  000000000  
     # 000      000   000  000          000     

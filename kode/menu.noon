@@ -19,9 +19,16 @@ go
     pass                    p
     genmove                 g
     calcscore               c
-    gnu 
-        black               b
-        white               w
+    -----
+    about                   alt+cmdctrl+/
+    quit                    cmdctrl+q
+    
+game
+    player
+        gnu human           b
+        human gnu           w
+        human human         h
+        gnu gnu
     boardsize 
         7x7                 t
         9x9                 s
@@ -37,9 +44,6 @@ go
         7                   7
         8                   8
         9                   9
-    -----
-    about                   alt+cmdctrl+/
-    quit                    cmdctrl+q
     
 view
     move number             alt+n

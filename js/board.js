@@ -21,12 +21,11 @@ opponent = require('./util').opponent
 
 Board = (function ()
 {
-    function Board (parent, size = 19, human)
+    function Board (parent, size = 19)
     {
         var d, h, s
 
         this.size = size
-        this.human = human
     
         this["onMouseDown"] = this["onMouseDown"].bind(this)
         this["onMouseMove"] = this["onMouseMove"].bind(this)
@@ -51,8 +50,11 @@ Board = (function ()
         this.num = elem('div',{class:'numbers',parent:this.div})
         this.trr = elem('div',{class:'territory',parent:this.div})
         this.hlt = elem('div',{class:'highlts',parent:this.div})
-        this.hvr = elem('div',{class:`hover ${this.human}`,parent:this.hlt})
-        this.hvr.style = `width:${h}%; height:${h}%; display:none;`
+        this.hvw = elem('div',{class:"hover white",parent:this.hlt})
+        this.hvb = elem('div',{class:"hover black",parent:this.hlt})
+        this.hvw.style = `width:${h}%; height:${h}%; display:none;`
+        this.hvb.style = `width:${h}%; height:${h}%; display:none;`
+        this.hvr = {white:this.hvw,black:this.hvb}
         this.num.style.display = (window.stash.get('numbers') ? 'initial' : 'none')
         this.lib.style.display = (window.stash.get('liberties') ? 'initial' : 'none')
         this.lst = elem('div',{class:"last",parent:this.hlt})
@@ -81,7 +83,7 @@ Board = (function ()
         this.ctx.rect(0,0,s,s)
         this.ctx.fill()
         this.ctx.fillStyle = 'black'
-        for (var _81_17_ = i = 0, _81_21_ = this.size; (_81_17_ <= _81_21_ ? i < this.size : i > this.size); (_81_17_ <= _81_21_ ? ++i : --i))
+        for (var _84_17_ = i = 0, _84_21_ = this.size; (_84_17_ <= _84_21_ ? i < this.size : i > this.size); (_84_17_ <= _84_21_ ? ++i : --i))
         {
             this.ctx.beginPath()
             this.ctx.moveTo(o + i * d,o)
@@ -116,7 +118,7 @@ Board = (function ()
         var d, n, x
 
         d = 100 / (this.size + 1)
-        for (var _109_17_ = x = 0, _109_21_ = this.size; (_109_17_ <= _109_21_ ? x < this.size : x > this.size); (_109_17_ <= _109_21_ ? ++x : --x))
+        for (var _112_17_ = x = 0, _112_21_ = this.size; (_112_17_ <= _112_21_ ? x < this.size : x > this.size); (_112_17_ <= _112_21_ ? ++x : --x))
         {
             n = elem('div',{class:'legend',text:alpha[x],parent:this.lgd})
             n.style.left = `${d * (x + 1)}%`
@@ -168,66 +170,68 @@ Board = (function ()
 
     Board.prototype["onMouseLeave"] = function (event)
     {
-        return this.hvr.style.display = 'none'
+        this.hvr.black.style.display = 'none'
+        return this.hvr.white.style.display = 'none'
     }
 
     Board.prototype["onMouseMove"] = function (event)
     {
-        var c, p
+        var c, hvr, nextColor, p
 
         c = this.posAtEvent(event)
-        this.hvr.style.display = 'none'
+        this.hvr.white.style.display = 'none'
+        this.hvr.black.style.display = 'none'
+        nextColor = this.game.nextColor()
+        if (_k_.in(this.game.players[nextColor],['gnu']))
+        {
+            return
+        }
         if (c.x < 0 || c.y < 0 || c.x >= this.size || c.y >= this.size)
         {
             return
         }
-        if (this.game)
+        if (!this.game.legal(nextColor,[c.x,c.y]))
         {
-            if (this.game.moves.length && this.game.moves.slice(-1)[0].startsWith(this.human))
-            {
-                return
-            }
-            if (!this.game.legal(this.human,[c.x,c.y]))
-            {
-                return
-            }
+            return
         }
-        this.hvr.style.display = 'initial'
+        hvr = this.hvr[nextColor]
+        hvr.style.display = 'initial'
         p = this.posToPrcnt(c)
-        this.hvr.style.left = `${p.x}%`
-        this.hvr.style.top = `${p.y}%`
-        return this.hvr.style.borderRadius = `${0.5 * this.div.getBoundingClientRect().height / (this.size + 1)}px`
+        hvr.style.left = `${p.x}%`
+        hvr.style.top = `${p.y}%`
+        return hvr.style.borderRadius = `${0.5 * this.div.getBoundingClientRect().height / (this.size + 1)}px`
     }
 
     Board.prototype["onMouseDown"] = function (event)
     {
-        var c, p, _196_20_
+        var c, nextColor, p
 
+        nextColor = this.game.nextColor()
+        if (_k_.in(this[nextColor],['gnu']))
+        {
+            return
+        }
         c = this.posAtEvent(event)
         if (this.game)
         {
             p = this.game.pos([c.x,c.y])
-            if (this.game.moves.length && this.game.moves.slice(-1)[0].startsWith(this.human))
-            {
-                return
-            }
             if (_k_.in(p,this.game.all_legal()))
             {
-                this.hvr.style.display = 'none'
-                return (this.gnu != null ? this.gnu.humanMove(p) : undefined)
+                this.hvr[nextColor].style.display = 'none'
+                return post.emit('humanMove',p)
             }
         }
     }
 
     Board.prototype["lastMove"] = function ()
     {
-        var color, d, p, r, _206_29_
+        var color, d, p, r, _215_29_
 
         if (_k_.empty((this.game != null ? this.game.moves : undefined)))
         {
             return
         }
-        var _207_19_ = this.game.moves.slice(-1)[0].split(' '); color = _207_19_[0]; p = _207_19_[1]
+        var _216_19_ = this.game.moves.slice(-1)[0].split(' '); color = _216_19_[0]; p = _216_19_[1]
 
         r = this.coordToPrcnt(this.game.coord(p))
         d = this.div.getBoundingClientRect().height / (this.size + 1)
@@ -322,10 +326,10 @@ Board = (function ()
         if (this.game)
         {
             var list = _k_.list(this.game.moves)
-            for (var _300_18_ = 0; _300_18_ < list.length; _300_18_++)
+            for (var _309_18_ = 0; _309_18_ < list.length; _309_18_++)
             {
-                m = list[_300_18_]
-                var _301_30_ = m.split(' '); color = _301_30_[0]; move = _301_30_[1]
+                m = list[_309_18_]
+                var _310_30_ = m.split(' '); color = _310_30_[0]; move = _310_30_[1]
 
                 n = this.game.moves.indexOf(m)
                 if (!(move != null))
@@ -359,13 +363,13 @@ Board = (function ()
         if (this.game)
         {
             var list = ['black','white']
-            for (var _329_22_ = 0; _329_22_ < list.length; _329_22_++)
+            for (var _338_22_ = 0; _338_22_ < list.length; _338_22_++)
             {
-                color = list[_329_22_]
+                color = list[_338_22_]
                 var list1 = _k_.list(this.game.allStones(color))
-                for (var _330_22_ = 0; _330_22_ < list1.length; _330_22_++)
+                for (var _339_22_ = 0; _339_22_ < list1.length; _339_22_++)
                 {
-                    s = list1[_330_22_]
+                    s = list1[_339_22_]
                     c = this.game.coord(s)
                     l = elem('div',{class:`liberty ${color}`,parent:this.lib,text:this.game.liberties(c)})
                     p = this.coordToPrcnt(c)
@@ -385,15 +389,15 @@ Board = (function ()
             if (this.game.moves.length > 1)
             {
                 var list = _k_.list(this.game.areas)
-                for (var _348_22_ = 0; _348_22_ < list.length; _348_22_++)
+                for (var _357_22_ = 0; _357_22_ < list.length; _357_22_++)
                 {
-                    a = list[_348_22_]
+                    a = list[_357_22_]
                     if (_k_.in(a.color,'wbWB'))
                     {
                         var list1 = _k_.list(a.area)
-                        for (var _350_30_ = 0; _350_30_ < list1.length; _350_30_++)
+                        for (var _359_30_ = 0; _359_30_ < list1.length; _359_30_++)
                         {
-                            p = list1[_350_30_]
+                            p = list1[_359_30_]
                             e = elem('div',{class:`eye ${a.color}`,parent:this.trr})
                             r = this.coordToPrcnt(this.game.coord(p))
                             s = 22 / (this.size + 1)
@@ -403,15 +407,15 @@ Board = (function ()
                     }
                 }
                 var list2 = _k_.list(this.game.grps)
-                for (var _358_22_ = 0; _358_22_ < list2.length; _358_22_++)
+                for (var _367_22_ = 0; _367_22_ < list2.length; _367_22_++)
                 {
-                    g = list2[_358_22_]
+                    g = list2[_367_22_]
                     if (g.state === 'dead')
                     {
                         var list3 = _k_.list(g.group)
-                        for (var _360_30_ = 0; _360_30_ < list3.length; _360_30_++)
+                        for (var _369_30_ = 0; _369_30_ < list3.length; _369_30_++)
                         {
-                            p = list3[_360_30_]
+                            p = list3[_369_30_]
                             e = elem('div',{class:`eye ${opponent[stoneColor[g.stone]][0]}`,parent:this.trr})
                             r = this.coordToPrcnt(this.game.coord(p))
                             s = 22 / (this.size + 1)

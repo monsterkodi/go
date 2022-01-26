@@ -16,8 +16,9 @@ Grid  = require './grid'
 
 function Game extends Score
 
-    @: (board) ->
+    @: (board, white, black) ->
         
+        @players = {white, black}
         super board.size
         @board = board
         @moves = []
@@ -32,11 +33,8 @@ function Game extends Score
             
     move_history: -> @moves.join '\n'
             
-    nextColor: ->
-        
-        switch @moves.length%2
-            0 ➜ 'B'
-              ➜ 'W'
+    lastColor: -> ['white''black'][@moves.length%2]
+    nextColor: -> ['black''white'][@moves.length%2]
         
     #  0000000   00000000  000   000  00     00   0000000   000   000  00000000  
     # 000        000       0000  000  000   000  000   000  000   000  000       
