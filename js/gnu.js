@@ -55,11 +55,10 @@ GNU = (function ()
         delete this.redos
         this.game.play(this.human,p)
         this.send(`play ${this.human} ${p}`)
-        this.calcscore()
         return this.send(`genmove ${this.color}`)
     }
 
-    GNU.prototype["calcscore"] = function ()
+    GNU.prototype["estimateScore"] = function ()
     {
         return this.send('estimate_score')
     }
@@ -77,7 +76,7 @@ GNU = (function ()
 
     GNU.prototype["undo"] = function ()
     {
-        var _60_15_
+        var _59_15_
 
         if (_k_.empty(this.game.moves))
         {
@@ -87,11 +86,10 @@ GNU = (function ()
         {
             return
         }
-        this.redos = ((_60_15_=this.redos) != null ? _60_15_ : [])
+        this.redos = ((_59_15_=this.redos) != null ? _59_15_ : [])
         this.send('undo')
         this.redos.unshift(this.game.moves.pop())
-        this.send('showboard')
-        return this.calcscore()
+        return this.send('showboard')
     }
 
     GNU.prototype["lastMove"] = function ()
@@ -105,12 +103,11 @@ GNU = (function ()
         while (!_k_.empty(this.redos))
         {
             move = this.redos.shift()
-            var _71_23_ = move.split(' '); color = _71_23_[0]; p = _71_23_[1]
+            var _69_23_ = move.split(' '); color = _69_23_[0]; p = _69_23_[1]
 
             this.game.play(color,p)
             this.send(`play ${color} ${p}`)
         }
-        return this.calcscore()
     }
 
     GNU.prototype["redo"] = function ()
@@ -126,14 +123,10 @@ GNU = (function ()
             return
         }
         move = this.redos.shift()
-        var _83_19_ = move.split(' '); color = _83_19_[0]; p = _83_19_[1]
+        var _79_19_ = move.split(' '); color = _79_19_[0]; p = _79_19_[1]
 
         this.game.play(color,p)
-        this.send(`play ${color} ${p}`)
-        if (this.game.moves.length > 2)
-        {
-            return this.calcscore()
-        }
+        return this.send(`play ${color} ${p}`)
     }
 
     GNU.prototype["send"] = function (m)
@@ -173,16 +166,14 @@ GNU = (function ()
                 {
                     this.send('final_score')
                 }
-                this.game.play(this.color,p)
-                this.game.calcScore()
-                return this.game.board.annotate()
+                return this.game.play(this.color,p)
             }
             else if (m.startsWith('fixed_handicap'))
             {
                 var list = _k_.list(data.split(' '))
-                for (var _120_22_ = 0; _120_22_ < list.length; _120_22_++)
+                for (var _115_22_ = 0; _115_22_ < list.length; _115_22_++)
                 {
-                    p = list[_120_22_]
+                    p = list[_115_22_]
                     this.game.setStone(this.game.coord(p),stone.black)
                 }
             }

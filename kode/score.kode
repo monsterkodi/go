@@ -10,6 +10,7 @@
 { noon } = require 'kxk'
 { min } = Math
 Grid = require './grid'
+DeadStones = require '@sabaki/deadstones'
 
 function Score
 
@@ -175,6 +176,10 @@ function Score
                         
             for a in @areas
                 a.color = final.areaAt(a.area[0]).color
+
+            # binary = @grid.toBinarray()
+            # DeadStones.guess(binary).then (guess) ->
+                # log noon guess
             
             # dead = @grps.filter (g) -> g.state == 'dead'
             # eyes = @areas.filter (a) -> a.color in 'wb'

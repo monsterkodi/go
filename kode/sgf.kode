@@ -28,10 +28,9 @@ function SGF
                 n.data.W ➜ moves.push sgfToAlphaNum n.data.W[0], size
             n = n.children[0]
             
-            
         info = 
             score:   node.data.RE?[0]
-            players:[node.data.PB[0] + ' ' + (node.data.BR[0] ? ''), node.data.PW[0] + ' ' + (node.data.WR[0] ? '')]
+            players:[node.data.PB?[0] + ' ' + (node.data.BR?[0] ? ''), node.data.PW?[0] + ' ' + (node.data.WR?[0] ? '')]
             komi:    node.data.KM?[0] ? 0
 
         post.emit 'newGame' size, 'white' 0 moves, info

@@ -38,10 +38,9 @@ function GNU
         delete @redos
         @game.play @human, p
         @send "play #{@human} #{p}"
-        @calcscore()
         @send "genmove #{@color}"
         
-    calcscore: ->
+    estimateScore: ->
         
         @send 'estimate_score'
 
@@ -61,7 +60,6 @@ function GNU
         @send 'undo'
         @redos.unshift @game.moves.pop()
         @send 'showboard'
-        @calcscore()
         
     lastMove: ->
 
@@ -71,7 +69,6 @@ function GNU
             [color, p] = move.split ' '
             @game.play color, p
             @send "play #{color} #{p}"
-        @calcscore()
             
     redo: ->
         
@@ -79,11 +76,9 @@ function GNU
         return if valid @msg
         
         move = @redos.shift()
-        # log 'redo' move
         [color, p] = move.split ' '
         @game.play color, p
         @send "play #{color} #{p}"
-        @calcscore() if @game.moves.length > 2
         
     send: (m) -> @msg.push m; @gnu.stdin.write m + '\n'
 
@@ -114,8 +109,8 @@ function GNU
                 if p in ['PASS' 'resign']
                     @send 'final_score'
                 @game.play @color, p
-                @game.calcScore()
-                @game.board.annotate()
+                # @game.calcScore()
+                # @game.board.annotate()
             else if m.startsWith 'fixed_handicap'
                 for p in data.split ' '
                     @game.setStone @game.coord(p), stone.black

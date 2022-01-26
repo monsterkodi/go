@@ -102,6 +102,7 @@ Game = (function ()
             this.setStone(c,stone[color])
             this.moves.push(color + ' ' + p)
             this.capture(opponent[color])
+            this.calcScore()
             this.board.annotate()
             return ''
         }
@@ -135,10 +136,10 @@ Game = (function ()
         {
             return r.slice(3).split(' ').join('')
         }).bind(this))
-        for (var _115_17_ = y = 0, _115_21_ = this.size; (_115_17_ <= _115_21_ ? y < this.size : y > this.size); (_115_17_ <= _115_21_ ? ++y : --y))
+        for (var _116_17_ = y = 0, _116_21_ = this.size; (_116_17_ <= _116_21_ ? y < this.size : y > this.size); (_116_17_ <= _116_21_ ? ++y : --y))
         {
             r = rs[y]
-            for (var _117_21_ = x = 0, _117_25_ = this.size; (_117_21_ <= _117_25_ ? x < this.size : x > this.size); (_117_21_ <= _117_25_ ? ++x : --x))
+            for (var _118_21_ = x = 0, _118_25_ = this.size; (_118_21_ <= _118_25_ ? x < this.size : x > this.size); (_118_21_ <= _118_25_ ? ++x : --x))
             {
                 switch (r[x])
                 {
@@ -164,6 +165,7 @@ Game = (function ()
                 }
             }
         }
+        this.calcScore()
         return this.board.annotate()
     }
 
@@ -172,18 +174,18 @@ Game = (function ()
         var c, dc, dp, g, p
 
         var list = _k_.list(this.allStones(color))
-        for (var _139_14_ = 0; _139_14_ < list.length; _139_14_++)
+        for (var _141_14_ = 0; _141_14_ < list.length; _141_14_++)
         {
-            p = list[_139_14_]
+            p = list[_141_14_]
             c = this.coord(p)
             if (this.liberties(c) < 1)
             {
                 g = this.group(c)
                 this.captures[opponent[color]] += g.length
                 var list1 = _k_.list(g)
-                for (var _144_23_ = 0; _144_23_ < list1.length; _144_23_++)
+                for (var _146_23_ = 0; _146_23_ < list1.length; _146_23_++)
                 {
-                    dp = list1[_144_23_]
+                    dp = list1[_146_23_]
                     dc = this.coord(dp)
                     this.setStone(dc,stone.empty)
                 }
@@ -197,7 +199,7 @@ Game = (function ()
     {
         var i
 
-        for (var _152_17_ = i = 0, _152_21_ = num; (_152_17_ <= _152_21_ ? i < num : i > num); (_152_17_ <= _152_21_ ? ++i : --i))
+        for (var _154_17_ = i = 0, _154_21_ = num; (_154_17_ <= _154_21_ ? i < num : i > num); (_154_17_ <= _154_21_ ? ++i : --i))
         {
             this.genmove()
         }
@@ -248,7 +250,7 @@ Game = (function ()
         s = ' '
         b = '  '
         b += (function (o) {
-            var r_191_34_ = _k_.each_r(o)
+            var r_193_34_ = _k_.each_r(o)
             for (var k in o)
             {   
                 var m = (function (v)
@@ -257,18 +259,18 @@ Game = (function ()
             })(o[k])
                 if (m != null)
                 {
-                    r_191_34_[k] = m
+                    r_193_34_[k] = m
                 }
             }
-            return typeof o == 'string' ? r_191_34_.join('') : r_191_34_
+            return typeof o == 'string' ? r_193_34_.join('') : r_193_34_
         })(alpha.slice(0,this.size))
         b += '\n'
         y = 0
-        for (var _194_17_ = i = this.size, _194_24_ = 1; (_194_17_ <= _194_24_ ? i <= 1 : i >= 1); (_194_17_ <= _194_24_ ? ++i : --i))
+        for (var _196_17_ = i = this.size, _196_24_ = 1; (_196_17_ <= _196_24_ ? i <= 1 : i >= 1); (_196_17_ <= _196_24_ ? ++i : --i))
         {
             b += _k_.lpad(2,i)
             b += s
-            for (var _197_21_ = x = 0, _197_25_ = this.size; (_197_21_ <= _197_25_ ? x < this.size : x > this.size); (_197_21_ <= _197_25_ ? ++x : --x))
+            for (var _199_21_ = x = 0, _199_25_ = this.size; (_199_21_ <= _199_25_ ? x < this.size : x > this.size); (_199_21_ <= _199_25_ ? ++x : --x))
             {
                 b += this.stoneAt(x,y) + s
             }
@@ -278,7 +280,7 @@ Game = (function ()
         }
         b += '  '
         b += (function (o) {
-            var r_204_34_ = _k_.each_r(o)
+            var r_206_34_ = _k_.each_r(o)
             for (var k in o)
             {   
                 var m = (function (v)
@@ -287,10 +289,10 @@ Game = (function ()
             })(o[k])
                 if (m != null)
                 {
-                    r_204_34_[k] = m
+                    r_206_34_[k] = m
                 }
             }
-            return typeof o == 'string' ? r_204_34_.join('') : r_204_34_
+            return typeof o == 'string' ? r_206_34_.join('') : r_206_34_
         })(alpha.slice(0,this.size))
         b += '\n'
         return b
@@ -313,7 +315,7 @@ Game = (function ()
 
     Game.prototype["updateTitle"] = function ()
     {
-        var bs, t, td, ws, _233_19_, _234_19_
+        var bs, t, td, ws, _235_19_, _236_19_
 
         t = $('.titlebar-title')
         t.innerHTML = ''

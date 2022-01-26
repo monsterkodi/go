@@ -19,7 +19,7 @@ SGF = (function ()
 
     SGF["load"] = function (file)
     {
-        var info, moves, n, node, nodes, size, _33_33_, _34_110_, _34_62_, _35_33_, _35_38_
+        var info, moves, n, node, nodes, size, _32_33_, _33_109_, _33_114_, _33_33_, _33_59_, _33_64_, _33_83_, _34_33_, _34_38_
 
         nodes = sgf.parseFile(file)
         moves = []
@@ -37,7 +37,7 @@ SGF = (function ()
             }
             n = n.children[0]
         }
-        info = {score:(node.data.RE != null ? node.data.RE[0] : undefined),players:[node.data.PB[0] + ' ' + (((_34_62_=node.data.BR[0]) != null ? _34_62_ : '')),node.data.PW[0] + ' ' + (((_34_110_=node.data.WR[0]) != null ? _34_110_ : ''))],komi:((_35_38_=(node.data.KM != null ? node.data.KM[0] : undefined)) != null ? _35_38_ : 0)}
+        info = {score:(node.data.RE != null ? node.data.RE[0] : undefined),players:[(node.data.PB != null ? node.data.PB[0] : undefined) + ' ' + (((_33_64_=(node.data.BR != null ? node.data.BR[0] : undefined)) != null ? _33_64_ : '')),(node.data.PW != null ? node.data.PW[0] : undefined) + ' ' + (((_33_114_=(node.data.WR != null ? node.data.WR[0] : undefined)) != null ? _33_114_ : ''))],komi:((_34_38_=(node.data.KM != null ? node.data.KM[0] : undefined)) != null ? _34_38_ : 0)}
         post.emit('newGame',size,'white',0,moves,info)
         return nodes
     }
@@ -52,7 +52,7 @@ SGF = (function ()
 
     SGF["openDialog"] = function ()
     {
-        var cb, _53_18_
+        var cb, _52_18_
 
         cb = function (files)
         {
@@ -70,7 +70,7 @@ SGF = (function ()
 
     SGF["saveAsDialog"] = function ()
     {
-        var cb, _65_18_
+        var cb, _64_18_
 
         cb = (function (file)
         {

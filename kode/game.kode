@@ -81,6 +81,7 @@ function Game extends Score
             @setStone c, stone[color]
             @moves.push color + ' ' + p
             @capture opponent[color]
+            @calcScore()
             @board.annotate()
             ''
         else
@@ -125,7 +126,8 @@ function Game extends Score
                     @captures.white = captured
                 else
                     @captures.black = captured
-                    
+         
+        @calcScore()
         @board.annotate()
             
     #  0000000   0000000   00000000   000000000  000   000  00000000   00000000

@@ -6,7 +6,7 @@
  0000000   000   000  000  0000000  
 ###
 
-{ splice, alpha } = require './util'
+{ splice, alpha, stone } = require './util'
 
 function Grid
 
@@ -162,5 +162,14 @@ function Grid
         if legend
             s += w3 '\n ' + alpha[0...@size] each (v) => ' ' + v 
         s
+        
+    toBinarray: ->
+        
+        @rows.map (r) -> 
+            r.map (c) -> 
+                switch c 
+                    stone.black ➜  1
+                    stone.white ➜ -1
+                                ➜  0
         
 module.exports = Grid
