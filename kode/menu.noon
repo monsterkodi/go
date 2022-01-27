@@ -29,6 +29,10 @@ game
         human gnu           w
         human human         h
         gnu gnu
+        leelaz human
+        human leelaz
+        leelaz leelaz
+        gnu leelaz
     boardsize 
         7x7                 t
         9x9                 s

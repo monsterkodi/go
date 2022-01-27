@@ -182,7 +182,7 @@ Board = (function ()
         this.hvr.white.style.display = 'none'
         this.hvr.black.style.display = 'none'
         nextColor = this.game.nextColor()
-        if (_k_.in(this.game.players[nextColor],['gnu']))
+        if (this.game.players[nextColor] !== 'human')
         {
             return
         }
@@ -207,7 +207,7 @@ Board = (function ()
         var c, nextColor, p
 
         nextColor = this.game.nextColor()
-        if (_k_.in(this[nextColor],['gnu']))
+        if (this.game.players[nextColor] !== 'human')
         {
             return
         }
@@ -218,7 +218,7 @@ Board = (function ()
             if (_k_.in(p,this.game.all_legal()))
             {
                 this.hvr[nextColor].style.display = 'none'
-                return post.emit('humanMove',p)
+                return post.emit('playerMove',p,'human')
             }
         }
     }

@@ -179,7 +179,7 @@ function Board
         
         nextColor = @game.nextColor()
 
-        return if @game.players[nextColor] in ['gnu']
+        return if @game.players[nextColor] != 'human'
         return if c.x < 0 or c.y < 0 or c.x >= @size or c.y >= @size
         return if not @game.legal nextColor, [c.x, c.y]
         
@@ -195,14 +195,14 @@ function Board
     onMouseDown: (event) =>
 
         nextColor = @game.nextColor()
-        return if @[nextColor] in ['gnu']
+        return if @game.players[nextColor] != 'human'
         
         c = @posAtEvent event
         if @game
             p = @game.pos [c.x, c.y]
             if p in @game.all_legal()
                 @hvr[nextColor].style.display = 'none'
-                post.emit 'humanMove' p
+                post.emit 'playerMove' p, 'human'
         
     # 000       0000000    0000000  000000000  
     # 000      000   000  000          000     

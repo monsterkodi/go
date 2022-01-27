@@ -19,9 +19,11 @@ Grid = require('./grid')
 Game = (function ()
 {
     _k_.extend(Game, Score)
-    function Game (board, white, black)
+    function Game (board, white, black, handicap)
     {
-        this.players = {white:white,black:black}
+        this.handicap = handicap
+    
+        this.players = {black:black,white:white}
         Game.__super__.constructor.call(this,board.size)
         this.board = board
         this.moves = []

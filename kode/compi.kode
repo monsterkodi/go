@@ -1,0 +1,88 @@
+###
+ 0000000   0000000   00     00  00000000   000
+000       000   000  000   000  000   000  000
+000       000   000  000000000  00000000   000
+000       000   000  000 0 000  000        000
+ 0000000   0000000   000   000  000        000
+###
+
+{ stone, opponent }  = require './util'
+{ args, childp, post } = require 'kxk'
+
+function Compi
+
+    @: (@game, @name, cmd, args) ->
+        
+        @msg = []
+        
+        @proc = childp.spawn cmd, args
+        @proc.stdout.on 'data' @onData
+
+    newGame: (boardsize, @color, @handicap) ->
+        
+        @send "boardsize #{boardsize}"
+        @send "time_settings 300 10 3"
+        @send "fixed_handicap #{handicap}" if @handicap > 1
+
+    genmove: -> 
+    
+        @send "genmove #{@color}"
+        
+    opponentMove: (p) ->
+
+        @send "play #{opponent[@color]} #{p}"        
+        
+    estimateScore: ->
+        
+        @send 'estimate_score'
+                
+    undo: ->
+        
+        @send 'undo'
+        @send 'showboard'
+        
+    send: (m) -> @msg.push m; @proc.stdin.write m + '\n'
+    
+    onData: (chunk) =>
+        
+        data = String chunk
+        
+        if @partial 
+            data = @partial + data
+            delete @partial
+                    
+        while data.startsWith '= \n\n'
+            data = data[4..]
+            @msg.shift()
+
+        if not data.endsWith '\n\n'
+            @partial = data
+            return
+     
+        log @msg, @name, data
+            
+        if data[0] == '='
+            m = @msg.shift()
+            data = data[2..]
+            if m.startsWith 'genmove'
+                p = data.split('\n')[0]
+                p = 'pass' if p == 'PASS'
+                post.emit 'playerMove' p, @name
+            else if m.startsWith 'fixed_handicap'
+                if @color == 'black'
+                    for p in data.split ' '
+                        @game.setStone @game.coord(p), stone.black
+                    @game.moves.push "black #{data}"
+            else if m.startsWith 'estimate_score'
+                @game.setScore data.split(' ')[0]
+            else if m.startsWith 'final_score'
+                @game.finalScore data
+            else if m.startsWith 'showboard'
+                @game.show data
+            else
+                log m, data
+        else
+            m = @msg.shift()
+            error m, data
+
+module.exports = Compi

@@ -102,10 +102,14 @@ function MainWin extends win
             'liberties'                 ➜ @referee.board.toggleLiberties()
             'territory'                 ➜ @referee.board.toggleTerritory()
             'new game'                  ➜ @referee.newGame()
-            'gnu human'                 ➜ @referee.newGame black:'gnu'   white:'human'
-            'human gnu'                 ➜ @referee.newGame black:'human' white:'gnu'
-            'human human'               ➜ @referee.newGame black:'human' white:'human'               
-            'gnu gnu'                   ➜ @referee.newGame black:'gnu'   white:'gnu'  
+            'gnu human'                 ➜ @referee.newGame black:'gnu'    white:'human'
+            'human gnu'                 ➜ @referee.newGame black:'human'  white:'gnu'
+            'human human'               ➜ @referee.newGame black:'human'  white:'human'               
+            'gnu gnu'                   ➜ @referee.newGame black:'gnu'    white:'gnu'  
+            'leelaz human'              ➜ @referee.newGame black:'leelaz' white:'human' 
+            'human leelaz'              ➜ @referee.newGame black:'human'  white:'leelaz' 
+            'leelaz leelaz'             ➜ @referee.newGame black:'leelaz' white:'leelaz'
+            'gnu leelaz'                ➜ @referee.newGame black:'gnu'    white:'leelaz'   
             '7x7''9x9''13x13''19x19'    ➜ @referee.newGame size:int action
             '0''1''2''3''4'
             '5''6''7''8''9'             ➜ @referee.newGame handicap: int action

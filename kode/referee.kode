@@ -10,6 +10,7 @@ kxk = require 'kxk'
 { elem, post } = kxk
 { opponent }   = require './util'
 
+Leelaz  = require './leelaz'
 Board   = require './board'
 Game    = require './game'
 GNU     = require './gnu'
@@ -24,9 +25,8 @@ function Referee
         @white     = window.stash.get 'white'       'human'
         @black     = window.stash.get 'black'       'human'
         
-        post.on 'newGame'   @newGame
-        post.on 'humanMove' @humanMove
-        post.on 'gnuMove'   @gnuMove
+        post.on 'newGame'    @newGame
+        post.on 'playerMove' @playerMove
 
     # 000   000  00000000  000   000         0000000    0000000   00     00  00000000  
     # 0000  000  000       000 0 000        000        000   000  000   000  000       
@@ -38,15 +38,17 @@ function Referee
 
         # log noon gi
         
-        @boardsize = gi.size     ? @boardsize
-        @handicap  = gi.handicap ? @handicap
         @white     = gi.white    ? @white
         @black     = gi.black    ? @black
+        @handicap  = gi.handicap ? @handicap
+        @boardsize = gi.size     ? @boardsize
         moves      = gi.moves    ? []
         info       = gi.info     ? {}
         @redos     = []
         
-        # log @boardsize, @handicap, info
+        if @white == 'leelaz' or @black == 'leelaz' then @boardsize = 19
+        
+        log @boardsize, @handicap, info, gi
         
         window.stash.del 'score' if empty moves
         window.stash.set 'size'      @boardsize
@@ -58,7 +60,7 @@ function Referee
         @parent.innerHTML = ''
                 
         @board = new Board @parent, @boardsize
-        @game  = new Game  @board, @white, @black
+        @game  = new Game  @board, @white, @black, @handicap
         @board.game = @game
         @game.info  = info
         
@@ -68,10 +70,18 @@ function Referee
             @gnu.white = new GNU @game
             @gnu.white.newGame @boardsize, 'white' @handicap
             
+        if @white == 'leelaz'
+            @gnu.white = new Leelaz @game
+            @gnu.white.newGame @boardsize, 'white' @handicap
+            
         if @black == 'gnu'
             @gnu.black = new GNU @game
             @gnu.black.newGame @boardsize, 'black' @handicap
-                        
+
+        if @black == 'leelaz'
+            @gnu.black = new Leelaz @game
+            @gnu.black.newGame @boardsize, 'black' @handicap
+            
         if valid moves
             @replay moves
         else
@@ -113,17 +123,12 @@ function Referee
     
     genMove: -> @game.genmove @game.nextColor()
     
-    humanMove: (p) => @handleMove p, 'human'
-                        
-    gnuMove: (p) => @handleMove p, 'gnu'
-        
-    handleMove: (p, player) ->
+    playerMove: (p, player) =>
         
         lastColor = @game.lastColor()
         nextColor = @game.nextColor()
         
-        return error("wrong player: #{player}") if player == 'human' and @game.players[nextColor] in ['gnu']
-        return error("wrong player: #{player}") if player == 'gnu'   and @game.players[nextColor] != 'gnu'
+        return error("wrong player: #{player}", nextColor, @game.players) if @game.players[nextColor] != player
         
         @game.play nextColor, p
         @gnu[lastColor]?.opponentMove p
@@ -145,6 +150,7 @@ function Referee
     undo: ->
         
         return if empty @game.moves
+        return if @game.handicap > 1 and @game.moves.length == 1
         
         return if valid @gnu.black?.msg
         return if valid @gnu.white?.msg

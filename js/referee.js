@@ -2,7 +2,7 @@
 
 var _k_ = {empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}}
 
-var Board, elem, Game, GNU, kxk, opponent, post, Referee, SGF
+var Board, elem, Game, GNU, kxk, Leelaz, opponent, post, Referee, SGF
 
 kxk = require('kxk')
 elem = kxk.elem
@@ -10,6 +10,7 @@ post = kxk.post
 
 opponent = require('./util').opponent
 
+Leelaz = require('./leelaz')
 Board = require('./board')
 Game = require('./game')
 GNU = require('./gnu')
@@ -21,29 +22,32 @@ Referee = (function ()
     {
         this.parent = parent
     
-        this["gnuMove"] = this["gnuMove"].bind(this)
-        this["humanMove"] = this["humanMove"].bind(this)
+        this["playerMove"] = this["playerMove"].bind(this)
         this["newGame"] = this["newGame"].bind(this)
         this.boardsize = window.stash.get('boardsize',19)
         this.handicap = window.stash.get('handicap',0)
         this.white = window.stash.get('white','human')
         this.black = window.stash.get('black','human')
         post.on('newGame',this.newGame)
-        post.on('humanMove',this.humanMove)
-        post.on('gnuMove',this.gnuMove)
+        post.on('playerMove',this.playerMove)
     }
 
     Referee.prototype["newGame"] = function (gi = {})
     {
         var info, moves, _41_33_, _42_33_, _43_33_, _44_33_, _45_33_, _46_33_
 
-        this.boardsize = ((_41_33_=gi.size) != null ? _41_33_ : this.boardsize)
-        this.handicap = ((_42_33_=gi.handicap) != null ? _42_33_ : this.handicap)
-        this.white = ((_43_33_=gi.white) != null ? _43_33_ : this.white)
-        this.black = ((_44_33_=gi.black) != null ? _44_33_ : this.black)
+        this.white = ((_41_33_=gi.white) != null ? _41_33_ : this.white)
+        this.black = ((_42_33_=gi.black) != null ? _42_33_ : this.black)
+        this.handicap = ((_43_33_=gi.handicap) != null ? _43_33_ : this.handicap)
+        this.boardsize = ((_44_33_=gi.size) != null ? _44_33_ : this.boardsize)
         moves = ((_45_33_=gi.moves) != null ? _45_33_ : [])
         info = ((_46_33_=gi.info) != null ? _46_33_ : {})
         this.redos = []
+        if (this.white === 'leelaz' || this.black === 'leelaz')
+        {
+            this.boardsize = 19
+        }
+        console.log(this.boardsize,this.handicap,info,gi)
         if (_k_.empty(moves))
         {
             window.stash.del('score')
@@ -55,7 +59,7 @@ Referee = (function ()
         window.stash.set('moves',moves)
         this.parent.innerHTML = ''
         this.board = new Board(this.parent,this.boardsize)
-        this.game = new Game(this.board,this.white,this.black)
+        this.game = new Game(this.board,this.white,this.black,this.handicap)
         this.board.game = this.game
         this.game.info = info
         this.gnu = {}
@@ -64,9 +68,19 @@ Referee = (function ()
             this.gnu.white = new GNU(this.game)
             this.gnu.white.newGame(this.boardsize,'white',this.handicap)
         }
+        if (this.white === 'leelaz')
+        {
+            this.gnu.white = new Leelaz(this.game)
+            this.gnu.white.newGame(this.boardsize,'white',this.handicap)
+        }
         if (this.black === 'gnu')
         {
             this.gnu.black = new GNU(this.game)
+            this.gnu.black.newGame(this.boardsize,'black',this.handicap)
+        }
+        if (this.black === 'leelaz')
+        {
+            this.gnu.black = new Leelaz(this.game)
             this.gnu.black.newGame(this.boardsize,'black',this.handicap)
         }
         if (!_k_.empty(moves))
@@ -88,13 +102,13 @@ Referee = (function ()
 
     Referee["replay"] = function (moves)
     {
-        var c, m, p, score, _101_27_, _98_22_, _99_22_
+        var c, m, p, score, _108_22_, _109_22_, _111_27_
 
         var list = _k_.list(moves)
-        for (var _92_14_ = 0; _92_14_ < list.length; _92_14_++)
+        for (var _102_14_ = 0; _102_14_ < list.length; _102_14_++)
         {
-            m = list[_92_14_]
-            var _93_19_ = m.split(' '); c = _93_19_[0]; p = _93_19_[1]
+            m = list[_102_14_]
+            var _103_19_ = m.split(' '); c = _103_19_[0]; p = _103_19_[1]
 
             if (!(p != null))
             {
@@ -105,7 +119,7 @@ Referee = (function ()
             (this.gnu.black != null ? this.gnu.black.send(`play ${c} ${p}`) : undefined)
             (this.gnu.white != null ? this.gnu.white.send(`play ${c} ${p}`) : undefined)
         }
-        score = ((_101_27_=info.score) != null ? _101_27_ : window.stash.get('score'))
+        score = ((_111_27_=info.score) != null ? _111_27_ : window.stash.get('score'))
         if (score)
         {
             return this.game.finalScore(score)
@@ -121,29 +135,15 @@ Referee = (function ()
         return this.game.genmove(this.game.nextColor())
     }
 
-    Referee.prototype["humanMove"] = function (p)
+    Referee.prototype["playerMove"] = function (p, player)
     {
-        return this.handleMove(p,'human')
-    }
-
-    Referee.prototype["gnuMove"] = function (p)
-    {
-        return this.handleMove(p,'gnu')
-    }
-
-    Referee.prototype["handleMove"] = function (p, player)
-    {
-        var lastColor, nextColor, _132_22_, _133_22_
+        var lastColor, nextColor, _137_22_, _138_22_
 
         lastColor = this.game.lastColor()
         nextColor = this.game.nextColor()
-        if (player === 'human' && _k_.in(this.game.players[nextColor],['gnu']))
+        if (this.game.players[nextColor] !== player)
         {
-            return console.error(`wrong player: ${player}`)
-        }
-        if (player === 'gnu' && this.game.players[nextColor] !== 'gnu')
-        {
-            return console.error(`wrong player: ${player}`)
+            return console.error(`wrong player: ${player}`,nextColor,this.game.players)
         }
         this.game.play(nextColor,p)
         ;(this.gnu[lastColor] != null ? this.gnu[lastColor].opponentMove(p) : undefined)
@@ -163,9 +163,13 @@ Referee = (function ()
 
     Referee.prototype["undo"] = function ()
     {
-        var _149_34_, _150_34_, _154_15_, _157_22_, _158_22_, _164_18_, _165_18_
+        var _155_34_, _156_34_, _160_15_, _163_22_, _164_22_, _170_18_, _171_18_
 
         if (_k_.empty(this.game.moves))
+        {
+            return
+        }
+        if (this.game.handicap > 1 && this.game.moves.length === 1)
         {
             return
         }
@@ -177,7 +181,7 @@ Referee = (function ()
         {
             return
         }
-        this.redos = ((_154_15_=this.redos) != null ? _154_15_ : [])
+        this.redos = ((_160_15_=this.redos) != null ? _160_15_ : [])
         while (_k_.in(this.game.moves.slice(-1)[0].split(' ')[1],['pass','resign']))
         {
             this.redos.unshift(this.game.moves.pop())
@@ -191,7 +195,7 @@ Referee = (function ()
 
     Referee.prototype["redo"] = function ()
     {
-        var color, move, p, _170_34_, _171_34_, _176_18_, _177_18_
+        var color, move, p, _176_34_, _177_34_, _182_18_, _183_18_
 
         if (_k_.empty(this.redos))
         {
@@ -206,7 +210,7 @@ Referee = (function ()
             return
         }
         move = this.redos.shift()
-        var _174_19_ = move.split(' '); color = _174_19_[0]; p = _174_19_[1]
+        var _180_19_ = move.split(' '); color = _180_19_[0]; p = _180_19_[1]
 
         this.game.play(color,p)
         ;(this.gnu.black != null ? this.gnu.black.send(`play ${color} ${p}`) : undefined)
@@ -215,7 +219,7 @@ Referee = (function ()
 
     Referee.prototype["firstMove"] = function ()
     {
-        var _189_18_, _190_18_
+        var _195_18_, _196_18_
 
         if (_k_.empty(this.game.moves))
         {
@@ -229,7 +233,7 @@ Referee = (function ()
 
     Referee.prototype["lastMove"] = function ()
     {
-        var color, move, p, _200_22_, _201_22_
+        var color, move, p, _206_22_, _207_22_
 
         if (_k_.empty(this.redos))
         {
@@ -238,7 +242,7 @@ Referee = (function ()
         while (!_k_.empty(this.redos))
         {
             move = this.redos.shift()
-            var _198_23_ = move.split(' '); color = _198_23_[0]; p = _198_23_[1]
+            var _204_23_ = move.split(' '); color = _204_23_[0]; p = _204_23_[1]
 
             this.game.play(color,p)
             ;(this.gnu.black != null ? this.gnu.black.send(`play ${color} ${p}`) : undefined)

@@ -139,6 +139,18 @@ MainWin = (function ()
             case 'gnu gnu':
                 return this.referee.newGame({black:'gnu',white:'gnu'})
 
+            case 'leelaz human':
+                return this.referee.newGame({black:'leelaz',white:'human'})
+
+            case 'human leelaz':
+                return this.referee.newGame({black:'human',white:'leelaz'})
+
+            case 'leelaz leelaz':
+                return this.referee.newGame({black:'leelaz',white:'leelaz'})
+
+            case 'gnu leelaz':
+                return this.referee.newGame({black:'gnu',white:'leelaz'})
+
             case '7x7':
             case '9x9':
             case '13x13':
