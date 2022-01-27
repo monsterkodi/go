@@ -1,0 +1,118 @@
+2022-01-27 16:40:54+0100: GTP Engine starting...
+2022-01-27 16:40:54+0100: KataGo v1.10.0
+2022-01-27 16:40:54+0100: Using TrompTaylor rules initially, unless GTP/GUI overrides this
+2022-01-27 16:40:54+0100: Using 6 CPU thread(s) for search
+2022-01-27 16:40:54+0100: nnRandSeed0 = 10714550277885366651
+2022-01-27 16:40:54+0100: After dedups: nnModelFile0 = /Users/kodi/.katago/default_model.bin.gz useFP16 auto useNHWC auto
+2022-01-27 16:40:54+0100: Initializing neural net buffer to be size 19 * 19 exactly
+2022-01-27 16:40:54+0100: Found OpenCL Platform 0: Apple (Apple) (OpenCL 1.2 (Oct  1 2021 19:40:58))
+2022-01-27 16:40:54+0100: Found 1 device(s) on platform 0 with type CPU or GPU or Accelerator
+2022-01-27 16:40:54+0100: Found OpenCL Device 0: Apple M1 (Apple) (score 1000102)
+2022-01-27 16:40:54+0100: Creating context for OpenCL Platform: Apple (Apple) (OpenCL 1.2 (Oct  1 2021 19:40:58))
+2022-01-27 16:40:54+0100: Using OpenCL Device 0: Apple M1 (Apple) OpenCL 1.2  (Extensions: cl_APPLE_SetMemObjectDestructor cl_APPLE_ContextLoggingFunctions cl_APPLE_clut cl_APPLE_query_kernel_names cl_APPLE_gl_sharing cl_khr_gl_event cl_khr_byte_addressable_store cl_khr_global_int32_base_atomics cl_khr_global_int32_extended_atomics cl_khr_local_int32_base_atomics cl_khr_local_int32_extended_atomics cl_khr_3d_image_writes cl_khr_image2d_from_buffer cl_khr_depth_images )
+2022-01-27 16:40:54+0100: Loaded tuning parameters from: /Users/kodi/.katago/opencltuning/tune8_gpuAppleM1_x19_y19_c256_mv8.txt
+2022-01-27 16:40:54+0100: OpenCL backend thread 0: Model version 8
+2022-01-27 16:40:54+0100: OpenCL backend thread 0: Model name: g170-b20c256x2-s5303129600-d1228401921
+2022-01-27 16:40:55+0100: OpenCL backend thread 0: FP16Storage true FP16Compute false FP16TensorCores false
+2022-01-27 16:40:55+0100: Loaded neural net with nnXLen 19 nnYLen 19
+2022-01-27 16:40:55+0100: Initializing board with boardXSize 19 boardYSize 19
+2022-01-27 16:40:55+0100: Loaded config /Users/kodi/.katago/default_gtp.cfg
+2022-01-27 16:40:55+0100: Loaded model /Users/kodi/.katago/default_model.bin.gz
+2022-01-27 16:40:55+0100: Model name: g170-b20c256x2-s5303129600-d1228401921
+2022-01-27 16:40:55+0100: GTP ready, beginning main protocol loop
+2022-01-27 16:40:55+0100: Controller: boardsize 9
+2022-01-27 16:40:55+0100: GPU -1 finishing, processed 0 rows 0 batches
+2022-01-27 16:40:55+0100: Cleaned up old neural net and bot
+2022-01-27 16:40:55+0100: nnRandSeed0 = 660837787682024558
+2022-01-27 16:40:55+0100: After dedups: nnModelFile0 = /Users/kodi/.katago/default_model.bin.gz useFP16 auto useNHWC auto
+2022-01-27 16:40:55+0100: Initializing neural net buffer to be size 9 * 9 exactly
+2022-01-27 16:40:55+0100: Found OpenCL Platform 0: Apple (Apple) (OpenCL 1.2 (Oct  1 2021 19:40:58))
+2022-01-27 16:40:55+0100: Found 1 device(s) on platform 0 with type CPU or GPU or Accelerator
+2022-01-27 16:40:55+0100: Found OpenCL Device 0: Apple M1 (Apple) (score 1000102)
+2022-01-27 16:40:55+0100: Creating context for OpenCL Platform: Apple (Apple) (OpenCL 1.2 (Oct  1 2021 19:40:58))
+2022-01-27 16:40:55+0100: Using OpenCL Device 0: Apple M1 (Apple) OpenCL 1.2  (Extensions: cl_APPLE_SetMemObjectDestructor cl_APPLE_ContextLoggingFunctions cl_APPLE_clut cl_APPLE_query_kernel_names cl_APPLE_gl_sharing cl_khr_gl_event cl_khr_byte_addressable_store cl_khr_global_int32_base_atomics cl_khr_global_int32_extended_atomics cl_khr_local_int32_base_atomics cl_khr_local_int32_extended_atomics cl_khr_3d_image_writes cl_khr_image2d_from_buffer cl_khr_depth_images )
+2022-01-27 16:40:55+0100: Loaded tuning parameters from: /Users/kodi/.katago/opencltuning/tune8_gpuAppleM1_x19_y19_c256_mv8.txt
+2022-01-27 16:40:55+0100: OpenCL backend thread 0: Model version 8
+2022-01-27 16:40:55+0100: OpenCL backend thread 0: Model name: g170-b20c256x2-s5303129600-d1228401921
+2022-01-27 16:40:56+0100: OpenCL backend thread 0: FP16Storage true FP16Compute false FP16TensorCores false
+2022-01-27 16:40:56+0100: Loaded neural net with nnXLen 9 nnYLen 9
+2022-01-27 16:40:56+0100: Initializing board with boardXSize 9 boardYSize 9
+2022-01-27 16:40:56+0100: = 
+2022-01-27 16:40:56+0100: Controller: play black F6
+2022-01-27 16:40:56+0100: = 
+2022-01-27 16:40:56+0100: Controller: genmove white
+2022-01-27 16:40:59+0100: MoveNum: 1 HASH: 1D94FF0067800B65D520C15EBA480341
+   A B C D E F G H J
+ 9 . . . . . . . . .
+ 8 . . . . . . . . .
+ 7 . . . . . . . . .
+ 6 . . . . . X1. . .
+ 5 . . . . . . . . .
+ 4 . . . @ . . . . .
+ 3 . . . . . . . . .
+ 2 . . . . . . . . .
+ 1 . . . . . . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 2.61324
+Root visits: 505
+New playouts: 505
+NN rows: 497
+NN batches: 167
+NN avg batch size: 2.97605
+PV: D4 E4 E3 D3 C3 D2 D5 F4 C2 E2 E7 B5 C6 B6 B7 C4 B3 F7
+Tree:
+: T  78.09c W  76.18c S   2.33c ( +2.1 L  +1.2) N     505  --  D4 E4 E3 D3 C3 D2 D5
+---White(^)---
+D4  : T  78.84c W  76.80c S   2.42c ( +2.1 L  +1.2) LCB   75.73c P 87.23% WF 460.8 PSV     458 N     461  --  D4 E4 E3 D3 C3 D2 D5 F4
+D6  : T  63.49c W  65.30c S   0.89c ( +1.4 L  +0.7) LCB   24.70c P  3.07% WF   9.5 PSV       2 N      11  --  D6 D5 C5 D4 C4 C6
+D5  : T  61.21c W  62.38c S   0.65c ( +1.3 L  +0.4) LCB -286.05c P  0.09% WF   1.4 PSV       0 N       3  --  D5 F4 D7
+C4  : T  64.50c W  64.83c S   0.71c ( +1.3 L  +0.4) LCB -135.20c P  0.06% WF   1.5 PSV       0 N       3  --  C4 D4 D5
+E5  : T  29.07c W  31.66c S  -2.59c ( -0.4 L  -0.7) LCB -280.00c P  0.14% WF   0.8 PSV       0 N       1  --  E5
+C6  : T  43.20c W  44.14c S  -0.93c ( +0.5 L  -0.1) LCB -280.00c P  0.07% WF   0.6 PSV       0 N       1  --  C6
+D7  : T  40.65c W  42.57c S  -1.93c ( -0.1 L  -0.5) LCB -280.00c P  0.06% WF   0.6 PSV       0 N       1  --  D7
+C5  : T  38.75c W  40.30c S  -1.55c ( +0.2 L  -0.4) LCB -280.00c P  0.04% WF   0.4 PSV       0 N       1  --  C5
+C7  : T  23.85c W  26.30c S  -2.45c ( -0.3 L  -0.5) LCB -280.00c P  0.03% WF   0.3 PSV       0 N       1  --  C7
+E7  : T  21.52c W  25.11c S  -3.60c ( -0.9 L  -0.9) LCB -280.00c P  0.02% WF   0.2 PSV       0 N       1  --  E7
+
+2022-01-27 16:40:59+0100: = D4
+2022-01-27 16:40:59+0100: Controller: play black C3
+2022-01-27 16:40:59+0100: = 
+2022-01-27 16:40:59+0100: Controller: genmove white
+2022-01-27 16:41:01+0100: MoveNum: 3 HASH: EB7883DAE543C32AA88D446D71C92DDE
+   A B C D E F G H J
+ 9 . . . . . . . . .
+ 8 . . . . . . . . .
+ 7 . . . . . . . . .
+ 6 . . . @ . X1. . .
+ 5 . . . . . . . . .
+ 4 . . . O2. . . . .
+ 3 . . X3. . . . . .
+ 2 . . . . . . . . .
+ 1 . . . . . . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 2.33605
+Root visits: 505
+New playouts: 505
+NN rows: 481
+NN batches: 161
+NN avg batch size: 2.98758
+PV: D6 D7 C7 E7 D3 F4 G5 F5 C4 E2
+Tree:
+: T  90.95c W  89.31c S   1.99c ( +3.2 L  +2.3) N     505  --  D6 D7 C7 E7 D3 F4 G5
+---White(^)---
+D6  : T  93.35c W  91.23c S   2.42c ( +3.4 L  +2.5) LCB   91.60c P  4.84% WF 340.6 PSV     341 N     331  --  D6 D7 C7 E7 D3 F4 G5 F5
+C4  : T  88.34c W  87.21c S   1.39c ( +2.9 L  +2.0) LCB   85.72c P 33.57% WF 115.1 PSV      68 N     122  --  C4 F3 D3 C6 E5 E6 G4 B2
+D7  : T  79.21c W  79.81c S   0.27c ( +2.4 L  +1.4) LCB   52.75c P  1.55% WF  12.0 PSV       1 N      14  --  D7 C4 D5 C6 D6 G4
+E6  : T  80.45c W  81.68c S   0.30c ( +2.4 L  +1.4) LCB   64.35c P  2.02% WF   9.9 PSV       1 N      11  --  E6 E7 D6 D7 C7 G7 D3
+E7  : T  80.68c W  80.21c S   0.29c ( +2.4 L  +1.4) LCB   59.65c P  0.90% WF   5.5 PSV       0 N       6  --  E7 E6 D6
+C6  : T  69.28c W  76.16c S  -0.78c ( +1.8 L  +1.0) LCB -263.62c P  0.25% WF   3.4 PSV       0 N       4  --  C6 C4 D5 E2
+C7  : T  69.84c W  70.35c S  -0.51c ( +1.9 L  +0.9) LCB -280.00c P  0.11% WF   0.9 PSV       0 N       1  --  C7
+C5  : T  79.46c W  79.39c S   0.07c ( +2.3 L  +1.1) LCB -280.00c P  0.06% WF   0.9 PSV       0 N       1  --  C5
+F7  : T  53.88c W  55.54c S  -1.66c ( +1.3 L  +0.3) LCB -280.00c P  0.02% WF   0.4 PSV       0 N       1  --  F7
+B5  : T  63.76c W  64.54c S  -0.79c ( +1.8 L  +0.7) LCB -280.00c P  0.02% WF   0.4 PSV       0 N       1  --  B5
+
+2022-01-27 16:41:01+0100: = D6
+2022-01-27 16:41:21+0100: GPU -1 finishing, processed 978 rows 328 batches
+2022-01-27 16:41:21+0100: All cleaned up, quitting

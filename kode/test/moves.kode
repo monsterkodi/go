@@ -1,0 +1,115 @@
+###
+00     00   0000000   000   000  00000000   0000000  
+000   000  000   000  000   000  000       000       
+000000000  000   000   000 000   0000000   0000000   
+000 0 000  000   000     000     000            000  
+000   000   0000000       0      00000000  0000000   
+###
+
+Moves = require '../moves'
+
+▸ moves
+
+    m = new Moves
+    
+    ▸ start
+        
+        m.num()       ▸ 0
+        m.start()     ▸ true
+        m.end()       ▸ false
+        m.history()   ▸ []
+        m.lastColor() ▸ 'start'
+        m.nextColor() ▸ 'black'
+        
+        m.add 'A1' 'black'
+        
+        m.start()     ▸ false
+        m.history()   ▸ ['A1']
+        m.lastColor() ▸ 'black'
+        m.nextColor() ▸ 'white'
+        
+        m.add 'B2' 'white'
+        
+        m.history()   ▸ ['A1''B2']
+        m.lastColor() ▸ 'white'
+        m.nextColor() ▸ 'black'
+    
+    ▸ color
+        
+        m.color()        ▸ 'black'
+        m.color('b')     ▸ 'black'
+        m.color('B')     ▸ 'black'
+        m.color('black') ▸ 'black'
+    
+    ▸ add
+    
+        m.add 'C3'
+        m.history() ▸ ['A1''B2''C3']
+        m.color()   ▸ 'white'
+        
+    ▸ pass
+    
+        m.doublePass() ▸ false
+        m.lastIsPass() ▸ false
+        
+        m.add 'pass'
+        
+        m.history()    ▸ ['A1''B2''C3''pass']
+        m.color()      ▸ 'black'
+        m.lastIsPass() ▸ true
+        m.doublePass() ▸ false
+
+        m.add 'D4'
+        
+        m.history()    ▸ ['A1''B2''C3''pass''D4']
+        m.color()      ▸ 'white'
+        m.lastIsPass() ▸ false
+        m.doublePass() ▸ false
+        
+        m.add 'pass'    
+        
+        m.history()    ▸ ['A1''B2''C3''pass''D4''pass']
+        m.lastIsPass() ▸ true
+        m.doublePass() ▸ false
+        m.end()        ▸ false
+        
+        m.add 'pass'    
+        
+        m.history()    ▸ ['A1''B2''C3''pass''D4''pass''pass']
+        m.lastIsPass() ▸ true
+        m.doublePass() ▸ true
+        m.end()        ▸ true
+        m.color()      ▸ 'end'
+        m.num()        ▸ 7
+        
+        m.add 'D5'
+        m.history()    ▸ ['A1''B2''C3''pass''D4''pass''pass']
+        m.lastIsPass() ▸ true
+        m.doublePass() ▸ true
+        m.end()        ▸ true
+        m.color()      ▸ 'end'
+        m.num()        ▸ 7
+        
+    ▸ clear
+    
+        m.clear()
+        
+        m.end()       ▸ false
+        m.start()     ▸ true
+        m.num()       ▸ 0
+        m.history()   ▸ []
+        m.lastColor() ▸ 'start'
+        m.nextColor() ▸ 'black'
+        m.add 'A2'
+        m.history()   ▸ ['A2']
+        m.add 'B1'
+        m.history()   ▸ ['A2''B1']
+        
+    ▸ resign
+        
+        m.add 'resign'
+        m.history()   ▸ ['A2''B1''resign']
+        m.end()       ▸ true
+        
+        
+        

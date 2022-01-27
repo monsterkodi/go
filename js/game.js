@@ -1,8 +1,8 @@
 // monsterkodi/kode 0.237.0
 
-var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, each_r: function (o) {return o instanceof Array ? [] : typeof o == 'string' ? o.split('') : {}}, lpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s=c+s} return s}, trim: function (s,c=' ') {return _k_.ltrim(_k_.rtrim(s,c),c)}, ltrim: function (s,c=' ') { while (_k_.in(s[0],c)) { s = s.slice(1) } return s}, rtrim: function (s,c=' ') {while (_k_.in(s.slice(-1)[0],c)) { s = s.slice(0, s.length - 1) } return s}}
+var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, noon: function (obj) { var pad = function (s, l) { while (s.length < l) { s += ' ' }; return s }; var esc = function (k, arry) { var es, sp; if (0 <= k.indexOf('\n')) { sp = k.split('\n'); es = sp.map(function (s) { return esc(s,arry) }); es.unshift('...'); es.push('...'); return es.join('\n') } if (k === '' || k === '...' || _k_.in(k[0],[' ','#','|']) || _k_.in(k[k.length - 1],[' ','#','|'])) { k = '|' + k + '|' } else if (arry && /  /.test(k)) { k = '|' + k + '|' }; return k }; var pretty = function (o, ind, seen) { var k, kl, l, v, mk = 4; if (Object.keys(o).length > 1) { for (k in o) { if (Object.hasOwn(o,k)) { kl = parseInt(Math.ceil((k.length + 2) / 4) * 4); mk = Math.max(mk,kl); if (mk > 32) { mk = 32; break } } } }; l = []; var keyValue = function (k, v) { var i, ks, s, vs; s = ind; k = esc(k,true); if (k.indexOf('  ') > 0 && k[0] !== '|') { k = `|${k}|` } else if (k[0] !== '|' && k[k.length - 1] === '|') { k = '|' + k } else if (k[0] === '|' && k[k.length - 1] !== '|') { k += '|' }; ks = pad(k,Math.max(mk,k.length + 2)); i = pad(ind + '    ',mk); s += ks; vs = toStr(v,i,false,seen); if (vs[0] === '\n') { while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) } }; s += vs; while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) }; return s }; for (k in o) { if (Object.hasOwn(o,k)) { l.push(keyValue(k,o[k])) } }; return l.join('\n') }; var toStr = function (o, ind = '', arry = false, seen = []) { var s, t, v; if (!(o != null)) { if (o === null) { return 'null' }; if (o === undefined) { return 'undefined' }; return '<?>' }; switch (t = typeof(o)) { case 'string': {return esc(o,arry)}; case 'object': { if (_k_.in(o,seen)) { return '<v>' }; seen.push(o); if ((o.constructor != null ? o.constructor.name : undefined) === 'Array') { s = ind !== '' && arry && '.' || ''; if (o.length && ind !== '') { s += '\n' }; s += (function () { var result = []; var list = _k_.list(o); for (var li = 0; li < list.length; li++)  { v = list[li];result.push(ind + toStr(v,ind + '    ',true,seen))  } return result }).bind(this)().join('\n') } else if ((o.constructor != null ? o.constructor.name : undefined) === 'RegExp') { return o.source } else { s = (arry && '.\n') || ((ind !== '') && '\n' || ''); s += pretty(o,ind,seen) }; return s } default: return String(o) }; return '<???>' }; return toStr(obj) }, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, each_r: function (o) {return o instanceof Array ? [] : typeof o == 'string' ? o.split('') : {}}, lpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s=c+s} return s}, trim: function (s,c=' ') {return _k_.ltrim(_k_.rtrim(s,c),c)}, ltrim: function (s,c=' ') { while (_k_.in(s[0],c)) { s = s.slice(1) } return s}, rtrim: function (s,c=' ') {while (_k_.in(s.slice(-1)[0],c)) { s = s.slice(0, s.length - 1) } return s}}
 
-var $, alpha, elem, Game, Grid, kxk, opponent, randInt, Score, stone
+var $, alpha, elem, Game, Grid, kxk, Moves, opponent, randInt, Score, stone
 
 kxk = require('kxk')
 randInt = kxk.randInt
@@ -14,6 +14,7 @@ alpha = require('./util').alpha
 stone = require('./util').stone
 
 Score = require('./score')
+Moves = require('./moves')
 Grid = require('./grid')
 
 Game = (function ()
@@ -26,7 +27,7 @@ Game = (function ()
         this.players = {black:black,white:white}
         Game.__super__.constructor.call(this,board.size)
         this.board = board
-        this.moves = []
+        this.moves = new Moves
         this.boardsize(this.board.size)
     }
 
@@ -45,17 +46,32 @@ Game = (function ()
 
     Game.prototype["move_history"] = function ()
     {
-        return this.moves.join('\n')
+        return this.moves.history()
+    }
+
+    Game.prototype["start"] = function ()
+    {
+        return this.moves.start()
     }
 
     Game.prototype["lastColor"] = function ()
     {
-        return ['white','black'][this.moves.length % 2]
+        return this.moves.lastColor()
     }
 
     Game.prototype["nextColor"] = function ()
     {
-        return ['black','white'][this.moves.length % 2]
+        return this.moves.nextColor()
+    }
+
+    Game.prototype["lastMove"] = function ()
+    {
+        return this.moves.last().pos
+    }
+
+    Game.prototype["lastCoord"] = function ()
+    {
+        return this.coord(this.lastMove())
     }
 
     Game.prototype["genmove"] = function (color)
@@ -64,7 +80,7 @@ Game = (function ()
 
         color = (color != null ? color : this.nextColor())
         l = this.all_legal(color)
-        if (this.moves.length && this.moves.slice(-1)[0].endsWith('pass'))
+        if (this.moves.lastIsPass())
         {
             return 'pass'
         }
@@ -86,7 +102,7 @@ Game = (function ()
 
         if (p.toLowerCase() === 'pass')
         {
-            this.moves.push(color + ' ' + p.toLowerCase())
+            this.moves.add(p.toLowerCase(),color)
             this.updateTitle()
             return ''
         }
@@ -99,8 +115,7 @@ Game = (function ()
         if (this.valid(c))
         {
             this.setStone(c,stone[color])
-            this.moves.push(color + ' ' + p)
-            this.capture(opponent[color])
+            this.moves.add(p,color,this.capture(color))
             this.calcScore()
             this.board.annotate()
             return ''
@@ -108,6 +123,32 @@ Game = (function ()
         else
         {
             return '? invalid color or coordinate'
+        }
+    }
+
+    Game.prototype["capture"] = function (color)
+    {
+        var dead, deadPos, s
+
+        s = stone[opponent[color]]
+        this.calcGroups()
+        var list = _k_.list(this.grps.filter(function (g)
+        {
+            return g.libs === 0 && g.stone === s
+        }))
+        for (var _103_17_ = 0; _103_17_ < list.length; _103_17_++)
+        {
+            dead = list[_103_17_]
+            console.log(this.captures)
+            this.captures[color] += dead.group.length
+            console.log(_k_.noon(dead))
+            console.log(this.captures)
+            var list1 = _k_.list(dead.group)
+            for (var _108_24_ = 0; _108_24_ < list1.length; _108_24_++)
+            {
+                deadPos = list1[_108_24_]
+                this.removePos(deadPos)
+            }
         }
     }
 
@@ -124,6 +165,11 @@ Game = (function ()
         }
     }
 
+    Game.prototype["removePos"] = function (p)
+    {
+        return this.setStone(this.coord(p),stone.empty)
+    }
+
     Game.prototype["show"] = function (data)
     {
         var captured, r, rs, x, y
@@ -135,10 +181,10 @@ Game = (function ()
         {
             return r.slice(3).split(' ').join('')
         }).bind(this))
-        for (var _114_17_ = y = 0, _114_21_ = this.size; (_114_17_ <= _114_21_ ? y < this.size : y > this.size); (_114_17_ <= _114_21_ ? ++y : --y))
+        for (var _152_17_ = y = 0, _152_21_ = this.size; (_152_17_ <= _152_21_ ? y < this.size : y > this.size); (_152_17_ <= _152_21_ ? ++y : --y))
         {
             r = rs[y]
-            for (var _116_21_ = x = 0, _116_25_ = this.size; (_116_21_ <= _116_25_ ? x < this.size : x > this.size); (_116_21_ <= _116_25_ ? ++x : --x))
+            for (var _154_21_ = x = 0, _154_25_ = this.size; (_154_21_ <= _154_25_ ? x < this.size : x > this.size); (_154_21_ <= _154_25_ ? ++x : --x))
             {
                 switch (r[x])
                 {
@@ -154,6 +200,7 @@ Game = (function ()
             if (_k_.in('hascaptured',r))
             {
                 captured = parseInt(r.split('hascaptured')[1])
+                console.log('captured',r,captured)
                 if (_k_.in('WHITE',r))
                 {
                     this.captures.white = captured
@@ -168,37 +215,11 @@ Game = (function ()
         return this.board.annotate()
     }
 
-    Game.prototype["capture"] = function (color)
-    {
-        var c, dc, dp, g, p
-
-        var list = _k_.list(this.allStones(color))
-        for (var _139_14_ = 0; _139_14_ < list.length; _139_14_++)
-        {
-            p = list[_139_14_]
-            c = this.coord(p)
-            if (this.liberties(c) < 1)
-            {
-                g = this.group(c)
-                this.captures[opponent[color]] += g.length
-                var list1 = _k_.list(g)
-                for (var _144_23_ = 0; _144_23_ < list1.length; _144_23_++)
-                {
-                    dp = list1[_144_23_]
-                    dc = this.coord(dp)
-                    this.setStone(dc,stone.empty)
-                }
-                this.capture(color)
-                return
-            }
-        }
-    }
-
     Game.prototype["next"] = function (num = 1)
     {
         var i
 
-        for (var _152_17_ = i = 0, _152_21_ = num; (_152_17_ <= _152_21_ ? i < num : i > num); (_152_17_ <= _152_21_ ? ++i : --i))
+        for (var _172_17_ = i = 0, _172_21_ = num; (_172_17_ <= _172_21_ ? i < num : i > num); (_172_17_ <= _172_21_ ? ++i : --i))
         {
             this.genmove()
         }
@@ -234,7 +255,7 @@ Game = (function ()
     Game.prototype["clear_board"] = function ()
     {
         delete this.redos
-        this.moves = []
+        this.moves.clear()
         this.clear()
         this.grid.clear()
         this.board.clear()
@@ -249,7 +270,7 @@ Game = (function ()
         s = ' '
         b = '  '
         b += (function (o) {
-            var r_191_34_ = _k_.each_r(o)
+            var r_211_34_ = _k_.each_r(o)
             for (var k in o)
             {   
                 var m = (function (v)
@@ -258,18 +279,18 @@ Game = (function ()
             })(o[k])
                 if (m != null)
                 {
-                    r_191_34_[k] = m
+                    r_211_34_[k] = m
                 }
             }
-            return typeof o == 'string' ? r_191_34_.join('') : r_191_34_
+            return typeof o == 'string' ? r_211_34_.join('') : r_211_34_
         })(alpha.slice(0,this.size))
         b += '\n'
         y = 0
-        for (var _194_17_ = i = this.size, _194_24_ = 1; (_194_17_ <= _194_24_ ? i <= 1 : i >= 1); (_194_17_ <= _194_24_ ? ++i : --i))
+        for (var _214_17_ = i = this.size, _214_24_ = 1; (_214_17_ <= _214_24_ ? i <= 1 : i >= 1); (_214_17_ <= _214_24_ ? ++i : --i))
         {
             b += _k_.lpad(2,i)
             b += s
-            for (var _197_21_ = x = 0, _197_25_ = this.size; (_197_21_ <= _197_25_ ? x < this.size : x > this.size); (_197_21_ <= _197_25_ ? ++x : --x))
+            for (var _217_21_ = x = 0, _217_25_ = this.size; (_217_21_ <= _217_25_ ? x < this.size : x > this.size); (_217_21_ <= _217_25_ ? ++x : --x))
             {
                 b += this.stoneAt(x,y) + s
             }
@@ -279,7 +300,7 @@ Game = (function ()
         }
         b += '  '
         b += (function (o) {
-            var r_204_34_ = _k_.each_r(o)
+            var r_224_34_ = _k_.each_r(o)
             for (var k in o)
             {   
                 var m = (function (v)
@@ -288,10 +309,10 @@ Game = (function ()
             })(o[k])
                 if (m != null)
                 {
-                    r_204_34_[k] = m
+                    r_224_34_[k] = m
                 }
             }
-            return typeof o == 'string' ? r_204_34_.join('') : r_204_34_
+            return typeof o == 'string' ? r_224_34_.join('') : r_224_34_
         })(alpha.slice(0,this.size))
         b += '\n'
         return b
@@ -314,15 +335,17 @@ Game = (function ()
 
     Game.prototype["updateTitle"] = function ()
     {
-        var bs, t, td, ws, _233_19_, _234_19_
+        var bs, t, td, ws, _253_19_, _254_19_
 
         t = $('.titlebar-title')
         t.innerHTML = ''
         td = elem('div',{class:'captures',parent:t})
         bs = ((this.score != null ? this.score[0] : undefined) === 'B' ? this.score.slice(2) : '  ')
         ws = ((this.score != null ? this.score[0] : undefined) === 'W' ? this.score.slice(2) : '  ')
+        elem('span',{class:'player black',text:this.players.black + ' ',parent:td})
         elem('span',{class:'capture black',text:bs + ' ' + this.captures.black + stone.black,parent:td})
-        return elem('span',{class:'capture white',text:stone.white + this.captures.white + ' ' + ws,parent:td})
+        elem('span',{class:'capture white',text:stone.white + this.captures.white + ' ' + ws,parent:td})
+        return elem('span',{class:'player white',text:' ' + this.players.white,parent:td})
     }
 
     Game.prototype["finalScore"] = function (score)

@@ -2,21 +2,21 @@
 
 var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}}
 
-var Compi, GNU
+var Compi, Katago
 
 Compi = require('./compi')
 
-GNU = (function ()
+Katago = (function ()
 {
-    _k_.extend(GNU, Compi)
-    function GNU (game)
+    _k_.extend(Katago, Compi)
+    function Katago (game)
     {
-        GNU.__super__.constructor.call(this,this.game,'gnu','/usr/local/bin/gnugo',['--mode','gtp','--level','20','--never-resign'])
+        Katago.__super__.constructor.call(this,this.game,'katago','/opt/homebrew/bin/katago',['gtp'])
     
         this.game = game
     }
 
-    return GNU
+    return Katago
 })()
 
-module.exports = GNU
+module.exports = Katago

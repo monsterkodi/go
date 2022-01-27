@@ -1,0 +1,81 @@
+2022-01-27 16:40:50+0100: GTP Engine starting...
+2022-01-27 16:40:50+0100: KataGo v1.10.0
+2022-01-27 16:40:50+0100: Using TrompTaylor rules initially, unless GTP/GUI overrides this
+2022-01-27 16:40:50+0100: Using 6 CPU thread(s) for search
+2022-01-27 16:40:50+0100: nnRandSeed0 = 6293034383563802151
+2022-01-27 16:40:50+0100: After dedups: nnModelFile0 = /Users/kodi/.katago/default_model.bin.gz useFP16 auto useNHWC auto
+2022-01-27 16:40:50+0100: Initializing neural net buffer to be size 19 * 19 exactly
+2022-01-27 16:40:51+0100: Found OpenCL Platform 0: Apple (Apple) (OpenCL 1.2 (Oct  1 2021 19:40:58))
+2022-01-27 16:40:51+0100: Found 1 device(s) on platform 0 with type CPU or GPU or Accelerator
+2022-01-27 16:40:51+0100: Found OpenCL Device 0: Apple M1 (Apple) (score 1000102)
+2022-01-27 16:40:51+0100: Creating context for OpenCL Platform: Apple (Apple) (OpenCL 1.2 (Oct  1 2021 19:40:58))
+2022-01-27 16:40:51+0100: Using OpenCL Device 0: Apple M1 (Apple) OpenCL 1.2  (Extensions: cl_APPLE_SetMemObjectDestructor cl_APPLE_ContextLoggingFunctions cl_APPLE_clut cl_APPLE_query_kernel_names cl_APPLE_gl_sharing cl_khr_gl_event cl_khr_byte_addressable_store cl_khr_global_int32_base_atomics cl_khr_global_int32_extended_atomics cl_khr_local_int32_base_atomics cl_khr_local_int32_extended_atomics cl_khr_3d_image_writes cl_khr_image2d_from_buffer cl_khr_depth_images )
+2022-01-27 16:40:51+0100: Loaded tuning parameters from: /Users/kodi/.katago/opencltuning/tune8_gpuAppleM1_x19_y19_c256_mv8.txt
+2022-01-27 16:40:51+0100: OpenCL backend thread 0: Model version 8
+2022-01-27 16:40:51+0100: OpenCL backend thread 0: Model name: g170-b20c256x2-s5303129600-d1228401921
+2022-01-27 16:40:52+0100: OpenCL backend thread 0: FP16Storage true FP16Compute false FP16TensorCores false
+2022-01-27 16:40:52+0100: Loaded neural net with nnXLen 19 nnYLen 19
+2022-01-27 16:40:52+0100: Initializing board with boardXSize 19 boardYSize 19
+2022-01-27 16:40:52+0100: Loaded config /Users/kodi/.katago/default_gtp.cfg
+2022-01-27 16:40:52+0100: Loaded model /Users/kodi/.katago/default_model.bin.gz
+2022-01-27 16:40:52+0100: Model name: g170-b20c256x2-s5303129600-d1228401921
+2022-01-27 16:40:52+0100: GTP ready, beginning main protocol loop
+2022-01-27 16:40:52+0100: Controller: boardsize 13
+2022-01-27 16:40:52+0100: GPU -1 finishing, processed 0 rows 0 batches
+2022-01-27 16:40:52+0100: Cleaned up old neural net and bot
+2022-01-27 16:40:52+0100: nnRandSeed0 = 6435620380994786801
+2022-01-27 16:40:52+0100: After dedups: nnModelFile0 = /Users/kodi/.katago/default_model.bin.gz useFP16 auto useNHWC auto
+2022-01-27 16:40:52+0100: Initializing neural net buffer to be size 13 * 13 exactly
+2022-01-27 16:40:52+0100: Found OpenCL Platform 0: Apple (Apple) (OpenCL 1.2 (Oct  1 2021 19:40:58))
+2022-01-27 16:40:52+0100: Found 1 device(s) on platform 0 with type CPU or GPU or Accelerator
+2022-01-27 16:40:52+0100: Found OpenCL Device 0: Apple M1 (Apple) (score 1000102)
+2022-01-27 16:40:52+0100: Creating context for OpenCL Platform: Apple (Apple) (OpenCL 1.2 (Oct  1 2021 19:40:58))
+2022-01-27 16:40:52+0100: Using OpenCL Device 0: Apple M1 (Apple) OpenCL 1.2  (Extensions: cl_APPLE_SetMemObjectDestructor cl_APPLE_ContextLoggingFunctions cl_APPLE_clut cl_APPLE_query_kernel_names cl_APPLE_gl_sharing cl_khr_gl_event cl_khr_byte_addressable_store cl_khr_global_int32_base_atomics cl_khr_global_int32_extended_atomics cl_khr_local_int32_base_atomics cl_khr_local_int32_extended_atomics cl_khr_3d_image_writes cl_khr_image2d_from_buffer cl_khr_depth_images )
+2022-01-27 16:40:52+0100: Loaded tuning parameters from: /Users/kodi/.katago/opencltuning/tune8_gpuAppleM1_x19_y19_c256_mv8.txt
+2022-01-27 16:40:52+0100: OpenCL backend thread 0: Model version 8
+2022-01-27 16:40:52+0100: OpenCL backend thread 0: Model name: g170-b20c256x2-s5303129600-d1228401921
+2022-01-27 16:40:53+0100: OpenCL backend thread 0: FP16Storage true FP16Compute false FP16TensorCores false
+2022-01-27 16:40:53+0100: Loaded neural net with nnXLen 13 nnYLen 13
+2022-01-27 16:40:53+0100: Initializing board with boardXSize 13 boardYSize 13
+2022-01-27 16:40:53+0100: = 
+2022-01-27 16:40:53+0100: Controller: play black K10
+2022-01-27 16:40:53+0100: = 
+2022-01-27 16:40:53+0100: Controller: genmove white
+2022-01-27 16:40:56+0100: MoveNum: 1 HASH: 48C82C867219252AAC25E04A62D884C1
+   A B C D E F G H J K L M N
+13 . . . . . . . . . . . . .
+12 . . . . . . . . . . . . .
+11 . . . . . . . . . . . . .
+10 . . . . . . . . . X1. . .
+ 9 . . . . . . . . . . . . .
+ 8 . . . . . . . . . . . . .
+ 7 . . . . . . . . . . . . .
+ 6 . . . . . . . . . . . . .
+ 5 . . . . . . . . . . . . .
+ 4 . . . @ . . . . . . . . .
+ 3 . . . . . . . . . . . . .
+ 2 . . . . . . . . . . . . .
+ 1 . . . . . . . . . . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 3.19296
+Root visits: 505
+New playouts: 505
+NN rows: 480
+NN batches: 161
+NN avg batch size: 2.98137
+PV: D4 D11 K3 C6 D10 C10 K6 E11 C9 E6
+Tree:
+: T  39.63c W  39.07c S   0.59c ( +1.8 L  +0.9) N     505  --  D4 D11 K3 C6 D10 C10 K6
+---White(^)---
+D4  : T  40.61c W  40.01c S   0.70c ( +1.9 L  +1.0) LCB   39.60c P 68.22% WF 347.8 PSV     343 N     344  --  D4 D11 K3 C6 D10 C10 K6 E11
+C10 : T  38.81c W  37.75c S   0.40c ( +1.6 L  +0.9) LCB   35.92c P  4.68% WF  79.9 PSV      10 N      84  --  C10 D10 D11 E11 C11 L4 D3 D4
+D10 : T  36.88c W  37.02c S   0.38c ( +1.6 L  +0.9) LCB   33.41c P  5.32% WF  49.8 PSV       7 N      54  --  D10 D4 K4 C11 D11 C10 C9 B9
+D11 : T  34.74c W  34.93c S   0.14c ( +1.4 L  +0.8) LCB   27.50c P  2.93% WF  15.2 PSV       3 N      16  --  D11 L4 D4 F3 K4 K3
+C4  : T  29.03c W  29.97c S  -0.44c ( +1.0 L  +0.5) LCB  -83.95c P  1.31% WF   2.8 PSV       0 N       3  --  C4 D4 D3
+C11 : T  30.04c W  30.93c S  -0.37c ( +1.1 L  +0.5) LCB -280.00c P  0.33% WF   1.9 PSV       0 N       2  --  C11 L4
+L11 : T  19.66c W  20.67c S  -1.01c ( +0.6 L  +0.3) LCB -280.00c P  0.55% WF   0.9 PSV       0 N       1  --  L11
+
+2022-01-27 16:40:56+0100: = D4
+2022-01-27 16:41:21+0100: GPU -1 finishing, processed 480 rows 161 batches
+2022-01-27 16:41:21+0100: All cleaned up, quitting

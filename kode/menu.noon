@@ -33,6 +33,11 @@ game
         human leelaz
         leelaz leelaz
         gnu leelaz
+        gnu hara
+        hara hara
+        katago katago
+        hara katago
+        gnu katago
     boardsize 
         7x7                 t
         9x9                 s

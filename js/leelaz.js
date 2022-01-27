@@ -11,7 +11,7 @@ Leelaz = (function ()
     _k_.extend(Leelaz, Compi)
     function Leelaz (game)
     {
-        Leelaz.__super__.constructor.call(this,this.game,'leelaz','/opt/homebrew/bin/leelaz',['-g','--noponder','--timemanage','fast'])
+        Leelaz.__super__.constructor.call(this,this.game,'leelaz','/opt/homebrew/bin/leelaz',['--gtp','--noponder','--timemanage','fast','--logfile','/Users/kodi/Desktop/leelaz.log'])
     
         this.game = game
     }

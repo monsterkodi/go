@@ -12,6 +12,7 @@ kxk = require 'kxk'
 { opponent, alpha, stone } = require './util'
 
 Score = require './score'
+Moves = require './moves'
 Grid  = require './grid'
 
 function Game extends Score
@@ -21,7 +22,7 @@ function Game extends Score
         @players = {black, white}
         super board.size
         @board = board
-        @moves = []
+        @moves = new Moves
         @boardsize @board.size
         
     boardsize: (@size) -> @clear_board()
@@ -31,10 +32,13 @@ function Game extends Score
         window.stash.set 'moves' @moves
         window.stash.set 'grid'  @grid.toString()
             
-    move_history: -> @moves.join '\n'
+    move_history: -> @moves.history()
             
-    lastColor: -> ['white''black'][@moves.length%2]
-    nextColor: -> ['black''white'][@moves.length%2]
+    start:     -> @moves.start()
+    lastColor: -> @moves.lastColor()
+    nextColor: -> @moves.nextColor()
+    lastMove:  -> @moves.last().pos
+    lastCoord: -> @coord @lastMove()
         
     #  0000000   00000000  000   000  00     00   0000000   000   000  00000000  
     # 000        000       0000  000  000   000  000   000  000   000  000       
@@ -47,7 +51,7 @@ function Game extends Score
         color ?= @nextColor()
         l = @all_legal color
         
-        if @moves.length and @moves[-1].endsWith 'pass'
+        if @moves.lastIsPass()
             return 'pass'
         
         if valid l
@@ -66,7 +70,7 @@ function Game extends Score
     play: (color, p) ->
 
         if p.toLowerCase() == 'pass' 
-            @moves.push color + ' ' + p.toLowerCase()
+            @moves.add p.toLowerCase(), color
             @updateTitle()
             return ''
             
@@ -77,13 +81,43 @@ function Game extends Score
         c = @coord p
         if @valid c
             @setStone c, stone[color]
-            @moves.push color + ' ' + p
-            @capture opponent[color]
+            @moves.add p, color, @capture color
             @calcScore()
             @board.annotate()
             ''
         else
             '? invalid color or coordinate'
+            
+    #  0000000   0000000   00000000   000000000  000   000  00000000   00000000
+    # 000       000   000  000   000     000     000   000  000   000  000     
+    # 000       000000000  00000000      000     000   000  0000000    0000000 
+    # 000       000   000  000           000     000   000  000   000  000     
+    #  0000000  000   000  000           000      0000000   000   000  00000000
+    
+    capture: (color) ->
+        
+        s = stone[opponent[color]]
+        
+        @calcGroups()
+        
+        for dead in @grps.filter (g) -> g.libs == 0 and g.stone == s
+            log @captures
+            @captures[color] += dead.group.length
+            log noon dead
+            log @captures
+            for deadPos in dead.group
+                @removePos deadPos
+        
+        # for p in @allStones color
+            # c = @coord p
+            # if @liberties(c) < 1
+                # g = @group c
+                # @captures[opponent[color]] += g.length
+                # for dp in g
+                    # dc = @coord dp
+                    # @setStone dc, stone.empty
+                # @capture color
+                # return
             
     #  0000000  00000000  000000000   0000000  000000000   0000000   000   000  00000000  
     # 000       000          000     000          000     000   000  0000  000  000       
@@ -98,6 +132,10 @@ function Game extends Score
             @board.delStone c
         else
             @board.addStone c, s
+            
+    removePos: (p) ->
+        
+        @setStone @coord(p), stone.empty
             
     #  0000000  000   000   0000000   000   000  
     # 000       000   000  000   000  000 0 000  
@@ -120,6 +158,7 @@ function Game extends Score
                  
             if 'hascaptured' in r
                 captured = int r.split('hascaptured')[1]
+                log 'captured' r, captured
                 if 'WHITE' in r
                     @captures.white = captured
                 else
@@ -127,26 +166,7 @@ function Game extends Score
          
         @calcScore()
         @board.annotate()
-            
-    #  0000000   0000000   00000000   000000000  000   000  00000000   00000000
-    # 000       000   000  000   000     000     000   000  000   000  000     
-    # 000       000000000  00000000      000     000   000  0000000    0000000 
-    # 000       000   000  000           000     000   000  000   000  000     
-    #  0000000  000   000  000           000      0000000   000   000  00000000
-    
-    capture: (color) ->
-        
-        for p in @allStones color
-            c = @coord p
-            if @liberties(c) < 1
-                g = @group c
-                @captures[opponent[color]] += g.length
-                for dp in g
-                    dc = @coord dp
-                    @setStone dc, stone.empty
-                @capture color
-                return
-                        
+                                    
     next: (num=1) ->
         
         for i in 0...num
@@ -171,7 +191,7 @@ function Game extends Score
     clear_board: ->
         
         delete @redos
-        @moves = []
+        @moves.clear()
         @clear()
         @grid.clear()
         @board.clear()
@@ -233,8 +253,10 @@ function Game extends Score
         bs = @score?[0] == 'B' ? @score[2..] : '  '
         ws = @score?[0] == 'W' ? @score[2..] : '  '
         
+        elem 'span' class:'player black'  text:@players.black + ' ', parent:td
         elem 'span' class:'capture black' text: bs + ' ' + @captures.black + stone.black, parent:td
         elem 'span' class:'capture white' text: stone.white + @captures.white + ' ' + ws, parent:td
+        elem 'span' {class:'player white' text:' ' + @players.white, parent:td
         
     finalScore: (score) ->
         

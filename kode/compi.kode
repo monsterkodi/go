@@ -15,17 +15,27 @@ function Compi
         
         @msg = []
         
-        @proc = childp.spawn cmd, args
+        @proc = childp.spawn cmd, args, shell:true, detached:true
         @proc.stdout.on 'data' @onData
+        @proc.once 'exit' @onExit
+        
+    onExit: (signal) => 
+      
+      # @proc.stdin.destroy()
+      # @proc.stdout.destroy()
+
+      delete @proc
+
+      log "#{@name} stopped #{signal}"
 
     newGame: (boardsize, @color, @handicap) ->
         
+        # @send "time_settings 0 10 1"
         @send "boardsize #{boardsize}"
-        @send "time_settings 300 10 3"
         @send "fixed_handicap #{handicap}" if @handicap > 1
 
     genmove: -> 
-    
+        log "#{@name}: genmove #{@color}"
         @send "genmove #{@color}"
         
     opponentMove: (p) ->
@@ -47,19 +57,25 @@ function Compi
         
         data = String chunk
         
+        log @name, @msg, @partial, "'#{data}'"
+        
         if @partial 
-            data = @partial + data
+            data = @partial + "'#{data}'"
             delete @partial
                     
         while data.startsWith '= \n\n'
             data = data[4..]
             @msg.shift()
+            log @name, 'shift' @msg, "'#{data}'"
+            if empty data
+                return
 
         if not data.endsWith '\n\n'
             @partial = data
+            log @name, 'partial' @msg, "'#{data}'"
             return
      
-        log @msg, @name, data
+        log @msg, @name, "'#{data}'"
             
         if data[0] == '='
             m = @msg.shift()

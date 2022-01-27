@@ -212,10 +212,8 @@ function Board
     
     lastMove: ->
         
-        return if empty @game?.moves
-        [color, p] = @game.moves[-1].split ' '
-
-        r = @coordToPrcnt @game.coord p
+        return if @game.start()
+        r = @coordToPrcnt @game.lastCoord()
         d = @div.getBoundingClientRect().height/(@size+1)
         @lst.style.left         = "#{r.x}%"
         @lst.style.top          = "#{r.y}%"
@@ -223,10 +221,10 @@ function Board
         @lst.style.height       = "#{0.5*d}px"
         @lst.style.borderRadius = "#{0.5*d}px"
         @lst.style.borderWidth  = "#{0.1*d}px"
-        @lst.style.display = 'initial'
+        @lst.style.display      = 'initial'
         @lst.classList.remove 'black'
         @lst.classList.remove 'white'
-        @lst.classList.add opponent[color]
+        @lst.classList.add @game.nextColor()
         
     posAtEvent: (event) ->
         

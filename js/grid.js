@@ -91,7 +91,7 @@ Grid = (function ()
     {
         var c, r
 
-        var _77_14_ = this.rowCol(x,y); r = _77_14_[0]; c = _77_14_[1]
+        var _78_14_ = this.rowCol(x,y); r = _78_14_[0]; c = _78_14_[1]
 
         if ((r != null))
         {

@@ -1,6 +1,6 @@
 // monsterkodi/kode 0.237.0
 
-var _k_ = {list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}}
+var _k_ = {empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}}
 
 var args, childp, Compi, opponent, post, stone
 
@@ -20,9 +20,17 @@ Compi = (function ()
         this.name = name
     
         this["onData"] = this["onData"].bind(this)
+        this["onExit"] = this["onExit"].bind(this)
         this.msg = []
-        this.proc = childp.spawn(cmd,args)
+        this.proc = childp.spawn(cmd,args,{shell:true,detached:true})
         this.proc.stdout.on('data',this.onData)
+        this.proc.once('exit',this.onExit)
+    }
+
+    Compi.prototype["onExit"] = function (signal)
+    {
+        delete this.proc
+        console.log(`${this.name} stopped ${signal}`)
     }
 
     Compi.prototype["newGame"] = function (boardsize, color, handicap)
@@ -31,7 +39,6 @@ Compi = (function ()
         this.handicap = handicap
     
         this.send(`boardsize ${boardsize}`)
-        this.send("time_settings 300 10 3")
         if (this.handicap > 1)
         {
             return this.send(`fixed_handicap ${handicap}`)
@@ -40,6 +47,7 @@ Compi = (function ()
 
     Compi.prototype["genmove"] = function ()
     {
+        console.log(`${this.name}: genmove ${this.color}`)
         return this.send(`genmove ${this.color}`)
     }
 
@@ -70,22 +78,29 @@ Compi = (function ()
         var data, m, p
 
         data = String(chunk)
+        console.log(this.name,this.msg,this.partial,`'${data}'`)
         if (this.partial)
         {
-            data = this.partial + data
+            data = this.partial + `'${data}'`
             delete this.partial
         }
         while (data.startsWith('= \n\n'))
         {
             data = data.slice(4)
             this.msg.shift()
+            console.log(this.name,'shift',this.msg,`'${data}'`)
+            if (_k_.empty(data))
+            {
+                return
+            }
         }
         if (!data.endsWith('\n\n'))
         {
             this.partial = data
+            console.log(this.name,'partial',this.msg,`'${data}'`)
             return
         }
-        console.log(this.msg,this.name,data)
+        console.log(this.msg,this.name,`'${data}'`)
         if (data[0] === '=')
         {
             m = this.msg.shift()
@@ -104,9 +119,9 @@ Compi = (function ()
                 if (this.color === 'black')
                 {
                     var list = _k_.list(data.split(' '))
-                    for (var _73_26_ = 0; _73_26_ < list.length; _73_26_++)
+                    for (var _89_26_ = 0; _89_26_ < list.length; _89_26_++)
                     {
-                        p = list[_73_26_]
+                        p = list[_89_26_]
                         this.game.setStone(this.game.coord(p),stone.black)
                     }
                     return this.game.moves.push(`black ${data}`)

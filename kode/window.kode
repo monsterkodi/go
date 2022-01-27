@@ -110,6 +110,11 @@ function MainWin extends win
             'human leelaz'              ➜ @referee.newGame black:'human'  white:'leelaz' 
             'leelaz leelaz'             ➜ @referee.newGame black:'leelaz' white:'leelaz'
             'gnu leelaz'                ➜ @referee.newGame black:'gnu'    white:'leelaz'   
+            'gnu hara'                  ➜ @referee.newGame black:'gnu'    white:'hara'   
+            'hara hara'                 ➜ @referee.newGame black:'hara'   white:'hara'   
+            'katago katago'             ➜ @referee.newGame black:'katago' white:'katago'   
+            'hara katago'               ➜ @referee.newGame black:'hara'   white:'katago'   
+            'gnu katago'                ➜ @referee.newGame black:'gnu'    white:'katago'   
             '7x7''9x9''13x13''19x19'    ➜ @referee.newGame size:int action
             '0''1''2''3''4'
             '5''6''7''8''9'             ➜ @referee.newGame handicap: int action

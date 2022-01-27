@@ -1,0 +1,1027 @@
+2022-01-27 16:41:43+0100: GTP Engine starting...
+2022-01-27 16:41:43+0100: KataGo v1.10.0
+2022-01-27 16:41:43+0100: Using TrompTaylor rules initially, unless GTP/GUI overrides this
+2022-01-27 16:41:43+0100: Using 6 CPU thread(s) for search
+2022-01-27 16:41:43+0100: nnRandSeed0 = 14973990424576091003
+2022-01-27 16:41:43+0100: After dedups: nnModelFile0 = /Users/kodi/.katago/default_model.bin.gz useFP16 auto useNHWC auto
+2022-01-27 16:41:43+0100: Initializing neural net buffer to be size 19 * 19 exactly
+2022-01-27 16:41:44+0100: Found OpenCL Platform 0: Apple (Apple) (OpenCL 1.2 (Oct  1 2021 19:40:58))
+2022-01-27 16:41:44+0100: Found 1 device(s) on platform 0 with type CPU or GPU or Accelerator
+2022-01-27 16:41:44+0100: Found OpenCL Device 0: Apple M1 (Apple) (score 1000102)
+2022-01-27 16:41:44+0100: Creating context for OpenCL Platform: Apple (Apple) (OpenCL 1.2 (Oct  1 2021 19:40:58))
+2022-01-27 16:41:44+0100: Using OpenCL Device 0: Apple M1 (Apple) OpenCL 1.2  (Extensions: cl_APPLE_SetMemObjectDestructor cl_APPLE_ContextLoggingFunctions cl_APPLE_clut cl_APPLE_query_kernel_names cl_APPLE_gl_sharing cl_khr_gl_event cl_khr_byte_addressable_store cl_khr_global_int32_base_atomics cl_khr_global_int32_extended_atomics cl_khr_local_int32_base_atomics cl_khr_local_int32_extended_atomics cl_khr_3d_image_writes cl_khr_image2d_from_buffer cl_khr_depth_images )
+2022-01-27 16:41:44+0100: Loaded tuning parameters from: /Users/kodi/.katago/opencltuning/tune8_gpuAppleM1_x19_y19_c256_mv8.txt
+2022-01-27 16:41:44+0100: OpenCL backend thread 0: Model version 8
+2022-01-27 16:41:44+0100: OpenCL backend thread 0: Model name: g170-b20c256x2-s5303129600-d1228401921
+2022-01-27 16:41:45+0100: OpenCL backend thread 0: FP16Storage true FP16Compute false FP16TensorCores false
+2022-01-27 16:41:45+0100: Loaded neural net with nnXLen 19 nnYLen 19
+2022-01-27 16:41:45+0100: Initializing board with boardXSize 19 boardYSize 19
+2022-01-27 16:41:45+0100: Loaded config /Users/kodi/.katago/default_gtp.cfg
+2022-01-27 16:41:45+0100: Loaded model /Users/kodi/.katago/default_model.bin.gz
+2022-01-27 16:41:45+0100: Model name: g170-b20c256x2-s5303129600-d1228401921
+2022-01-27 16:41:45+0100: GTP ready, beginning main protocol loop
+2022-01-27 16:41:45+0100: Controller: boardsize 9
+2022-01-27 16:41:45+0100: GPU -1 finishing, processed 0 rows 0 batches
+2022-01-27 16:41:45+0100: Cleaned up old neural net and bot
+2022-01-27 16:41:45+0100: nnRandSeed0 = 11090518824582051910
+2022-01-27 16:41:45+0100: After dedups: nnModelFile0 = /Users/kodi/.katago/default_model.bin.gz useFP16 auto useNHWC auto
+2022-01-27 16:41:45+0100: Initializing neural net buffer to be size 9 * 9 exactly
+2022-01-27 16:41:45+0100: Found OpenCL Platform 0: Apple (Apple) (OpenCL 1.2 (Oct  1 2021 19:40:58))
+2022-01-27 16:41:45+0100: Found 1 device(s) on platform 0 with type CPU or GPU or Accelerator
+2022-01-27 16:41:45+0100: Found OpenCL Device 0: Apple M1 (Apple) (score 1000102)
+2022-01-27 16:41:45+0100: Creating context for OpenCL Platform: Apple (Apple) (OpenCL 1.2 (Oct  1 2021 19:40:58))
+2022-01-27 16:41:45+0100: Using OpenCL Device 0: Apple M1 (Apple) OpenCL 1.2  (Extensions: cl_APPLE_SetMemObjectDestructor cl_APPLE_ContextLoggingFunctions cl_APPLE_clut cl_APPLE_query_kernel_names cl_APPLE_gl_sharing cl_khr_gl_event cl_khr_byte_addressable_store cl_khr_global_int32_base_atomics cl_khr_global_int32_extended_atomics cl_khr_local_int32_base_atomics cl_khr_local_int32_extended_atomics cl_khr_3d_image_writes cl_khr_image2d_from_buffer cl_khr_depth_images )
+2022-01-27 16:41:45+0100: Loaded tuning parameters from: /Users/kodi/.katago/opencltuning/tune8_gpuAppleM1_x19_y19_c256_mv8.txt
+2022-01-27 16:41:45+0100: OpenCL backend thread 0: Model version 8
+2022-01-27 16:41:45+0100: OpenCL backend thread 0: Model name: g170-b20c256x2-s5303129600-d1228401921
+2022-01-27 16:41:46+0100: OpenCL backend thread 0: FP16Storage true FP16Compute false FP16TensorCores false
+2022-01-27 16:41:46+0100: Loaded neural net with nnXLen 9 nnYLen 9
+2022-01-27 16:41:46+0100: Initializing board with boardXSize 9 boardYSize 9
+2022-01-27 16:41:46+0100: = 
+2022-01-27 16:41:46+0100: Controller: play black E5
+2022-01-27 16:41:46+0100: = 
+2022-01-27 16:41:46+0100: Controller: genmove white
+2022-01-27 16:41:49+0100: MoveNum: 1 HASH: 38E71B648B5DE3A43B414F57C285AD76
+   A B C D E F G H J
+ 9 . . . . . . . . .
+ 8 . . . . . . . . .
+ 7 . . . . . . . . .
+ 6 . . . . . . . . .
+ 5 . . @ . X1. . . .
+ 4 . . . . . . . . .
+ 3 . . . . . . . . .
+ 2 . . . . . . . . .
+ 1 . . . . . . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 2.62231
+Root visits: 505
+New playouts: 505
+NN rows: 464
+NN batches: 156
+NN avg batch size: 2.97436
+PV: C5 D3 G6 G4 F4 F5 G5 F7 G3 C7 G7 F8 D7
+Tree:
+: T  70.51c W  69.03c S   1.51c ( +2.3 L  +1.4) N     505  --  C5 D3 G6 G4 F4 F5 G5
+---White(^)---
+C5  : T  71.57c W  69.80c S   1.71c ( +2.4 L  +1.5) LCB   68.43c P 23.97% WF 429.1 PSV     424 N     428  --  C5 D3 G6 G4 F4 F5 G5 F7
+C4  : T  65.34c W  65.41c S   0.19c ( +1.6 L  +0.8) LCB   56.31c P  0.45% WF  26.3 PSV       0 N      35  --  C4 D3 C6 G6 G3 C3 H5 G5
+C3  : T  61.80c W  63.45c S  -0.14c ( +1.4 L  +0.6) LCB   48.30c P  0.43% WF  17.4 PSV       0 N      23  --  C3 C5 E3 F7 G4 F4
+D4  : T  49.65c W  51.12c S  -1.94c ( +0.4 L  +0.1) LCB    0.13c P  0.15% WF   5.1 PSV       0 N       7  --  D4 D5 F3 G4
+B5  : T   5.55c W  10.48c S  -4.93c ( -1.3 L  -1.2) LCB -280.00c P  0.01% WF   0.2 PSV       0 N       1  --  B5
+D5  : T  -3.08c W   3.41c S  -6.49c ( -1.9 L  -1.6) LCB -280.00c P  0.01% WF   0.2 PSV       0 N       1  --  D5
+pss : T -122.61c W -99.49c S -23.12c (-13.8 L -15.0) LCB -280.00c P  0.00% WF   0.1 PSV       0 N       1  --  pass
+B4  : T  -8.11c W  -1.96c S  -6.15c ( -2.0 L  -1.6) LCB -280.00c P  0.00% WF   0.1 PSV       0 N       1  --  B4
+B3  : T -41.63c W -34.84c S  -6.79c ( -2.4 L  -2.2) LCB -280.00c P  0.00% WF   0.0 PSV       0 N       1  --  B3
+B2  : T -102.02c W -90.82c S -11.19c ( -5.0 L  -5.1) LCB -280.00c P  0.00% WF   0.0 PSV       0 N       1  --  B2
+
+2022-01-27 16:41:49+0100: = C5
+2022-01-27 16:41:58+0100: Controller: play black G5
+2022-01-27 16:41:58+0100: = 
+2022-01-27 16:41:58+0100: Controller: genmove white
+2022-01-27 16:42:01+0100: MoveNum: 3 HASH: 5691E4911F931BE9727F9BC884862EF9
+   A B C D E F G H J
+ 9 . . . . . . . . .
+ 8 . . . . . . . . .
+ 7 . . . . . . . . .
+ 6 . . . . . . . . .
+ 5 . . O2. X1. X3. .
+ 4 . . . . . . . . .
+ 3 . . . @ . . . . .
+ 2 . . . . . . . . .
+ 1 . . . . . . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 2.70794
+Root visits: 505
+New playouts: 493
+NN rows: 486
+NN batches: 162
+NN avg batch size: 3
+PV: D3 C6 B6 D6 F4 D4 C4 E3 E4 D5 E2 C3 F3 B3 F5 F6 G6 G7 H6
+Tree:
+: T  72.75c W  72.15c S   1.23c ( +2.0 L  +1.1) N     505  --  D3 C6 B6 D6 F4 D4 C4
+---White(^)---
+D3  : T  73.82c W  73.08c S   1.39c ( +2.1 L  +1.2) LCB   70.34c P 45.19% WF 384.5 PSV     380 N     383  --  D3 C6 B6 D6 F4 D4 C4 E3
+H5  : T  70.69c W  70.77c S   1.05c ( +1.9 L  +1.0) LCB   65.14c P  5.56% WF  68.4 PSV      15 N      71  --  H5 H4 D3 D7 G6 F4
+D4  : T  70.83c W  69.86c S   0.33c ( +1.6 L  +0.8) LCB   61.21c P  1.78% WF  30.7 PSV       5 N      33  --  D4 C6 B6 C7 F3 D5 C4 B7
+G4  : T  64.80c W  65.85c S  -0.52c ( +1.1 L  +0.5) LCB -280.00c P  0.33% WF   1.9 PSV       0 N       2  --  G4 F4
+F4  : T  47.42c W  48.41c S  -0.98c ( +0.9 L  +0.0) LCB -280.00c P  0.37% WF   0.9 PSV       0 N       1  --  F4
+C3  : T  65.76c W  64.99c S   0.76c ( +1.8 L  +0.6) LCB -280.00c P  0.18% WF   1.0 PSV       0 N       1  --  C3
+D5  : T  53.09c W  53.70c S  -0.61c ( +1.1 L  +0.1) LCB -280.00c P  0.10% WF   0.9 PSV       0 N       1  --  D5
+F3  : T  24.01c W  27.78c S  -3.77c ( -0.5 L  -0.8) LCB -280.00c P  0.08% WF   0.8 PSV       0 N       1  --  F3
+E3  : T  41.41c W  43.04c S  -1.62c ( +0.5 L  -0.0) LCB -280.00c P  0.06% WF   0.8 PSV       0 N       1  --  E3
+E4  : T  22.70c W  26.23c S  -3.53c ( -0.5 L  -0.4) LCB -280.00c P  0.02% WF   0.3 PSV       0 N       1  --  E4
+
+2022-01-27 16:42:01+0100: = D3
+2022-01-27 16:42:06+0100: Controller: play black F3
+2022-01-27 16:42:06+0100: = 
+2022-01-27 16:42:06+0100: Controller: genmove white
+2022-01-27 16:42:08+0100: MoveNum: 5 HASH: 903CB5A399EEB9E904E1A1FAF1FEEE74
+   A B C D E F G H J
+ 9 . . . . . . . . .
+ 8 . . . . . . . . .
+ 7 . . . . @ . . . .
+ 6 . . . . . . . . .
+ 5 . . O . X . X1. .
+ 4 . . . . . . . . .
+ 3 . . . O2. X3. . .
+ 2 . . . . . . . . .
+ 1 . . . . . . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 2.66028
+Root visits: 505
+New playouts: 505
+NN rows: 478
+NN batches: 161
+NN avg batch size: 2.96894
+PV: E7 D6 G7 C6 B4 E2 B6 B7 D2 A6 B5 D8
+Tree:
+: T  85.68c W  84.73c S   1.68c ( +2.8 L  +2.0) N     505  --  E7 D6 G7 C6 B4 E2 B6
+---White(^)---
+E7  : T  90.12c W  88.10c S   2.38c ( +3.2 L  +2.4) LCB   85.62c P  2.59% WF 132.2 PSV     792 N     125  --  E7 D6 G7 C6 B4 E2 B6 B7
+D7  : T  84.83c W  84.23c S   1.62c ( +2.8 L  +1.9) LCB   80.65c P 63.99% WF 249.2 PSV     253 N     254  --  D7 E7 D6 C4 D4 D5 B5 C6
+D6  : T  83.93c W  83.19c S   1.11c ( +2.5 L  +1.7) LCB   78.20c P 20.58% WF  95.6 PSV      63 N      99  --  D6 C4 D4 D5 C6 C3 C2 B2
+G6  : T  78.70c W  78.91c S   0.84c ( +2.4 L  +1.4) LCB   63.13c P  7.56% WF  14.0 PSV      10 N      15  --  G6 F6 G7 H5 D8 C6
+E8  : T  76.26c W  76.70c S   0.16c ( +2.1 L  +1.2) LCB   48.55c P  1.37% WF   6.5 PSV       1 N       7  --  E8 C6 B6
+G4  : T  74.15c W  76.37c S   1.03c ( +2.5 L  +1.4) LCB -538.45c P  1.27% WF   2.8 PSV       1 N       3  --  G4 C4 D4
+F7  : T  61.06c W  61.39c S  -0.33c ( +1.8 L  +1.1) LCB -280.00c P  1.20% WF   0.9 PSV       0 N       1  --  F7
+
+2022-01-27 16:42:08+0100: = E7
+2022-01-27 16:42:17+0100: Controller: play black D6
+2022-01-27 16:42:17+0100: = 
+2022-01-27 16:42:17+0100: Controller: genmove white
+2022-01-27 16:42:19+0100: MoveNum: 7 HASH: A5C679AEA3649667DA40CAEFBA76006B
+   A B C D E F G H J
+ 9 . . . . . . . . .
+ 8 . . . . . . . . .
+ 7 . . . . O2. @ . .
+ 6 . . . X3. . . . .
+ 5 . . O . X . X . .
+ 4 . . . . . . . . .
+ 3 . . . O . X1. . .
+ 2 . . . . . . . . .
+ 1 . . . . . . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 1.98063
+Root visits: 505
+New playouts: 381
+NN rows: 356
+NN batches: 120
+NN avg batch size: 2.96667
+PV: G7 D7 D8 B5 B4 B6 E2 F2 B2 A4 B3 C8 E8 H7 H6
+Tree:
+: T  89.28c W  87.36c S   2.30c ( +3.3 L  +2.5) N     505  --  G7 D7 D8 B5 B4 B6 E2
+---White(^)---
+G7  : T  89.49c W  87.52c S   2.33c ( +3.3 L  +2.6) LCB   86.87c P 89.82% WF 495.2 PSV     495 N     498  --  G7 D7 D8 B5 B4 B6 E2 F2
+H7  : T  68.20c W  72.64c S  -0.40c ( +1.9 L  +1.1) LCB -402.42c P  4.30% WF   2.6 PSV       2 N       3  --  H7 C6 B5
+G6  : T  73.73c W  75.08c S   0.58c ( +2.5 L  +1.4) LCB -409.58c P  3.90% WF   2.7 PSV       2 N       3  --  G6 C6 F6
+
+2022-01-27 16:42:19+0100: = G7
+2022-01-27 16:42:27+0100: Controller: play black C6
+2022-01-27 16:42:27+0100: = 
+2022-01-27 16:42:27+0100: Controller: genmove white
+2022-01-27 16:42:29+0100: MoveNum: 9 HASH: BEAE6377F8B9BA5083248707E4FBD91D
+   A B C D E F G H J
+ 9 . . . . . . . . .
+ 8 . . . . . . . . .
+ 7 . . . . O . O2. .
+ 6 . . X3X1. . . . .
+ 5 . . O . X . X . .
+ 4 . @ . . . . . . .
+ 3 . . . O . X . . .
+ 2 . . . . . . . . .
+ 1 . . . . . . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 1.72023
+Root visits: 505
+New playouts: 316
+NN rows: 314
+NN batches: 105
+NN avg batch size: 2.99048
+PV: B4 B6 E2 F8 E8 H7 G8 H8
+Tree:
+: T  86.81c W  85.00c S   2.31c ( +3.3 L  +2.5) N     505  --  B4 B6 E2 F8 E8 H7 G8
+---White(^)---
+B4  : T  88.68c W  86.35c S   2.58c ( +3.5 L  +2.7) LCB   85.50c P 18.27% WF 379.4 PSV     401 N     377  --  B4 B6 E2 F8 E8 H7 G8 H8
+B5  : T  81.02c W  80.73c S   1.59c ( +3.0 L  +2.0) LCB   74.77c P 64.87% WF  90.1 PSV      98 N     101  --  B5 B6 B3 E2 D2 F8 E8 H7
+B6  : T  78.80c W  78.25c S   1.27c ( +2.8 L  +1.9) LCB   43.89c P  8.18% WF  12.0 PSV       9 N      13  --  B6 C4 D4 D5
+E2  : T  80.03c W  81.21c S   0.57c ( +2.4 L  +1.4) LCB   59.90c P  3.37% WF   7.5 PSV       4 N       8  --  E2 B4 B3 C4 C3 F2
+F4  : T  77.17c W  79.12c S   0.42c ( +2.3 L  +1.3) LCB    7.54c P  4.59% WF   4.6 PSV       4 N       5  --  F4 E4 F2
+
+2022-01-27 16:42:29+0100: = B4
+2022-01-27 16:42:32+0100: Controller: play black D8
+2022-01-27 16:42:32+0100: = 
+2022-01-27 16:42:32+0100: Controller: genmove white
+2022-01-27 16:42:34+0100: MoveNum: 11 HASH: B4F456EC81E02410DFC2BC97E8723BB0
+   A B C D E F G H J
+ 9 . . . . . . . . .
+ 8 . . . X3@ . . . .
+ 7 . . . . O . O . .
+ 6 . . X1X . . . . .
+ 5 . . O . X . X . .
+ 4 . O2. . . . . . .
+ 3 . . . O . X . . .
+ 2 . . . . . . . . .
+ 1 . . . . . . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 2.36399
+Root visits: 505
+New playouts: 500
+NN rows: 423
+NN batches: 142
+NN avg batch size: 2.97887
+PV: E8 E2 B6 C2 C3 B2 D2 D1 B7 B8 E3
+Tree:
+: T  91.95c W  90.14c S   2.30c ( +3.2 L  +2.5) N     505  --  E8 E2 B6 C2 C3 B2 D2
+---White(^)---
+E8  : T  93.55c W  92.01c S   1.79c ( +2.9 L  +2.3) LCB   91.48c P 54.65% WF 363.7 PSV     356 N     357  --  E8 E2 B6 C2 C3 B2 D2 D1
+D7  : T  89.33c W  86.31c S   4.00c ( +4.2 L  +3.4) LCB   83.24c P 29.54% WF 113.8 PSV      57 N     120  --  D7 B6 C7 E2 D2 B5 C4 B2
+H6  : T  77.76c W  79.07c S   0.36c ( +2.3 L  +1.4) LCB   64.41c P 13.95% WF   9.6 PSV       9 N      11  --  H6 E8 H5 H4 H8 F8 G8
+G6  : T  63.52c W  64.11c S  -0.59c ( +1.8 L  +0.9) LCB -280.00c P  0.90% WF   0.9 PSV       0 N       1  --  G6
+H5  : T  69.57c W  69.04c S   0.53c ( +2.3 L  +1.2) LCB -280.00c P  0.73% WF   0.9 PSV       0 N       1  --  H5
+F4  : T  37.97c W  40.49c S  -2.52c ( +0.7 L  +0.2) LCB -280.00c P  0.11% WF   0.7 PSV       0 N       1  --  F4
+H7  : T  16.83c W  21.90c S  -5.07c ( -0.9 L  -0.7) LCB -280.00c P  0.02% WF   0.2 PSV       0 N       1  --  H7
+G4  : T  16.39c W  21.21c S  -4.81c ( -0.6 L  -0.3) LCB -280.00c P  0.02% WF   0.2 PSV       0 N       1  --  G4
+B6  : T  -3.05c W   2.96c S  -6.01c ( -1.7 L  -1.5) LCB -280.00c P  0.01% WF   0.1 PSV       0 N       1  --  B6
+E4  : T  -4.47c W   2.27c S  -6.73c ( -1.7 L  -1.3) LCB -280.00c P  0.01% WF   0.1 PSV       0 N       1  --  E4
+
+2022-01-27 16:42:34+0100: = E8
+2022-01-27 16:42:44+0100: Controller: play black D7
+2022-01-27 16:42:44+0100: = 
+2022-01-27 16:42:44+0100: Controller: genmove white
+2022-01-27 16:42:46+0100: MoveNum: 13 HASH: 88A7589B8CC6636F74F75F7F3C5CD62D
+   A B C D E F G H J
+ 9 . . . . . . . . .
+ 8 . . . X1O2. . . .
+ 7 . . . X3O . O . .
+ 6 . . X X . . . @ .
+ 5 . . O . X . X . .
+ 4 . O . . . . . . .
+ 3 . . . O . X . . .
+ 2 . . . . . . . . .
+ 1 . . . . . . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 2.69344
+Root visits: 505
+New playouts: 505
+NN rows: 486
+NN batches: 163
+NN avg batch size: 2.9816
+PV: H6 H5 J5 D2 C2 E2 B6 B7 A6 C1 B2 D4 C4 E6
+Tree:
+: T  93.00c W  92.86c S   0.91c ( +3.3 L  +2.9) N     505  --  H6 H5 J5 D2 C2 E2 B6
+---White(^)---
+H6  : T  94.20c W  93.74c S   1.12c ( +3.4 L  +3.1) LCB   92.19c P 76.43% WF 419.2 PSV     413 N     416  --  H6 H5 J5 D2 C2 E2 B6 B7
+E2  : T  83.89c W  83.05c S   1.62c ( +3.7 L  +3.1) LCB   50.84c P  7.93% WF  11.8 PSV       6 N      13  --  E2 H7 H6 H8 G6 H5
+H7  : T  87.41c W  90.71c S  -1.77c ( +2.2 L  +1.6) LCB   77.43c P  4.89% WF  29.7 PSV       5 N      32  --  H7 E2 B6 B7 D2 A6 B5 B2
+F4  : T  89.49c W  89.53c S   0.35c ( +3.1 L  +2.3) LCB   81.99c P  1.49% WF  27.0 PSV       2 N      33  --  F4 E3 D4 E4 H6 H5
+B6  : T  75.75c W  80.37c S   1.16c ( +3.5 L  +2.4) LCB  -80.34c P  3.65% WF   4.3 PSV       1 N       5  --  B6 H7 H6 H8 G6
+D9  : T  78.77c W  79.96c S  -0.35c ( +2.7 L  +1.6) LCB -280.00c P  2.12% WF   1.8 PSV       1 N       2  --  D9 H7
+H5  : T  76.92c W  82.92c S  -0.79c ( +2.5 L  +1.7) LCB -899.56c P  1.42% WF   2.7 PSV       0 N       3  --  H5 H6 G6
+
+2022-01-27 16:42:46+0100: = H6
+2022-01-27 16:42:47+0100: Controller: play black H5
+2022-01-27 16:42:47+0100: = 
+2022-01-27 16:42:47+0100: Controller: genmove white
+2022-01-27 16:42:48+0100: MoveNum: 15 HASH: D0122E4D2EA5C56E022A00CC069A86D1
+   A B C D E F G H J
+ 9 . . . . . . . . .
+ 8 . . . X O . . . .
+ 7 . . . X1O . O . .
+ 6 . . X X . . . O2.
+ 5 . . O . X . X X3@
+ 4 . O . . . . . . .
+ 3 . . . O . X . . .
+ 2 . . . . . . . . .
+ 1 . . . . . . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 0.624484
+Root visits: 505
+New playouts: 123
+NN rows: 115
+NN batches: 39
+NN avg batch size: 2.94872
+PV: J5 D2 C2 E2 B6 B7 A6 C1 B2 D4 C4 B1 D5
+Tree:
+: T  94.99c W  93.07c S   2.30c ( +3.3 L  +2.9) N     505  --  J5 D2 C2 E2 B6 B7 A6
+---White(^)---
+J5  : T  96.92c W  93.45c S   3.62c ( +3.9 L  +3.6) LCB   93.10c P 27.24% WF 219.4 PSV     214 N     215  --  J5 D2 C2 E2 B6 B7 A6 C1
+J6  : T  94.84c W  93.83c S   1.39c ( +2.9 L  +2.5) LCB   91.26c P 25.17% WF 145.5 PSV      80 N     148  --  J6 D2 C2 E2 B6 B7 A6 C1
+H8  : T  94.80c W  94.36c S   1.13c ( +2.7 L  +2.3) LCB   91.67c P  8.76% WF  93.0 PSV      27 N      94  --  H8 F8 F9 D2 C2 E2 B6 B7
+F6  : T  89.46c W  89.07c S   1.24c ( +2.8 L  +2.2) LCB   80.36c P 13.29% WF  23.4 PSV      16 N      25  --  F6 H8 H7 G8 J8 E2 D2 B6
+D9  : T  79.24c W  77.61c S   1.12c ( +2.8 L  +1.9) LCB   56.04c P 15.70% WF   9.5 PSV       9 N      11  --  D9 H8 H7 G8 F6 C9 E9 B8
+G8  : T  90.69c W  92.25c S  -0.96c ( +1.9 L  +1.4) LCB   33.45c P  2.54% WF   5.7 PSV       3 N       6  --  G8 E2 D2
+B6  : T  76.28c W  78.89c S   1.72c ( +3.2 L  +2.2) LCB -737.96c P  2.79% WF   2.6 PSV       1 N       3  --  B6 H8 H7
+E2  : T  62.50c W  61.95c S   0.54c ( +2.5 L  +1.9) LCB -280.00c P  2.62% WF   0.8 PSV       0 N       1  --  E2
+E9  : T  86.74c W  86.44c S   0.30c ( +2.4 L  +1.8) LCB -280.00c P  0.98% WF   1.0 PSV       0 N       1  --  E9
+
+2022-01-27 16:42:48+0100: = J5
+2022-01-27 16:42:53+0100: Controller: play black J4
+2022-01-27 16:42:53+0100: = 
+2022-01-27 16:42:53+0100: Controller: genmove white
+2022-01-27 16:42:56+0100: MoveNum: 17 HASH: 5056BD0B9DA3E9F22C959A8EABD52169
+   A B C D E F G H J
+ 9 . . . . . . . . .
+ 8 . . . X O . . . .
+ 7 . . . X O . O . .
+ 6 . . X X . . . O @
+ 5 . . O . X . X X1O2
+ 4 . O . . . . . . X3
+ 3 . . . O . X . . .
+ 2 . . . . . . . . .
+ 1 . . . . . . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 2.48
+Root visits: 505
+New playouts: 503
+NN rows: 446
+NN batches: 149
+NN avg batch size: 2.99329
+PV: J6 D2 C2 E2 B6 B7 A6 C1 B2 D4 C4 B1
+Tree:
+: T  97.87c W  95.18c S   2.71c ( +4.4 L  +4.4) N     505  --  J6 D2 C2 E2 B6 B7 A6
+---White(^)---
+J6  : T  98.44c W  95.68c S   2.81c ( +4.5 L  +4.4) LCB   96.50c P 98.95% WF 467.4 PSV     466 N     467  --  J6 D2 C2 E2 B6 B7 A6 C1
+B6  : T  15.77c W  21.50c S  -5.73c ( -0.6 L  -0.7) LCB -280.00c P  0.29% WF   0.6 PSV       0 N       1  --  B6
+D9  : T   3.43c W   9.35c S  -5.93c ( -1.1 L  -0.7) LCB -280.00c P  0.28% WF   0.6 PSV       0 N       1  --  D9
+H8  : T  56.18c W  61.10c S  -4.92c ( +1.1 L  +0.5) LCB -280.00c P  0.20% WF   0.8 PSV       0 N       1  --  H8
+E2  : T  -4.93c W   2.28c S  -7.21c ( -1.8 L  -1.6) LCB -280.00c P  0.16% WF   0.5 PSV       0 N       1  --  E2
+E9  : T  47.12c W  52.69c S  -5.57c ( +0.7 L  +0.2) LCB -280.00c P  0.02% WF   0.2 PSV       0 N       1  --  E9
+D5  : T  15.23c W  20.92c S  -5.69c ( -0.4 L  -0.3) LCB -280.00c P  0.01% WF   0.1 PSV       0 N       1  --  D5
+F6  : T  68.68c W  71.69c S  -3.01c ( +1.6 L  +0.9) LCB -280.00c P  0.01% WF   0.2 PSV       0 N       1  --  F6
+H9  : T  28.43c W  35.50c S  -7.07c ( +0.2 L  -0.0) LCB -280.00c P  0.01% WF   0.1 PSV       0 N       1  --  H9
+G8  : T  49.42c W  54.94c S  -5.52c ( +0.9 L  +0.4) LCB -280.00c P  0.01% WF   0.1 PSV       0 N       1  --  G8
+
+2022-01-27 16:42:56+0100: = J6
+2022-01-27 16:43:00+0100: Controller: play black H3
+2022-01-27 16:43:00+0100: = 
+2022-01-27 16:43:00+0100: Controller: genmove white
+2022-01-27 16:43:02+0100: MoveNum: 19 HASH: 4E8F8952A895A577DE63C9A8D702CFFE
+   A B C D E F G H J
+ 9 . . . . . . . . .
+ 8 . . . X O . . . .
+ 7 . . . X O . O . .
+ 6 . @ X X . . . O O2
+ 5 . . O . X . X X O
+ 4 . O . . . . . . X1
+ 3 . . . O . X . X3.
+ 2 . . . . . . . . .
+ 1 . . . . . . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 2.54312
+Root visits: 505
+New playouts: 505
+NN rows: 462
+NN batches: 155
+NN avg batch size: 2.98065
+PV: B6 E2 D2 B7 A7 A8 A6 D4 C4
+Tree:
+: T 102.15c W  98.61c S   3.45c ( +6.0 L  +6.2) N     505  --  B6 E2 D2 B7 A7 A8 A6
+---White(^)---
+B6  : T 103.39c W  99.25c S   4.14c ( +6.2 L  +6.5) LCB  102.22c P 26.99% WF 202.6 PSV     624 N     201  --  B6 E2 D2 B7 A7 A8 A6 D4
+E2  : T 102.39c W  98.21c S   4.04c ( +6.2 L  +6.5) LCB   99.99c P 57.01% WF 235.6 PSV     235 N     236  --  E2 E9 F9 D9 G8 B6 G2 F2
+D9  : T  96.96c W  97.91c S  -0.89c ( +4.2 L  +4.2) LCB   92.02c P  7.04% WF  28.2 PSV       8 N      30  --  D9 D4 C3 E2
+H4  : T  97.87c W  97.95c S  -0.23c ( +4.5 L  +4.4) LCB   94.07c P  1.32% WF  17.5 PSV       1 N      20  --  H4 E2 D2 B6 B2 E9
+J3  : T  96.68c W  97.76c S  -0.66c ( +4.3 L  +4.2) LCB   87.87c P  0.92% WF   8.5 PSV       1 N       9  --  J3 D2 C2 E2
+E9  : T  96.49c W  99.07c S  -2.57c ( +3.6 L  +3.6) LCB   93.57c P  0.89% WF   7.6 PSV       1 N       8  --  E9 D2 C2 E2 B6
+
+2022-01-27 16:43:02+0100: = B6
+2022-01-27 16:43:10+0100: Controller: play black E2
+2022-01-27 16:43:10+0100: = 
+2022-01-27 16:43:10+0100: Controller: genmove white
+2022-01-27 16:43:12+0100: MoveNum: 21 HASH: 0EC5E5111F8889E869BDF76E4533ACF0
+   A B C D E F G H J
+ 9 . . . . . . . . .
+ 8 . . . X O . . . .
+ 7 . . . X O . O . .
+ 6 . O2X X . . . O O
+ 5 . . O . X . X X O
+ 4 . O . . . . . . X
+ 3 . . . O . X . X1.
+ 2 . . . @ X3. . . .
+ 1 . . . . . . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 2.28007
+Root visits: 505
+New playouts: 440
+NN rows: 411
+NN batches: 138
+NN avg batch size: 2.97826
+PV: D2 B7 A7 D4 C4 A8 A6 B2 C2 B3
+Tree:
+: T 102.71c W  98.55c S   4.15c ( +5.7 L  +5.9) N     505  --  D2 B7 A7 D4 C4 A8 A6
+---White(^)---
+D2  : T 104.08c W  98.57c S   5.40c ( +6.2 L  +6.6) LCB  102.26c P 49.19% WF 288.0 PSV     282 N     284  --  D2 B7 A7 D4 C4 A8 A6 B2
+B7  : T 101.06c W  98.49c S   2.74c ( +5.1 L  +5.2) LCB   98.98c P 34.56% WF 128.8 PSV      68 N     135  --  B7 C2 C3 B2 D2 D1 A2 B8
+B8  : T 100.14c W  98.21c S   2.12c ( +4.9 L  +4.9) LCB   97.19c P  6.95% WF  40.6 PSV      11 N      42  --  B8 C2 C3 B2 D2 D1 E3 F2
+C2  : T 101.08c W  99.07c S   1.99c ( +4.8 L  +5.0) LCB   98.36c P  1.61% WF  36.6 PSV       3 N      40  --  C2 B7 A7 A8 A6 D4 C4
+E3  : T  95.71c W  97.43c S  -0.96c ( +3.7 L  +3.5) LCB  -70.86c P  1.15% WF   2.9 PSV       1 N       3  --  E3 D2 C2
+
+2022-01-27 16:43:12+0100: = D2
+2022-01-27 16:43:20+0100: Controller: play black B7
+2022-01-27 16:43:20+0100: = 
+2022-01-27 16:43:20+0100: Controller: genmove white
+2022-01-27 16:43:21+0100: MoveNum: 23 HASH: 2F69EB131F4DFE2C577743ECC95C03E1
+   A B C D E F G H J
+ 9 . . . . . . . . .
+ 8 . . . X O . . . .
+ 7 @ X3. X O . O . .
+ 6 . O X X . . . O O
+ 5 . . O . X . X X O
+ 4 . O . . . . . . X
+ 3 . . . O . X . X .
+ 2 . . . O2X1. . . .
+ 1 . . . . . . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 1.58574
+Root visits: 495
+New playouts: 377
+NN rows: 288
+NN batches: 96
+NN avg batch size: 3
+PV: A7 E9 F9 A8 A6 D9 G8 A4
+Tree:
+: T 102.99c W  98.56c S   4.45c ( +6.0 L  +6.4) N     495  --  A7 E9 F9 A8 A6 D9 G8
+---White(^)---
+A7  : T 103.97c W  98.54c S   5.43c ( +6.4 L  +6.9) LCB  102.61c P 54.15% WF 270.8 PSV     267 N     267  --  A7 E9 F9 A8 A6 D9 G8 A4
+D9  : T 102.55c W  98.88c S   3.77c ( +5.8 L  +6.2) LCB  100.95c P 14.76% WF  92.2 PSV      40 N      94  --  D9 A6 B5 B2 D4 B3 D5 C9
+E3  : T 101.60c W  98.15c S   3.47c ( +5.7 L  +6.0) LCB   97.80c P 10.43% WF  74.1 PSV      21 N      76  --  E3 F2 A6 D4 C4 B2
+A6  : T 100.94c W  98.56c S   2.25c ( +5.1 L  +5.4) LCB   97.53c P 11.73% WF  47.6 PSV      21 N      49  --  A6 D4 C4 E3 D9 B2
+E9  : T 100.40c W  99.46c S   1.20c ( +4.7 L  +4.9) LCB   75.50c P  1.30% WF   3.9 PSV       2 N       4  --  E9 A6 B5
+E4  : T  99.71c W  99.22c S   0.67c ( +4.5 L  +4.7) LCB   85.22c P  1.31% WF   3.9 PSV       1 N       4  --  E4 D5 D4
+
+2022-01-27 16:43:21+0100: = A7
+2022-01-27 16:43:39+0100: Controller: play black B8
+2022-01-27 16:43:39+0100: = 
+2022-01-27 16:43:39+0100: Controller: genmove white
+2022-01-27 16:43:41+0100: MoveNum: 25 HASH: 90DC4AFC5A23F906BEC4C7C976F8F9D3
+   A B C D E F G H J
+ 9 . . . . @ . . . .
+ 8 . X3. X O . . . .
+ 7 O2X1. X O . O . .
+ 6 . O X X . . . O O
+ 5 . . O . X . X X O
+ 4 . O . . . . . . X
+ 3 . . . O . X . X .
+ 2 . . . O X . . . .
+ 1 . . . . . . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 1.6046
+Root visits: 292
+New playouts: 292
+NN rows: 285
+NN batches: 97
+NN avg batch size: 2.93814
+PV: E9 A8 B2 A6 B5 E3
+Tree:
+: T 102.75c W  98.93c S   3.97c ( +6.7 L  +7.2) N     292  --  E9 A8 B2 A6 B5 E3
+---White(^)---
+E9  : T 103.70c W  99.51c S   4.32c ( +6.8 L  +7.2) LCB  101.85c P 14.37% WF  65.7 PSV     113 N      65  --  E9 A8 B2 A6 B5 E3
+E3  : T 103.51c W  98.42c S   5.45c ( +7.3 L  +7.9) LCB   98.05c P 19.47% WF  51.4 PSV      51 N      51  --  E3 F2 E4 D5 D4
+E4  : T 103.09c W  98.24c S   4.82c ( +7.1 L  +7.6) LCB   93.94c P 13.12% WF  41.1 PSV      41 N      41  --  E4 A8 F4 G4 G2
+F6  : T 102.30c W  99.12c S   3.29c ( +6.4 L  +6.8) LCB   98.77c P  9.10% WF  36.8 PSV      21 N      37  --  F6 D4 C4 A8 E3
+A8  : T 101.63c W  98.19c S   3.60c ( +6.6 L  +7.0) LCB   93.69c P  8.93% WF  27.7 PSV      17 N      29  --  A8 E9 H8 D4 C4
+D1  : T 101.90c W  98.75c S   2.98c ( +6.3 L  +6.9) LCB   98.72c P  7.65% WF  20.8 PSV      16 N      21  --  D1 D4 C4 A8 E3
+H8  : T 102.06c W  99.72c S   2.56c ( +6.2 L  +6.4) LCB   99.04c P  6.83% WF  18.8 PSV      13 N      19  --  H8 D4 C4 B2
+G6  : T 101.35c W  99.43c S   2.09c ( +6.0 L  +6.4) LCB   98.27c P  6.28% WF  19.7 PSV      11 N      20  --  G6 D4 C4 A8 E3
+D5  : T 101.15c W  99.77c S   1.34c ( +5.7 L  +6.1) LCB   90.35c P  2.15% WF   4.9 PSV       3 N       5  --  D5 A8 E4
+G8  : T 101.04c W  99.83c S   1.28c ( +5.7 L  +6.0) LCB   38.33c P  1.69% WF   3.0 PSV       2 N       3  --  G8 D4
+
+2022-01-27 16:43:41+0100: = E9
+2022-01-27 16:43:41+0100: Controller: play black D1
+2022-01-27 16:43:41+0100: = 
+2022-01-27 16:43:41+0100: Controller: genmove white
+2022-01-27 16:43:43+0100: MoveNum: 27 HASH: 2B054437CF28A2358B84060A9D192501
+   A B C D E F G H J
+ 9 . . . . O2. . . .
+ 8 . X1. X O . . . .
+ 7 O X . X O . O . .
+ 6 . O X X . . . O O
+ 5 . . O . X . X X O
+ 4 . O . . . . . . X
+ 3 . . . O . X . X .
+ 2 . . . O X . . . .
+ 1 . . @ X3. . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 1.55483
+Root visits: 292
+New playouts: 292
+NN rows: 280
+NN batches: 95
+NN avg batch size: 2.94737
+PV: C1 A8 E1 F1 E4 F4 A6
+Tree:
+: T 105.15c W  99.36c S   5.63c ( +7.1 L  +7.6) N     292  --  C1 A8 E1 F1 E4 F4 A6
+---White(^)---
+C1  : T 107.22c W  99.56c S   7.57c ( +7.8 L  +8.3) LCB  106.06c P 73.12% WF 139.6 PSV     136 N     136  --  C1 A8 E1 F1 E4 F4 A6
+B2  : T 104.27c W  99.62c S   4.61c ( +6.7 L  +7.1) LCB  102.59c P 11.20% WF  59.9 PSV      11 N      67  --  B2 B1 E3 F2 C2 C1 A8 F6
+E3  : T 103.20c W  98.27c S   4.60c ( +6.9 L  +7.3) LCB   95.68c P  7.69% WF  44.5 PSV       6 N      48  --  E3 F2 C1 A8 E1 D4
+C2  : T 102.23c W  99.66c S   2.43c ( +5.9 L  +6.3) LCB   99.93c P  5.86% WF  26.1 PSV       4 N      27  --  C2 A8 C1 A6 B5
+B1  : T  98.76c W  99.30c S  -0.31c ( +5.0 L  +5.1) LCB   92.46c P  0.69% WF   7.4 PSV       0 N      10  --  B1 D4 B3 E3
+C3  : T  95.10c W  99.11c S  -3.98c ( +3.5 L  +3.6) LCB -280.00c P  0.13% WF   1.3 PSV       0 N       2  --  C3 B1
+F2  : T  91.31c W  95.78c S  -4.46c ( +3.2 L  +3.1) LCB -280.00c P  0.19% WF   0.9 PSV       0 N       1  --  F2
+
+2022-01-27 16:43:43+0100: = C1
+2022-01-27 16:43:45+0100: Controller: play black E1
+2022-01-27 16:43:45+0100: = 
+2022-01-27 16:43:45+0100: Controller: genmove white
+2022-01-27 16:43:47+0100: MoveNum: 29 HASH: E76E44F302127B7D265E284C73F1B142
+   A B C D E F G H J
+ 9 . . . . O . . . .
+ 8 . X . X O . . . .
+ 7 O X . X O . O . .
+ 6 . O X X . . . O O
+ 5 . . O . X . X X O
+ 4 . O . . . . . . X
+ 3 . . . O . X . X .
+ 2 . @ . O X . . . .
+ 1 . . O2X1X3. . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 1.32069
+Root visits: 292
+New playouts: 259
+NN rows: 240
+NN batches: 80
+NN avg batch size: 3
+PV: B2 A8 E3 F2 A6 F7 F6
+Tree:
+: T 105.62c W  99.53c S   5.94c ( +7.8 L  +8.3) N     292  --  B2 A8 E3 F2 A6 F7 F6
+---White(^)---
+B2  : T 107.96c W  99.71c S   8.12c ( +8.6 L  +9.0) LCB  105.84c P 48.28% WF 166.7 PSV     165 N     162  --  B2 A8 E3 F2 A6 F7 F6
+C2  : T 103.20c W  99.46c S   3.81c ( +7.1 L  +7.6) LCB  101.22c P 26.83% WF  54.0 PSV      32 N      56  --  C2 A8 E4 D5 D4 A6
+C3  : T 103.23c W  99.59c S   3.59c ( +7.0 L  +7.5) LCB  100.58c P 12.38% WF  53.1 PSV      12 N      55  --  C3 A8 A6 D4 E3 F2 E4
+E3  : T  88.55c W  92.83c S  -3.53c ( +3.9 L  +3.5) LCB  -27.05c P 10.33% WF   4.4 PSV       3 N       5  --  E3 C2 C3 B1
+B1  : T  99.88c W  99.48c S   0.36c ( +5.8 L  +6.2) LCB   94.88c P  1.00% WF  10.1 PSV       0 N      13  --  B1 D4 E3 F2 C4
+
+2022-01-27 16:43:47+0100: = B2
+2022-01-27 16:43:47+0100: Controller: play black E3
+2022-01-27 16:43:47+0100: = 
+2022-01-27 16:43:47+0100: Controller: genmove white
+2022-01-27 16:43:48+0100: MoveNum: 31 HASH: 45433BBFDD8CDEB03643AF8566B1E133
+   A B C D E F G H J
+ 9 . . . . O . . . .
+ 8 @ X . X O . . . .
+ 7 O X . X O . O . .
+ 6 . O X X . . . O O
+ 5 . . O . X . X X O
+ 4 . O . . . . . . X
+ 3 . . . O X3X . X .
+ 2 . O2. O X . . . .
+ 1 . . O X X1. . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 1.12634
+Root visits: 270
+New playouts: 270
+NN rows: 203
+NN batches: 69
+NN avg batch size: 2.94203
+PV: A8 D4 C4 F6 F7 G6
+Tree:
+: T 106.96c W  99.71c S   7.13c ( +8.6 L  +8.9) N     270  --  A8 D4 C4 F6 F7 G6
+---White(^)---
+A8  : T 108.18c W  99.74c S   8.27c ( +9.0 L  +9.4) LCB  107.21c P 31.76% WF  39.5 PSV     278 N      39  --  A8 D4 C4 F6 F7 G6
+G6  : T 106.61c W  99.70c S   6.73c ( +8.5 L  +8.6) LCB  105.53c P 15.21% WF  72.2 PSV      73 N      73  --  G6 A8 A6 D4 C4 F6 F7 D5
+F6  : T 107.13c W  99.79c S   7.23c ( +8.6 L  +8.9) LCB  106.51c P 21.03% WF  64.2 PSV      65 N      65  --  F6 A8 A6 G6 H7 D4 C4 E6
+D4  : T 107.28c W  99.69c S   7.51c ( +8.8 L  +9.1) LCB  105.68c P 17.24% WF  47.9 PSV      48 N      48  --  D4 A8 A6 G6 H8 F6
+D5  : T 104.88c W  99.78c S   4.96c ( +7.9 L  +8.3) LCB  102.18c P  2.61% WF  13.7 PSV       5 N      14  --  D5 A8 A6 F6 F7
+H4  : T 106.56c W  99.58c S   7.02c ( +8.7 L  +9.0) LCB  102.16c P  1.74% WF  13.8 PSV       4 N      14  --  H4 G4 A8 D4 C4
+J3  : T 105.98c W  99.58c S   6.54c ( +8.5 L  +8.8) LCB  102.53c P  1.79% WF  15.4 PSV       3 N      16  --  J3 H4 A8 D4 C4
+
+2022-01-27 16:43:48+0100: = A8
+2022-01-27 16:43:49+0100: Controller: play black D4
+2022-01-27 16:43:49+0100: = 
+2022-01-27 16:43:49+0100: Controller: genmove white
+2022-01-27 16:43:50+0100: MoveNum: 33 HASH: F01D527B6B19AB8803152B1D153912E0
+   A B C D E F G H J
+ 9 . . . . O . . . .
+ 8 O2X . X O . . . .
+ 7 O X . X O . O . .
+ 6 . O X X . . . O O
+ 5 . . O . X . X X O
+ 4 . O @ X3. . . . X
+ 3 . . . O X1X . X .
+ 2 . O . O X . . . .
+ 1 . . O X X . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 1.13629
+Root visits: 244
+New playouts: 232
+NN rows: 208
+NN batches: 70
+NN avg batch size: 2.97143
+PV: C4 F6 F7 G6 H7 D5 A6 D9 B9 C9
+Tree:
+: T 105.73c W  99.32c S   6.31c ( +8.6 L  +8.9) N     244  --  C4 F6 F7 G6 H7 D5 A6
+---White(^)---
+C4  : T 107.31c W  99.53c S   7.72c ( +9.1 L  +9.4) LCB  106.14c P 89.56% WF 188.3 PSV     185 N     186  --  C4 F6 F7 G6 H7 D5 A6 D9
+C3  : T 102.04c W  99.77c S   2.19c ( +7.1 L  +7.4) LCB  100.62c P  2.33% WF  26.8 PSV       1 N      36  --  C3 F6 F7 D5 G6
+F6  : T  97.83c W  99.10c S  -1.19c ( +5.9 L  +6.2) LCB   95.22c P  0.79% WF   7.3 PSV       0 N      11  --  F6 C3 C2 C4 B3 G6
+D5  : T  84.80c W  90.53c S  -1.73c ( +5.2 L  +5.2) LCB -685.60c P  1.00% WF   2.6 PSV       0 N       3  --  D5 C4 B5
+G6  : T  94.31c W  97.48c S  -2.63c ( +5.3 L  +5.8) LCB -280.00c P  0.50% WF   1.9 PSV       0 N       2  --  G6 C3
+D9  : T  95.28c W  97.74c S  -2.00c ( +5.5 L  +5.8) LCB -280.00c P  0.30% WF   1.6 PSV       0 N       2  --  D9 C3
+H4  : T  82.64c W  87.54c S  -4.90c ( +4.1 L  +4.1) LCB -280.00c P  1.30% WF   0.9 PSV       0 N       1  --  H4
+J3  : T  85.95c W  88.68c S  -2.73c ( +5.1 L  +5.1) LCB -280.00c P  1.01% WF   0.9 PSV       0 N       1  --  J3
+C8  : T  91.75c W  96.68c S  -4.93c ( +4.4 L  +4.4) LCB -280.00c P  0.31% WF   0.9 PSV       0 N       1  --  C8
+
+2022-01-27 16:43:50+0100: = C4
+2022-01-27 16:43:51+0100: Controller: play black D5
+2022-01-27 16:43:51+0100: = 
+2022-01-27 16:43:51+0100: Controller: genmove white
+2022-01-27 16:43:52+0100: MoveNum: 35 HASH: F5D6B8D832C24F7851C7AEC4DE6E750F
+   A B C D E F G H J
+ 9 . . . . O . . . .
+ 8 O X . X O . . . .
+ 7 O X . X O . O . .
+ 6 . O X X . @ . O O
+ 5 . . O X3X . X X O
+ 4 . O O2X1. . . . X
+ 3 . . . O X X . X .
+ 2 . O . O X . . . .
+ 1 . . O X X . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 1.01417
+Root visits: 246
+New playouts: 240
+NN rows: 186
+NN batches: 62
+NN avg batch size: 3
+PV: F6 G6 H8 F5 E6 D9
+Tree:
+: T 108.09c W  99.66c S   8.30c ( +9.8 L  +9.9) N     246  --  F6 G6 H8 F5 E6 D9
+---White(^)---
+F6  : T 109.32c W  99.68c S   9.54c (+10.2 L +10.4) LCB  108.46c P 48.46% WF  59.8 PSV      59 N      59  --  F6 G6 H8 F5 E6 D9
+G6  : T 108.36c W  99.50c S   8.72c (+10.0 L +10.1) LCB  107.17c P 19.34% WF  44.1 PSV      19 N      44  --  G6 F6 F7 E6 D9 C9 A9 B9
+D9  : T 108.26c W  99.63c S   8.29c ( +9.8 L +10.1) LCB  106.89c P  8.41% WF  39.4 PSV       8 N      40  --  D9 C9 F6 G6 H7 F5
+F7  : T 106.94c W  99.73c S   7.20c ( +9.4 L  +9.3) LCB  106.06c P  3.31% WF  49.2 PSV       2 N      54  --  F7 G6 H7 F6 D9 C9 A9
+H4  : T 108.23c W  99.70c S   8.30c ( +9.8 L +10.0) LCB  104.96c P  3.44% WF  30.6 PSV       2 N      31  --  H4 G4 F6 G6 H7 E6 F7
+J3  : T 106.89c W  99.71c S   7.12c ( +9.3 L  +9.6) LCB  103.47c P  2.60% WF   9.9 PSV       1 N      10  --  J3 H4 F6 G6 H7
+H8  : T 104.15c W  99.87c S   4.08c ( +8.3 L  +8.3) LCB   87.95c P  3.49% WF   3.9 PSV       1 N       4  --  H8 F6 F7
+C9  : T 103.76c W  99.64c S   4.25c ( +8.4 L  +8.7) LCB   53.82c P  1.82% WF   2.9 PSV       1 N       3  --  C9 D9 F6
+
+2022-01-27 16:43:52+0100: = F6
+2022-01-27 16:43:52+0100: Controller: play black G6
+2022-01-27 16:43:52+0100: = 
+2022-01-27 16:43:52+0100: Controller: genmove white
+2022-01-27 16:43:53+0100: MoveNum: 37 HASH: 2042772509F5846E2F8806D8CAA673C5
+   A B C D E F G H J
+ 9 . . . . O . . . .
+ 8 O X . X O . . . .
+ 7 O X . X O . O @ .
+ 6 . O X X . O2X3O O
+ 5 . . O X1X . X X O
+ 4 . O O X . . . . X
+ 3 . . . O X X . X .
+ 2 . O . O X . . . .
+ 1 . . O X X . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 0.930045
+Root visits: 246
+New playouts: 211
+NN rows: 169
+NN batches: 57
+NN avg batch size: 2.96491
+PV: H7 E6 F7 F5 D9 C9 A9 B9
+Tree:
+: T 108.08c W  98.95c S   8.65c (+10.3 L +10.3) N     246  --  H7 E6 F7 F5 D9 C9 A9
+---White(^)---
+H7  : T 108.58c W  99.57c S   8.80c (+10.3 L +10.3) LCB  107.63c P 55.85% WF 127.4 PSV     170 N     127  --  H7 E6 F7 F5 D9 C9 A9 B9
+H8  : T 109.28c W  99.66c S   9.40c (+10.5 L +10.5) LCB  107.15c P 43.25% WF 111.3 PSV      85 N     110  --  H8 E6 F5 F4 F7 D9 A6 B9
+H4  : T -103.41c W -80.18c S -23.23c (-11.7 L -20.3) LCB -280.00c P  0.40% WF   0.3 PSV       0 N       1  --  H4
+J3  : T -82.59c W -64.44c S -18.15c ( -7.4 L -15.9) LCB -280.00c P  0.11% WF   0.2 PSV       0 N       1  --  J3
+J8  : T  48.27c W  63.35c S -15.08c ( +0.6 L  +0.4) LCB -280.00c P  0.08% WF   0.3 PSV       0 N       1  --  J8
+F5  : T -122.47c W -94.28c S -28.19c (-18.3 L -30.5) LCB -280.00c P  0.06% WF   0.1 PSV       0 N       1  --  F5
+G4  : T -117.40c W -91.64c S -25.77c (-14.9 L -31.2) LCB -280.00c P  0.06% WF   0.1 PSV       0 N       1  --  G4
+J7  : T  49.12c W  57.28c S  -8.17c ( +2.8 L  +3.7) LCB -280.00c P  0.05% WF   0.2 PSV       0 N       1  --  J7
+D9  : T -87.51c W -69.68c S -17.83c ( -2.2 L  -4.0) LCB -280.00c P  0.02% WF   0.1 PSV       0 N       1  --  D9
+G8  : T -44.97c W -27.88c S -17.09c ( -3.6 L  -3.0) LCB -280.00c P  0.02% WF   0.1 PSV       0 N       1  --  G8
+
+2022-01-27 16:43:53+0100: = H7
+2022-01-27 16:43:53+0100: Controller: play black F5
+2022-01-27 16:43:53+0100: = 
+2022-01-27 16:43:53+0100: Controller: genmove white
+2022-01-27 16:43:54+0100: MoveNum: 39 HASH: C90CEFB24693903DD9D1F75049FA19B4
+   A B C D E F G H J
+ 9 . . . . O . . . .
+ 8 O X . X O . . . .
+ 7 O X . X O . O O2.
+ 6 . O X X @ O X1O O
+ 5 . . O X X X3X X O
+ 4 . O O X . . . . X
+ 3 . . . O X X . X .
+ 2 . O . O X . . . .
+ 1 . . O X X . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 0.905702
+Root visits: 269
+New playouts: 218
+NN rows: 164
+NN batches: 56
+NN avg batch size: 2.92857
+PV: E6 G8 H8 A9 B9 C9
+Tree:
+: T 107.97c W  99.58c S   8.20c (+10.3 L +10.2) N     269  --  E6 G8 H8 A9 B9 C9
+---White(^)---
+E6  : T 109.83c W  99.59c S   9.96c (+10.9 L +10.7) LCB  108.68c P 35.16% WF  96.2 PSV     126 N      94  --  E6 G8 H8 A9 B9 C9
+D9  : T 107.32c W  99.46c S   7.75c (+10.1 L +10.2) LCB  105.16c P 25.16% WF  60.0 PSV      32 N      61  --  D9 C9 A9 F7 F8 B9 A6
+A6  : T 107.70c W  99.61c S   7.94c (+10.2 L +10.1) LCB  105.09c P  9.25% WF  47.3 PSV      12 N      48  --  A6 D9 E6 B9 A9 pass C3
+F7  : T 106.07c W  99.72c S   6.18c ( +9.5 L  +9.3) LCB  104.25c P  9.74% WF  32.2 PSV       9 N      33  --  F7 D9 A9 B9 A6 E6 pass
+A9  : T 106.53c W  99.45c S   6.60c ( +9.7 L  +9.5) LCB  102.16c P  2.45% WF  11.8 PSV       2 N      12  --  A9 B9 A6 E6 F7
+H4  : T 106.82c W  99.75c S   6.93c ( +9.8 L  +9.8) LCB  102.16c P  2.53% WF   6.9 PSV       2 N       7  --  H4 J3 E6 D9
+C9  : T 104.25c W  99.38c S   5.04c ( +9.1 L  +9.2) LCB   90.54c P  3.63% WF   5.8 PSV       2 N       6  --  C9 D9 E6 B9
+J3  : T 106.31c W  99.79c S   6.57c ( +9.7 L  +9.7) LCB   98.26c P  2.16% WF   4.9 PSV       1 N       5  --  J3 H4 E6
+B9  : T 102.71c W  99.88c S   2.94c ( +8.4 L  +8.6) LCB -280.00c P  1.60% WF   1.9 PSV       1 N       2  --  B9 C9
+
+2022-01-27 16:43:54+0100: = E6
+2022-01-27 16:43:55+0100: Controller: play black B9
+2022-01-27 16:43:55+0100: = 
+2022-01-27 16:43:55+0100: Controller: genmove white
+2022-01-27 16:43:56+0100: MoveNum: 41 HASH: 0F894282F1F802432CE24FE4EF26FF81
+   A B C D E F G H J
+ 9 . X3. @ O . . . .
+ 8 O X . X O . . . .
+ 7 O X . X O . O O .
+ 6 . O X X O2O X O O
+ 5 . . O X X X1X X O
+ 4 . O O X . . . . X
+ 3 . . . O X X . X .
+ 2 . O . O X . . . .
+ 1 . . O X X . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 1.03897
+Root visits: 269
+New playouts: 264
+NN rows: 186
+NN batches: 65
+NN avg batch size: 2.86154
+PV: D9 C9 A6 A9 C3 pass pass
+Tree:
+: T 107.77c W  99.50c S   8.28c (+10.9 L +10.7) N     269  --  D9 C9 A6 A9 C3 pass pass
+---White(^)---
+D9  : T 108.20c W  99.59c S   8.61c (+11.0 L +10.8) LCB  107.17c P 55.77% WF 103.7 PSV     103 N     104  --  D9 C9 A6 A9 C3 pass pass
+A6  : T 107.66c W  99.56c S   7.98c (+10.8 L +10.6) LCB  106.11c P 19.33% WF  68.1 PSV      31 N      69  --  A6 D9 A9 pass pass
+H4  : T 107.79c W  99.21c S   8.62c (+11.1 L +11.1) LCB  102.71c P  5.81% WF  44.1 PSV       7 N      46  --  H4 G4 D9 C9 A6 A9 pass pass
+J3  : T 107.80c W  99.44c S   8.51c (+11.0 L +10.8) LCB  104.80c P  4.72% WF  40.8 PSV       5 N      41  --  J3 H4 D9 C9 A6 A9 pass J2
+C2  : T 102.81c W  99.68c S   3.08c ( +9.1 L  +8.8) LCB   92.80c P  1.23% WF   4.8 PSV       0 N       5  --  C2 D9 A6
+G8  : T 102.48c W  99.51c S   2.99c ( +9.1 L  +8.9) LCB   87.64c P  1.59% WF   2.9 PSV       0 N       3  --  G8 A9
+
+2022-01-27 16:43:56+0100: = D9
+2022-01-27 16:43:56+0100: Controller: play black C9
+2022-01-27 16:43:56+0100: = 
+2022-01-27 16:43:56+0100: Controller: genmove white
+2022-01-27 16:43:57+0100: MoveNum: 43 HASH: 14522635A03709FCC07EBD5C895E7809
+   A B C D E F G H J
+ 9 . X1X3O2O . . . .
+ 8 O X . X O . . . .
+ 7 O X . X O . O O .
+ 6 . O X X O O X O O
+ 5 . . O X X X X X O
+ 4 . O O X . . . . X
+ 3 . . @ O X X . X .
+ 2 . O . O X . . . .
+ 1 . . O X X . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 0.873827
+Root visits: 269
+New playouts: 220
+NN rows: 151
+NN batches: 54
+NN avg batch size: 2.7963
+PV: C3 A9 A6 pass pass
+Tree:
+: T 109.04c W  99.68c S   9.34c (+11.0 L +10.8) N     269  --  C3 A9 A6 pass pass
+---White(^)---
+C3  : T 109.32c W  99.78c S   9.60c (+11.1 L +10.8) LCB  108.67c P  9.59% WF  48.1 PSV     105 N      48  --  C3 A9 A6 pass pass
+A6  : T 109.11c W  99.76c S   9.30c (+11.0 L +10.8) LCB  108.51c P 22.12% WF  72.0 PSV      72 N      72  --  A6 A9 C3 pass pass
+B5  : T 109.19c W  99.72c S   9.54c (+11.1 L +10.8) LCB  107.84c P  7.57% WF  32.0 PSV      26 N      32  --  B5 G3 A6 A9 pass
+pss : T 109.55c W  99.77c S   9.75c (+11.1 L +10.9) LCB  108.27c P  5.27% WF  27.1 PSV      22 N      27  --  pass pass
+C2  : T 108.74c W  99.58c S   9.12c (+10.9 L +10.7) LCB  106.41c P  7.10% WF  22.9 PSV      19 N      23  --  C2 F4 A6 A9
+B3  : T 107.71c W  99.43c S   8.20c (+10.7 L +10.5) LCB   99.64c P  6.05% WF  13.6 PSV      11 N      14  --  B3 pass A6 A9 pass
+G8  : T 109.06c W  99.76c S   9.36c (+11.0 L +10.8) LCB  106.04c P  5.29% WF  11.0 PSV       9 N      11  --  G8 G3 A6 A9
+B1  : T 107.29c W  98.88c S   8.11c (+10.6 L +10.6) LCB   85.81c P  5.36% WF   8.9 PSV       8 N      10  --  B1 A9 A6 pass
+F7  : T 109.30c W  99.68c S   9.61c (+11.1 L +10.7) LCB  106.29c P  2.06% WF  10.0 PSV       7 N      10  --  F7 A9 A6 pass C3
+A5  : T 109.04c W  99.67c S   9.23c (+10.9 L +10.6) LCB   98.77c P  3.03% WF   6.0 PSV       5 N       6  --  A5 A9 A6 pass
+
+2022-01-27 16:43:57+0100: = C3
+2022-01-27 16:43:57+0100: Controller: play black A9
+2022-01-27 16:43:57+0100: = 
+2022-01-27 16:43:57+0100: Controller: genmove white
+2022-01-27 16:43:58+0100: MoveNum: 45 HASH: 9C38ABE54D327EE921BDA6F1997A4B87
+   A B C D E F G H J
+ 9 X3X X1O O . . . .
+ 8 O X . X O . . . .
+ 7 O X . X O . O O .
+ 6 @ O X X O O X O O
+ 5 . . O X X X X X O
+ 4 . O O X . . . . X
+ 3 . . O2O X X . X .
+ 2 . O . O X . . . .
+ 1 . . O X X . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 0.955456
+Root visits: 236
+New playouts: 223
+NN rows: 164
+NN batches: 59
+NN avg batch size: 2.77966
+PV: A6 pass pass
+Tree:
+: T 108.04c W  99.60c S   8.20c (+10.6 L +10.5) N     236  --  A6 pass pass
+---White(^)---
+A6  : T 108.93c W  99.79c S   9.22c (+10.9 L +10.7) LCB  108.54c P 86.74% WF 134.3 PSV     133 N     133  --  A6 pass pass
+J3  : T 107.74c W  99.55c S   7.77c (+10.5 L +10.6) LCB  104.16c P  5.33% WF  46.2 PSV       4 N      50  --  J3 J2 A6 pass pass
+H4  : T 107.21c W  99.14c S   7.29c (+10.3 L +10.5) LCB  102.41c P  4.99% WF  38.6 PSV       4 N      41  --  H4 A6 J3 G4 J4 H2 B5 J2
+A5  : T 102.80c W  99.54c S   2.75c ( +8.7 L  +8.5) LCB   95.48c P  1.00% WF   7.3 PSV       0 N       9  --  A5 A6 A7 A8 A6
+B5  : T  92.28c W  99.70c S  -7.41c ( +5.1 L  +4.5) LCB -280.00c P  0.48% WF   0.9 PSV       0 N       1  --  B5
+G4  : T  83.77c W  94.27c S -10.50c ( +3.5 L  +3.1) LCB -280.00c P  0.23% WF   0.9 PSV       0 N       1  --  G4
+
+2022-01-27 16:43:58+0100: = A6
+2022-01-27 16:43:59+0100: Controller: play black pass
+2022-01-27 16:43:59+0100: = 
+2022-01-27 16:43:59+0100: Controller: final_score
+2022-01-27 16:44:00+0100: = W+10.5
+2022-01-27 16:44:00+0100: Controller: genmove white
+2022-01-27 16:44:00+0100: MoveNum: 47 HASH: 072EC8CE416521F119E779C66A8211FE
+   A B C D E F G H J
+ 9 X1X X O O . . . .
+ 8 O X . X O . . . .
+ 7 O X . X O . O O .
+ 6 O2O X X O O X O O
+ 5 . @ O X X X X X O
+ 4 . O O X . . . . X
+ 3 . . O O X X . X .
+ 2 . O . O X . . . .
+ 1 . . O X X . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 0.250321
+Root visits: 121
+New playouts: 121
+NN rows: 40
+NN batches: 16
+NN avg batch size: 2.5
+PV: B5 pass pass
+Tree:
+: T 109.70c W  99.86c S   9.86c (+11.0 L +10.7) N     121  --  B5 pass pass
+---White(^)---
+B5  : T 109.94c W  99.86c S  10.02c (+11.0 L +10.7) LCB  108.68c P  9.59% WF  20.0 PSV      36 N      20  --  B5 pass pass
+pss : T 109.42c W  99.88c S   9.62c (+10.9 L +10.7) LCB  108.30c P 13.87% WF  22.9 PSV      23 N      23  --  pass pass
+B1  : T 109.89c W  99.86c S   9.98c (+11.0 L +10.7) LCB  108.48c P  9.14% WF  19.0 PSV      19 N      19  --  B1 pass pass
+F7  : T 109.75c W  99.85c S   9.83c (+10.9 L +10.6) LCB  108.12c P  8.65% WF  17.0 PSV      17 N      17  --  F7 pass pass
+C2  : T 109.71c W  99.87c S   9.84c (+10.9 L +10.7) LCB  108.12c P  7.75% WF  16.0 PSV      15 N      16  --  C2 pass pass
+B3  : T 109.85c W  99.85c S  10.06c (+11.0 L +10.7) LCB  108.44c P  6.40% WF  14.0 PSV      13 N      14  --  B3 G3 pass pass
+A4  : T 109.21c W  99.90c S   9.56c (+10.8 L +10.7) LCB   45.83c P  3.31% WF   3.0 PSV       3 N       3  --  A4 pass pass
+A2  : T 109.21c W  99.86c S   9.58c (+10.8 L +10.6) LCB   62.77c P  2.53% WF   3.0 PSV       2 N       3  --  A2 pass pass
+F8  : T 109.46c W  99.86c S   9.80c (+10.9 L +10.8) LCB   48.63c P  2.37% WF   3.0 PSV       2 N       3  --  F8 pass
+A5  : T 109.44c W  99.81c S   9.97c (+11.0 L +10.7) LCB -280.00c P  2.51% WF   2.0 PSV       2 N       2  --  A5 pass
+
+2022-01-27 16:44:00+0100: = B5
+2022-01-27 16:44:01+0100: Controller: play black pass
+2022-01-27 16:44:01+0100: = 
+2022-01-27 16:44:01+0100: Controller: final_score
+2022-01-27 16:44:02+0100: = W+10.5
+2022-01-27 16:44:02+0100: Controller: genmove white
+2022-01-27 16:44:02+0100: MoveNum: 49 HASH: 5F01D983B7BF2CAEBD406C53CC227016
+   A B C D E F G H J
+ 9 X X X O O . . . .
+ 8 O X . X O . . . .
+ 7 O X . X O . O O .
+ 6 O O X X O O X O O
+ 5 . O2O X X X X X O
+ 4 . O O X . . . . X
+ 3 . @ O O X X . X .
+ 2 . O . O X . . . .
+ 1 . . O X X . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 0.0480364
+Root visits: 62
+New playouts: 62
+NN rows: 6
+NN batches: 3
+NN avg batch size: 2
+PV: B3 G3 pass
+Tree:
+: T 109.37c W  99.87c S   9.42c (+10.9 L +10.7) N      62  --  B3 G3 pass
+---White(^)---
+B3  : T 109.68c W  99.85c S   9.74c (+11.1 L +10.8) LCB  107.74c P  8.53% WF  12.0 PSV      19 N      12  --  B3 G3 pass
+pss : T 109.32c W  99.89c S   9.37c (+10.9 L +10.7) LCB  107.60c P 14.64% WF  17.0 PSV      17 N      17  --  pass pass
+C2  : T 109.32c W  99.89c S   9.31c (+10.9 L +10.7) LCB  106.75c P  9.45% WF  11.0 PSV      11 N      11  --  C2 pass pass
+F7  : T 109.34c W  99.88c S   9.25c (+10.9 L +10.6) LCB  106.19c P  8.39% WF  10.0 PSV      10 N      10  --  F7 pass pass
+B1  : T 109.06c W  99.87c S   9.28c (+10.9 L +10.7) LCB  105.88c P 12.04% WF   8.0 PSV       8 N       8  --  B1 pass pass
+A4  : T 109.34c W  99.87c S   9.72c (+11.1 L +10.8) LCB -280.00c P  2.80% WF   2.0 PSV       2 N       2  --  A4 pass
+A2  : T 110.38c W  99.93c S  10.46c (+11.3 L +10.9) LCB -280.00c P  2.59% WF   1.0 PSV       1 N       1  --  A2
+
+2022-01-27 16:44:02+0100: = B3
+2022-01-27 16:44:02+0100: Controller: play black pass
+2022-01-27 16:44:02+0100: = 
+2022-01-27 16:44:02+0100: Controller: final_score
+2022-01-27 16:44:04+0100: = W+10.5
+2022-01-27 16:44:04+0100: Controller: genmove white
+2022-01-27 16:44:04+0100: MoveNum: 51 HASH: EF624EB38A3839220BBF5AFF8589D987
+   A B C D E F G H J
+ 9 X X X O O . . . .
+ 8 O X . X O . . . .
+ 7 O X . X O . O O .
+ 6 O O X X O O X O O
+ 5 . O O X X X X X O
+ 4 . O O X . . . . X
+ 3 . O2O O X X . X .
+ 2 . O . O X . . . .
+ 1 . . O X X . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 0.0178847
+Root visits: 62
+New playouts: 62
+NN rows: 4
+NN batches: 1
+NN avg batch size: 4
+PV: pass pass
+Tree:
+: T 108.96c W  99.89c S   9.06c (+10.9 L +10.7) N      62  --  pass pass
+---White(^)---
+pss : T 109.02c W  99.90c S   9.07c (+10.9 L +10.7) LCB  107.67c P 16.73% WF  20.0 PSV      20 N      20  --  pass pass
+B1  : T 108.94c W  99.88c S   9.06c (+10.9 L +10.7) LCB  107.05c P 14.51% WF  13.0 PSV      13 N      13  --  B1 pass pass
+C2  : T 109.05c W  99.89c S   9.03c (+10.9 L +10.7) LCB  106.81c P  8.59% WF  11.0 PSV      10 N      11  --  C2 pass pass
+F7  : T 108.94c W  99.88c S   9.08c (+10.9 L +10.7) LCB  106.54c P  6.61% WF  10.0 PSV       8 N      10  --  F7 pass B1 pass
+F8  : T 108.65c W  99.88c S   8.91c (+10.9 L +10.8) LCB   62.25c P  3.04% WF   3.0 PSV       2 N       3  --  F8 pass
+G8  : T 108.39c W  99.94c S   8.66c (+10.8 L +10.6) LCB   46.31c P  2.92% WF   3.0 PSV       2 N       3  --  G8 pass pass
+A5  : T 110.04c W  99.95c S  10.09c (+11.3 L +10.8) LCB -280.00c P  2.61% WF   1.0 PSV       1 N       1  --  A5
+
+2022-01-27 16:44:04+0100: = pass
+2022-01-27 16:44:04+0100: Controller: final_score
+2022-01-27 16:44:04+0100: = W+10.5
+2022-01-27 16:44:11+0100: Controller: undo
+2022-01-27 16:44:11+0100: = 
+2022-01-27 16:44:11+0100: Controller: undo
+2022-01-27 16:44:11+0100: = 
+2022-01-27 16:44:11+0100: Controller: undo
+2022-01-27 16:44:11+0100: = 
+2022-01-27 16:44:11+0100: Controller: showboard
+2022-01-27 16:44:11+0100: = MoveNum: 49 HASH: 5F01D983B7BF2CAEBD406C53CC227016
+   A B C D E F G H J
+ 9 X X X O O . . . .
+ 8 O X . X O . . . .
+ 7 O X . X O . O O .
+ 6 O O X X O O X O O
+ 5 . O2O X X X X X O
+ 4 . O O X . . . . X
+ 3 . . O O X X . X .
+ 2 . O . O X . . . .
+ 1 . . O X X . . . .
+Next player: White
+Rules: {"friendlyPassOk":false,"hasButton":false,"ko":"POSITIONAL","komi":7.5,"scoring":"AREA","suicide":true,"tax":"NONE","whiteHandicapBonus":"0"}
+B stones captured: 0
+W stones captured: 0
+2022-01-27 16:44:13+0100: Controller: play white B3
+2022-01-27 16:44:13+0100: = 
+2022-01-27 16:44:14+0100: Controller: play black pass
+2022-01-27 16:44:14+0100: = 
+2022-01-27 16:44:15+0100: Controller: play white pass
+2022-01-27 16:44:15+0100: = 
+2022-01-27 16:44:16+0100: Controller: undo
+2022-01-27 16:44:16+0100: = 
+2022-01-27 16:44:16+0100: Controller: undo
+2022-01-27 16:44:16+0100: = 
+2022-01-27 16:44:16+0100: Controller: undo
+2022-01-27 16:44:16+0100: = 
+2022-01-27 16:44:16+0100: Controller: showboard
+2022-01-27 16:44:16+0100: = MoveNum: 49 HASH: 5F01D983B7BF2CAEBD406C53CC227016
+   A B C D E F G H J
+ 9 X X X O O . . . .
+ 8 O X . X O . . . .
+ 7 O X . X O . O O .
+ 6 O O X X O O X O O
+ 5 . O2O X X X X X O
+ 4 . O O X . . . . X
+ 3 . . O O X X . X .
+ 2 . O . O X . . . .
+ 1 . . O X X . . . .
+Next player: White
+Rules: {"friendlyPassOk":false,"hasButton":false,"ko":"POSITIONAL","komi":7.5,"scoring":"AREA","suicide":true,"tax":"NONE","whiteHandicapBonus":"0"}
+B stones captured: 0
+W stones captured: 0
+2022-01-27 17:10:17+0100: GPU -1 finishing, processed 7679 rows 2630 batches
+2022-01-27 17:10:17+0100: All cleaned up, quitting

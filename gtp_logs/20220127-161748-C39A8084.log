@@ -1,0 +1,389 @@
+2022-01-27 16:17:48+0100: GTP Engine starting...
+2022-01-27 16:17:48+0100: KataGo v1.10.0
+2022-01-27 16:17:48+0100: Using TrompTaylor rules initially, unless GTP/GUI overrides this
+2022-01-27 16:17:48+0100: Using 6 CPU thread(s) for search
+2022-01-27 16:17:48+0100: nnRandSeed0 = 18028323594042145314
+2022-01-27 16:17:48+0100: After dedups: nnModelFile0 = /Users/kodi/.katago/default_model.bin.gz useFP16 auto useNHWC auto
+2022-01-27 16:17:48+0100: Initializing neural net buffer to be size 19 * 19 exactly
+2022-01-27 16:17:48+0100: Found OpenCL Platform 0: Apple (Apple) (OpenCL 1.2 (Oct  1 2021 19:40:58))
+2022-01-27 16:17:48+0100: Found 1 device(s) on platform 0 with type CPU or GPU or Accelerator
+2022-01-27 16:17:48+0100: Found OpenCL Device 0: Apple M1 (Apple) (score 1000102)
+2022-01-27 16:17:48+0100: Creating context for OpenCL Platform: Apple (Apple) (OpenCL 1.2 (Oct  1 2021 19:40:58))
+2022-01-27 16:17:48+0100: Using OpenCL Device 0: Apple M1 (Apple) OpenCL 1.2  (Extensions: cl_APPLE_SetMemObjectDestructor cl_APPLE_ContextLoggingFunctions cl_APPLE_clut cl_APPLE_query_kernel_names cl_APPLE_gl_sharing cl_khr_gl_event cl_khr_byte_addressable_store cl_khr_global_int32_base_atomics cl_khr_global_int32_extended_atomics cl_khr_local_int32_base_atomics cl_khr_local_int32_extended_atomics cl_khr_3d_image_writes cl_khr_image2d_from_buffer cl_khr_depth_images )
+2022-01-27 16:17:48+0100: No existing tuning parameters found or parseable or valid at: /Users/kodi/.katago/opencltuning/tune8_gpuAppleM1_x19_y19_c256_mv8.txt
+2022-01-27 16:17:48+0100: Performing autotuning
+2022-01-27 16:17:48+0100: *** On some systems, this may take several minutes, please be patient ***
+2022-01-27 16:17:48+0100: Found OpenCL Platform 0: Apple (Apple) (OpenCL 1.2 (Oct  1 2021 19:40:58))
+2022-01-27 16:17:48+0100: Found 1 device(s) on platform 0 with type CPU or GPU or Accelerator
+2022-01-27 16:17:48+0100: Found OpenCL Device 0: Apple M1 (Apple) (score 1000102)
+2022-01-27 16:17:48+0100: Creating context for OpenCL Platform: Apple (Apple) (OpenCL 1.2 (Oct  1 2021 19:40:58))
+2022-01-27 16:17:48+0100: Using OpenCL Device 0: Apple M1 (Apple) OpenCL 1.2  (Extensions: cl_APPLE_SetMemObjectDestructor cl_APPLE_ContextLoggingFunctions cl_APPLE_clut cl_APPLE_query_kernel_names cl_APPLE_gl_sharing cl_khr_gl_event cl_khr_byte_addressable_store cl_khr_global_int32_base_atomics cl_khr_global_int32_extended_atomics cl_khr_local_int32_base_atomics cl_khr_local_int32_extended_atomics cl_khr_3d_image_writes cl_khr_image2d_from_buffer cl_khr_depth_images )
+2022-01-27 16:18:46+0100: Done tuning, saved results to /Users/kodi/.katago/opencltuning/tune8_gpuAppleM1_x19_y19_c256_mv8.txt
+2022-01-27 16:18:47+0100: OpenCL backend thread 0: Model version 8
+2022-01-27 16:18:47+0100: OpenCL backend thread 0: Model name: g170-b20c256x2-s5303129600-d1228401921
+2022-01-27 16:18:48+0100: OpenCL backend thread 0: FP16Storage true FP16Compute false FP16TensorCores false
+2022-01-27 16:18:48+0100: Loaded neural net with nnXLen 19 nnYLen 19
+2022-01-27 16:18:48+0100: Initializing board with boardXSize 19 boardYSize 19
+2022-01-27 16:18:48+0100: Loaded config /Users/kodi/.katago/default_gtp.cfg
+2022-01-27 16:18:48+0100: Loaded model /Users/kodi/.katago/default_model.bin.gz
+2022-01-27 16:18:48+0100: Model name: g170-b20c256x2-s5303129600-d1228401921
+2022-01-27 16:18:48+0100: GTP ready, beginning main protocol loop
+2022-01-27 16:19:03+0100: Controller: list_commands
+2022-01-27 16:19:03+0100: = protocol_version
+name
+version
+known_command
+list_commands
+quit
+boardsize
+rectangular_boardsize
+clear_board
+set_position
+komi
+get_komi
+play
+undo
+kata-get-rules
+kata-set-rule
+kata-set-rules
+kata-get-param
+kata-set-param
+kata-list-params
+kgs-rules
+genmove
+genmove_debug
+search_debug
+clear_cache
+showboard
+fixed_handicap
+place_free_handicap
+set_free_handicap
+time_settings
+kgs-time_settings
+time_left
+kata-list_time_settings
+kata-time_settings
+final_score
+final_status_list
+loadsgf
+printsgf
+lz-genmove_analyze
+kata-genmove_analyze
+lz-analyze
+kata-analyze
+kata-raw-nn
+cputime
+gomill-cpu_time
+kata-debug-print-tc
+stop
+2022-01-27 16:19:07+0100: Controller: showboard
+2022-01-27 16:19:07+0100: = MoveNum: 0 HASH: CDCBC1F514D7E680FACD226074256633
+   A B C D E F G H J K L M N O P Q R S T
+19 . . . . . . . . . . . . . . . . . . .
+18 . . . . . . . . . . . . . . . . . . .
+17 . . . . . . . . . . . . . . . . . . .
+16 . . . . . . . . . . . . . . . . . . .
+15 . . . . . . . . . . . . . . . . . . .
+14 . . . . . . . . . . . . . . . . . . .
+13 . . . . . . . . . . . . . . . . . . .
+12 . . . . . . . . . . . . . . . . . . .
+11 . . . . . . . . . . . . . . . . . . .
+10 . . . . . . . . . . . . . . . . . . .
+ 9 . . . . . . . . . . . . . . . . . . .
+ 8 . . . . . . . . . . . . . . . . . . .
+ 7 . . . . . . . . . . . . . . . . . . .
+ 6 . . . . . . . . . . . . . . . . . . .
+ 5 . . . . . . . . . . . . . . . . . . .
+ 4 . . . . . . . . . . . . . . . . . . .
+ 3 . . . . . . . . . . . . . . . . . . .
+ 2 . . . . . . . . . . . . . . . . . . .
+ 1 . . . . . . . . . . . . . . . . . . .
+Next player: Black
+Rules: {"friendlyPassOk":false,"hasButton":false,"ko":"POSITIONAL","komi":7.5,"scoring":"AREA","suicide":true,"tax":"NONE","whiteHandicapBonus":"0"}
+B stones captured: 0
+W stones captured: 0
+2022-01-27 16:19:15+0100: Controller: genmove B
+2022-01-27 16:19:19+0100: MoveNum: 0 HASH: CDCBC1F514D7E680FACD226074256633
+   A B C D E F G H J K L M N O P Q R S T
+19 . . . . . . . . . . . . . . . . . . .
+18 . . . . . . . . . . . . . . . . . . .
+17 . . . . . . . . . . . . . . . . . . .
+16 . . . . . . . . . . . . . . . @ . . .
+15 . . . . . . . . . . . . . . . . . . .
+14 . . . . . . . . . . . . . . . . . . .
+13 . . . . . . . . . . . . . . . . . . .
+12 . . . . . . . . . . . . . . . . . . .
+11 . . . . . . . . . . . . . . . . . . .
+10 . . . . . . . . . . . . . . . . . . .
+ 9 . . . . . . . . . . . . . . . . . . .
+ 8 . . . . . . . . . . . . . . . . . . .
+ 7 . . . . . . . . . . . . . . . . . . .
+ 6 . . . . . . . . . . . . . . . . . . .
+ 5 . . . . . . . . . . . . . . . . . . .
+ 4 . . . . . . . . . . . . . . . . . . .
+ 3 . . . . . . . . . . . . . . . . . . .
+ 2 . . . . . . . . . . . . . . . . . . .
+ 1 . . . . . . . . . . . . . . . . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 3.27369
+Root visits: 505
+New playouts: 505
+NN rows: 410
+NN batches: 138
+NN avg batch size: 2.97101
+PV: Q16 D16 D4 Q4 R3 Q3 R4 R6 R5 Q5 S6
+Tree:
+: T -19.31c W -19.18c S  -0.25c ( -1.4 L  -0.8) N     505  --  Q16 D16 D4 Q4 R3 Q3 R4
+---Black(^)---
+Q16 : T -18.10c W -18.07c S  -0.14c ( -1.2 L  -0.7) LCB  -18.97c P 10.33% WF 308.5 PSV     303 N     309  --  Q16 D16 D4 Q4 R3 Q3 R4 R6
+R16 : T -19.87c W -19.84c S  -0.31c ( -1.4 L  -0.8) LCB  -20.87c P  6.44% WF  85.9 PSV      22 N      87  --  R16 D16 D4 Q4 R3 Q3 R4 R6
+Q15 : T -21.63c W -21.30c S  -0.49c ( -1.6 L  -0.9) LCB  -23.56c P  1.38% WF  55.5 PSV       2 N      59  --  Q15 D4 D16 Q4 Q17
+R15 : T -23.51c W -22.74c S  -0.64c ( -1.8 L  -1.0) LCB  -25.80c P  0.20% WF  24.3 PSV       0 N      31  --  R15 Q4 D16 D4 Q17 C17 D17
+R17 : T -24.30c W -23.72c S  -0.69c ( -1.8 L  -1.1) LCB  -27.83c P  0.38% WF  16.1 PSV       0 N      17  --  R17 D4 Q4 D16
+R14 : T -30.56c W -29.40c S  -1.16c ( -2.4 L  -1.6) LCB -280.00c P  0.05% WF   0.9 PSV       0 N       1  --  R14
+
+2022-01-27 16:19:19+0100: = Q16
+2022-01-27 16:19:35+0100: Controller: time_settings 0 10 1
+2022-01-27 16:19:35+0100: = 
+2022-01-27 16:19:41+0100: Controller: genmove W
+2022-01-27 16:19:43+0100: MoveNum: 1 HASH: D787FAD66281F76731DCD9C1B3387463
+   A B C D E F G H J K L M N O P Q R S T
+19 . . . . . . . . . . . . . . . . . . .
+18 . . . . . . . . . . . . . . . . . . .
+17 . . . . . . . . . . . . . . . . . . .
+16 . . . . . . . . . . . . . . . X1. . .
+15 . . . . . . . . . . . . . . . . . . .
+14 . . . . . . . . . . . . . . . . . . .
+13 . . . . . . . . . . . . . . . . . . .
+12 . . . . . . . . . . . . . . . . . . .
+11 . . . . . . . . . . . . . . . . . . .
+10 . . . . . . . . . . . . . . . . . . .
+ 9 . . . . . . . . . . . . . . . . . . .
+ 8 . . . . . . . . . . . . . . . . . . .
+ 7 . . . . . . . . . . . . . . . . . . .
+ 6 . . . . . . . . . . . . . . . . . . .
+ 5 . . . . . . . . . . . . . . . . . . .
+ 4 . . . @ . . . . . . . . . . . . . . .
+ 3 . . . . . . . . . . . . . . . . . . .
+ 2 . . . . . . . . . . . . . . . . . . .
+ 1 . . . . . . . . . . . . . . . . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 1.74237
+Root visits: 505
+New playouts: 282
+NN rows: 219
+NN batches: 73
+NN avg batch size: 3
+PV: D4 Q4 D16 C3 D3 C4 D5 B6 R17 R16
+Tree:
+: T  17.81c W  17.61c S   0.32c ( +1.2 L  +0.7) N     505  --  D4 Q4 D16 C3 D3 C4 D5
+---White(^)---
+D4  : T  18.07c W  17.80c S   0.35c ( +1.2 L  +0.7) LCB   16.96c P 32.98% WF 195.7 PSV     278 N     199  --  D4 Q4 D16 C3 D3 C4 D5 B6
+D16 : T  17.85c W  17.63c S   0.32c ( +1.2 L  +0.7) LCB   16.74c P 26.09% WF 209.7 PSV     210 N     215  --  D16 Q4 D4 C17 C16 D17 E16 F17
+D17 : T  17.18c W  17.24c S   0.28c ( +1.1 L  +0.6) LCB   15.01c P  1.83% WF  31.4 PSV       8 N      32  --  D17 D4 Q4 C15 F16 R3
+C4  : T  17.23c W  17.22c S   0.28c ( +1.1 L  +0.6) LCB   15.15c P  1.49% WF  36.4 PSV       6 N      38  --  C4 Q4 D16 C17 C16 D17
+C16 : T  16.72c W  16.69c S   0.20c ( +1.1 L  +0.6) LCB   13.28c P  1.81% WF  19.8 PSV       6 N      20  --  C16 Q4 D4 C3 C4
+
+2022-01-27 16:19:43+0100: = D4
+2022-01-27 16:19:46+0100: Controller: showboard
+2022-01-27 16:19:46+0100: = MoveNum: 2 HASH: B248EA89FABF13234D0CA990126373BE
+   A B C D E F G H J K L M N O P Q R S T
+19 . . . . . . . . . . . . . . . . . . .
+18 . . . . . . . . . . . . . . . . . . .
+17 . . . . . . . . . . . . . . . . . . .
+16 . . . . . . . . . . . . . . . X1. . .
+15 . . . . . . . . . . . . . . . . . . .
+14 . . . . . . . . . . . . . . . . . . .
+13 . . . . . . . . . . . . . . . . . . .
+12 . . . . . . . . . . . . . . . . . . .
+11 . . . . . . . . . . . . . . . . . . .
+10 . . . . . . . . . . . . . . . . . . .
+ 9 . . . . . . . . . . . . . . . . . . .
+ 8 . . . . . . . . . . . . . . . . . . .
+ 7 . . . . . . . . . . . . . . . . . . .
+ 6 . . . . . . . . . . . . . . . . . . .
+ 5 . . . . . . . . . . . . . . . . . . .
+ 4 . . . O2. . . . . . . . . . . . . . .
+ 3 . . . . . . . . . . . . . . . . . . .
+ 2 . . . . . . . . . . . . . . . . . . .
+ 1 . . . . . . . . . . . . . . . . . . .
+Next player: Black
+Rules: {"friendlyPassOk":false,"hasButton":false,"ko":"POSITIONAL","komi":7.5,"scoring":"AREA","suicide":true,"tax":"NONE","whiteHandicapBonus":"0"}
+B stones captured: 0
+W stones captured: 0
+2022-01-27 16:20:33+0100: Controller: genomve B
+2022-01-27 16:20:33+0100: ? unknown command
+2022-01-27 16:20:37+0100: Controller: genomve B
+2022-01-27 16:20:37+0100: ? unknown command
+2022-01-27 16:20:42+0100: Controller: genmove B
+2022-01-27 16:20:45+0100: MoveNum: 2 HASH: B248EA89FABF13234D0CA990126373BE
+   A B C D E F G H J K L M N O P Q R S T
+19 . . . . . . . . . . . . . . . . . . .
+18 . . . . . . . . . . . . . . . . . . .
+17 . . . . . . . . . . . . . . . . . . .
+16 . . . . . . . . . . . . . . . X1. . .
+15 . . . . . . . . . . . . . . . . . . .
+14 . . . . . . . . . . . . . . . . . . .
+13 . . . . . . . . . . . . . . . . . . .
+12 . . . . . . . . . . . . . . . . . . .
+11 . . . . . . . . . . . . . . . . . . .
+10 . . . . . . . . . . . . . . . . . . .
+ 9 . . . . . . . . . . . . . . . . . . .
+ 8 . . . . . . . . . . . . . . . . . . .
+ 7 . . . . . . . . . . . . . . . . . . .
+ 6 . . . . . . . . . . . . . . . . . . .
+ 5 . . . . . . . . . . . . . . . . . . .
+ 4 . . . O2. . . . . . . . . . . . . . .
+ 3 . . @ . . . . . . . . . . . . . . . .
+ 2 . . . . . . . . . . . . . . . . . . .
+ 1 . . . . . . . . . . . . . . . . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 3.19879
+Root visits: 505
+New playouts: 387
+NN rows: 334
+NN batches: 112
+NN avg batch size: 2.98214
+PV: C3 D3 C4 D5 B6 Q4 D16 R17 Q17 R16
+Tree:
+: T -18.25c W -17.96c S  -0.38c ( -1.2 L  -0.7) N     505  --  C3 D3 C4 D5 B6 Q4 D16
+---Black(^)---
+C3  : T -17.84c W -17.58c S  -0.36c ( -1.2 L  -0.7) LCB  -19.18c P 17.43% WF 169.2 PSV     253 N     170  --  C3 D3 C4 D5 B6 Q4 D16 R17
+Q4  : T -17.97c W -17.70c S  -0.34c ( -1.2 L  -0.7) LCB  -19.19c P 19.79% WF 251.5 PSV     251 N     261  --  Q4 D16 C3 C4 D3 E4 F2 R17
+Q3  : T -19.25c W -19.06c S  -0.49c ( -1.4 L  -0.8) LCB  -21.85c P  3.68% WF  39.0 PSV      14 N      41  --  Q3 D16 C17 D17 C16 D15 B14 R17
+F3  : T -20.78c W -20.18c S  -0.67c ( -1.6 L  -0.9) LCB  -25.32c P  3.40% WF  11.7 PSV       7 N      12  --  F3 Q4 D16 C17 C16
+R4  : T -21.53c W -20.97c S  -0.70c ( -1.6 L  -0.9) LCB  -28.35c P  3.59% WF   7.8 PSV       6 N       8  --  R4 D16 P4 R17
+P4  : T -21.19c W -20.81c S  -0.69c ( -1.6 L  -0.9) LCB  -31.57c P  2.49% WF   6.8 PSV       4 N       7  --  P4 D16 R4 R17 Q17
+Q5  : T -23.26c W -21.95c S  -0.80c ( -1.7 L  -1.0) LCB  -63.80c P  2.30% WF   4.6 PSV       2 N       5  --  Q5 D16 Q3
+
+2022-01-27 16:20:45+0100: = C3
+2022-01-27 16:20:50+0100: Controller: genmove W
+2022-01-27 16:20:54+0100: MoveNum: 3 HASH: 729391011D04CF6E78724453F52F904A
+   A B C D E F G H J K L M N O P Q R S T
+19 . . . . . . . . . . . . . . . . . . .
+18 . . . . . . . . . . . . . . . . . . .
+17 . . . . . . . . . . . . . . . . . . .
+16 . . . . . . . . . . . . . . . X1. . .
+15 . . . . . . . . . . . . . . . . . . .
+14 . . . . . . . . . . . . . . . . . . .
+13 . . . . . . . . . . . . . . . . . . .
+12 . . . . . . . . . . . . . . . . . . .
+11 . . . . . . . . . . . . . . . . . . .
+10 . . . . . . . . . . . . . . . . . . .
+ 9 . . . . . . . . . . . . . . . . . . .
+ 8 . . . . . . . . . . . . . . . . . . .
+ 7 . . . . . . . . . . . . . . . . . . .
+ 6 . . . . . . . . . . . . . . . . . . .
+ 5 . . . . . . . . . . . . . . . . . . .
+ 4 . . @ O2. . . . . . . . . . . . . . .
+ 3 . . X3. . . . . . . . . . . . . . . .
+ 2 . . . . . . . . . . . . . . . . . . .
+ 1 . . . . . . . . . . . . . . . . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 3.74145
+Root visits: 505
+New playouts: 417
+NN rows: 393
+NN batches: 131
+NN avg batch size: 3
+PV: C4 D3 E4 F2 D16 Q3 R17 R16 Q17 P16 O18 Q5 R10
+Tree:
+: T  18.14c W  17.75c S   0.38c ( +1.2 L  +0.7) N     505  --  C4 D3 E4 F2 D16 Q3 R17
+---White(^)---
+C4  : T  18.33c W  17.95c S   0.40c ( +1.3 L  +0.7) LCB   16.95c P 49.12% WF 399.4 PSV     398 N     411  --  C4 D3 E4 F2 D16 Q3 R17 R16
+D16 : T  17.19c W  16.79c S   0.26c ( +1.1 L  +0.6) LCB   15.24c P  1.31% WF  83.9 PSV       4 N      93  --  D16 C4 D5 C5 D6 Q4 D3 B7
+
+2022-01-27 16:20:54+0100: = C4
+2022-01-27 16:20:58+0100: Controller: showboard
+2022-01-27 16:20:58+0100: = MoveNum: 4 HASH: 462A68BF2AF7E8C968D280D053D59404
+   A B C D E F G H J K L M N O P Q R S T
+19 . . . . . . . . . . . . . . . . . . .
+18 . . . . . . . . . . . . . . . . . . .
+17 . . . . . . . . . . . . . . . . . . .
+16 . . . . . . . . . . . . . . . X . . .
+15 . . . . . . . . . . . . . . . . . . .
+14 . . . . . . . . . . . . . . . . . . .
+13 . . . . . . . . . . . . . . . . . . .
+12 . . . . . . . . . . . . . . . . . . .
+11 . . . . . . . . . . . . . . . . . . .
+10 . . . . . . . . . . . . . . . . . . .
+ 9 . . . . . . . . . . . . . . . . . . .
+ 8 . . . . . . . . . . . . . . . . . . .
+ 7 . . . . . . . . . . . . . . . . . . .
+ 6 . . . . . . . . . . . . . . . . . . .
+ 5 . . . . . . . . . . . . . . . . . . .
+ 4 . . O3O1. . . . . . . . . . . . . . .
+ 3 . . X2. . . . . . . . . . . . . . . .
+ 2 . . . . . . . . . . . . . . . . . . .
+ 1 . . . . . . . . . . . . . . . . . . .
+Next player: Black
+Rules: {"friendlyPassOk":false,"hasButton":false,"ko":"POSITIONAL","komi":7.5,"scoring":"AREA","suicide":true,"tax":"NONE","whiteHandicapBonus":"0"}
+B stones captured: 0
+W stones captured: 0
+2022-01-27 16:21:28+0100: Controller: genmove B
+2022-01-27 16:21:29+0100: MoveNum: 4 HASH: 462A68BF2AF7E8C968D280D053D59404
+   A B C D E F G H J K L M N O P Q R S T
+19 . . . . . . . . . . . . . . . . . . .
+18 . . . . . . . . . . . . . . . . . . .
+17 . . . . . . . . . . . . . . . . . . .
+16 . . . . . . . . . . . . . . . X . . .
+15 . . . . . . . . . . . . . . . . . . .
+14 . . . . . . . . . . . . . . . . . . .
+13 . . . . . . . . . . . . . . . . . . .
+12 . . . . . . . . . . . . . . . . . . .
+11 . . . . . . . . . . . . . . . . . . .
+10 . . . . . . . . . . . . . . . . . . .
+ 9 . . . . . . . . . . . . . . . . . . .
+ 8 . . . . . . . . . . . . . . . . . . .
+ 7 . . . . . . . . . . . . . . . . . . .
+ 6 . . . . . . . . . . . . . . . . . . .
+ 5 . . . . . . . . . . . . . . . . . . .
+ 4 . . O3O1. . . . . . . . . . . . . . .
+ 3 . . X2@ . . . . . . . . . . . . . . .
+ 2 . . . . . . . . . . . . . . . . . . .
+ 1 . . . . . . . . . . . . . . . . . . .
+
+koPOSITIONALscoreAREAtaxNONEsui1komi7.5
+Time taken: 0.861839
+Root visits: 505
+New playouts: 94
+NN rows: 90
+NN batches: 30
+NN avg batch size: 3
+PV: D3 E4 F2 D16 Q3 R17 R16 Q17 P16 O18 Q5 R10 R8
+Tree:
+: T -18.17c W -17.91c S  -0.36c ( -1.3 L  -0.7) N     505  --  D3 E4 F2 D16 Q3 R17 R16
+---Black(^)---
+D3  : T -18.17c W -17.91c S  -0.36c ( -1.3 L  -0.7) LCB  -19.38c P 97.01% WF 491.0 PSV     491 N     504  --  D3 E4 F2 D16 Q3 R17 R16 Q17
+
+2022-01-27 16:21:29+0100: = D3
+2022-01-27 16:21:34+0100: Controller: showboard
+2022-01-27 16:21:34+0100: = MoveNum: 5 HASH: B270D1A09F1E757FF72AAF8C6FEB90AC
+   A B C D E F G H J K L M N O P Q R S T
+19 . . . . . . . . . . . . . . . . . . .
+18 . . . . . . . . . . . . . . . . . . .
+17 . . . . . . . . . . . . . . . . . . .
+16 . . . . . . . . . . . . . . . X . . .
+15 . . . . . . . . . . . . . . . . . . .
+14 . . . . . . . . . . . . . . . . . . .
+13 . . . . . . . . . . . . . . . . . . .
+12 . . . . . . . . . . . . . . . . . . .
+11 . . . . . . . . . . . . . . . . . . .
+10 . . . . . . . . . . . . . . . . . . .
+ 9 . . . . . . . . . . . . . . . . . . .
+ 8 . . . . . . . . . . . . . . . . . . .
+ 7 . . . . . . . . . . . . . . . . . . .
+ 6 . . . . . . . . . . . . . . . . . . .
+ 5 . . . . . . . . . . . . . . . . . . .
+ 4 . . O2O . . . . . . . . . . . . . . .
+ 3 . . X1X3. . . . . . . . . . . . . . .
+ 2 . . . . . . . . . . . . . . . . . . .
+ 1 . . . . . . . . . . . . . . . . . . .
+Next player: White
+Rules: {"friendlyPassOk":false,"hasButton":false,"ko":"POSITIONAL","komi":7.5,"scoring":"AREA","suicide":true,"tax":"NONE","whiteHandicapBonus":"0"}
+B stones captured: 0
+W stones captured: 0

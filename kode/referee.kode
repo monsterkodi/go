@@ -11,6 +11,8 @@ kxk = require 'kxk'
 { opponent }   = require './util'
 
 Leelaz  = require './leelaz'
+Katago  = require './katago'
+Hara    = require './hara'
 Board   = require './board'
 Game    = require './game'
 GNU     = require './gnu'
@@ -48,7 +50,7 @@ function Referee
         
         if @white == 'leelaz' or @black == 'leelaz' then @boardsize = 19
         
-        log @boardsize, @handicap, info, gi
+        # log @boardsize, @handicap, info, gi
         
         window.stash.del 'score' if empty moves
         window.stash.set 'size'      @boardsize
@@ -64,32 +66,31 @@ function Referee
         @board.game = @game
         @game.info  = info
         
-        @gnu = {}
+        @compi = {}
+                    
+        switch @black
+            'gnu'       ➜ @compi.black = new GNU    @game
+            'leelaz'    ➜ @compi.black = new Leelaz @game
+            'hara'      ➜ @compi.black = new Hara   @game
+            'katago'    ➜ @compi.black = new Katago @game
+            
+        switch @white
+            'gnu'       ➜ @compi.white = new GNU    @game
+            'leelaz'    ➜ @compi.white = new Leelaz @game
+            'hara'      ➜ @compi.white = new Hara   @game
+            'katago'    ➜ @compi.white = new Katago @game
+                
+        @compi.black?.newGame @boardsize, 'black' @handicap
+        @compi.white?.newGame @boardsize, 'white' @handicap
         
-        if @white == 'gnu'
-            @gnu.white = new GNU @game
-            @gnu.white.newGame @boardsize, 'white' @handicap
-            
-        if @white == 'leelaz'
-            @gnu.white = new Leelaz @game
-            @gnu.white.newGame @boardsize, 'white' @handicap
-            
-        if @black == 'gnu'
-            @gnu.black = new GNU @game
-            @gnu.black.newGame @boardsize, 'black' @handicap
-
-        if @black == 'leelaz'
-            @gnu.black = new Leelaz @game
-            @gnu.black.newGame @boardsize, 'black' @handicap
-            
         if valid moves
             @replay moves
         else
-            if @gnu.black and @handicap < 2
-                @gnu.black.genmove()
+            if @compi.black and @handicap < 2
+                @compi.black.genmove()
                 
-            if @gnu.white and @handicap > 1
-                @gnu.white.genmove()
+            if @compi.white and @handicap > 1
+                @compi.white.genmove()
             
     # 00000000   00000000  00000000   000       0000000   000   000  
     # 000   000  000       000   000  000      000   000   000 000   
@@ -97,7 +98,7 @@ function Referee
     # 000   000  000       000        000      000   000     000     
     # 000   000  00000000  000        0000000  000   000     000     
     
-    @replay: (moves) ->
+    replay: (moves) ->
             
         for m in moves
             [c, p] = m.split ' '
@@ -105,15 +106,16 @@ function Referee
                 p = c
                 c = ['black' 'white'][moves.indexOf(m)%2]
             @game.play c, p
-            @gnu.black?.send "play #{c} #{p}"
-            @gnu.white?.send "play #{c} #{p}"
+            if 1
+                @compi.black?.send "play #{c} #{p}"
+                @compi.white?.send "play #{c} #{p}"
         
-        score = info.score ? window.stash.get 'score'
+        score = @game.info.score ? window.stash.get 'score'
 
         if score
             @game.finalScore score
         else
-            @gnu[@game.nextColor()]?.genmove()
+            @compi[@game.nextColor()]?.genmove()
 
     # 00     00   0000000   000   000  00000000  
     # 000   000  000   000  000   000  000       
@@ -131,15 +133,16 @@ function Referee
         return error("wrong player: #{player}", nextColor, @game.players) if @game.players[nextColor] != player
         
         @game.play nextColor, p
-        @gnu[lastColor]?.opponentMove p
+        @compi[lastColor]?.opponentMove p
             
         if p in ['pass' 'resign']
-            @gnu.black?.send 'final_score'
-            @gnu.white?.send 'final_score'
+            @compi.black?.send 'final_score'
+            @compi.white?.send 'final_score'
             
         if p != 'resign'
             if p != 'pass' or 'pass' not in @game.moves[-2]
-                @gnu[lastColor]?.genmove()
+                # log "#{lastColor} genmove" @compi[lastColor]?
+                @compi[lastColor]?.genmove()
                             
     # 000   000  000   000  0000000     0000000   
     # 000   000  0000  000  000   000  000   000  
@@ -152,35 +155,35 @@ function Referee
         return if empty @game.moves
         return if @game.handicap > 1 and @game.moves.length == 1
         
-        return if valid @gnu.black?.msg
-        return if valid @gnu.white?.msg
+        return if valid @compi.black?.msg
+        return if valid @compi.white?.msg
         
         # log 'undo' @game.moves
         
         @redos ?= []
         while @game.moves[-1].split(' ')[1] in ['pass' 'resign']
             @redos.unshift @game.moves.pop() 
-            @gnu.black?.send 'undo'
-            @gnu.white?.send 'undo'
+            @compi.black?.send 'undo'
+            @compi.white?.send 'undo'
             
         @redos.unshift @game.moves.pop()
         
         # log 'undo' @game.moves, @redos
         
-        @gnu.black?.undo()
-        @gnu.white?.undo()
+        @compi.black?.undo()
+        @compi.white?.undo()
             
     redo: ->
         
         return if empty @redos
-        return if valid @gnu.black?.msg
-        return if valid @gnu.white?.msg
+        return if valid @compi.black?.msg
+        return if valid @compi.white?.msg
         
         move = @redos.shift()
         [color, p] = move.split ' '
         @game.play color, p
-        @gnu.black?.send "play #{color} #{p}"
-        @gnu.white?.send "play #{color} #{p}"
+        @compi.black?.send "play #{color} #{p}"
+        @compi.white?.send "play #{color} #{p}"
             
     # 00000000  000  00000000    0000000  000000000        000       0000000    0000000  000000000  
     # 000       000  000   000  000          000           000      000   000  000          000     
@@ -192,8 +195,8 @@ function Referee
         
         return if empty @game.moves
         @redos = @game.moves.concat @redos
-        @gnu.black?.send "boardsize #{@game.size}"
-        @gnu.white?.send "boardsize #{@game.size}"
+        @compi.black?.send "boardsize #{@game.size}"
+        @compi.white?.send "boardsize #{@game.size}"
         @game.clear_board()
         
     lastMove: ->
@@ -203,7 +206,7 @@ function Referee
             move = @redos.shift()
             [color, p] = move.split ' '
             @game.play color, p
-            @gnu.black?.send "play #{color} #{p}"
-            @gnu.white?.send "play #{color} #{p}"
+            @compi.black?.send "play #{color} #{p}"
+            @compi.white?.send "play #{color} #{p}"
                     
 module.exports = Referee

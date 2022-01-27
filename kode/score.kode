@@ -23,7 +23,7 @@ function Score
     clone: ->
         
         s = new Score @size
-        s.captures = copy @captures
+        s.captures = clone @captures
         s.grid.copy @grid 
         s
 
@@ -44,14 +44,13 @@ function Score
     # 000       000   000  000      000       
     #  0000000  000   000  0000000   0000000  
     
-    calcScore: (root) ->
-        
-        # ● calcScore
+    calcGroups: ->
         
         @grps  = []
         @areas = []
         
-        for s,gl of @allGroups()
+        allg = @allGroups()
+        for s,gl of allg
             for g in gl
                 n = @groupNeighbors g
                 if s == stone.empty
@@ -67,13 +66,20 @@ function Score
                         stone: s
                         group: g
                         areas: []
-                        eyes: []
+                        eyes:  []
                         libs:  n.filter((p) => stone.empty == @stoneAt @coord p).length
                         neighbors: n
                         diagonals: @groupDiagonals g, n
                         key:   g.join ' '
                         state: 'unknown'
-                                            
+        # log @grps
+    
+    calcScore: (root) ->
+        
+        # ● calcScore
+              
+        @calcGroups()
+        
         markDead = (g,r) =>
             
             # log @groupString g
@@ -466,12 +472,12 @@ function Score
         allp = @allPos()
         while allp.length
             p = allp.pop()
-            s = @stoneAt p
-            g = @group @coord p
-            for gp in g
-                if 0 <= i = allp.indexOf gp
-                    allp.splice i, 1
-            grps[s].push g.sort()
+            if s = @stoneAt p
+                g = @group @coord p
+                for gp in g
+                    if 0 <= i = allp.indexOf gp
+                        allp.splice i, 1
+                grps[s].push g.sort()
         grps
     
     group: (c) ->

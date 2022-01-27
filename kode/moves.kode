@@ -1,0 +1,37 @@
+###
+00     00   0000000   000   000  00000000   0000000
+000   000  000   000  000   000  000       000     
+000000000  000   000   000 000   0000000   0000000 
+000 0 000  000   000     000     000            000
+000   000   0000000       0      00000000  0000000 
+###
+
+{ stoneColor } = require './util'
+
+function Move
+
+    @: (@pos, @color, @captures) ->
+
+function Moves
+
+    @: -> @m = []
+
+    num:        -> @m.length
+    clear:      -> @m = []; delete @ended
+    end:        -> @ended ? false
+    last:       -> @m[-1]
+    start:      -> @m.length == 0
+    history:    -> @m.map (m) -> m.pos
+    lastIsPass: -> @m[-1]?.pos == 'pass'
+    doublePass: -> @m[-1]?.pos == 'pass' == @m[-2]?.pos
+    lastColor:  -> @m.length ? ['white''black'][@m.length%2] : 'start'
+    nextColor:  -> @ended ? 'end' : ['black''white'][@m.length%2]
+    color: (c)  -> c ? stoneColor[c] : @nextColor()
+    add: (pos,color,captures)  -> 
+        return if @ended
+        @m.push new Move pos, @color(color), captures
+        switch pos
+            'pass'   ➜ @ended = @doublePass()
+            'resign' ➜ @ended = true
+
+module.exports = Moves

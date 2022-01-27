@@ -1,0 +1,17 @@
+###
+000   000   0000000   00000000    0000000   
+000   000  000   000  000   000  000   000  
+000000000  000000000  0000000    000000000  
+000   000  000   000  000   000  000   000  
+000   000  000   000  000   000  000   000  
+###
+
+Compi = require './compi'
+
+function Hara extends Compi
+
+    @: (@game) ->
+        
+        super @game, 'hara' '/usr/local/bin/hara' []
+                                
+module.exports = Hara

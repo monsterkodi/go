@@ -13,9 +13,11 @@ function Leelaz extends Compi
     @: (@game) ->
         
         super @game, 'leelaz' '/opt/homebrew/bin/leelaz' [
-            '-g'
-            '--noponder' 
+            '--gtp'
+            '--noponder'
+            # '--cpu-only'
             '--timemanage' 'fast'
+            '--logfile' '/Users/kodi/Desktop/leelaz.log'
             ]
                                     
 module.exports = Leelaz
