@@ -11,12 +11,14 @@
 function Move
 
     @: (@pos, @color, @captures) ->
+        log @pos, @color, @captures if valid @captures
 
 function Moves
 
     @: -> @m = []
 
     num:        -> @m.length
+    pop:        -> @m.pop()
     clear:      -> @m = []; delete @ended
     end:        -> @ended ? false
     last:       -> @m[-1]

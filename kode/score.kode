@@ -170,9 +170,9 @@ function Score
                                         
             # final = score.calcScore @
                         
-            for a in final.areas
-                if a.color != '.'
-                    final.captures[stoneColor[a.color]] += a.area.length
+            # for a in final.areas
+                # if a.color != '.'
+                    # final.captures[stoneColor[a.color]] += a.area.length
                     
             for g in @grps
                 if g.state == 'unknown'

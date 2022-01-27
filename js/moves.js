@@ -1,6 +1,6 @@
 // monsterkodi/kode 0.237.0
 
-var _k_
+var _k_ = {empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}}
 
 var Move, Moves, stoneColor
 
@@ -14,6 +14,11 @@ Move = (function ()
         this.pos = pos
         this.color = color
         this.captures = captures
+    
+        if (!_k_.empty(this.captures))
+        {
+            console.log(this.pos,this.color,this.captures)
+        }
     }
 
     return Move
@@ -32,6 +37,11 @@ Moves = (function ()
         return this.m.length
     }
 
+    Moves.prototype["pop"] = function ()
+    {
+        return this.m.pop()
+    }
+
     Moves.prototype["clear"] = function ()
     {
         this.m = []
@@ -40,9 +50,9 @@ Moves = (function ()
 
     Moves.prototype["end"] = function ()
     {
-        var _21_26_
+        var _23_26_
 
-        return ((_21_26_=this.ended) != null ? _21_26_ : false)
+        return ((_23_26_=this.ended) != null ? _23_26_ : false)
     }
 
     Moves.prototype["last"] = function ()

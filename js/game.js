@@ -1,6 +1,6 @@
 // monsterkodi/kode 0.237.0
 
-var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, noon: function (obj) { var pad = function (s, l) { while (s.length < l) { s += ' ' }; return s }; var esc = function (k, arry) { var es, sp; if (0 <= k.indexOf('\n')) { sp = k.split('\n'); es = sp.map(function (s) { return esc(s,arry) }); es.unshift('...'); es.push('...'); return es.join('\n') } if (k === '' || k === '...' || _k_.in(k[0],[' ','#','|']) || _k_.in(k[k.length - 1],[' ','#','|'])) { k = '|' + k + '|' } else if (arry && /  /.test(k)) { k = '|' + k + '|' }; return k }; var pretty = function (o, ind, seen) { var k, kl, l, v, mk = 4; if (Object.keys(o).length > 1) { for (k in o) { if (Object.hasOwn(o,k)) { kl = parseInt(Math.ceil((k.length + 2) / 4) * 4); mk = Math.max(mk,kl); if (mk > 32) { mk = 32; break } } } }; l = []; var keyValue = function (k, v) { var i, ks, s, vs; s = ind; k = esc(k,true); if (k.indexOf('  ') > 0 && k[0] !== '|') { k = `|${k}|` } else if (k[0] !== '|' && k[k.length - 1] === '|') { k = '|' + k } else if (k[0] === '|' && k[k.length - 1] !== '|') { k += '|' }; ks = pad(k,Math.max(mk,k.length + 2)); i = pad(ind + '    ',mk); s += ks; vs = toStr(v,i,false,seen); if (vs[0] === '\n') { while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) } }; s += vs; while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) }; return s }; for (k in o) { if (Object.hasOwn(o,k)) { l.push(keyValue(k,o[k])) } }; return l.join('\n') }; var toStr = function (o, ind = '', arry = false, seen = []) { var s, t, v; if (!(o != null)) { if (o === null) { return 'null' }; if (o === undefined) { return 'undefined' }; return '<?>' }; switch (t = typeof(o)) { case 'string': {return esc(o,arry)}; case 'object': { if (_k_.in(o,seen)) { return '<v>' }; seen.push(o); if ((o.constructor != null ? o.constructor.name : undefined) === 'Array') { s = ind !== '' && arry && '.' || ''; if (o.length && ind !== '') { s += '\n' }; s += (function () { var result = []; var list = _k_.list(o); for (var li = 0; li < list.length; li++)  { v = list[li];result.push(ind + toStr(v,ind + '    ',true,seen))  } return result }).bind(this)().join('\n') } else if ((o.constructor != null ? o.constructor.name : undefined) === 'RegExp') { return o.source } else { s = (arry && '.\n') || ((ind !== '') && '\n' || ''); s += pretty(o,ind,seen) }; return s } default: return String(o) }; return '<???>' }; return toStr(obj) }, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, each_r: function (o) {return o instanceof Array ? [] : typeof o == 'string' ? o.split('') : {}}, lpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s=c+s} return s}, trim: function (s,c=' ') {return _k_.ltrim(_k_.rtrim(s,c),c)}, ltrim: function (s,c=' ') { while (_k_.in(s[0],c)) { s = s.slice(1) } return s}, rtrim: function (s,c=' ') {while (_k_.in(s.slice(-1)[0],c)) { s = s.slice(0, s.length - 1) } return s}}
+var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, each_r: function (o) {return o instanceof Array ? [] : typeof o == 'string' ? o.split('') : {}}, lpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s=c+s} return s}, trim: function (s,c=' ') {return _k_.ltrim(_k_.rtrim(s,c),c)}, ltrim: function (s,c=' ') { while (_k_.in(s[0],c)) { s = s.slice(1) } return s}, rtrim: function (s,c=' ') {while (_k_.in(s.slice(-1)[0],c)) { s = s.slice(0, s.length - 1) } return s}}
 
 var $, alpha, elem, Game, Grid, kxk, Moves, opponent, randInt, Score, stone
 
@@ -40,13 +40,18 @@ Game = (function ()
 
     Game.prototype["save"] = function ()
     {
-        window.stash.set('moves',this.moves)
+        window.stash.set('moves',this.moves.history())
         return window.stash.set('grid',this.grid.toString())
     }
 
     Game.prototype["move_history"] = function ()
     {
         return this.moves.history()
+    }
+
+    Game.prototype["end"] = function ()
+    {
+        return this.moves.end()
     }
 
     Game.prototype["start"] = function ()
@@ -66,12 +71,17 @@ Game = (function ()
 
     Game.prototype["lastMove"] = function ()
     {
-        return this.moves.last().pos
+        return this.moves.last()
+    }
+
+    Game.prototype["lastPos"] = function ()
+    {
+        return this.lastMove().pos
     }
 
     Game.prototype["lastCoord"] = function ()
     {
-        return this.coord(this.lastMove())
+        return this.coord(this.lastPos())
     }
 
     Game.prototype["genmove"] = function (color)
@@ -136,13 +146,11 @@ Game = (function ()
         {
             return g.libs === 0 && g.stone === s
         }))
-        for (var _103_17_ = 0; _103_17_ < list.length; _103_17_++)
+        for (var _105_17_ = 0; _105_17_ < list.length; _105_17_++)
         {
-            dead = list[_103_17_]
-            console.log(this.captures)
+            dead = list[_105_17_]
+            console.log('game.capture',color,dead.group.length)
             this.captures[color] += dead.group.length
-            console.log(_k_.noon(dead))
-            console.log(this.captures)
             var list1 = _k_.list(dead.group)
             for (var _108_24_ = 0; _108_24_ < list1.length; _108_24_++)
             {
@@ -170,6 +178,13 @@ Game = (function ()
         return this.setStone(this.coord(p),stone.empty)
     }
 
+    Game.prototype["undoMove"] = function (m)
+    {
+        this.removePos(m.pos)
+        this.calcScore()
+        return this.board.annotate()
+    }
+
     Game.prototype["show"] = function (data)
     {
         var captured, r, rs, x, y
@@ -181,10 +196,10 @@ Game = (function ()
         {
             return r.slice(3).split(' ').join('')
         }).bind(this))
-        for (var _152_17_ = y = 0, _152_21_ = this.size; (_152_17_ <= _152_21_ ? y < this.size : y > this.size); (_152_17_ <= _152_21_ ? ++y : --y))
+        for (var _147_17_ = y = 0, _147_21_ = this.size; (_147_17_ <= _147_21_ ? y < this.size : y > this.size); (_147_17_ <= _147_21_ ? ++y : --y))
         {
             r = rs[y]
-            for (var _154_21_ = x = 0, _154_25_ = this.size; (_154_21_ <= _154_25_ ? x < this.size : x > this.size); (_154_21_ <= _154_25_ ? ++x : --x))
+            for (var _149_21_ = x = 0, _149_25_ = this.size; (_149_21_ <= _149_25_ ? x < this.size : x > this.size); (_149_21_ <= _149_25_ ? ++x : --x))
             {
                 switch (r[x])
                 {
@@ -219,7 +234,7 @@ Game = (function ()
     {
         var i
 
-        for (var _172_17_ = i = 0, _172_21_ = num; (_172_17_ <= _172_21_ ? i < num : i > num); (_172_17_ <= _172_21_ ? ++i : --i))
+        for (var _167_17_ = i = 0, _167_21_ = num; (_167_17_ <= _167_21_ ? i < num : i > num); (_167_17_ <= _167_21_ ? ++i : --i))
         {
             this.genmove()
         }
@@ -270,7 +285,7 @@ Game = (function ()
         s = ' '
         b = '  '
         b += (function (o) {
-            var r_211_34_ = _k_.each_r(o)
+            var r_206_34_ = _k_.each_r(o)
             for (var k in o)
             {   
                 var m = (function (v)
@@ -279,18 +294,18 @@ Game = (function ()
             })(o[k])
                 if (m != null)
                 {
-                    r_211_34_[k] = m
+                    r_206_34_[k] = m
                 }
             }
-            return typeof o == 'string' ? r_211_34_.join('') : r_211_34_
+            return typeof o == 'string' ? r_206_34_.join('') : r_206_34_
         })(alpha.slice(0,this.size))
         b += '\n'
         y = 0
-        for (var _214_17_ = i = this.size, _214_24_ = 1; (_214_17_ <= _214_24_ ? i <= 1 : i >= 1); (_214_17_ <= _214_24_ ? ++i : --i))
+        for (var _209_17_ = i = this.size, _209_24_ = 1; (_209_17_ <= _209_24_ ? i <= 1 : i >= 1); (_209_17_ <= _209_24_ ? ++i : --i))
         {
             b += _k_.lpad(2,i)
             b += s
-            for (var _217_21_ = x = 0, _217_25_ = this.size; (_217_21_ <= _217_25_ ? x < this.size : x > this.size); (_217_21_ <= _217_25_ ? ++x : --x))
+            for (var _212_21_ = x = 0, _212_25_ = this.size; (_212_21_ <= _212_25_ ? x < this.size : x > this.size); (_212_21_ <= _212_25_ ? ++x : --x))
             {
                 b += this.stoneAt(x,y) + s
             }
@@ -300,7 +315,7 @@ Game = (function ()
         }
         b += '  '
         b += (function (o) {
-            var r_224_34_ = _k_.each_r(o)
+            var r_219_34_ = _k_.each_r(o)
             for (var k in o)
             {   
                 var m = (function (v)
@@ -309,10 +324,10 @@ Game = (function ()
             })(o[k])
                 if (m != null)
                 {
-                    r_224_34_[k] = m
+                    r_219_34_[k] = m
                 }
             }
-            return typeof o == 'string' ? r_224_34_.join('') : r_224_34_
+            return typeof o == 'string' ? r_219_34_.join('') : r_219_34_
         })(alpha.slice(0,this.size))
         b += '\n'
         return b
@@ -335,13 +350,14 @@ Game = (function ()
 
     Game.prototype["updateTitle"] = function ()
     {
-        var bs, t, td, ws, _253_19_, _254_19_
+        var bs, t, td, ws, _248_19_, _249_19_
 
         t = $('.titlebar-title')
         t.innerHTML = ''
         td = elem('div',{class:'captures',parent:t})
         bs = ((this.score != null ? this.score[0] : undefined) === 'B' ? this.score.slice(2) : '  ')
         ws = ((this.score != null ? this.score[0] : undefined) === 'W' ? this.score.slice(2) : '  ')
+        console.log('captures',this.captures)
         elem('span',{class:'player black',text:this.players.black + ' ',parent:td})
         elem('span',{class:'capture black',text:bs + ' ' + this.captures.black + stone.black,parent:td})
         elem('span',{class:'capture white',text:stone.white + this.captures.white + ' ' + ws,parent:td})

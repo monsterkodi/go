@@ -127,22 +127,27 @@ function Referee
     
     playerMove: (p, player) =>
         
-        lastColor = @game.lastColor()
-        nextColor = @game.nextColor()
+        return if @game.end()
+        if valid @redos 
+            if player in [@compi.black?.name, @compi.white?.name]
+                return
+            @redos = []
         
-        return error("wrong player: #{player}", nextColor, @game.players) if @game.players[nextColor] != player
+        color = @game.nextColor()
         
-        @game.play nextColor, p
-        @compi[lastColor]?.opponentMove p
+        return error("wrong player: #{player}", color, @game.players) if @game.players[color] != player
+        
+        @game.play color, p
+        
+        next = opponent[color]
+        @compi[next]?.opponentMove p
             
-        if p in ['pass' 'resign']
+        if @game.end()
             @compi.black?.send 'final_score'
             @compi.white?.send 'final_score'
-            
-        if p != 'resign'
-            if p != 'pass' or 'pass' not in @game.moves[-2]
-                # log "#{lastColor} genmove" @compi[lastColor]?
-                @compi[lastColor]?.genmove()
+        else
+            log "#{next} genmove" @compi[next]
+            @compi[next]?.genmove()
                             
     # 000   000  000   000  0000000     0000000   
     # 000   000  0000  000  000   000  000   000  
@@ -152,21 +157,24 @@ function Referee
     
     undo: ->
         
-        return if empty @game.moves
-        return if @game.handicap > 1 and @game.moves.length == 1
+        return if @game.start()
+        return if @game.handicap > 1 and @game.moves.num() == 1
         
-        return if valid @compi.black?.msg
-        return if valid @compi.white?.msg
+        # return if valid @compi.black?.msg
+        # return if valid @compi.white?.msg
         
         # log 'undo' @game.moves
         
         @redos ?= []
-        while @game.moves[-1].split(' ')[1] in ['pass' 'resign']
-            @redos.unshift @game.moves.pop() 
-            @compi.black?.send 'undo'
-            @compi.white?.send 'undo'
+        while @game.lastPos() in ['pass' 'resign']
+            @redos.unshift @game.moves.pop()
+            @compi.black?.undo()
+            @compi.white?.undo()
             
-        @redos.unshift @game.moves.pop()
+        m = @game.moves.pop()
+        @redos.unshift m
+        
+        @game.undoMove m
         
         # log 'undo' @game.moves, @redos
         
@@ -176,37 +184,29 @@ function Referee
     redo: ->
         
         return if empty @redos
-        return if valid @compi.black?.msg
-        return if valid @compi.white?.msg
         
         move = @redos.shift()
-        [color, p] = move.split ' '
-        @game.play color, p
-        @compi.black?.send "play #{color} #{p}"
-        @compi.white?.send "play #{color} #{p}"
+        @game.play move.color, move.pos
+        @compi.black?.send "play #{move.color} #{move.pos}"
+        @compi.white?.send "play #{move.color} #{move.pos}"
             
-    # 00000000  000  00000000    0000000  000000000        000       0000000    0000000  000000000  
-    # 000       000  000   000  000          000           000      000   000  000          000     
-    # 000000    000  0000000    0000000      000           000      000000000  0000000      000     
-    # 000       000  000   000       000     000           000      000   000       000     000     
-    # 000       000  000   000  0000000      000           0000000  000   000  0000000      000    
+    #       000  000   000  00     00  00000000   
+    #       000  000   000  000   000  000   000  
+    #       000  000   000  000000000  00000000   
+    # 000   000  000   000  000 0 000  000        
+    #  0000000    0000000   000   000  000        
     
-    firstMove: ->
+    jumpToStart: ->
         
-        return if empty @game.moves
-        @redos = @game.moves.concat @redos
-        @compi.black?.send "boardsize #{@game.size}"
-        @compi.white?.send "boardsize #{@game.size}"
+        return if @game.start()
+        @redos = @game.moves.m.concat @redos
+        @compi.black?.send "clear_board"
+        @compi.white?.send "clear_board"
         @game.clear_board()
         
-    lastMove: ->
+    jumpToEnd: ->
 
-        return if empty @redos
         while valid @redos
-            move = @redos.shift()
-            [color, p] = move.split ' '
-            @game.play color, p
-            @compi.black?.send "play #{color} #{p}"
-            @compi.white?.send "play #{color} #{p}"
+            @redo()
                     
 module.exports = Referee

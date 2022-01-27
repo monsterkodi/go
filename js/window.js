@@ -97,14 +97,14 @@ MainWin = (function ()
             case 'redo':
                 return this.referee.redo()
 
-            case 'first move':
-                return this.referee.firstMove()
+            case 'start':
+                return this.referee.jumpToStart()
 
-            case 'last move':
-                return this.referee.lastMove()
+            case 'end':
+                return this.referee.jumpToEnd()
 
             case 'pass':
-                return this.referee.humanMove('pass')
+                return this.referee.playerMove('pass','human')
 
             case 'genmove':
                 return this.referee.genMove()

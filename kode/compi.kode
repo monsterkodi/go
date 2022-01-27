@@ -41,13 +41,14 @@ function Compi
     opponentMove: (p) ->
 
         @send "play #{opponent[@color]} #{p}"        
+        @send 'showboard'
         
     estimateScore: ->
         
         @send 'estimate_score'
                 
-    undo: ->
-        
+    undo: -> 
+        if @msg[-1]?.startsWith 'genmove' then @send 'undo'
         @send 'undo'
         @send 'showboard'
         
@@ -57,48 +58,57 @@ function Compi
         
         data = String chunk
         
-        log @name, @msg, @partial, "'#{data}'"
+        log @name, 'onData msgs' @msg, "'#{data}'"
         
         if @partial 
             data = @partial + "'#{data}'"
             delete @partial
-                    
-        while data.startsWith '= \n\n'
-            data = data[4..]
-            @msg.shift()
-            log @name, 'shift' @msg, "'#{data}'"
-            if empty data
-                return
-
-        if not data.endsWith '\n\n'
-            @partial = data
-            log @name, 'partial' @msg, "'#{data}'"
-            return
-     
-        log @msg, @name, "'#{data}'"
             
-        if data[0] == '='
-            m = @msg.shift()
-            data = data[2..]
-            if m.startsWith 'genmove'
-                p = data.split('\n')[0]
-                p = 'pass' if p == 'PASS'
-                post.emit 'playerMove' p, @name
-            else if m.startsWith 'fixed_handicap'
+        answers = data.split '\n\n'
+        
+        @partial = answers.pop()
+
+        log @name, answers
+
+        for answer in answers
+            
+            if answer[0] == '='
+                @ok @msg.shift(), answer[2..]
+            else
+                error @msg.shift(), answer[2..]
+                            
+    ok: (m, data) ->
+            
+        # log @name, 'ok --' m, data
+        switch m.split(' ')[0]
+            
+            'genmove'
+                if not 'undo' in @msg
+                    p = data.split('\n')[0]
+                    p = 'pass' if p == 'PASS'
+                    post.emit 'playerMove' p, @name
+                
+            'fixed_handicap'
+                
                 if @color == 'black'
                     for p in data.split ' '
                         @game.setStone @game.coord(p), stone.black
                     @game.moves.push "black #{data}"
-            else if m.startsWith 'estimate_score'
+                    
+            'estimate_score'
+                
                 @game.setScore data.split(' ')[0]
-            else if m.startsWith 'final_score'
+                
+            'final_score'
+                
                 @game.finalScore data
-            else if m.startsWith 'showboard'
-                @game.show data
+                
+            'showboard'
+                
+                log data
+                
             else
-                log m, data
-        else
-            m = @msg.shift()
-            error m, data
+                
+                log @name, 'ok -- ignore' m, "'#{data}'"
 
 module.exports = Compi

@@ -1,6 +1,6 @@
 // monsterkodi/kode 0.237.0
 
-var _k_ = {empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}}
+var _k_ = {list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}}
 
 var args, childp, Compi, opponent, post, stone
 
@@ -53,7 +53,8 @@ Compi = (function ()
 
     Compi.prototype["opponentMove"] = function (p)
     {
-        return this.send(`play ${opponent[this.color]} ${p}`)
+        this.send(`play ${opponent[this.color]} ${p}`)
+        return this.send('showboard')
     }
 
     Compi.prototype["estimateScore"] = function ()
@@ -63,6 +64,10 @@ Compi = (function ()
 
     Compi.prototype["undo"] = function ()
     {
+        if ((this.msg.slice(-1)[0] != null ? this.msg.slice(-1)[0].startsWith('genmove') : undefined))
+        {
+            this.send('undo')
+        }
         this.send('undo')
         return this.send('showboard')
     }
@@ -75,80 +80,75 @@ Compi = (function ()
 
     Compi.prototype["onData"] = function (chunk)
     {
-        var data, m, p
+        var answer, answers, data
 
         data = String(chunk)
-        console.log(this.name,this.msg,this.partial,`'${data}'`)
+        console.log(this.name,'onData msgs',this.msg,`'${data}'`)
         if (this.partial)
         {
             data = this.partial + `'${data}'`
             delete this.partial
         }
-        while (data.startsWith('= \n\n'))
+        answers = data.split('\n\n')
+        this.partial = answers.pop()
+        console.log(this.name,answers)
+        var list = _k_.list(answers)
+        for (var _73_19_ = 0; _73_19_ < list.length; _73_19_++)
         {
-            data = data.slice(4)
-            this.msg.shift()
-            console.log(this.name,'shift',this.msg,`'${data}'`)
-            if (_k_.empty(data))
+            answer = list[_73_19_]
+            if (answer[0] === '=')
             {
-                return
+                this.ok(this.msg.shift(),answer.slice(2))
+            }
+            else
+            {
+                console.error(this.msg.shift(),answer.slice(2))
             }
         }
-        if (!data.endsWith('\n\n'))
+    }
+
+    Compi.prototype["ok"] = function (m, data)
+    {
+        var p
+
+        switch (m.split(' ')[0])
         {
-            this.partial = data
-            console.log(this.name,'partial',this.msg,`'${data}'`)
-            return
-        }
-        console.log(this.msg,this.name,`'${data}'`)
-        if (data[0] === '=')
-        {
-            m = this.msg.shift()
-            data = data.slice(2)
-            if (m.startsWith('genmove'))
-            {
-                p = data.split('\n')[0]
-                if (p === 'PASS')
+            case 'genmove':
+                if (!(_k_.in('undo',this.msg)))
                 {
-                    p = 'pass'
+                    p = data.split('\n')[0]
+                    if (p === 'PASS')
+                    {
+                        p = 'pass'
+                    }
+                    return post.emit('playerMove',p,this.name)
                 }
-                return post.emit('playerMove',p,this.name)
-            }
-            else if (m.startsWith('fixed_handicap'))
-            {
+                break
+            case 'fixed_handicap':
                 if (this.color === 'black')
                 {
                     var list = _k_.list(data.split(' '))
-                    for (var _89_26_ = 0; _89_26_ < list.length; _89_26_++)
+                    for (var _94_26_ = 0; _94_26_ < list.length; _94_26_++)
                     {
-                        p = list[_89_26_]
+                        p = list[_94_26_]
                         this.game.setStone(this.game.coord(p),stone.black)
                     }
                     return this.game.moves.push(`black ${data}`)
                 }
-            }
-            else if (m.startsWith('estimate_score'))
-            {
+                break
+            case 'estimate_score':
                 return this.game.setScore(data.split(' ')[0])
-            }
-            else if (m.startsWith('final_score'))
-            {
+
+            case 'final_score':
                 return this.game.finalScore(data)
-            }
-            else if (m.startsWith('showboard'))
-            {
-                return this.game.show(data)
-            }
-            else
-            {
-                console.log(m,data)
-            }
+
+            case 'showboard':
+                console.log(data)
+                break
+            default:
+                console.log(this.name,'ok -- ignore',m,`'${data}'`)
         }
-        else
-        {
-            m = this.msg.shift()
-            console.error(m,data)
-        }
+
     }
 
     return Compi

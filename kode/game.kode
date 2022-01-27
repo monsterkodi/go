@@ -29,16 +29,18 @@ function Game extends Score
     
     save: ->
         
-        window.stash.set 'moves' @moves
+        window.stash.set 'moves' @moves.history()
         window.stash.set 'grid'  @grid.toString()
             
     move_history: -> @moves.history()
             
+    end:       -> @moves.end()
     start:     -> @moves.start()
     lastColor: -> @moves.lastColor()
     nextColor: -> @moves.nextColor()
-    lastMove:  -> @moves.last().pos
-    lastCoord: -> @coord @lastMove()
+    lastMove:  -> @moves.last()
+    lastPos:   -> @lastMove().pos
+    lastCoord: -> @coord @lastPos()
         
     #  0000000   00000000  000   000  00     00   0000000   000   000  00000000  
     # 000        000       0000  000  000   000  000   000  000   000  000       
@@ -101,24 +103,11 @@ function Game extends Score
         @calcGroups()
         
         for dead in @grps.filter (g) -> g.libs == 0 and g.stone == s
-            log @captures
+            log 'game.capture' color, dead.group.length
             @captures[color] += dead.group.length
-            log noon dead
-            log @captures
             for deadPos in dead.group
                 @removePos deadPos
         
-        # for p in @allStones color
-            # c = @coord p
-            # if @liberties(c) < 1
-                # g = @group c
-                # @captures[opponent[color]] += g.length
-                # for dp in g
-                    # dc = @coord dp
-                    # @setStone dc, stone.empty
-                # @capture color
-                # return
-            
     #  0000000  00000000  000000000   0000000  000000000   0000000   000   000  00000000  
     # 000       000          000     000          000     000   000  0000  000  000       
     # 0000000   0000000      000     0000000      000     000   000  000 0 000  0000000   
@@ -136,6 +125,12 @@ function Game extends Score
     removePos: (p) ->
         
         @setStone @coord(p), stone.empty
+
+    undoMove: (m) ->
+        
+        @removePos m.pos
+        @calcScore()
+        @board.annotate()
             
     #  0000000  000   000   0000000   000   000  
     # 000       000   000  000   000  000 0 000  
@@ -252,6 +247,8 @@ function Game extends Score
         
         bs = @score?[0] == 'B' ? @score[2..] : '  '
         ws = @score?[0] == 'W' ? @score[2..] : '  '
+        
+        log 'captures' @captures
         
         elem 'span' class:'player black'  text:@players.black + ' ', parent:td
         elem 'span' class:'capture black' text: bs + ' ' + @captures.black + stone.black, parent:td

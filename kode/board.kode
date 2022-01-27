@@ -16,7 +16,7 @@ function Board
     @: (parent, @size=19) ->
         
         @div = elem 'div' class:'board'     parent:parent
-        @img = elem 'img' class:'wood'      src:'../img/wood.png' parent:@div
+        @img = elem 'img' class:'wood'      src:'../img/board.png' parent:@div
         # @blk = elem 'div' class:'blank'     parent:@div
         @shd = elem 'div' class:'shadows'   parent:@div
         @lgd = elem 'div' class:'legends'   parent:@div
@@ -210,9 +210,11 @@ function Board
     # 000      000   000       000     000     
     # 0000000  000   000  0000000      000     
     
-    lastMove: ->
+    showLastMove: ->
         
-        return if @game.start()
+        if @game.start()
+            @lst.style.display  = 'none'
+            return
         r = @coordToPrcnt @game.lastCoord()
         d = @div.getBoundingClientRect().height/(@size+1)
         @lst.style.left         = "#{r.x}%"
@@ -288,7 +290,7 @@ function Board
     
     annotate: ->
         
-        @lastMove()
+        @showLastMove()
         @numbers()
         @liberties()
         @territory()

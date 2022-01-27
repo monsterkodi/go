@@ -155,116 +155,99 @@ Referee = (function ()
 
     Referee.prototype["playerMove"] = function (p, player)
     {
-        var lastColor, nextColor, _139_24_, _140_24_
+        var color, next, _132_38_, _132_58_, _146_24_, _147_24_
 
-        lastColor = this.game.lastColor()
-        nextColor = this.game.nextColor()
-        if (this.game.players[nextColor] !== player)
+        if (this.game.end())
         {
-            return console.error(`wrong player: ${player}`,nextColor,this.game.players)
+            return
         }
-        this.game.play(nextColor,p)
-        ;(this.compi[lastColor] != null ? this.compi[lastColor].opponentMove(p) : undefined)
-        if (_k_.in(p,['pass','resign']))
+        if (!_k_.empty(this.redos))
+        {
+            if (_k_.in(player,[(this.compi.black != null ? this.compi.black.name : undefined),(this.compi.white != null ? this.compi.white.name : undefined)]))
+            {
+                return
+            }
+            this.redos = []
+        }
+        color = this.game.nextColor()
+        if (this.game.players[color] !== player)
+        {
+            return console.error(`wrong player: ${player}`,color,this.game.players)
+        }
+        this.game.play(color,p)
+        next = opponent[color]
+        ;(this.compi[next] != null ? this.compi[next].opponentMove(p) : undefined)
+        if (this.game.end())
         {
             ;(this.compi.black != null ? this.compi.black.send('final_score') : undefined)
-            ;(this.compi.white != null ? this.compi.white.send('final_score') : undefined)
+            return (this.compi.white != null ? this.compi.white.send('final_score') : undefined)
         }
-        if (p !== 'resign')
+        else
         {
-            if (p !== 'pass' || !(_k_.in('pass',this.game.moves.slice(-2,-1)[0])))
-            {
-                return (this.compi[lastColor] != null ? this.compi[lastColor].genmove() : undefined)
-            }
+            console.log(`${next} genmove`,this.compi[next])
+            return (this.compi[next] != null ? this.compi[next].genmove() : undefined)
         }
     }
 
     Referee.prototype["undo"] = function ()
     {
-        var _158_36_, _159_36_, _163_15_, _166_24_, _167_24_, _173_20_, _174_20_
+        var m, _168_15_, _171_24_, _172_24_, _181_20_, _182_20_
 
-        if (_k_.empty(this.game.moves))
+        if (this.game.start())
         {
             return
         }
-        if (this.game.handicap > 1 && this.game.moves.length === 1)
+        if (this.game.handicap > 1 && this.game.moves.num() === 1)
         {
             return
         }
-        if (!_k_.empty((this.compi.black != null ? this.compi.black.msg : undefined)))
-        {
-            return
-        }
-        if (!_k_.empty((this.compi.white != null ? this.compi.white.msg : undefined)))
-        {
-            return
-        }
-        this.redos = ((_163_15_=this.redos) != null ? _163_15_ : [])
-        while (_k_.in(this.game.moves.slice(-1)[0].split(' ')[1],['pass','resign']))
+        this.redos = ((_168_15_=this.redos) != null ? _168_15_ : [])
+        while (_k_.in(this.game.lastPos(),['pass','resign']))
         {
             this.redos.unshift(this.game.moves.pop())
-            ;(this.compi.black != null ? this.compi.black.send('undo') : undefined)
-            ;(this.compi.white != null ? this.compi.white.send('undo') : undefined)
+            ;(this.compi.black != null ? this.compi.black.undo() : undefined)
+            ;(this.compi.white != null ? this.compi.white.undo() : undefined)
         }
-        this.redos.unshift(this.game.moves.pop())
+        m = this.game.moves.pop()
+        this.redos.unshift(m)
+        this.game.undoMove(m)
         ;(this.compi.black != null ? this.compi.black.undo() : undefined)
         return (this.compi.white != null ? this.compi.white.undo() : undefined)
     }
 
     Referee.prototype["redo"] = function ()
     {
-        var color, move, p, _179_36_, _180_36_, _185_20_, _186_20_
+        var move, _190_20_, _191_20_
 
         if (_k_.empty(this.redos))
-        {
-            return
-        }
-        if (!_k_.empty((this.compi.black != null ? this.compi.black.msg : undefined)))
-        {
-            return
-        }
-        if (!_k_.empty((this.compi.white != null ? this.compi.white.msg : undefined)))
         {
             return
         }
         move = this.redos.shift()
-        var _183_19_ = move.split(' '); color = _183_19_[0]; p = _183_19_[1]
-
-        this.game.play(color,p)
-        ;(this.compi.black != null ? this.compi.black.send(`play ${color} ${p}`) : undefined)
-        return (this.compi.white != null ? this.compi.white.send(`play ${color} ${p}`) : undefined)
+        this.game.play(move.color,move.pos)
+        ;(this.compi.black != null ? this.compi.black.send(`play ${move.color} ${move.pos}`) : undefined)
+        return (this.compi.white != null ? this.compi.white.send(`play ${move.color} ${move.pos}`) : undefined)
     }
 
-    Referee.prototype["firstMove"] = function ()
+    Referee.prototype["jumpToStart"] = function ()
     {
-        var _198_20_, _199_20_
+        var _203_20_, _204_20_
 
-        if (_k_.empty(this.game.moves))
+        if (this.game.start())
         {
             return
         }
-        this.redos = this.game.moves.concat(this.redos)
-        ;(this.compi.black != null ? this.compi.black.send(`boardsize ${this.game.size}`) : undefined)
-        ;(this.compi.white != null ? this.compi.white.send(`boardsize ${this.game.size}`) : undefined)
+        this.redos = this.game.moves.m.concat(this.redos)
+        ;(this.compi.black != null ? this.compi.black.send("clear_board") : undefined)
+        ;(this.compi.white != null ? this.compi.white.send("clear_board") : undefined)
         return this.game.clear_board()
     }
 
-    Referee.prototype["lastMove"] = function ()
+    Referee.prototype["jumpToEnd"] = function ()
     {
-        var color, move, p, _209_24_, _210_24_
-
-        if (_k_.empty(this.redos))
-        {
-            return
-        }
         while (!_k_.empty(this.redos))
         {
-            move = this.redos.shift()
-            var _207_23_ = move.split(' '); color = _207_23_[0]; p = _207_23_[1]
-
-            this.game.play(color,p)
-            ;(this.compi.black != null ? this.compi.black.send(`play ${color} ${p}`) : undefined)
-            ;(this.compi.white != null ? this.compi.white.send(`play ${color} ${p}`) : undefined)
+            this.redo()
         }
     }
 

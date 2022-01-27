@@ -92,9 +92,9 @@ function MainWin extends win
             'save as ...'               ➜ SGF.saveAsDialog()
             'undo'                      ➜ @referee.undo()
             'redo'                      ➜ @referee.redo()
-            'first move'                ➜ @referee.firstMove()
-            'last move'                 ➜ @referee.lastMove()
-            'pass'                      ➜ @referee.humanMove 'pass'
+            'start'                     ➜ @referee.jumpToStart()
+            'end'                       ➜ @referee.jumpToEnd()
+            'pass'                      ➜ @referee.playerMove 'pass' 'human'
             'genmove'                   ➜ @referee.genMove()
             'calcscore'                 ➜ @referee.gnu.calcscore()
             'move number'               ➜ @referee.board.toggleNumbers()
