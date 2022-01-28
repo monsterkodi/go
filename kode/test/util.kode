@@ -1,8 +1,9 @@
 
 { sgfToAlphaNum } = require '../util'
 
-▸ sgfToAlphaNum
-
-    sgfToAlphaNum 'pd' ▸ 'Q16'
-    sgfToAlphaNum 'dp' ▸ 'D4'
-    sgfToAlphaNum 'ss' ▸ 'T1'
+▸ util
+    ▸ sgfToAlphaNum
+    
+        sgfToAlphaNum 'pd' ▸ 'Q16'
+        sgfToAlphaNum 'dp' ▸ 'D4'
+        sgfToAlphaNum 'ss' ▸ 'T1'

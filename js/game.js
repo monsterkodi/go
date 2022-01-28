@@ -350,17 +350,20 @@ Game = (function ()
 
     Game.prototype["updateTitle"] = function ()
     {
-        var bs, t, td, ws, _248_19_, _249_19_
+        var scr, t, td, _249_27_, _250_27_
 
         t = $('.titlebar-title')
         t.innerHTML = ''
         td = elem('div',{class:'captures',parent:t})
-        bs = ((this.score != null ? this.score[0] : undefined) === 'B' ? this.score.slice(2) : '  ')
-        ws = ((this.score != null ? this.score[0] : undefined) === 'W' ? this.score.slice(2) : '  ')
+        scr = {black:((this.score != null ? this.score[0] : undefined) === 'B' ? this.score.slice(2) : '  '),white:((this.score != null ? this.score[0] : undefined) === 'W' ? this.score.slice(2) : '  ')}
         console.log('captures',this.captures)
+        if (this.moves.singlePass())
+        {
+            scr[this.lastColor()]('pass')
+        }
         elem('span',{class:'player black',text:this.players.black + ' ',parent:td})
-        elem('span',{class:'capture black',text:bs + ' ' + this.captures.black + stone.black,parent:td})
-        elem('span',{class:'capture white',text:stone.white + this.captures.white + ' ' + ws,parent:td})
+        elem('span',{class:'capture black',text:scr.black + ' ' + this.captures.black + stone.black,parent:td})
+        elem('span',{class:'capture white',text:stone.white + this.captures.white + ' ' + scr.white,parent:td})
         return elem('span',{class:'player white',text:' ' + this.players.white,parent:td})
     }
 

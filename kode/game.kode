@@ -245,15 +245,18 @@ function Game extends Score
         t.innerHTML = ''
         td = elem 'div' class:'captures' parent:t
         
-        bs = @score?[0] == 'B' ? @score[2..] : '  '
-        ws = @score?[0] == 'W' ? @score[2..] : '  '
+        scr = 
+              black: @score?[0] == 'B' ? @score[2..] : '  '
+              white: @score?[0] == 'W' ? @score[2..] : '  '
         
         log 'captures' @captures
+        if @moves.singlePass()
+            scr[@lastColor()] 'pass'
         
         elem 'span' class:'player black'  text:@players.black + ' ', parent:td
-        elem 'span' class:'capture black' text: bs + ' ' + @captures.black + stone.black, parent:td
-        elem 'span' class:'capture white' text: stone.white + @captures.white + ' ' + ws, parent:td
-        elem 'span' {class:'player white' text:' ' + @players.white, parent:td
+        elem 'span' class:'capture black' text: scr.black + ' ' + @captures.black + stone.black, parent:td
+        elem 'span' class:'capture white' text: stone.white + @captures.white + ' ' + scr.white, parent:td
+        elem 'span' class:'player white' text:' ' + @players.white, parent:td
         
     finalScore: (score) ->
         

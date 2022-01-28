@@ -212,10 +212,19 @@ Score = (function ()
         }
         if (!root)
         {
-            var list6 = _k_.list(this.grps)
-            for (var _177_18_ = 0; _177_18_ < list6.length; _177_18_++)
+            var list6 = _k_.list(final.areas)
+            for (var _173_18_ = 0; _173_18_ < list6.length; _173_18_++)
             {
-                g = list6[_177_18_]
+                a = list6[_173_18_]
+                if (_k_.in(a.color,'wb'))
+                {
+                    final.captures[stoneColor[a.color]] += a.area.length
+                }
+            }
+            var list7 = _k_.list(this.grps)
+            for (var _177_18_ = 0; _177_18_ < list7.length; _177_18_++)
+            {
+                g = list7[_177_18_]
                 if (g.state === 'unknown')
                 {
                     if (stone.empty === final.grid.at(g.group[0]))
@@ -224,10 +233,10 @@ Score = (function ()
                     }
                 }
             }
-            var list7 = _k_.list(this.areas)
-            for (var _183_18_ = 0; _183_18_ < list7.length; _183_18_++)
+            var list8 = _k_.list(this.areas)
+            for (var _183_18_ = 0; _183_18_ < list8.length; _183_18_++)
             {
-                a = list7[_183_18_]
+                a = list8[_183_18_]
                 a.color = final.areaAt(a.area[0]).color
             }
             if (final.captures.white > final.captures.black)
