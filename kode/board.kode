@@ -264,12 +264,12 @@ function Board
         cn += 1+(c[0]+c[1])%15 if cn == 'white'
         src = "../img/stone_#{cn}.png" 
         stn = elem 'img' class:"stone pos#{c[0]}_#{c[1]}" src:src, width:"auto", height:"#{d}%" parent:@stn
-        shd = elem 'img' class:"shadow pos#{c[0]}_#{c[1]}" src:'../img/stone_shadow.png', width:"auto", height:"#{1.15*d}%" parent:@shd
+        shd = elem 'img' class:"shadow pos#{c[0]}_#{c[1]}" src:'../img/shadow_hard.png', width:"auto", height:"#{1.15*d}%" parent:@shd
         x = (c[0]+0.5)*100/(@size+1)
         y = (c[1]+0.5)*100/(@size+1)
 
         stn.style = "left:#{x}%; top:#{y}%;" 
-        shd.style = "left:#{x}%; top:#{y}%; opacity:#{o = @size == 19 ? 0.5 : @size == 13 ? 0.6 : 0.7};"
+        shd.style = "left:#{x}%; top:#{y}%;"
         
     clear: ->
         

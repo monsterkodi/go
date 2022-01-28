@@ -281,7 +281,7 @@ Board = (function ()
 
     Board.prototype["addStone"] = function (c, s = stone.black)
     {
-        var cn, d, o, shd, src, stn, x, y
+        var cn, d, shd, src, stn, x, y
 
         d = 100 / (this.size + 1)
         cn = stoneColor[s]
@@ -291,11 +291,11 @@ Board = (function ()
         }
         src = `../img/stone_${cn}.png`
         stn = elem('img',{class:`stone pos${c[0]}_${c[1]}`,src:src,width:"auto",height:`${d}%`,parent:this.stn})
-        shd = elem('img',{class:`shadow pos${c[0]}_${c[1]}`,src:'../img/stone_shadow.png',width:"auto",height:`${1.15 * d}%`,parent:this.shd})
+        shd = elem('img',{class:`shadow pos${c[0]}_${c[1]}`,src:'../img/shadow_hard.png',width:"auto",height:`${1.15 * d}%`,parent:this.shd})
         x = (c[0] + 0.5) * 100 / (this.size + 1)
         y = (c[1] + 0.5) * 100 / (this.size + 1)
         stn.style = `left:${x}%; top:${y}%;`
-        return shd.style = `left:${x}%; top:${y}%; opacity:${o = (this.size === 19 ? 0.5 : (this.size === 13 ? 0.6 : 0.7))};`
+        return shd.style = `left:${x}%; top:${y}%;`
     }
 
     Board.prototype["clear"] = function ()
