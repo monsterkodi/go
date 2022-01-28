@@ -133,6 +133,9 @@ body {
   font-family: titlebarFont;
   transform: translate(-50%, -50%);
 }
+.legend {
+  font-size: 13px;
+}
 .number {
   text-align: center;
   line-height: 1.56;
@@ -184,20 +187,22 @@ body {
   display: flex;
   flex-direction: row;
 }
-.gameInfo .white {
-  color: #fff;
-}
 .gameInfo .black {
   color: #000;
+  filter: drop-shadow(0px 1px 1px rgba(0,0,0,0.533));
+}
+.gameInfo .white {
+  color: #fff;
+  filter: drop-shadow(0px 1px 1px rgba(0,0,0,0.867));
 }
 .gameInfoLeft,
 .gameInfoRight {
   flex: 1 1 100px;
   width: 100px;
   padding-left: 3px;
+  padding-right: 3px;
 }
 .gameInfoLeft {
-  padding-right: 3px;
   text-align: end;
 }
 .gameInfoCenter {
@@ -205,24 +210,28 @@ body {
   font-weight: bold;
   flex: 1 1;
 }
-.score.W {
-  color: #fff;
+.score {
+  padding-left: 3px;
+  padding-right: 3px;
 }
 .score.B {
   color: #000;
+  filter: drop-shadow(0px 1px 1px rgba(0,0,0,0.533));
 }
+.score.W {
+  color: #fff;
+  filter: drop-shadow(0px 1px 1px rgba(0,0,0,0.867));
+}
+.redos,
 .move {
-  color: #a80;
+  color: #a20;
+  padding-left: 3px;
+  padding-right: 3px;
 }
-.quote {
-  opacity: 0.5;
-}
-.titlebar-dot {
-  display: inline-block;
-  vertical-align: top;
-  padding-left: 9px;
-  padding-right: 9px;
-  margin-top: -1px;
+.player {
+  padding-left: 3px;
+  padding-right: 3px;
+  font-size: 17px;
 }
 #titlebar .winicon img {
   pointer-events: all;

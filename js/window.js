@@ -1,10 +1,12 @@
 // monsterkodi/kode 0.237.0
 
-var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}}
+var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}}
 
-var $, args, Board, elem, kerror, keyinfo, klog, kxk, MainWin, post, Referee, stash, win
+var $, args, Board, elem, kerror, keyinfo, klog, kxk, MainWin, post, Referee, stash, stone, win
 
 kxk = require('kxk')
+stone = require('./util').stone
+
 args = kxk.args
 kerror = kxk.kerror
 keyinfo = kxk.keyinfo
@@ -77,6 +79,47 @@ MainWin = (function ()
         return post.toMain('stashSaved')
     }
 
+    MainWin.prototype["updateTitle"] = function ()
+    {
+        var cps, game, mov, t, td, tl, tm, tr
+
+        game = this.referee.game
+        if (!game)
+        {
+            return
+        }
+        t = $('.titlebar-title')
+        t.innerHTML = ''
+        td = elem('div',{class:'gameInfo',parent:t})
+        tl = elem('div',{class:'gameInfoLeft black',parent:td})
+        tm = elem('div',{class:'gameInfoCenter',parent:td})
+        tr = elem('div',{class:'gameInfoRight white',parent:td})
+        mov = {black:'',white:''}
+        if (game.moves.singlePass())
+        {
+            mov[game.lastColor()] = 'pass'
+        }
+        if (game.moves.resigned())
+        {
+            mov[game.lastColor()] = 'resign'
+        }
+        cps = {black:(game.captures.black !== 0 ? game.captures.black + ' ' + stone.white : ''),white:(game.captures.white !== 0 ? game.captures.white + ' ' + stone.white : '')}
+        elem('span',{class:'move',parent:tl,text:mov.black})
+        elem('span',{class:'player',parent:tl,text:game.players.black})
+        elem('span',{class:'capture',parent:tl,text:stone.white + ' ' + cps.black})
+        if (game.info.score)
+        {
+            elem('span',{class:`score ${game.info.score[0]}`,parent:tm,text:game.info.score})
+        }
+        if (!_k_.empty(this.referee.redos))
+        {
+            elem('span',{class:"redos",parent:tm,text:`${this.referee.game.moves.num()} ${stone.white} ${this.referee.game.moves.num() + this.referee.redos.length}`})
+        }
+        elem('span',{class:'capture',parent:tr,text:stone.white + ' ' + cps.white})
+        elem('span',{class:'player',parent:tr,text:game.players.white})
+        return elem('span',{class:'move',parent:tr,text:mov.white})
+    }
+
     MainWin.prototype["onMenuAction"] = function (action, args)
     {
         switch (action.toLowerCase())
@@ -113,9 +156,9 @@ MainWin = (function ()
                 return this.referee.genMove()
 
             case 'calcscore':
-                return this.referee.gnu.calcscore()
+                return this.referee.board.annotate()
 
-            case 'move number':
+            case 'numbers':
                 return this.referee.board.toggleNumbers()
 
             case 'legend':

@@ -185,7 +185,6 @@ function Game extends Score
     
     clear_board: ->
         
-        delete @redos
         @moves.clear()
         @clear()
         @grid.clear()
@@ -227,50 +226,18 @@ function Game extends Score
         log 'black' @allStones('b').length, @allStones 'b'
         log @grid.toString()
         
-    setScore: (@score) -> 
-    
-        # log 'game.setScore' @score
-        @calcScore()
-        # @board.annotate()
+    setScore: (score) -> 
+
+        @info.score = score
+        log 'game.setScore' score
+        calc = @calcScore()
+        log 'calcScore' calc
+        @board.annotate()
         
-    # 000000000  000  000000000  000      00000000  
-    #    000     000     000     000      000       
-    #    000     000     000     000      0000000   
-    #    000     000     000     000      000       
-    #    000     000     000     0000000  00000000  
-    
-    updateTitle: (score='') ->
-        
-        t =$ '.titlebar-title'
-        t.innerHTML = ''
-        td = elem 'div' class:'gameInfo'            parent:t
-        tl = elem 'div' class:'gameInfoLeft black'  parent:td
-        tm = elem 'div' class:'gameInfoCenter'      parent:td
-        tr = elem 'div' class:'gameInfoRight white' parent:td
-        
-        scr = black: @score?[0] == 'B' ? @score[2..] : '  '
-              white: @score?[0] == 'W' ? @score[2..] : '  '
-        
-        log 'captures' @captures, score
-        mov = black:'' white:''
-        if @moves.singlePass()
-            mov[@lastColor()] = 'pass'
-        if @moves.resigned()
-            mov[@lastColor()] = 'resign'
-            
-        cps = black: @captures.black != 0 ? @captures.black : ''
-              white: @captures.white != 0 ? @captures.white : ''
-                
-        elem 'span' class:'move'    parent:tl, text: mov.black
-        elem 'span' class:'player'  parent:tl, text:@players.black + ' '
-        elem 'span' class:'capture' parent:tl, text: scr.black + ' ' + cps.black + ' ' + stone.white
-        elem 'span' class:"score #{score[0]}"  parent:tm, text: score
-        elem 'span' class:'capture' parent:tr, text: stone.white + cps.white + ' ' + scr.white
-        elem 'span' class:'player'  parent:tr, text: @players.white 
-        elem 'span' class:'move'    parent:tr, text: mov.white
+    updateTitle: -> window.win.updateTitle()
         
     finalScore: (score) ->
         
-        @updateTitle score
+        @setScore score
         
 module.exports = Game

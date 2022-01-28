@@ -26,7 +26,7 @@ function Compi
 
       delete @proc
 
-      log "#{@name} stopped #{signal}"
+      log "#{@name} process exited #{signal}"
 
     newGame: (boardsize, @color, @handicap) ->
         
@@ -35,7 +35,7 @@ function Compi
         @send "fixed_handicap #{handicap}" if @handicap > 1
 
     genmove: -> 
-        log "#{@name}: genmove #{@color}"
+        # log "#{@name}: genmove #{@color}"
         @send "genmove #{@color}"
         
     opponentMove: (p) ->
@@ -58,17 +58,17 @@ function Compi
         
         data = String chunk
         
-        log @name, 'onData msgs' @msg, "'#{data}'"
+        # log @name, 'onData msgs' @msg, "'#{data}'"
         
         if @partial 
-            data = @partial + "'#{data}'"
+            data = @partial + data
             delete @partial
             
         answers = data.split '\n\n'
         
         @partial = answers.pop()
 
-        log @name, answers
+        # log @name, answers
 
         for answer in answers
             

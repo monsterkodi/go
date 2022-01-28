@@ -30,7 +30,7 @@ Compi = (function ()
     Compi.prototype["onExit"] = function (signal)
     {
         delete this.proc
-        console.log(`${this.name} stopped ${signal}`)
+        console.log(`${this.name} process exited ${signal}`)
     }
 
     Compi.prototype["newGame"] = function (boardsize, color, handicap)
@@ -47,7 +47,6 @@ Compi = (function ()
 
     Compi.prototype["genmove"] = function ()
     {
-        console.log(`${this.name}: genmove ${this.color}`)
         return this.send(`genmove ${this.color}`)
     }
 
@@ -83,15 +82,13 @@ Compi = (function ()
         var answer, answers, data
 
         data = String(chunk)
-        console.log(this.name,'onData msgs',this.msg,`'${data}'`)
         if (this.partial)
         {
-            data = this.partial + `'${data}'`
+            data = this.partial + data
             delete this.partial
         }
         answers = data.split('\n\n')
         this.partial = answers.pop()
-        console.log(this.name,answers)
         var list = _k_.list(answers)
         for (var _73_19_ = 0; _73_19_ < list.length; _73_19_++)
         {

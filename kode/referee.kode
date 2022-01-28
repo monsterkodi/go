@@ -143,7 +143,7 @@ function Referee
             @compi.black?.send 'final_score'
             @compi.white?.send 'final_score'
         else
-            log "#{next} genmove" @compi[next]
+            # log "#{next} genmove" @compi[next]
             @compi[next]?.genmove()
                             
     # 000   000  000   000  0000000     0000000   

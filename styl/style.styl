@@ -132,7 +132,10 @@ body
     font-size           11px
     font-family         titlebarFont
     transform           translate(-50%, -50%)
-    
+
+.legend
+    font-size           13px
+
 .number
     text-align          center
     line-height         1.56
@@ -176,16 +179,18 @@ body
     position            absolute
     left                50%
     transform           translate(-50%, 20%)
-    & .white
-        color            white
     & .black
-        color            black
+        color           black
+        filter          drop-shadow(0px 1px 1px #0008)
+    & .white
+        color           white
+        filter          drop-shadow(0px 1px 1px #000d)
     background-image    url("../../img/board.png")
     background-repeat   repeat, no-repeat
     background-size     contain
-    background-position-x  center
+    background-position-x   center
     border-top-left-radius  6px
-    border-top-right-radius  6px
+    border-top-right-radius 6px
     padding-left        6px
     padding-right       6px
     height              titlebarHeight
@@ -197,8 +202,8 @@ body
     flex                1 1 100px
     width               100px
     padding-left        3px
-.gameInfoLeft
     padding-right       3px
+.gameInfoLeft
     text-align          end
 .gameInfoCenter         
     font-size           18px
@@ -206,24 +211,27 @@ body
     flex                1 1
     
 .score
-    &.W
-        color           white
     &.B
         color           black
+        filter          drop-shadow(0px 1px 1px #0008)
+    &.W
+        color           white
+        filter          drop-shadow(0px 1px 1px #000d)
+    padding-left        3px
+    padding-right       3px
         
+.redos
 .move
-    color               #a80
+    color               #a20
+    padding-left        3px
+    padding-right       3px
+    
+.player
+
+    padding-left        3px
+    padding-right       3px
+    font-size           17px
         
-.quote
-    opacity             0.5
-    
-.titlebar-dot
-    display             inline-block
-    vertical-align      top
-    padding-left        9px
-    padding-right       9px
-    margin-top          -1px
-    
 #titlebar .winicon img
     pointer-events      all
     padding-left        6px

@@ -7,6 +7,7 @@
 ###
 
 kxk = require 'kxk'
+{ stone } = require './util'
 { args, kerror, keyinfo, klog, post, stash, win, elem, $ } = kxk
 
 Board   = require './board'
@@ -77,6 +78,44 @@ function MainWin extends win
         post.emit 'stash'
         window.stash.save()
         post.toMain 'stashSaved'
+        
+    # 000000000  000  000000000  000      00000000  
+    #    000     000     000     000      000       
+    #    000     000     000     000      0000000   
+    #    000     000     000     000      000       
+    #    000     000     000     0000000  00000000  
+    
+    updateTitle: ->
+        
+        game = @referee.game
+        return if not game
+        
+        t =$ '.titlebar-title'
+        t.innerHTML = ''
+        td = elem 'div' class:'gameInfo'            parent:t
+        tl = elem 'div' class:'gameInfoLeft black'  parent:td
+        tm = elem 'div' class:'gameInfoCenter'      parent:td
+        tr = elem 'div' class:'gameInfoRight white' parent:td
+                
+        # log 'captures' game.captures, game.info.score
+        
+        mov = black:'' white:''
+        if game.moves.singlePass()
+            mov[game.lastColor()] = 'pass'
+        if game.moves.resigned()
+            mov[game.lastColor()] = 'resign'
+            
+        cps = black: game.captures.black != 0 ? game.captures.black + ' ' + stone.white : ''
+              white: game.captures.white != 0 ? game.captures.white + ' ' + stone.white : ''
+                
+        elem 'span' class:'move'    parent:tl, text: mov.black
+        elem 'span' class:'player'  parent:tl, text: game.players.black
+        elem 'span' class:'capture' parent:tl, text: stone.white + ' ' + cps.black 
+        if game.info.score      ➜ elem 'span' class:"score #{game.info.score[0]}"  parent:tm, text: game.info.score
+        if valid @referee.redos ➜ elem 'span' class:"redos"  parent:tm, text: "#{@referee.game.moves.num()} #{stone.white} #{@referee.game.moves.num()+@referee.redos.length}"
+        elem 'span' class:'capture' parent:tr, text: stone.white + ' ' + cps.white
+        elem 'span' class:'player'  parent:tr, text: game.players.white 
+        elem 'span' class:'move'    parent:tr, text: mov.white
                 
     # 00     00  00000000  000   000  000   000  
     # 000   000  000       0000  000  000   000  
@@ -97,8 +136,8 @@ function MainWin extends win
             'pass'                      ➜ @referee.playerMove 'pass'   'human'
             'resign'                    ➜ @referee.playerMove 'resign' 'human'
             'genmove'                   ➜ @referee.genMove()
-            'calcscore'                 ➜ @referee.gnu.calcscore()
-            'move number'               ➜ @referee.board.toggleNumbers()
+            'calcscore'                 ➜ @referee.board.annotate()
+            'numbers'                   ➜ @referee.board.toggleNumbers()
             'legend'                    ➜ @referee.board.toggleLegend()
             'liberties'                 ➜ @referee.board.toggleLiberties()
             'territory'                 ➜ @referee.board.toggleTerritory()

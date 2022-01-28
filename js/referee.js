@@ -179,7 +179,6 @@ Referee = (function ()
         }
         else
         {
-            console.log(`${next} genmove`,this.compi[next])
             return (this.compi[next] != null ? this.compi[next].genmove() : undefined)
         }
     }

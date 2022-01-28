@@ -56,7 +56,7 @@ game
         9                   9
     
 view
-    move number             alt+n
+    numbers                 alt+n
     liberties               alt+l
     legend                  cmdctrl+l
     territory               cmdctrl+t

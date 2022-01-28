@@ -79,7 +79,7 @@ function Score
         # ● calcScore
               
         @calcGroups()
-        
+                
         markDead = (g,r) =>
             
             # log @groupString g
@@ -181,14 +181,16 @@ function Score
             # eyes = @areas.filter (a) -> a.color in 'wb'
             # log @groupString.apply @, dead.concat eyes
              
+            points = copy final.captures
+            
             for a in final.areas
                 if a.color in 'wb'
-                    final.captures[stoneColor[a.color]] += a.area.length
+                    points[stoneColor[a.color]] += a.area.length
 
-            if final.captures.white > final.captures.black
-                finalScore = 'W+'+(final.captures.white-final.captures.black)
+            if points.white > points.black
+                finalScore = 'W+'+(points.white-points.black)
             else
-                finalScore = 'B+'+(final.captures.black-final.captures.white)
+                finalScore = 'B+'+(points.black-points.white)
                 
             finalScore
 

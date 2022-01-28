@@ -269,7 +269,6 @@ Game = (function ()
 
     Game.prototype["clear_board"] = function ()
     {
-        delete this.redos
         this.moves.clear()
         this.clear()
         this.grid.clear()
@@ -285,7 +284,7 @@ Game = (function ()
         s = ' '
         b = '  '
         b += (function (o) {
-            var r_206_34_ = _k_.each_r(o)
+            var r_205_34_ = _k_.each_r(o)
             for (var k in o)
             {   
                 var m = (function (v)
@@ -294,18 +293,18 @@ Game = (function ()
             })(o[k])
                 if (m != null)
                 {
-                    r_206_34_[k] = m
+                    r_205_34_[k] = m
                 }
             }
-            return typeof o == 'string' ? r_206_34_.join('') : r_206_34_
+            return typeof o == 'string' ? r_205_34_.join('') : r_205_34_
         })(alpha.slice(0,this.size))
         b += '\n'
         y = 0
-        for (var _209_17_ = i = this.size, _209_24_ = 1; (_209_17_ <= _209_24_ ? i <= 1 : i >= 1); (_209_17_ <= _209_24_ ? ++i : --i))
+        for (var _208_17_ = i = this.size, _208_24_ = 1; (_208_17_ <= _208_24_ ? i <= 1 : i >= 1); (_208_17_ <= _208_24_ ? ++i : --i))
         {
             b += _k_.lpad(2,i)
             b += s
-            for (var _212_21_ = x = 0, _212_25_ = this.size; (_212_21_ <= _212_25_ ? x < this.size : x > this.size); (_212_21_ <= _212_25_ ? ++x : --x))
+            for (var _211_21_ = x = 0, _211_25_ = this.size; (_211_21_ <= _211_25_ ? x < this.size : x > this.size); (_211_21_ <= _211_25_ ? ++x : --x))
             {
                 b += this.stoneAt(x,y) + s
             }
@@ -315,7 +314,7 @@ Game = (function ()
         }
         b += '  '
         b += (function (o) {
-            var r_219_34_ = _k_.each_r(o)
+            var r_218_34_ = _k_.each_r(o)
             for (var k in o)
             {   
                 var m = (function (v)
@@ -324,10 +323,10 @@ Game = (function ()
             })(o[k])
                 if (m != null)
                 {
-                    r_219_34_[k] = m
+                    r_218_34_[k] = m
                 }
             }
-            return typeof o == 'string' ? r_219_34_.join('') : r_219_34_
+            return typeof o == 'string' ? r_218_34_.join('') : r_218_34_
         })(alpha.slice(0,this.size))
         b += '\n'
         return b
@@ -343,45 +342,23 @@ Game = (function ()
 
     Game.prototype["setScore"] = function (score)
     {
-        this.score = score
-    
-        return this.calcScore()
+        var calc
+
+        this.info.score = score
+        console.log('game.setScore',score)
+        calc = this.calcScore()
+        console.log('calcScore',calc)
+        return this.board.annotate()
     }
 
-    Game.prototype["updateTitle"] = function (score = '')
+    Game.prototype["updateTitle"] = function ()
     {
-        var cps, mov, scr, t, td, tl, tm, tr, _251_27_, _252_27_
-
-        t = $('.titlebar-title')
-        t.innerHTML = ''
-        td = elem('div',{class:'gameInfo',parent:t})
-        tl = elem('div',{class:'gameInfoLeft black',parent:td})
-        tm = elem('div',{class:'gameInfoCenter',parent:td})
-        tr = elem('div',{class:'gameInfoRight white',parent:td})
-        scr = {black:((this.score != null ? this.score[0] : undefined) === 'B' ? this.score.slice(2) : '  '),white:((this.score != null ? this.score[0] : undefined) === 'W' ? this.score.slice(2) : '  ')}
-        console.log('captures',this.captures,score)
-        mov = {black:'',white:''}
-        if (this.moves.singlePass())
-        {
-            mov[this.lastColor()] = 'pass'
-        }
-        if (this.moves.resigned())
-        {
-            mov[this.lastColor()] = 'resign'
-        }
-        cps = {black:(this.captures.black !== 0 ? this.captures.black : ''),white:(this.captures.white !== 0 ? this.captures.white : '')}
-        elem('span',{class:'move',parent:tl,text:mov.black})
-        elem('span',{class:'player',parent:tl,text:this.players.black + ' '})
-        elem('span',{class:'capture',parent:tl,text:scr.black + ' ' + cps.black + ' ' + stone.white})
-        elem('span',{class:`score ${score[0]}`,parent:tm,text:score})
-        elem('span',{class:'capture',parent:tr,text:stone.white + cps.white + ' ' + scr.white})
-        elem('span',{class:'player',parent:tr,text:this.players.white})
-        return elem('span',{class:'move',parent:tr,text:mov.white})
+        return window.win.updateTitle()
     }
 
     Game.prototype["finalScore"] = function (score)
     {
-        return this.updateTitle(score)
+        return this.setScore(score)
     }
 
     return Game

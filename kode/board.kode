@@ -289,7 +289,7 @@ function Board
     ###
     
     annotate: ->
-        
+
         @showLastMove()
         @numbers()
         @liberties()
@@ -306,14 +306,10 @@ function Board
         
         @num.innerHTML = ''
         if @game
-            for m in @game.moves
-                [color, move] = m.split ' '
-                n = @game.moves.indexOf m
-                if not move?
-                    move = color 
-                    color = ['black''white'][n]
-                c = @game.coord move
-                l = elem 'div' class:"number #{color}" parent:@num, text:1+n
+            for m in @game.moves.m
+                n = @game.moves.m.indexOf m
+                c = @game.coord m.pos
+                l = elem 'div' class:"number #{m.color}" parent:@num, text:1+n
                 p = @coordToPrcnt c
                 l.style = "left:#{p.x}%; top:#{p.y}%;" 
                 s = @div.getBoundingClientRect().height/(@size+1)
@@ -322,8 +318,8 @@ function Board
                 l.style.width = "#{s}px"
                 l.style.height = "#{s}px"
                 l.style.borderRadius = "#{s}px"
-                if stone.empty == @game.stoneAt move
-                    l.style.backgroundColor = color
+                if stone.empty == @game.stoneAt m.pos
+                    l.style.backgroundColor = m.color
         
     # 000      000  0000000    00000000  00000000   000000000  000  00000000   0000000  
     # 000      000  000   000  000       000   000     000     000  000       000       
@@ -352,7 +348,7 @@ function Board
         
         @trr.innerHTML = ''
         if @game
-            if @game.moves.length > 1
+            if @game.moves.num() > 1
                             
                 for a in @game.areas
                     if a.color in 'wbWB'
@@ -363,7 +359,6 @@ function Board
                             s = s.toFixed 2
                             e.style = "left:#{r.x}%; top:#{r.y}%; width:#{s}%; height:#{s}%;" 
                     
-
                 for g in @game.grps
                     if g.state == 'dead'
                         for p in g.group
