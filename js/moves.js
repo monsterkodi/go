@@ -73,9 +73,19 @@ Moves = (function ()
         })
     }
 
+    Moves.prototype["resigned"] = function ()
+    {
+        return (this.m.slice(-1)[0] != null ? this.m.slice(-1)[0].pos : undefined) === 'resign'
+    }
+
     Moves.prototype["lastIsPass"] = function ()
     {
         return (this.m.slice(-1)[0] != null ? this.m.slice(-1)[0].pos : undefined) === 'pass'
+    }
+
+    Moves.prototype["singlePass"] = function ()
+    {
+        return (this.m.slice(-1)[0] != null ? this.m.slice(-1)[0].pos : undefined) === 'pass' && (this.m.slice(-2,-1)[0] != null ? this.m.slice(-2,-1)[0].pos : undefined) !== 'pass'
     }
 
     Moves.prototype["doublePass"] = function ()

@@ -36,7 +36,7 @@ Referee = (function ()
 
     Referee.prototype["newGame"] = function (gi = {})
     {
-        var info, moves, _43_33_, _44_33_, _45_33_, _46_33_, _47_33_, _48_33_, _83_20_, _84_20_
+        var info, moves, _43_33_, _44_33_, _45_33_, _46_33_, _47_33_, _48_33_, _82_20_, _83_20_
 
         this.white = ((_43_33_=gi.white) != null ? _43_33_ : this.white)
         this.black = ((_44_33_=gi.black) != null ? _44_33_ : this.black)
@@ -48,10 +48,6 @@ Referee = (function ()
         if (this.white === 'leelaz' || this.black === 'leelaz')
         {
             this.boardsize = 19
-        }
-        if (_k_.empty(moves))
-        {
-            window.stash.del('score')
         }
         window.stash.set('size',this.boardsize)
         window.stash.set('white',this.white)
@@ -117,13 +113,13 @@ Referee = (function ()
 
     Referee.prototype["replay"] = function (moves)
     {
-        var c, m, p, score, _110_28_, _111_28_, _113_33_
+        var c, m, p, score, _109_28_, _110_28_
 
         var list = _k_.list(moves)
-        for (var _103_14_ = 0; _103_14_ < list.length; _103_14_++)
+        for (var _102_14_ = 0; _102_14_ < list.length; _102_14_++)
         {
-            m = list[_103_14_]
-            var _104_19_ = m.split(' '); c = _104_19_[0]; p = _104_19_[1]
+            m = list[_102_14_]
+            var _103_19_ = m.split(' '); c = _103_19_[0]; p = _103_19_[1]
 
             if (!(p != null))
             {
@@ -137,8 +133,7 @@ Referee = (function ()
                 ;(this.compi.white != null ? this.compi.white.send(`play ${c} ${p}`) : undefined)
             }
         }
-        score = ((_113_33_=this.game.info.score) != null ? _113_33_ : window.stash.get('score'))
-        if (score)
+        if (score = this.game.info.score)
         {
             return this.game.finalScore(score)
         }
@@ -155,7 +150,7 @@ Referee = (function ()
 
     Referee.prototype["playerMove"] = function (p, player)
     {
-        var color, next, _132_38_, _132_58_, _146_24_, _147_24_
+        var color, next, _129_38_, _129_58_, _143_24_, _144_24_
 
         if (this.game.end())
         {
@@ -191,7 +186,7 @@ Referee = (function ()
 
     Referee.prototype["undo"] = function ()
     {
-        var m, _168_15_, _171_24_, _172_24_, _181_20_, _182_20_
+        var m, _165_15_, _168_24_, _169_24_, _178_20_, _179_20_
 
         if (this.game.start())
         {
@@ -201,7 +196,7 @@ Referee = (function ()
         {
             return
         }
-        this.redos = ((_168_15_=this.redos) != null ? _168_15_ : [])
+        this.redos = ((_165_15_=this.redos) != null ? _165_15_ : [])
         while (_k_.in(this.game.lastPos(),['pass','resign']))
         {
             this.redos.unshift(this.game.moves.pop())
@@ -217,7 +212,7 @@ Referee = (function ()
 
     Referee.prototype["redo"] = function ()
     {
-        var move, _190_20_, _191_20_
+        var move, _187_20_, _188_20_
 
         if (_k_.empty(this.redos))
         {
@@ -231,7 +226,7 @@ Referee = (function ()
 
     Referee.prototype["jumpToStart"] = function ()
     {
-        var _203_20_, _204_20_
+        var _200_20_, _201_20_
 
         if (this.game.start())
         {

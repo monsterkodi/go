@@ -52,7 +52,6 @@ function Referee
         
         # log @boardsize, @handicap, info, gi
         
-        window.stash.del 'score' if empty moves
         window.stash.set 'size'      @boardsize
         window.stash.set 'white'     @white
         window.stash.set 'black'     @black
@@ -110,9 +109,7 @@ function Referee
                 @compi.black?.send "play #{c} #{p}"
                 @compi.white?.send "play #{c} #{p}"
         
-        score = @game.info.score ? window.stash.get 'score'
-
-        if score
+        if score = @game.info.score
             @game.finalScore score
         else
             @compi[@game.nextColor()]?.genmove()

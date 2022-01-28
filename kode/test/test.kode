@@ -29,4 +29,7 @@ ded = (b) ->
         """
     # log ars(b)
     # log ded(b)
-    # scr(b) ▸ 'W+1'
+    scr(b) ▸ 'W+1'
+    # s = new Score b
+    # s.captures.black ▸ 0
+    # s.captures.white ▸ 0

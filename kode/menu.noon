@@ -17,6 +17,7 @@ go
     redo                    right
     ----
     pass                    p
+    resign                  r
     genmove                 g
     calcscore               c
     -----

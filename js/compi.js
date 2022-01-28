@@ -145,8 +145,6 @@ Compi = (function ()
             case 'showboard':
                 console.log(data)
                 break
-            default:
-                console.log(this.name,'ok -- ignore',m,`'${data}'`)
         }
 
     }

@@ -11,7 +11,7 @@ GNU = (function ()
     _k_.extend(GNU, Compi)
     function GNU (game)
     {
-        GNU.__super__.constructor.call(this,this.game,'gnu','/usr/local/bin/gnugo',['--mode','gtp','--level','18','--never-resign'])
+        GNU.__super__.constructor.call(this,this.game,'gnu','/usr/local/bin/gnugo',['--mode','gtp','--level','13','--never-resign'])
     
         this.game = game
     }

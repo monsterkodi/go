@@ -24,7 +24,9 @@ function Moves
     last:       -> @m[-1]
     start:      -> @m.length == 0
     history:    -> @m.map (m) -> m.pos
+    resigned:   -> @m[-1]?.pos == 'resign'
     lastIsPass: -> @m[-1]?.pos == 'pass'
+    singlePass: -> @m[-1]?.pos == 'pass' and @m[-2]?.pos != 'pass'
     doublePass: -> @m[-1]?.pos == 'pass' == @m[-2]?.pos
     lastColor:  -> @m.length ? ['white''black'][@m.length%2] : 'start'
     nextColor:  -> @ended ? 'end' : ['black''white'][@m.length%2]

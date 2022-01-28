@@ -239,34 +239,38 @@ function Game extends Score
     #    000     000     000     000      000       
     #    000     000     000     0000000  00000000  
     
-    updateTitle: ->
+    updateTitle: (score='') ->
         
         t =$ '.titlebar-title'
         t.innerHTML = ''
-        td = elem 'div' class:'captures' parent:t
+        td = elem 'div' class:'gameInfo'            parent:t
+        tl = elem 'div' class:'gameInfoLeft black'  parent:td
+        tm = elem 'div' class:'gameInfoCenter'      parent:td
+        tr = elem 'div' class:'gameInfoRight white' parent:td
         
-        scr = 
-              black: @score?[0] == 'B' ? @score[2..] : '  '
+        scr = black: @score?[0] == 'B' ? @score[2..] : '  '
               white: @score?[0] == 'W' ? @score[2..] : '  '
         
-        log 'captures' @captures
+        log 'captures' @captures, score
+        mov = black:'' white:''
         if @moves.singlePass()
-            scr[@lastColor()] 'pass'
-        
-        elem 'span' class:'player black'  text:@players.black + ' ', parent:td
-        elem 'span' class:'capture black' text: scr.black + ' ' + @captures.black + stone.black, parent:td
-        elem 'span' class:'capture white' text: stone.white + @captures.white + ' ' + scr.white, parent:td
-        elem 'span' class:'player white' text:' ' + @players.white, parent:td
+            mov[@lastColor()] = 'pass'
+        if @moves.resigned()
+            mov[@lastColor()] = 'resign'
+            
+        cps = black: @captures.black != 0 ? @captures.black : ''
+              white: @captures.white != 0 ? @captures.white : ''
+                
+        elem 'span' class:'move'    parent:tl, text: mov.black
+        elem 'span' class:'player'  parent:tl, text:@players.black + ' '
+        elem 'span' class:'capture' parent:tl, text: scr.black + ' ' + cps.black + ' ' + stone.white
+        elem 'span' class:"score #{score[0]}"  parent:tm, text: score
+        elem 'span' class:'capture' parent:tr, text: stone.white + cps.white + ' ' + scr.white
+        elem 'span' class:'player'  parent:tr, text: @players.white 
+        elem 'span' class:'move'    parent:tr, text: mov.white
         
     finalScore: (score) ->
         
-        window.stash.set 'score' trim score 
-        t =$ '.titlebar-title'
-        t.innerHTML = ''
-        td = elem 'div' class:'captures' parent:t
-        
-        elem 'span' {class:'player black' text:@info.players[0] + ' ', parent:td} if valid @info.players
-        elem 'span'  class:"score  #{score[0] == 'B' ? 'black' : 'white'}" text:score, parent:td
-        elem 'span' {class:'player white' text:' ' + @info.players[1], parent:td} if valid @info.players
+        @updateTitle score
         
 module.exports = Game

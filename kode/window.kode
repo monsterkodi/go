@@ -94,7 +94,8 @@ function MainWin extends win
             'redo'                      ➜ @referee.redo()
             'start'                     ➜ @referee.jumpToStart()
             'end'                       ➜ @referee.jumpToEnd()
-            'pass'                      ➜ @referee.playerMove 'pass' 'human'
+            'pass'                      ➜ @referee.playerMove 'pass'   'human'
+            'resign'                    ➜ @referee.playerMove 'resign' 'human'
             'genmove'                   ➜ @referee.genMove()
             'calcscore'                 ➜ @referee.gnu.calcscore()
             'move number'               ➜ @referee.board.toggleNumbers()

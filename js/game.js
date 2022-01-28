@@ -1,6 +1,6 @@
 // monsterkodi/kode 0.237.0
 
-var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, each_r: function (o) {return o instanceof Array ? [] : typeof o == 'string' ? o.split('') : {}}, lpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s=c+s} return s}, trim: function (s,c=' ') {return _k_.ltrim(_k_.rtrim(s,c),c)}, ltrim: function (s,c=' ') { while (_k_.in(s[0],c)) { s = s.slice(1) } return s}, rtrim: function (s,c=' ') {while (_k_.in(s.slice(-1)[0],c)) { s = s.slice(0, s.length - 1) } return s}}
+var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, each_r: function (o) {return o instanceof Array ? [] : typeof o == 'string' ? o.split('') : {}}, lpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s=c+s} return s}}
 
 var $, alpha, elem, Game, Grid, kxk, Moves, opponent, randInt, Score, stone
 
@@ -348,42 +348,40 @@ Game = (function ()
         return this.calcScore()
     }
 
-    Game.prototype["updateTitle"] = function ()
+    Game.prototype["updateTitle"] = function (score = '')
     {
-        var scr, t, td, _249_27_, _250_27_
+        var cps, mov, scr, t, td, tl, tm, tr, _251_27_, _252_27_
 
         t = $('.titlebar-title')
         t.innerHTML = ''
-        td = elem('div',{class:'captures',parent:t})
+        td = elem('div',{class:'gameInfo',parent:t})
+        tl = elem('div',{class:'gameInfoLeft black',parent:td})
+        tm = elem('div',{class:'gameInfoCenter',parent:td})
+        tr = elem('div',{class:'gameInfoRight white',parent:td})
         scr = {black:((this.score != null ? this.score[0] : undefined) === 'B' ? this.score.slice(2) : '  '),white:((this.score != null ? this.score[0] : undefined) === 'W' ? this.score.slice(2) : '  ')}
-        console.log('captures',this.captures)
+        console.log('captures',this.captures,score)
+        mov = {black:'',white:''}
         if (this.moves.singlePass())
         {
-            scr[this.lastColor()]('pass')
+            mov[this.lastColor()] = 'pass'
         }
-        elem('span',{class:'player black',text:this.players.black + ' ',parent:td})
-        elem('span',{class:'capture black',text:scr.black + ' ' + this.captures.black + stone.black,parent:td})
-        elem('span',{class:'capture white',text:stone.white + this.captures.white + ' ' + scr.white,parent:td})
-        return elem('span',{class:'player white',text:' ' + this.players.white,parent:td})
+        if (this.moves.resigned())
+        {
+            mov[this.lastColor()] = 'resign'
+        }
+        cps = {black:(this.captures.black !== 0 ? this.captures.black : ''),white:(this.captures.white !== 0 ? this.captures.white : '')}
+        elem('span',{class:'move',parent:tl,text:mov.black})
+        elem('span',{class:'player',parent:tl,text:this.players.black + ' '})
+        elem('span',{class:'capture',parent:tl,text:scr.black + ' ' + cps.black + ' ' + stone.white})
+        elem('span',{class:`score ${score[0]}`,parent:tm,text:score})
+        elem('span',{class:'capture',parent:tr,text:stone.white + cps.white + ' ' + scr.white})
+        elem('span',{class:'player',parent:tr,text:this.players.white})
+        return elem('span',{class:'move',parent:tr,text:mov.white})
     }
 
     Game.prototype["finalScore"] = function (score)
     {
-        var t, td
-
-        window.stash.set('score',_k_.trim(score))
-        t = $('.titlebar-title')
-        t.innerHTML = ''
-        td = elem('div',{class:'captures',parent:t})
-        if (!_k_.empty(this.info.players))
-        {
-            elem('span',{class:'player black',text:this.info.players[0] + ' ',parent:td})
-        }
-        elem('span',{class:`score  ${(score[0] === 'B' ? 'black' : 'white')}`,text:score,parent:td})
-        if (!_k_.empty(this.info.players))
-        {
-            return elem('span',{class:'player white',text:' ' + this.info.players[1],parent:td})
-        }
+        return this.updateTitle(score)
     }
 
     return Game

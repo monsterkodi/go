@@ -106,6 +106,9 @@ MainWin = (function ()
             case 'pass':
                 return this.referee.playerMove('pass','human')
 
+            case 'resign':
+                return this.referee.playerMove('resign','human')
+
             case 'genmove':
                 return this.referee.genMove()
 

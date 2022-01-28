@@ -125,11 +125,6 @@ function Score
                     markDead g, 'dead shape'
                     continue
                     
-                # for ai in g.areas
-                    # if not @deadShape @areas[ai]
-                        # g.state = 'alive_canMakeEye'
-                        # break
-                        
                 continue if g.state.startsWith 'alive'
                         
                 if valid(weak = @weakCollection g)
@@ -162,18 +157,13 @@ function Score
                     score.grid.set p, ' '
             
             final = score.calcScore @
+            
         else
             # log 'no more death:' dead.length
             final = @
                 
         if not root
                                         
-            # final = score.calcScore @
-                        
-            for a in final.areas
-                if a.color in 'wb'
-                    final.captures[stoneColor[a.color]] += a.area.length
-                    
             for g in @grps
                 if g.state == 'unknown'
                     if stone.empty == final.grid.at g.group[0]
@@ -190,7 +180,11 @@ function Score
             # dead = @grps.filter (g) -> g.state == 'dead'
             # eyes = @areas.filter (a) -> a.color in 'wb'
             # log @groupString.apply @, dead.concat eyes
-                
+             
+            for a in final.areas
+                if a.color in 'wb'
+                    final.captures[stoneColor[a.color]] += a.area.length
+
             if final.captures.white > final.captures.black
                 finalScore = 'W+'+(final.captures.white-final.captures.black)
             else
@@ -201,11 +195,6 @@ function Score
         else
             
             final
-            
-        # else if dead
-            # final
-        # else
-            # @
             
     #  0000000   00000000   00000000   0000000   
     # 000   000  000   000  000       000   000  
@@ -322,17 +311,11 @@ function Score
                         bad = false
                         for ei in g.eyes
                             if n in @areas[ei].area and @areas[ei].area.length == 1
-                                # dbg 'NO connection weak eye!' g.key
                                 bad = true
                         for ai in g.areas
                             if n in @areas[ai].area and @areas[ai].area.length == 1 # area length > 1?
-                                # dbg 'NO connection small 2nd area!' g.key
                                 bad = true
                         if not bad
-                            # log @deadString 1
-                            # dbg 'potential connection' g
-                            # dbg d
-                            # dbg n
                             return true
         false
         
@@ -348,27 +331,15 @@ function Score
 
     suicidalEye: (g, a) ->
         
-        # log 'suicidalEye' @areas.indexOf a
-        # log @groupString g, a
         if a.area.length > 2 ➜ return false
         opponentGroups = [] 
         opponentSuicides = []
-        # log @groupString.apply @, [a].concat a.grps.map (gi) => @grps[gi]
         for gi in a.grps
             if @grps[gi].stone != g.stone
                 opponentGroups.push gi
-                # ▴ @grps[gi].libs > 1
                 if @grps[gi].eyes.length < 2 and @grps[gi].libs <= 2 
-                    # log '111111'
-                    # if @grps[gi].eyes.length 
-                        # log '222222'
-                        # eye = @areas[@grps[gi].eyes[0]]
-                        # if eye.grps.length > 2
-                            # log '333333'
-                            # opponentGroups.push @grps[gi]
                     opponentSuicides.push gi
 
-        # dbg opponentGroups.length, opponentSuicides.length
         opponentGroups.length == opponentSuicides.length
         
     # 000   000  00000000   0000000   000   000  
@@ -383,29 +354,21 @@ function Score
         
     weakCollection: (g) ->
 
-        # log @groupString.apply @, @grps
-        # dbg 'weakCollection' g
         friends = []
         if 1 <= g.eyes.length <= 2
             for ai in g.areas
                 a = @areas[ai]
                 for gi in a.grps
-                    # dbg ai, gi
                     if @grps[gi].stone == g.stone
                         friends.push @grps[gi] if not @grps[gi] in friends
                         
-            # dbg friends.length, g.eyes.length, g.areas.length
             if friends.length <= g.areas.length
                 friends = []
 
             if friends.length
                 for f in friends
                     if f.eyes.length > 1
-                        # log 'friend with 2 eyes'
                         return []
-                # dbg friends
-                # log @groupString.apply @, friends
-        # dbg friends.length
         friends
         
     # 00000000    0000000   000   000  

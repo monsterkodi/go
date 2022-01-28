@@ -168,10 +168,51 @@ body {
   font: titlebarFont;
   flex: 1 1;
 }
-.captures {
+.gameInfo {
   position: absolute;
   left: 50%;
-  transform: translate(-50%, 30%);
+  transform: translate(-50%, 20%);
+  background-image: url("../../img/board.png");
+  background-repeat: repeat, no-repeat;
+  background-size: contain;
+  background-position-x: center;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  padding-left: 6px;
+  padding-right: 6px;
+  height: 30px;
+  display: flex;
+  flex-direction: row;
+}
+.gameInfo .white {
+  color: #fff;
+}
+.gameInfo .black {
+  color: #000;
+}
+.gameInfoLeft,
+.gameInfoRight {
+  flex: 1 1 100px;
+  width: 100px;
+  padding-left: 3px;
+}
+.gameInfoLeft {
+  padding-right: 3px;
+  text-align: end;
+}
+.gameInfoCenter {
+  font-size: 18px;
+  font-weight: bold;
+  flex: 1 1;
+}
+.score.W {
+  color: #fff;
+}
+.score.B {
+  color: #000;
+}
+.move {
+  color: #a80;
 }
 .quote {
   opacity: 0.5;

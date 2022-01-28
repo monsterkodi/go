@@ -14,7 +14,7 @@ function GNU extends Compi
         
         super @game, 'gnu' '/usr/local/bin/gnugo' [
             '--mode' 'gtp' 
-            '--level' '18' 
+            '--level' '13' 
             '--never-resign'
             ]
                                 

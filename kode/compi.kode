@@ -107,8 +107,6 @@ function Compi
                 
                 log data
                 
-            else
-                
-                log @name, 'ok -- ignore' m, "'#{data}'"
+            # else log @name, 'ok -- ignore' m, "'#{data}'"
 
 module.exports = Compi
