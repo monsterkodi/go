@@ -1,35 +1,24 @@
 
-Score = require '../score'
-
-scr = (b) ->
-    s = new Score b
-    r = s.calcScore()
-    r
-
-ars = (b) ->
-    s = new Score b
-    r = s.calcScore()
-    s.areaString()
-
-ded = (b) ->
-    s = new Score b
-    r = s.calcScore()
-    s.deadString()
-
+{ scr } = require './util'
+    
 ▸ test
 
     b = """
-        ┌───────────┐
-        │   ●   ○ ○ │
-        │   ●   ○   │
-        │   ●   ○   │
-        │   ●   ○   │
-        │   ●   ○   │
-        └───────────┘
+        ┌───────────────────┐
+        │     ● ● ● ○       │
+        │ ● ●   ● ○   ○     │
+        │ ○ ● ● ○ ○   ●     │
+        │ ○ ● ○             │
+        │ ○ ○ ○   ○     ○ ○ │
+        │ ● ● ● ○ ○ ○ ○ ○ ● │
+        │     ● ● ○ ● ● ● ● │
+        │   ● ○ ○ ●   ●     │
+        │       ○ ● ●       │
+        └───────────────────┘
         """
     # log ars(b)
     # log ded(b)
-    scr(b) ▸ 'W+1'
+    scr(b) ▸ 'W+3'
     # s = new Score b
     # s.captures.black ▸ 0
     # s.captures.white ▸ 0

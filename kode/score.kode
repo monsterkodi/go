@@ -112,6 +112,10 @@ function Score
                     continue
                     
                 a = g.eyes.length ? @areas[g.eyes[0]] : @areas[g.areas[0]]
+                
+                if not a
+                    log g
+                
                 for gi in a.grps
                     o = @grps[gi]
                     if o.stone != g.stone and o.eyes.length > 1
@@ -167,12 +171,15 @@ function Score
             for g in @grps
                 if g.state == 'unknown'
                     if stone.empty == final.grid.at g.group[0]
-                        # log 'late death' g
-                        g.state = 'dead'
+                        log 'late death' g
+                        markDead g, 'late death'
+                        # g.state = 'dead'
                         
             for a in @areas
                 a.color = final.areaAt(a.area[0]).color
 
+            log @areaString()
+                
             # binary = @grid.toBinarray()
             # DeadStones.guess(binary).then (guess) ->
                 # log noon guess
@@ -521,7 +528,7 @@ function Score
         
         fr = @freedoms color, c
         mc = @movecaptures color, c
-        @stoneAt(c) == stone.empty and (fr or mc)
+        (fr or mc) and @stoneAt(c) == stone.empty
         
     all_legal: (color) ->
         

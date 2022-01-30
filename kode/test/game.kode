@@ -1,0 +1,49 @@
+
+Game = require '../game'
+{ scr, ded, ars } = require './util'
+
+▸ game
+
+    ▸ fromMoves
+
+        # this contains an suicide move (176: O13 by black)
+        moves = """
+                Q16 D16 Q4 D4 Q10 O17 M17 R17 R16 Q17 P16 S17 P17 P18 N15 O3 L4 R3 R4 Q3 P4 N2 N5 Q11 F17 P11 F4 N17 M16 R10 D6 B5 J17 C7 R11 R12 C14 D14
+                D13 D15 C12 C15 B14 G16 F16 E18 G15 F18 E3 G17 F14 E13 E12 J16 H16 H17 H15 D11 J18 B15 E14 R9 P14 D3 L2 D8 F6 C11 G9 H9 G8 N10 F13 G10 J7
+                E5 D5 E2 F2 E4 F3 F10 E6 S4 S5 T4 R6 Q7 N8 B12 G18 C2 N18 G19 H18 N19 M19 B13 O18 Q19 C13 L9 L7 F5 G5 M3 L3 K8 K7 G4 E1 A14 D2 C4 J12 S16
+                M12 L11 S15 H8 G7 R14 R15 S14 T14 C1 T13 T16 T15 O7 S11 O8 L12 H4 H3 H6 G6 H7 H5 P13 Q14 N13 N12 J6 O13 M6 N6 O12 M8 O14 R13 H11 Q12 M13
+                L13 H12 K11 R7 S7 S8 C6 B6 E8 K10 H13 J11 K12 E17 D7 D9 O19 S18 O15 G12 Q13 O13 M14 N11 T8 N7 M7 T9 M4 M2 M1 T7 N1 O1 L1 P3 T5 S2 M11 K5 L5
+                K6 K4 L6 S6 L10 M10 O4 M9 O5 P19 Q18 H19 J8 F19 G13 E19 C18 D19 C19 G14 D18 G19 N9 P12 P10 D1 O6 N4 S10 T11 E9 F9 E11 N3 O2 D12 F12 E13 O11
+                C5 B4 E15 B7 J5 B11 E16 Q9 N14 T10 M5 P5 H14 Q5 L8 J10 pass pass
+                """
+                
+        board = """
+                ┌───────────────────────────────────────┐
+                │     ● ○ ○ ○ ○ ○       ○   ○ ○ ●       │
+                │     ● ● ● ● ○ ○ ○       ○ ○ ● ●   ●   │
+                │         ● ○     ○     ○ ● ● ○ ● ● ●   │
+                │       ● ○ ○   ○ ●     ○     ○ ○ ○ ● ● │
+                │   ● ● ● ○   ○ ○         ○ ○     ○ ○ ○ │
+                │ ● ○ ○ ● ○ ○ ○ ○       ○ ○ ● ○ ○ ● ● ○ │
+                │   ● ○ ○ ○ ○ ● ○     ○ ● ● ● ● ○ ○   ○ │
+                │   ● ○ ○ ○ ● ● ● ○ ○ ○ ○ ○ ● ○ ○ ●     │
+                │   ● ● ● ●     ● ● ○ ● ○ ● ● ● ● ○ ○ ○ │
+                │           ● ●   ● ● ● ○ ●   ●   ● ● ● │
+                │       ● ● ○ ○ ●     ● ○ ●     ● ●   ● │
+                │       ● ○   ○ ● ● ● ○ ○ ○ ●       ●   │
+                │   ● ● ○     ○ ● ○ ○ ○ ○ ● ●   ● ● ○ ● │
+                │   ● ○ ○ ○ ○ ○ ● ● ● ● ● ○ ●     ○ ○   │
+                │   ● ○ ○ ● ● ○ ○ ○ ● ○ ○ ○ ● ● ●   ○ ○ │
+                │   ● ● ● ● ○ ● ●   ○ ○ ○ ○ ● ○ ○ ○ ● ● │
+                │       ● ○ ○   ○     ○ ● ○ ● ● ● ●     │
+                │     ● ○   ○         ○ ● ● ●       ●   │
+                │     ● ○ ○           ○ ○ ○ ●           │
+                └───────────────────────────────────────┘
+                """
+
+        g = Game.fromMoves moves
+        g.grid.toString() ▸ board
+        log ars board
+        log ded board
+        log scr board
+        

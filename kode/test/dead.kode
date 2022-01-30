@@ -1,10 +1,4 @@
-
-Score = require '../score'
-
-ded = (b) ->
-    s = new Score b
-    r = s.calcScore()
-    s.deadString()
+{ ded } = require './util'
 
 ▸ dead
 

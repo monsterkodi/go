@@ -1,7 +1,27 @@
 
+Score = require '../score'
+
+scr = (b) ->
+    s = new Score b
+    r = s.calcScore()
+    r
+    
+ars = (b) ->
+    s = new Score b
+    r = s.calcScore()
+    s.areaString()
+
+ded = (b) ->
+    s = new Score b
+    r = s.calcScore()
+    s.deadString()
+
+module.exports = { scr, ded, ars}
+    
 { sgfToAlphaNum } = require '../util'
 
 ▸ util
+    
     ▸ sgfToAlphaNum
     
         sgfToAlphaNum 'pd' ▸ 'Q16'

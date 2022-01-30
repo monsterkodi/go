@@ -25,6 +25,19 @@ function Game extends Score
         @moves = new Moves
         @boardsize @board.size
         
+    @fromMoves: (moves) ->
+
+        moves = moves.replace /\n+/g ' '
+        moves = moves.split ' '
+        
+        g = new Game size:19 'sgf' 'sgf' 0
+        
+        for m in moves
+            # log moves.indexOf(m)+1,m
+            g.play m
+            
+        g
+                
     boardsize: (@size) -> @clear_board()
     
     save: ->
@@ -71,21 +84,28 @@ function Game extends Score
     
     play: (color, p) ->
 
-        if p.toLowerCase() == 'pass' 
-            @moves.add p.toLowerCase(), color
-            @updateTitle()
-            return ''
-            
         if not p 
             p = color
             color = @nextColor()
-            
+                    
+        if p.toLowerCase() in ['pass' 'resign' 'illegal']
+            @moves.add p.toLowerCase(), color
+            @updateTitle()
+            return ''
+
         c = @coord p
+        
+        if not @legal color, c
+            @moves.add "illegal", color
+            error("illegal move:" color, @moves.num(), p) 
+            return '? invalid move'
+            
         if @valid c
+            # log color, p, @legal color, c
             @setStone c, stone[color]
             @moves.add p, color, @capture color
             @calcScore()
-            @board.annotate()
+            @board.annotate?()
             ''
         else
             '? invalid color or coordinate'
@@ -103,7 +123,7 @@ function Game extends Score
         @calcGroups()
         
         for dead in @grps.filter (g) -> g.libs == 0 and g.stone == s
-            log 'game.capture' color, dead.group.length
+            # log 'game.capture' color, dead.group.length
             @captures[color] += dead.group.length
             for deadPos in dead.group
                 @removePos deadPos
@@ -118,9 +138,9 @@ function Game extends Score
         
         @grid.set c, s
         if s == stone.empty
-            @board.delStone c
+            @board.delStone? c
         else
-            @board.addStone c, s
+            @board.addStone? c, s
             
     removePos: (p) ->
         
@@ -129,6 +149,10 @@ function Game extends Score
     undoMove: (m) ->
         
         @removePos m.pos
+        
+        if valid m.captures
+            log 'undoMove captures' m
+        
         @calcScore()
         @board.annotate()
             
@@ -188,7 +212,7 @@ function Game extends Score
         @moves.clear()
         @clear()
         @grid.clear()
-        @board.clear()
+        @board.clear?()
         @updateTitle()
         ''
             
@@ -236,7 +260,10 @@ function Game extends Score
             error 'game.setScore' score, '!=' calc
         @board.annotate()
         
-    updateTitle: -> window.win.updateTitle()
+    updateTitle: -> 
+
+        if process.type == 'renderer'
+            window?.win.updateTitle()
         
     finalScore: (score) ->
         

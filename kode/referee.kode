@@ -131,7 +131,7 @@ function Referee
             @redos = []
         
         color = @game.nextColor()
-        
+                
         return error("wrong player: #{player}", color, @game.players) if @game.players[color] != player
         
         @game.play color, p
@@ -154,6 +154,7 @@ function Referee
     
     undo: ->
         
+        log 'undo'
         return if @game.start()
         return if @game.handicap > 1 and @game.moves.num() == 1
         
@@ -162,6 +163,7 @@ function Referee
         
         # log 'undo' @game.moves
         
+        @paused = true
         @redos ?= []
         while @game.lastPos() in ['pass' 'resign']
             @redos.unshift @game.moves.pop()
@@ -179,7 +181,7 @@ function Referee
         @compi.white?.undo()
             
     redo: ->
-        
+        log 'redo'
         return if empty @redos
         
         move = @redos.shift()
@@ -195,6 +197,7 @@ function Referee
     
     jumpToStart: ->
         
+        log 'start'
         return if @game.start()
         @redos = @game.moves.m.concat @redos
         @compi.black?.send "clear_board"
@@ -203,6 +206,7 @@ function Referee
         
     jumpToEnd: ->
 
+        log 'end'
         while valid @redos
             @redo()
                     
