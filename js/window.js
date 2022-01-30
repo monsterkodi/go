@@ -81,7 +81,7 @@ MainWin = (function ()
 
     MainWin.prototype["updateTitle"] = function ()
     {
-        var cps, game, mov, t, td, tl, tm, tr
+        var cps, game, mov, sb, sw, t, td, tl, tm, tr
 
         game = this.referee.game
         if (!game)
@@ -103,10 +103,20 @@ MainWin = (function ()
         {
             mov[game.lastColor()] = 'resign'
         }
-        cps = {black:(game.captures.black !== 0 ? game.captures.black + ' ' + stone.white : ''),white:(game.captures.white !== 0 ? game.captures.white + ' ' + stone.white : '')}
+        if (game.lastColor() === 'white')
+        {
+            sb = stone.white
+            sw = stone.black
+        }
+        else
+        {
+            sb = stone.black
+            sw = stone.white
+        }
+        cps = {black:(game.captures.black !== 0 ? game.captures.black + ' ' + sb : ''),white:(game.captures.white !== 0 ? game.captures.white + ' ' + sw : '')}
         elem('span',{class:'move',parent:tl,text:mov.black})
         elem('span',{class:'player',parent:tl,text:game.players.black})
-        elem('span',{class:'capture',parent:tl,text:stone.white + ' ' + cps.black})
+        elem('span',{class:'capture',parent:tl,text:sb + ' ' + cps.black})
         if (game.info.score)
         {
             elem('span',{class:`score ${game.info.score[0]}`,parent:tm,text:game.info.score})
@@ -115,7 +125,7 @@ MainWin = (function ()
         {
             elem('span',{class:"redos",parent:tm,text:`${this.referee.game.moves.num()} ${stone.white} ${this.referee.game.moves.num() + this.referee.redos.length}`})
         }
-        elem('span',{class:'capture',parent:tr,text:stone.white + ' ' + cps.white})
+        elem('span',{class:'capture',parent:tr,text:sw + ' ' + cps.white})
         elem('span',{class:'player',parent:tr,text:game.players.white})
         return elem('span',{class:'move',parent:tr,text:mov.white})
     }

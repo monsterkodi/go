@@ -104,16 +104,23 @@ function MainWin extends win
             mov[game.lastColor()] = 'pass'
         if game.moves.resigned()
             mov[game.lastColor()] = 'resign'
+ 
+        if game.lastColor() == 'white'
+            sb = stone.white
+            sw = stone.black
+        else
+            sb = stone.black
+            sw = stone.white
             
-        cps = black: game.captures.black != 0 ? game.captures.black + ' ' + stone.white : ''
-              white: game.captures.white != 0 ? game.captures.white + ' ' + stone.white : ''
+        cps = black: game.captures.black != 0 ? game.captures.black + ' ' + sb : ''
+              white: game.captures.white != 0 ? game.captures.white + ' ' + sw : ''
                 
         elem 'span' class:'move'    parent:tl, text: mov.black
         elem 'span' class:'player'  parent:tl, text: game.players.black
-        elem 'span' class:'capture' parent:tl, text: stone.white + ' ' + cps.black 
+        elem 'span' class:'capture' parent:tl, text: sb + ' ' + cps.black 
         if game.info.score      ➜ elem 'span' class:"score #{game.info.score[0]}"  parent:tm, text: game.info.score
         if valid @referee.redos ➜ elem 'span' class:"redos"  parent:tm, text: "#{@referee.game.moves.num()} #{stone.white} #{@referee.game.moves.num()+@referee.redos.length}"
-        elem 'span' class:'capture' parent:tr, text: stone.white + ' ' + cps.white
+        elem 'span' class:'capture' parent:tr, text: sw + ' ' + cps.white
         elem 'span' class:'player'  parent:tr, text: game.players.white 
         elem 'span' class:'move'    parent:tr, text: mov.white
                 

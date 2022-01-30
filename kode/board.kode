@@ -51,6 +51,7 @@ function Board
         @lst = elem 'div' class:"last" parent:@hlt
         @lst.style = "display:none;"
      
+        post.on 'variation' @onVariation
         post.on 'resize' @onResize
         
     onResize: =>
@@ -320,6 +321,25 @@ function Board
                 l.style.borderRadius = "#{s}px"
                 if stone.empty == @game.stoneAt m.pos
                     l.style.backgroundColor = m.color
+                    
+    onVariation: (variation) =>
+        
+        color = @game.nextColor()
+        for m in variation
+            n = variation.indexOf m
+            c = @game.coord m
+            l = elem 'div' class:"number #{color}" parent:@num, text:1+n
+            p = @coordToPrcnt c
+            l.style = "left:#{p.x}%; top:#{p.y}%;" 
+            s = @div.getBoundingClientRect().height/(@size+1)
+            s = max 16 int s/3
+            l.style.fontSize = "#{int(2*s/3)}px"
+            l.style.width = "#{s}px"
+            l.style.height = "#{s}px"
+            l.style.borderRadius = "#{s}px"
+            if stone.empty == @game.stoneAt m
+                l.style.backgroundColor = color
+            color = opponent[color]
         
     # 000      000  0000000    00000000  00000000   000000000  000  00000000   0000000  
     # 000      000  000   000  000       000   000     000     000  000       000       

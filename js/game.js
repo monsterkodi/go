@@ -344,10 +344,16 @@ Game = (function ()
     {
         var calc
 
+        if (score.endsWith('.0'))
+        {
+            score = score.slice(0, -2)
+        }
         this.info.score = score
-        console.log('game.setScore',score)
         calc = this.calcScore()
-        console.log('calcScore',calc)
+        if (score !== calc)
+        {
+            console.error('game.setScore',score,'!=',calc)
+        }
         return this.board.annotate()
     }
 

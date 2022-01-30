@@ -228,10 +228,12 @@ function Game extends Score
         
     setScore: (score) -> 
 
+        if score.endsWith '.0'
+            score = score[...-2]
         @info.score = score
-        log 'game.setScore' score
         calc = @calcScore()
-        log 'calcScore' calc
+        if score != calc
+            error 'game.setScore' score, '!=' calc
         @board.annotate()
         
     updateTitle: -> window.win.updateTitle()

@@ -17,6 +17,7 @@ function Compi
         
         @proc = childp.spawn cmd, args, shell:true, detached:true
         @proc.stdout.on 'data' @onData
+        @proc.stderr.on 'data' @onDataError
         @proc.once 'exit' @onExit
         
     onExit: (signal) => 
@@ -29,13 +30,15 @@ function Compi
       log "#{@name} process exited #{signal}"
 
     newGame: (boardsize, @color, @handicap) ->
-        
+
         # @send "time_settings 0 10 1"
         @send "boardsize #{boardsize}"
+        @send "komi 0"
         @send "fixed_handicap #{handicap}" if @handicap > 1
 
     genmove: -> 
         # log "#{@name}: genmove #{@color}"
+        ●▸ genmove
         @send "genmove #{@color}"
         
     opponentMove: (p) ->
@@ -53,7 +56,13 @@ function Compi
         @send 'showboard'
         
     send: (m) -> @msg.push m; @proc.stdin.write m + '\n'
-    
+
+    onDataError: (chunk) =>
+        
+        data = String chunk
+        log data if "a b c d e f g h j k l m n o p q r s t" in data
+        @onStderr data
+        
     onData: (chunk) =>
         
         data = String chunk
@@ -68,7 +77,7 @@ function Compi
         
         @partial = answers.pop()
 
-        # log @name, answers
+        # log @name, answers, @partial
 
         for answer in answers
             
@@ -83,6 +92,9 @@ function Compi
         switch m.split(' ')[0]
             
             'genmove'
+                
+                ●▪ genmove
+                
                 if not 'undo' in @msg
                     p = data.split('\n')[0]
                     p = 'pass' if p == 'PASS'

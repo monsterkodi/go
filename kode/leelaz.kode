@@ -6,6 +6,8 @@
 0000000  00000000  00000000  0000000  000   000  0000000  
 ###
 
+{ post } = require 'kxk'
+
 Compi = require './compi'
 
 function Leelaz extends Compi
@@ -19,5 +21,25 @@ function Leelaz extends Compi
             '--timemanage' 'fast'
             '--logfile' '/Users/kodi/Desktop/leelaz.log'
             ]
+            
+    newGame: (boardsize, color, handicap) ->
+
+        @send "time_settings 0 15 1"
+        
+        super boardsize, color, handicap
+        
+    onStderr: (str) ->
+        
+        if str.startsWith 'Playouts:' # "Playouts: 327, Win: 82.39%, PV: C15 D14 F16 C6 C10 E6 F4 E10 C8 D9"
+            
+            str = trim str, '\n'
+            playout = {}
+            for kv in str.split ', '
+                [key, value] = kv.split ': '
+                switch key
+                    'PV'  ➜ playout.variation = value.split ' '
+                          ➜ playout[key.toLowerCase()] = value
+            # log playout
+            post.emit 'variation' playout.variation
                                     
 module.exports = Leelaz
