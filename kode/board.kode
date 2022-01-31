@@ -372,7 +372,7 @@ function Board
                             
                 for a in @game.areas
                     if a.color in 'wbWB'
-                        for p in a.area
+                        for p in a.posl
                             e = elem 'div' class:"eye #{a.color}" parent:@trr
                             r = @coordToPrcnt @game.coord p
                             s = 22/(@size+1)
@@ -381,7 +381,7 @@ function Board
                     
                 for g in @game.grps
                     if g.state == 'dead'
-                        for p in g.group
+                        for p in g.posl
                             e = elem 'div' class:"eye #{opponent[stoneColor[g.stone]][0]}" parent:@trr
                             r = @coordToPrcnt @game.coord p
                             s = 22/(@size+1)

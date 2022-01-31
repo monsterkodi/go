@@ -171,8 +171,8 @@ Game = (function ()
         for (var _125_17_ = 0; _125_17_ < list.length; _125_17_++)
         {
             dead = list[_125_17_]
-            this.captures[color] += dead.group.length
-            var list1 = _k_.list(dead.group)
+            this.captures[color] += dead.posl.length
+            var list1 = _k_.list(dead.posl)
             for (var _128_24_ = 0; _128_24_ < list1.length; _128_24_++)
             {
                 deadPos = list1[_128_24_]

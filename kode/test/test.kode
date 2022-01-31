@@ -1,5 +1,5 @@
 
-{ scr } = require './util'
+{ scr, ded } = require './util'
     
 ▸ test
 
@@ -17,7 +17,7 @@
         └───────────────────┘
         """
     # log ars(b)
-    # log ded(b)
+    log ded(b)
     scr(b) ▸ 'W+3'
     # s = new Score b
     # s.captures.black ▸ 0

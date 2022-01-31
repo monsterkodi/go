@@ -123,9 +123,9 @@ function Game extends Score
         @calcGroups()
         
         for dead in @grps.filter (g) -> g.libs == 0 and g.stone == s
-            # log 'game.capture' color, dead.group.length
-            @captures[color] += dead.group.length
-            for deadPos in dead.group
+            # log 'game.capture' color, dead.posl.length
+            @captures[color] += dead.posl.length
+            for deadPos in dead.posl
                 @removePos deadPos
         
     #  0000000  00000000  000000000   0000000  000000000   0000000   000   000  00000000  

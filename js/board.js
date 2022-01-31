@@ -416,7 +416,7 @@ Board = (function ()
                     a = list[_373_22_]
                     if (_k_.in(a.color,'wbWB'))
                     {
-                        var list1 = _k_.list(a.area)
+                        var list1 = _k_.list(a.posl)
                         for (var _375_30_ = 0; _375_30_ < list1.length; _375_30_++)
                         {
                             p = list1[_375_30_]
@@ -434,7 +434,7 @@ Board = (function ()
                     g = list2[_382_22_]
                     if (g.state === 'dead')
                     {
-                        var list3 = _k_.list(g.group)
+                        var list3 = _k_.list(g.posl)
                         for (var _384_30_ = 0; _384_30_ < list3.length; _384_30_++)
                         {
                             p = list3[_384_30_]
