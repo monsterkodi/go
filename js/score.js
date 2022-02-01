@@ -1,6 +1,6 @@
 // monsterkodi/kode 0.237.0
 
-var _k_ = {clone: function (o,v) { v ??= new Map(); if (o instanceof Array) { if (!v.has(o)) {var r = []; v.set(o,r); for (var i=0; i < o.length; i++) {if (!v.has(o[i])) { v.set(o[i],_k_.clone(o[i],v)) }; r.push(v.get(o[i]))}}; return v.get(o) } else if (typeof o == 'string') { if (!v.has(o)) {v.set(o,''+o)}; return v.get(o) } else if (o != null && typeof o == 'object' && o.constructor.name == 'Object') { if (!v.has(o)) { var k, r = {}; v.set(o,r); for (k in o) { if (!v.has(o[k])) { v.set(o[k],_k_.clone(o[k],v)) }; r[k] = v.get(o[k]) }; }; return v.get(o) } else {return o} }, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, copy: function (o) { return o instanceof Array ? o.slice() : typeof o == 'object' && o.constructor.name == 'Object' ? Object.assign({}, o) : typeof o == 'string' ? ''+o : o }, min: function () { m = Infinity; for (a of arguments) { if (a instanceof Array) {m = _k_.min.apply(_k_.min,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n < m ? n : m}}}; return m }, k: { f:(r,g,b)=>'\x1b[38;5;'+(16+36*r+6*g+b)+'m', F:(r,g,b)=>'\x1b[48;5;'+(16+36*r+6*g+b)+'m', r:(i)=>(i<6)&&_k_.k.f(i,0,0)||_k_.k.f(5,i-5,i-5), R:(i)=>(i<6)&&_k_.k.F(i,0,0)||_k_.k.F(5,i-5,i-5), g:(i)=>(i<6)&&_k_.k.f(0,i,0)||_k_.k.f(i-5,5,i-5), G:(i)=>(i<6)&&_k_.k.F(0,i,0)||_k_.k.F(i-5,5,i-5), b:(i)=>(i<6)&&_k_.k.f(0,0,i)||_k_.k.f(i-5,i-5,5), B:(i)=>(i<6)&&_k_.k.F(0,0,i)||_k_.k.F(i-5,i-5,5), y:(i)=>(i<6)&&_k_.k.f(i,i,0)||_k_.k.f(5,5,i-5), Y:(i)=>(i<6)&&_k_.k.F(i,i,0)||_k_.k.F(5,5,i-5), m:(i)=>(i<6)&&_k_.k.f(i,0,i)||_k_.k.f(5,i-5,5), M:(i)=>(i<6)&&_k_.k.F(i,0,i)||_k_.k.F(5,i-5,5), c:(i)=>(i<6)&&_k_.k.f(0,i,i)||_k_.k.f(i-5,5,5), C:(i)=>(i<6)&&_k_.k.F(0,i,i)||_k_.k.F(i-5,5,5), w:(i)=>'\x1b[38;5;'+(232+(i-1)*3)+'m', W:(i)=>'\x1b[48;5;'+(232+(i-1)*3+2)+'m', wrap:(open,close,reg)=>(s)=>open+(~(s+='').indexOf(close,4)&&s.replace(reg,open)||s)+close, F256:(open)=>_k_.k.wrap(open,'\x1b[39m',new RegExp('\\x1b\\[39m','g')), B256:(open)=>_k_.k.wrap(open,'\x1b[49m',new RegExp('\\x1b\\[49m','g'))}, rpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s+=c} return s}};_k_.w2=_k_.k.F256(_k_.k.w(2))
+var _k_ = {clone: function (o,v) { v ??= new Map(); if (o instanceof Array) { if (!v.has(o)) {var r = []; v.set(o,r); for (var i=0; i < o.length; i++) {if (!v.has(o[i])) { v.set(o[i],_k_.clone(o[i],v)) }; r.push(v.get(o[i]))}}; return v.get(o) } else if (typeof o == 'string') { if (!v.has(o)) {v.set(o,''+o)}; return v.get(o) } else if (o != null && typeof o == 'object' && o.constructor.name == 'Object') { if (!v.has(o)) { var k, r = {}; v.set(o,r); for (k in o) { if (!v.has(o[k])) { v.set(o[k],_k_.clone(o[k],v)) }; r[k] = v.get(o[k]) }; }; return v.get(o) } else {return o} }, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, copy: function (o) { return o instanceof Array ? o.slice() : typeof o == 'object' && o.constructor.name == 'Object' ? Object.assign({}, o) : typeof o == 'string' ? ''+o : o }, min: function () { m = Infinity; for (a of arguments) { if (a instanceof Array) {m = _k_.min.apply(_k_.min,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n < m ? n : m}}}; return m }, k: { f:(r,g,b)=>'\x1b[38;5;'+(16+36*r+6*g+b)+'m', F:(r,g,b)=>'\x1b[48;5;'+(16+36*r+6*g+b)+'m', r:(i)=>(i<6)&&_k_.k.f(i,0,0)||_k_.k.f(5,i-5,i-5), R:(i)=>(i<6)&&_k_.k.F(i,0,0)||_k_.k.F(5,i-5,i-5), g:(i)=>(i<6)&&_k_.k.f(0,i,0)||_k_.k.f(i-5,5,i-5), G:(i)=>(i<6)&&_k_.k.F(0,i,0)||_k_.k.F(i-5,5,i-5), b:(i)=>(i<6)&&_k_.k.f(0,0,i)||_k_.k.f(i-5,i-5,5), B:(i)=>(i<6)&&_k_.k.F(0,0,i)||_k_.k.F(i-5,i-5,5), y:(i)=>(i<6)&&_k_.k.f(i,i,0)||_k_.k.f(5,5,i-5), Y:(i)=>(i<6)&&_k_.k.F(i,i,0)||_k_.k.F(5,5,i-5), m:(i)=>(i<6)&&_k_.k.f(i,0,i)||_k_.k.f(5,i-5,5), M:(i)=>(i<6)&&_k_.k.F(i,0,i)||_k_.k.F(5,i-5,5), c:(i)=>(i<6)&&_k_.k.f(0,i,i)||_k_.k.f(i-5,5,5), C:(i)=>(i<6)&&_k_.k.F(0,i,i)||_k_.k.F(i-5,5,5), w:(i)=>'\x1b[38;5;'+(232+(i-1)*3)+'m', W:(i)=>'\x1b[48;5;'+(232+(i-1)*3+2)+'m', wrap:(open,close,reg)=>(s)=>open+(~(s+='').indexOf(close,4)&&s.replace(reg,open)||s)+close, F256:(open)=>_k_.k.wrap(open,'\x1b[39m',new RegExp('\\x1b\\[39m','g')), B256:(open)=>_k_.k.wrap(open,'\x1b[49m',new RegExp('\\x1b\\[49m','g'))}, rpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s+=c} return s}};_k_.r6=_k_.k.F256(_k_.k.r(6));_k_.b6=_k_.k.F256(_k_.k.b(6));_k_.w2=_k_.k.F256(_k_.k.w(2));_k_.w3=_k_.k.F256(_k_.k.w(3));_k_.w4=_k_.k.F256(_k_.k.w(4));_k_.w6=_k_.k.F256(_k_.k.w(6));_k_.w8=_k_.k.F256(_k_.k.w(8))
 
 var alpha, DeadStones, fs, Grid, ilpha, opponent, Score, stone, stoneColor
 
@@ -1483,19 +1483,70 @@ Score = (function ()
         return g.toString(legend)
     }
 
+    Score.prototype["areaColors"] = function (legend)
+    {
+        var a, aa, g, gg, gr
+
+        g = new Grid(this.grid.toString())
+        var list = _k_.list(this.areas)
+        for (var _938_14_ = 0; _938_14_ < list.length; _938_14_++)
+        {
+            a = list[_938_14_]
+            var list1 = _k_.list(a.posl)
+            for (var _939_19_ = 0; _939_19_ < list1.length; _939_19_++)
+            {
+                aa = list1[_939_19_]
+                switch (a.color)
+                {
+                    case '?':
+                        g.set(aa,_k_.b6('?'))
+                        break
+                    case 'w':
+                        g.set(aa,_k_.w8('.'))
+                        break
+                    case 'b':
+                        g.set(aa,_k_.w3('.'))
+                        break
+                }
+
+            }
+        }
+        var list2 = _k_.list(this.grps)
+        for (var _944_15_ = 0; _944_15_ < list2.length; _944_15_++)
+        {
+            gr = list2[_944_15_]
+            var list3 = _k_.list(gr.posl)
+            for (var _945_19_ = 0; _945_19_ < list3.length; _945_19_++)
+            {
+                gg = list3[_945_19_]
+                switch (g.at(gg))
+                {
+                    case '○':
+                        g.set(gg,_k_.w4('○'))
+                        break
+                    case '●':
+                        g.set(gg,_k_.w6('●'))
+                        break
+                }
+
+            }
+        }
+        return g.toAnsi(legend)
+    }
+
     Score.prototype["deadString"] = function (legend)
     {
         var g, gg, gr
 
         g = new Grid(this.grid.toString())
         var list = _k_.list(this.grps)
-        for (var _944_15_ = 0; _944_15_ < list.length; _944_15_++)
+        for (var _960_15_ = 0; _960_15_ < list.length; _960_15_++)
         {
-            gr = list[_944_15_]
+            gr = list[_960_15_]
             var list1 = _k_.list(gr.posl)
-            for (var _945_19_ = 0; _945_19_ < list1.length; _945_19_++)
+            for (var _961_19_ = 0; _961_19_ < list1.length; _961_19_++)
             {
-                gg = list1[_945_19_]
+                gg = list1[_961_19_]
                 if (gr.state === 'dead')
                 {
                     g.set(gg,'X')
@@ -1503,6 +1554,32 @@ Score = (function ()
             }
         }
         return g.toString(legend)
+    }
+
+    Score.prototype["deadColors"] = function (legend)
+    {
+        var g, gg, gr
+
+        g = new Grid(this.grid.toString())
+        var list = _k_.list(this.grps)
+        for (var _968_15_ = 0; _968_15_ < list.length; _968_15_++)
+        {
+            gr = list[_968_15_]
+            var list1 = _k_.list(gr.posl)
+            for (var _969_19_ = 0; _969_19_ < list1.length; _969_19_++)
+            {
+                gg = list1[_969_19_]
+                if (gr.state === 'dead')
+                {
+                    g.set(gg,_k_.r6('X'))
+                }
+                else
+                {
+                    g.set(gg,_k_.w4(g.at(gg)))
+                }
+            }
+        }
+        return g.toAnsi(legend)
     }
 
     Score.prototype["rainbow"] = function (idx, c)
@@ -1516,15 +1593,15 @@ Score = (function ()
 
         grid = new Grid(this.grid.toString())
         var list = _k_.list(this.grps)
-        for (var _960_15_ = 0; _960_15_ < list.length; _960_15_++)
+        for (var _988_15_ = 0; _988_15_ < list.length; _988_15_++)
         {
-            gr = list[_960_15_]
+            gr = list[_988_15_]
             if (0 <= (idx = [].slice.call(arguments,0).indexOf(gr)))
             {
                 var list1 = _k_.list(gr.posl)
-                for (var _962_23_ = 0; _962_23_ < list1.length; _962_23_++)
+                for (var _990_23_ = 0; _990_23_ < list1.length; _990_23_++)
                 {
-                    gg = list1[_962_23_]
+                    gg = list1[_990_23_]
                     c = (arguments[idx].stone === '○' ? '◻' : '◼')
                     grid.set(gg,this.rainbow(idx,c))
                 }
@@ -1532,23 +1609,23 @@ Score = (function ()
             else
             {
                 var list2 = _k_.list(gr.posl)
-                for (var _966_23_ = 0; _966_23_ < list2.length; _966_23_++)
+                for (var _994_23_ = 0; _994_23_ < list2.length; _994_23_++)
                 {
-                    gg = list2[_966_23_]
+                    gg = list2[_994_23_]
                     grid.set(gg,_k_.w2(grid.at(gg)))
                 }
             }
         }
         var list3 = _k_.list(this.areas)
-        for (var _968_15_ = 0; _968_15_ < list3.length; _968_15_++)
+        for (var _996_15_ = 0; _996_15_ < list3.length; _996_15_++)
         {
-            ar = list3[_968_15_]
+            ar = list3[_996_15_]
             if (0 <= (idx = [].slice.call(arguments,0).indexOf(ar)))
             {
                 var list4 = _k_.list(ar.posl)
-                for (var _970_23_ = 0; _970_23_ < list4.length; _970_23_++)
+                for (var _998_23_ = 0; _998_23_ < list4.length; _998_23_++)
                 {
-                    aa = list4[_970_23_]
+                    aa = list4[_998_23_]
                     grid.set(aa,this.rainbow(idx,this.areas.indexOf(ar)))
                 }
             }
@@ -1562,15 +1639,15 @@ Score = (function ()
 
         grid = new Grid(this.grid.toString())
         var list = _k_.list(this.grps)
-        for (var _977_15_ = 0; _977_15_ < list.length; _977_15_++)
+        for (var _1005_15_ = 0; _1005_15_ < list.length; _1005_15_++)
         {
-            gr = list[_977_15_]
+            gr = list[_1005_15_]
             if (0 <= (idx = [].slice.call(arguments,0).indexOf(gr)))
             {
                 var list1 = _k_.list(gr.posl)
-                for (var _979_23_ = 0; _979_23_ < list1.length; _979_23_++)
+                for (var _1007_23_ = 0; _1007_23_ < list1.length; _1007_23_++)
                 {
-                    gg = list1[_979_23_]
+                    gg = list1[_1007_23_]
                     c = this.grps.indexOf(gr)
                     if (c > 9)
                     {
@@ -1589,15 +1666,15 @@ Score = (function ()
 
         grid = new Grid(this.grid.toString())
         var list = _k_.list(this.chains)
-        for (var _988_15_ = 0; _988_15_ < list.length; _988_15_++)
+        for (var _1016_15_ = 0; _1016_15_ < list.length; _1016_15_++)
         {
-            ch = list[_988_15_]
+            ch = list[_1016_15_]
             if (0 <= (idx = [].slice.call(arguments,0).indexOf(ch)))
             {
                 var list1 = _k_.list(ch.posl)
-                for (var _990_23_ = 0; _990_23_ < list1.length; _990_23_++)
+                for (var _1018_23_ = 0; _1018_23_ < list1.length; _1018_23_++)
                 {
-                    cp = list1[_990_23_]
+                    cp = list1[_1018_23_]
                     c = this.chains.indexOf(ch)
                     grid.set(cp,this.rainbow(idx,c))
                 }
@@ -1615,7 +1692,7 @@ Score = (function ()
         cs = this.chainString.apply(this,this.chains).split('\n')
         pl = this.size * 2 + 6
         fs = [_k_.w2(_k_.rpad(pl,' areas') + _k_.rpad(pl,' groups') + _k_.rpad(pl,' chains'))]
-        for (var _1004_17_ = i = 0, _1004_21_ = as.length; (_1004_17_ <= _1004_21_ ? i < as.length : i > as.length); (_1004_17_ <= _1004_21_ ? ++i : --i))
+        for (var _1032_17_ = i = 0, _1032_21_ = as.length; (_1032_17_ <= _1032_21_ ? i < as.length : i > as.length); (_1032_17_ <= _1032_21_ ? ++i : --i))
         {
             if (i === 0 || i === as.length - 2)
             {
@@ -1638,15 +1715,15 @@ Score = (function ()
     {
         var as, cs, gs, i, pl
 
-        as = this.areaString.apply(this,this.areas).split('\n')
-        gs = this.deadString(1).split('\n')
+        as = this.areaColors.apply(this,this.areas).split('\n')
+        gs = this.deadColors(1).split('\n')
         cs = this.groupString.apply(this,this.grps.filter(function (g)
         {
             return g.state === 'alive'
         })).split('\n')
         pl = this.size * 2 + 6
-        fs = [_k_.w2(_k_.rpad(pl,' area color') + _k_.rpad(pl,' dead') + _k_.rpad(pl,' alive'))]
-        for (var _1022_17_ = i = 0, _1022_21_ = as.length; (_1022_17_ <= _1022_21_ ? i < as.length : i > as.length); (_1022_17_ <= _1022_21_ ? ++i : --i))
+        fs = [_k_.w2(_k_.rpad(pl,' color') + _k_.rpad(pl,' dead') + _k_.rpad(pl,' alive'))]
+        for (var _1050_17_ = i = 0, _1050_21_ = as.length; (_1050_17_ <= _1050_21_ ? i < as.length : i > as.length); (_1050_17_ <= _1050_21_ ? ++i : --i))
         {
             if (i === 0 || i === as.length - 2)
             {

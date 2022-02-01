@@ -931,6 +931,22 @@ function Score
             for aa in a.posl
                 g.set aa, a.color
         g.toString legend
+        
+    areaColors: (legend) ->
+        
+        g = new Grid @grid.toString()
+        for a in @areas
+            for aa in a.posl
+                switch a.color
+                    '?' ➜ g.set aa, b6 '?'
+                    'w' ➜ g.set aa, w8 '.'
+                    'b' ➜ g.set aa, w3 '.'
+        for gr in @grps
+            for gg in gr.posl
+                switch g.at(gg)
+                    '○' ➜ g.set gg, w4 '○'
+                    '●' ➜ g.set gg, w6 '●'
+        g.toAnsi legend
 
     # 0000000    00000000   0000000   0000000     0000000  000000000  00000000   000  000   000   0000000   
     # 000   000  000       000   000  000   000  000          000     000   000  000  0000  000  000        
@@ -945,6 +961,18 @@ function Score
             for gg in gr.posl
                 g.set gg, 'X' if gr.state == 'dead'
         g.toString legend
+
+    deadColors: (legend) ->
+        
+        g = new Grid @grid.toString()
+        for gr in @grps
+            for gg in gr.posl
+                if gr.state == 'dead'
+                    g.set gg, r6('X') 
+                else
+                    g.set gg, w4 g.at gg
+            
+        g.toAnsi legend
         
     #  0000000   00000000    0000000   000   000  00000000    0000000  000000000  00000000   000  000   000   0000000   
     # 000        000   000  000   000  000   000  000   000  000          000     000   000  000  0000  000  000        
@@ -1013,12 +1041,12 @@ function Score
         
     deadOrAlive: ->
         
-        as = @areaString.apply(@, @areas).split '\n'
-        gs = @deadString(1).split '\n'
+        as = @areaColors.apply(@, @areas).split '\n'
+        gs = @deadColors(1).split '\n'
         cs = @groupString.apply(@,  @grps.filter((g) -> g.state == 'alive')).split '\n'
 
         pl = @size*2+6
-        fs = [w2 rpad(pl, ' area color') + rpad(pl, ' dead') + rpad(pl, ' alive')]
+        fs = [w2 rpad(pl, ' color') + rpad(pl, ' dead') + rpad(pl, ' alive')]
         for i in 0...as.length
             if i == 0 or i == as.length-2
                 fs.push as[i]+'   '+gs[i]+'   '+cs[i]
