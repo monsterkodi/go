@@ -90,7 +90,8 @@ function Game extends Score
                     
         if p.toLowerCase() in ['pass' 'resign' 'illegal']
             @moves.add p.toLowerCase(), color
-            @updateTitle()
+            # @updateTitle()
+            @board.annotate?()
             return ''
 
         c = @coord p
@@ -105,6 +106,7 @@ function Game extends Score
             @setStone c, stone[color]
             @moves.add p, color, @capture color
             @calcScore()
+            log 'annotate' p
             @board.annotate?()
             ''
         else
@@ -121,12 +123,14 @@ function Game extends Score
         s = stone[opponent[color]]
         
         @calcGroups()
-        
+        pl = []
         for dead in @grps.filter (g) -> g.libs == 0 and g.stone == s
             # log 'game.capture' color, dead.posl.length
             @captures[color] += dead.posl.length
+            pl = pl.concat dead.posl
             for deadPos in dead.posl
                 @removePos deadPos
+        pl
         
     #  0000000  00000000  000000000   0000000  000000000   0000000   000   000  00000000  
     # 000       000          000     000          000     000   000  0000  000  000       
@@ -146,6 +150,12 @@ function Game extends Score
         
         @setStone @coord(p), stone.empty
 
+    # 000   000  000   000  0000000     0000000   00     00   0000000   000   000  00000000  
+    # 000   000  0000  000  000   000  000   000  000   000  000   000  000   000  000       
+    # 000   000  000 0 000  000   000  000   000  000000000  000   000   000 000   0000000   
+    # 000   000  000  0000  000   000  000   000  000 0 000  000   000     000     000       
+    #  0000000   000   000  0000000     0000000   000   000   0000000       0      00000000  
+    
     undoMove: (m) ->
         
         @removePos m.pos
@@ -156,36 +166,6 @@ function Game extends Score
         @calcScore()
         @board.annotate()
             
-    #  0000000  000   000   0000000   000   000  
-    # 000       000   000  000   000  000 0 000  
-    # 0000000   000000000  000   000  000000000  
-    #      000  000   000  000   000  000   000  
-    # 0000000   000   000   0000000   00     00  
-    
-    show: (data) ->
-
-        @grid.clear()
-        @board.clear()
-        rs = data.split('\n')[2..]
-        rs = rs.map (r) => r[3..].split(' ').join('')
-        for y in 0...@size
-            r = rs[y]
-            for x in 0...@size
-                switch r[x]
-                    'X' ➜ @setStone [x,y] stone.black
-                    'O' ➜ @setStone [x,y] stone.white
-                 
-            if 'hascaptured' in r
-                captured = int r.split('hascaptured')[1]
-                log 'captured' r, captured
-                if 'WHITE' in r
-                    @captures.white = captured
-                else
-                    @captures.black = captured
-         
-        @calcScore()
-        @board.annotate()
-                                    
     next: (num=1) ->
         
         for i in 0...num

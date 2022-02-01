@@ -20,13 +20,6 @@ function Score
         @size = @grid.size
         @captures = black:0 white:0
         
-    clone: ->
-        
-        s = new Score @size
-        s.captures = clone @captures
-        s.grid.copy @grid 
-        s
-
     #  0000000  000      00000000   0000000   00000000   
     # 000       000      000       000   000  000   000  
     # 000       000      0000000   000000000  0000000    
@@ -194,6 +187,8 @@ function Score
         
         @deadOrAlive()
         
+        return if @areas.length < 2
+        
         battle = []
         for ch in @chains
             if not ch.alive
@@ -341,13 +336,16 @@ function Score
     calcScore: ->
         
         # ● calcScore
-              
+            
         @calcGroups()
         @linkAreas()
         @linkGroups()
         @calcChains()
         @calcAreas()
-                
+               
+        return 'B+0' if @chains.length < 2
+        return 'B+0' if @areas.length  < 2
+        
         dead = @grps.filter (g) -> g.state == 'dead'
                                     
         for g in @grps
@@ -366,7 +364,7 @@ function Score
         # eyes = @areas.filter (a) -> a.color in 'wb'
         # log @groupString.apply @, dead.concat eyes
          
-        points = @captures
+        points = copy @captures
         
         log points
         
@@ -389,145 +387,6 @@ function Score
             
         finalScore
 
-    
-    # 00000000   00000000   0000000  000   000  00000000    0000000  000  000   000  00000000  
-    # 000   000  000       000       000   000  000   000  000       000  000   000  000       
-    # 0000000    0000000   000       000   000  0000000    0000000   000   000 000   0000000   
-    # 000   000  000       000       000   000  000   000       000  000     000     000       
-    # 000   000  00000000   0000000   0000000   000   000  0000000   000      0      00000000  
-    
-    calcScoreRecursive: (root) ->
-        
-        # ● calcScore
-              
-        @calcGroups()
-                
-        markDead = (g,r) =>
-            
-            # log @groupString g
-            # log 'dead:' r, g
-            
-            g.state = 'dead'
-            
-            for ai in g.areas
-                a = @areas[ai]
-                for gi in a.grps
-                    gg = @grps[gi]
-                    if gg.stone != g.stone and gg.state == 'dead'
-                        # log 'reanimate' gg.key
-                        gg.state = 'undead'
-        @linkAreas()
-        
-        for g in @grps
-                        
-            continue if g.state == 'dead'
-            continue if g.state.startsWith 'alive'
-            
-            if g.libs == 1
-                markDead g, 'single lib'
-                continue
-            
-            if g.eyes.length < 2
-                
-                if @potentialConnection g
-                    g.state = 'alive_potentialConnection'
-                    continue
-                    
-                a = g.eyes.length ? @areas[g.eyes[0]] : @areas[g.areas[0]]
-                
-                if not a
-                    log g
-                
-                for gi in a.grps
-                    o = @grps[gi]
-                    if o.stone != g.stone and o.eyes.length > 1
-                        if not @potentialGroup g 
-                            markDead g, 'no eyes and no potential'
-                            break
-                          
-                continue if g.state == 'dead'
-
-                if g.areas.length == 1 and @deadShape a
-                    markDead g, 'dead shape'
-                    continue
-                    
-                continue if g.state.startsWith 'alive'
-                        
-                if valid(weak = @weakCollection g)
-                    for w in weak
-                        markDead w, 'weak collection'
-                    
-                continue if g.state == 'dead'
-                        
-                if g.areas.length == 2
-                    for ai in g.areas
-                        if ai not in g.eyes
-                            if  not @potentialEye(g, @areas[ai]) and
-                                not @suicidalEye(g, @areas[ai])
-                                    markDead g, 'no potential and no suicidal 2nd eye'
-                
-                # if g.state == 'unknown'
-                    # log 'no two eyes' g.key, g.state
-                                    
-            # log g.key, g.state
-           
-        dead = @grps.filter (g) -> g.state == 'dead'
-        
-        if valid dead
-            # log 'dead:' dead.length
-            # log @grps
-            
-            score = @clone()
-            for g in dead
-                for p in g.posl
-                    score.captures[opponent[g.stone]]++
-                    score.grid.set p, ' '
-            
-            final = score.calcScore @
-            
-        else
-            # log 'no more death:' dead.length
-            final = @
-                
-        if not root
-                                        
-            for g in @grps
-                if g.state == 'unknown'
-                    if stone.empty == final.grid.at g.posl[0]
-                        log 'late death' g
-                        markDead g, 'late death'
-                        # g.state = 'dead'
-                        
-            for a in @areas
-                a.color = final.areaAt(a.posl[0]).color
-
-            log @areaString()
-                
-            # binary = @grid.toBinarray()
-            # DeadStones.guess(binary).then (guess) ->
-                # log noon guess
-            
-            # dead = @grps.filter (g) -> g.state == 'dead'
-            # eyes = @areas.filter (a) -> a.color in 'wb'
-            # log @groupString.apply @, dead.concat eyes
-             
-            points = copy final.captures
-            
-            for a in final.areas
-                if a.color in 'wb'
-                    points[stoneColor[a.color]] += a.posl.length
-
-            if points.white > points.black
-                finalScore = 'W+'+(points.white-points.black)
-            else
-                finalScore = 'B+'+(points.black-points.white)
-                
-            finalScore
-
-        else
-            
-            final
-            
     #  0000000   00000000   00000000   0000000   
     # 000   000  000   000  000       000   000  
     # 000000000  0000000    0000000   000000000  

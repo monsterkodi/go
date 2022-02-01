@@ -57,7 +57,7 @@ Moves = (function ()
 
     Moves.prototype["last"] = function ()
     {
-        return this.m.slice(-1)[0]
+        return this.m[this.m.length - 1]
     }
 
     Moves.prototype["start"] = function ()
@@ -100,7 +100,7 @@ Moves = (function ()
 
     Moves.prototype["nextColor"] = function ()
     {
-        return (this.ended ? 'end' : ['black','white'][this.m.length % 2])
+        return ['black','white'][this.m.length % 2]
     }
 
     Moves.prototype["color"] = function (c)
@@ -110,10 +110,6 @@ Moves = (function ()
 
     Moves.prototype["add"] = function (pos, color, captures)
     {
-        if (this.ended)
-        {
-            return
-        }
         this.m.push(new Move(pos,this.color(color),captures))
         switch (pos)
         {

@@ -53,7 +53,7 @@ function Board
      
         post.on 'variation' @onVariation
         post.on 'resize' @onResize
-        
+                
     onResize: =>
         
         @annotate()
@@ -214,9 +214,11 @@ function Board
     showLastMove: ->
         
         if @game.start()
-            @lst.style.display  = 'none'
+            @lst.style.display = 'none'
             return
+            
         r = @coordToPrcnt @game.lastCoord()
+        log 'showLastMove' r, @game.lastPos(), @game.lastColor()
         d = @div.getBoundingClientRect().height/(@size+1)
         @lst.style.left         = "#{r.x}%"
         @lst.style.top          = "#{r.y}%"

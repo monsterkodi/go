@@ -85,6 +85,8 @@ function Referee
         if valid moves
             @replay moves
         else
+            @game.updateTitle()
+                    
             if @compi.black and @handicap < 2
                 @compi.black.genmove()
                 
@@ -181,10 +183,10 @@ function Referee
         @compi.white?.undo()
             
     redo: ->
-        log 'redo'
         return if empty @redos
         
         move = @redos.shift()
+        log 'redo' move
         @game.play move.color, move.pos
         @compi.black?.send "play #{move.color} #{move.pos}"
         @compi.white?.send "play #{move.color} #{move.pos}"

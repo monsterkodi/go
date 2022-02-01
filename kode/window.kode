@@ -55,7 +55,7 @@ function MainWin extends win
             size:     window.stash.get 'size'      9
             handicap: window.stash.get 'handicap'  0
             moves:    window.stash.get 'moves'     []
-                
+            
     onResize: =>
         
         window.stash.set 'bounds' @getBounds()
