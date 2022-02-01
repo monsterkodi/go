@@ -7,7 +7,7 @@
 ###
 
 { stoneColor, stone, alpha, ilpha, opponent } = require './util'
-{ fs } = require 'kxk'
+{ fs, noon } = require 'kxk'
 { min } = Math
 Grid = require './grid'
 DeadStones = require '@sabaki/deadstones'
@@ -209,6 +209,35 @@ function Score
             if not ch.alive and not ch.dead
                 @chainBattle ch
                 
+        undecided = @chains.filter (ch) -> not ch.alive and not ch.dead
+        
+        log noon undecided
+        
+        for ch in undecided
+            
+            ownedAreas = 0
+            
+            for ai in ch.areas
+                aliveOpponent = 0
+                deadOpponent = 0
+                ar = @areas[ai]
+                for gi in ar.grps
+                    g = @grps[gi]
+                    if gi not in ch.grps and g.stone != ch.stone 
+                        if g.state != 'dead'
+                            aliveOpponent++
+                        else
+                            deadOpponent++
+                if not aliveOpponent and deadOpponent
+                    # log 'set area color' stoneColor[ch.stone][0]
+                    ar.color = stoneColor[ch.stone][0]
+                    @aliveChains [ch]
+                if ar.color == stoneColor[ch.stone][0]
+                    ownedAreas++
+                    
+            if ownedAreas == ch.areas.length and not ch.alive
+                @aliveChains [ch]
+                
         log @chainString.apply @, @chains
         
         @deadOrAlive()        
@@ -226,16 +255,24 @@ function Score
         for oc in @chains
             if oc != ch and not oc.dead
                 lostAreas = []
+                sameAreas = []
                 for ai in ch.areas
                     if ai in oc.areas
+                        sameAreas.push ai
                         # log "shares are #{ai} with chain #{@chains.indexOf(oc)}"
-                        if oc.eyes.length > 1
+                        # if oc.eyes.length > 1
+                        if oc.eyes.length > 0
                             if @chainAreaLibs(ch, ai) <  @chainAreaLibs(oc, ai)
                                 log "lost area #{ai}" @chainAreaLibs(ch, ai), @chainAreaLibs(oc, ai)
                                 lostAreas.push ai
                 log lostAreas, lostAreas.length, ch.areas.length
                 if lostAreas.length == ch.areas.length
                     log 'lost all areas!' 
+                    @deadChains [ch]
+                    return
+                    
+                if sameAreas.length == ch.areas.length and oc.areas.length > ch.areas.length
+                    log 'shares all areas and has less!' 
                     @deadChains [ch]
                     return
         

@@ -1,6 +1,6 @@
 // monsterkodi/kode 0.237.0
 
-var _k_ = {list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, copy: function (o) { return o instanceof Array ? o.slice() : typeof o == 'object' && o.constructor.name == 'Object' ? Object.assign({}, o) : typeof o == 'string' ? ''+o : o }, min: function () { m = Infinity; for (a of arguments) { if (a instanceof Array) {m = _k_.min.apply(_k_.min,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n < m ? n : m}}}; return m }, k: { f:(r,g,b)=>'\x1b[38;5;'+(16+36*r+6*g+b)+'m', F:(r,g,b)=>'\x1b[48;5;'+(16+36*r+6*g+b)+'m', r:(i)=>(i<6)&&_k_.k.f(i,0,0)||_k_.k.f(5,i-5,i-5), R:(i)=>(i<6)&&_k_.k.F(i,0,0)||_k_.k.F(5,i-5,i-5), g:(i)=>(i<6)&&_k_.k.f(0,i,0)||_k_.k.f(i-5,5,i-5), G:(i)=>(i<6)&&_k_.k.F(0,i,0)||_k_.k.F(i-5,5,i-5), b:(i)=>(i<6)&&_k_.k.f(0,0,i)||_k_.k.f(i-5,i-5,5), B:(i)=>(i<6)&&_k_.k.F(0,0,i)||_k_.k.F(i-5,i-5,5), y:(i)=>(i<6)&&_k_.k.f(i,i,0)||_k_.k.f(5,5,i-5), Y:(i)=>(i<6)&&_k_.k.F(i,i,0)||_k_.k.F(5,5,i-5), m:(i)=>(i<6)&&_k_.k.f(i,0,i)||_k_.k.f(5,i-5,5), M:(i)=>(i<6)&&_k_.k.F(i,0,i)||_k_.k.F(5,i-5,5), c:(i)=>(i<6)&&_k_.k.f(0,i,i)||_k_.k.f(i-5,5,5), C:(i)=>(i<6)&&_k_.k.F(0,i,i)||_k_.k.F(i-5,5,5), w:(i)=>'\x1b[38;5;'+(232+(i-1)*3)+'m', W:(i)=>'\x1b[48;5;'+(232+(i-1)*3+2)+'m', wrap:(open,close,reg)=>(s)=>open+(~(s+='').indexOf(close,4)&&s.replace(reg,open)||s)+close, F256:(open)=>_k_.k.wrap(open,'\x1b[39m',new RegExp('\\x1b\\[39m','g')), B256:(open)=>_k_.k.wrap(open,'\x1b[49m',new RegExp('\\x1b\\[49m','g'))}, rpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s+=c} return s}};_k_.r6=_k_.k.F256(_k_.k.r(6));_k_.b6=_k_.k.F256(_k_.k.b(6));_k_.w2=_k_.k.F256(_k_.k.w(2));_k_.w3=_k_.k.F256(_k_.k.w(3));_k_.w4=_k_.k.F256(_k_.k.w(4));_k_.w6=_k_.k.F256(_k_.k.w(6));_k_.w8=_k_.k.F256(_k_.k.w(8))
+var _k_ = {list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, noon: function (obj) { var pad = function (s, l) { while (s.length < l) { s += ' ' }; return s }; var esc = function (k, arry) { var es, sp; if (0 <= k.indexOf('\n')) { sp = k.split('\n'); es = sp.map(function (s) { return esc(s,arry) }); es.unshift('...'); es.push('...'); return es.join('\n') } if (k === '' || k === '...' || _k_.in(k[0],[' ','#','|']) || _k_.in(k[k.length - 1],[' ','#','|'])) { k = '|' + k + '|' } else if (arry && /  /.test(k)) { k = '|' + k + '|' }; return k }; var pretty = function (o, ind, seen) { var k, kl, l, v, mk = 4; if (Object.keys(o).length > 1) { for (k in o) { if (Object.hasOwn(o,k)) { kl = parseInt(Math.ceil((k.length + 2) / 4) * 4); mk = Math.max(mk,kl); if (mk > 32) { mk = 32; break } } } }; l = []; var keyValue = function (k, v) { var i, ks, s, vs; s = ind; k = esc(k,true); if (k.indexOf('  ') > 0 && k[0] !== '|') { k = `|${k}|` } else if (k[0] !== '|' && k[k.length - 1] === '|') { k = '|' + k } else if (k[0] === '|' && k[k.length - 1] !== '|') { k += '|' }; ks = pad(k,Math.max(mk,k.length + 2)); i = pad(ind + '    ',mk); s += ks; vs = toStr(v,i,false,seen); if (vs[0] === '\n') { while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) } }; s += vs; while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) }; return s }; for (k in o) { if (Object.hasOwn(o,k)) { l.push(keyValue(k,o[k])) } }; return l.join('\n') }; var toStr = function (o, ind = '', arry = false, seen = []) { var s, t, v; if (!(o != null)) { if (o === null) { return 'null' }; if (o === undefined) { return 'undefined' }; return '<?>' }; switch (t = typeof(o)) { case 'string': {return esc(o,arry)}; case 'object': { if (_k_.in(o,seen)) { return '<v>' }; seen.push(o); if ((o.constructor != null ? o.constructor.name : undefined) === 'Array') { s = ind !== '' && arry && '.' || ''; if (o.length && ind !== '') { s += '\n' }; s += (function () { var result = []; var list = _k_.list(o); for (var li = 0; li < list.length; li++)  { v = list[li];result.push(ind + toStr(v,ind + '    ',true,seen))  } return result }).bind(this)().join('\n') } else if ((o.constructor != null ? o.constructor.name : undefined) === 'RegExp') { return o.source } else { s = (arry && '.\n') || ((ind !== '') && '\n' || ''); s += pretty(o,ind,seen) }; return s } default: return String(o) }; return '<???>' }; return toStr(obj) }, copy: function (o) { return o instanceof Array ? o.slice() : typeof o == 'object' && o.constructor.name == 'Object' ? Object.assign({}, o) : typeof o == 'string' ? ''+o : o }, min: function () { m = Infinity; for (a of arguments) { if (a instanceof Array) {m = _k_.min.apply(_k_.min,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n < m ? n : m}}}; return m }, k: { f:(r,g,b)=>'\x1b[38;5;'+(16+36*r+6*g+b)+'m', F:(r,g,b)=>'\x1b[48;5;'+(16+36*r+6*g+b)+'m', r:(i)=>(i<6)&&_k_.k.f(i,0,0)||_k_.k.f(5,i-5,i-5), R:(i)=>(i<6)&&_k_.k.F(i,0,0)||_k_.k.F(5,i-5,i-5), g:(i)=>(i<6)&&_k_.k.f(0,i,0)||_k_.k.f(i-5,5,i-5), G:(i)=>(i<6)&&_k_.k.F(0,i,0)||_k_.k.F(i-5,5,i-5), b:(i)=>(i<6)&&_k_.k.f(0,0,i)||_k_.k.f(i-5,i-5,5), B:(i)=>(i<6)&&_k_.k.F(0,0,i)||_k_.k.F(i-5,i-5,5), y:(i)=>(i<6)&&_k_.k.f(i,i,0)||_k_.k.f(5,5,i-5), Y:(i)=>(i<6)&&_k_.k.F(i,i,0)||_k_.k.F(5,5,i-5), m:(i)=>(i<6)&&_k_.k.f(i,0,i)||_k_.k.f(5,i-5,5), M:(i)=>(i<6)&&_k_.k.F(i,0,i)||_k_.k.F(5,i-5,5), c:(i)=>(i<6)&&_k_.k.f(0,i,i)||_k_.k.f(i-5,5,5), C:(i)=>(i<6)&&_k_.k.F(0,i,i)||_k_.k.F(i-5,5,5), w:(i)=>'\x1b[38;5;'+(232+(i-1)*3)+'m', W:(i)=>'\x1b[48;5;'+(232+(i-1)*3+2)+'m', wrap:(open,close,reg)=>(s)=>open+(~(s+='').indexOf(close,4)&&s.replace(reg,open)||s)+close, F256:(open)=>_k_.k.wrap(open,'\x1b[39m',new RegExp('\\x1b\\[39m','g')), B256:(open)=>_k_.k.wrap(open,'\x1b[49m',new RegExp('\\x1b\\[49m','g'))}, rpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s+=c} return s}};_k_.r6=_k_.k.F256(_k_.k.r(6));_k_.b6=_k_.k.F256(_k_.k.b(6));_k_.w2=_k_.k.F256(_k_.k.w(2));_k_.w3=_k_.k.F256(_k_.k.w(3));_k_.w4=_k_.k.F256(_k_.k.w(4));_k_.w6=_k_.k.F256(_k_.k.w(6));_k_.w8=_k_.k.F256(_k_.k.w(8))
 
 var alpha, DeadStones, fs, Grid, ilpha, opponent, Score, stone, stoneColor
 
@@ -11,6 +11,7 @@ ilpha = require('./util').ilpha
 opponent = require('./util').opponent
 
 fs = require('kxk').fs
+noon = require('kxk').noon
 
 min = Math.min
 
@@ -169,7 +170,7 @@ Score = (function ()
 
     Score.prototype["calcChains"] = function ()
     {
-        var ai, battle, ch, ci, g, gi, li, n, oc
+        var ai, aliveOpponent, ar, battle, ch, ci, deadOpponent, g, gi, li, n, oc, ownedAreas, undecided
 
         this.chains = []
         var list = _k_.list(this.grps)
@@ -337,29 +338,80 @@ Score = (function ()
                 this.chainBattle(ch)
             }
         }
+        undecided = this.chains.filter(function (ch)
+        {
+            return !ch.alive && !ch.dead
+        })
+        console.log(_k_.noon(undecided))
+        var list13 = _k_.list(undecided)
+        for (var _216_15_ = 0; _216_15_ < list13.length; _216_15_++)
+        {
+            ch = list13[_216_15_]
+            ownedAreas = 0
+            var list14 = _k_.list(ch.areas)
+            for (var _220_19_ = 0; _220_19_ < list14.length; _220_19_++)
+            {
+                ai = list14[_220_19_]
+                aliveOpponent = 0
+                deadOpponent = 0
+                ar = this.areas[ai]
+                var list15 = _k_.list(ar.grps)
+                for (var _224_23_ = 0; _224_23_ < list15.length; _224_23_++)
+                {
+                    gi = list15[_224_23_]
+                    g = this.grps[gi]
+                    if (!(_k_.in(gi,ch.grps)) && g.stone !== ch.stone)
+                    {
+                        if (g.state !== 'dead')
+                        {
+                            aliveOpponent++
+                        }
+                        else
+                        {
+                            deadOpponent++
+                        }
+                    }
+                }
+                if (!aliveOpponent && deadOpponent)
+                {
+                    ar.color = stoneColor[ch.stone][0]
+                    this.aliveChains([ch])
+                }
+                if (ar.color === stoneColor[ch.stone][0])
+                {
+                    ownedAreas++
+                }
+            }
+            if (ownedAreas === ch.areas.length && !ch.alive)
+            {
+                this.aliveChains([ch])
+            }
+        }
         console.log(this.chainString.apply(this,this.chains))
         return this.deadOrAlive()
     }
 
     Score.prototype["chainBattle"] = function (ch)
     {
-        var ai, lostAreas, oc
+        var ai, lostAreas, oc, sameAreas
 
         console.log(`chainBattle ${this.chains.indexOf(ch)}`,ch)
         var list = _k_.list(this.chains)
-        for (var _226_15_ = 0; _226_15_ < list.length; _226_15_++)
+        for (var _255_15_ = 0; _255_15_ < list.length; _255_15_++)
         {
-            oc = list[_226_15_]
+            oc = list[_255_15_]
             if (oc !== ch && !oc.dead)
             {
                 lostAreas = []
+                sameAreas = []
                 var list1 = _k_.list(ch.areas)
-                for (var _229_23_ = 0; _229_23_ < list1.length; _229_23_++)
+                for (var _259_23_ = 0; _259_23_ < list1.length; _259_23_++)
                 {
-                    ai = list1[_229_23_]
+                    ai = list1[_259_23_]
                     if (_k_.in(ai,oc.areas))
                     {
-                        if (oc.eyes.length > 1)
+                        sameAreas.push(ai)
+                        if (oc.eyes.length > 0)
                         {
                             if (this.chainAreaLibs(ch,ai) < this.chainAreaLibs(oc,ai))
                             {
@@ -376,6 +428,12 @@ Score = (function ()
                     this.deadChains([ch])
                     return
                 }
+                if (sameAreas.length === ch.areas.length && oc.areas.length > ch.areas.length)
+                {
+                    console.log('shares all areas and has less!')
+                    this.deadChains([ch])
+                    return
+                }
             }
         }
     }
@@ -385,14 +443,14 @@ Score = (function ()
         var ch, gi
 
         var list = _k_.list(chains)
-        for (var _244_15_ = 0; _244_15_ < list.length; _244_15_++)
+        for (var _281_15_ = 0; _281_15_ < list.length; _281_15_++)
         {
-            ch = list[_244_15_]
+            ch = list[_281_15_]
             ch.dead = true
             var list1 = _k_.list(ch.grps)
-            for (var _246_19_ = 0; _246_19_ < list1.length; _246_19_++)
+            for (var _283_19_ = 0; _283_19_ < list1.length; _283_19_++)
             {
-                gi = list1[_246_19_]
+                gi = list1[_283_19_]
                 console.log('dead',this.grps[gi].key)
                 this.grps[gi].state = 'dead'
             }
@@ -404,14 +462,14 @@ Score = (function ()
         var ch, gi
 
         var list = _k_.list(chains)
-        for (var _252_15_ = 0; _252_15_ < list.length; _252_15_++)
+        for (var _289_15_ = 0; _289_15_ < list.length; _289_15_++)
         {
-            ch = list[_252_15_]
+            ch = list[_289_15_]
             ch.alive = true
             var list1 = _k_.list(ch.grps)
-            for (var _254_19_ = 0; _254_19_ < list1.length; _254_19_++)
+            for (var _291_19_ = 0; _291_19_ < list1.length; _291_19_++)
             {
-                gi = list1[_254_19_]
+                gi = list1[_291_19_]
                 this.grps[gi].state = 'alive'
             }
         }
@@ -439,9 +497,9 @@ Score = (function ()
         wc = []
         bc = []
         var list = _k_.list(chains)
-        for (var _283_15_ = 0; _283_15_ < list.length; _283_15_++)
+        for (var _320_15_ = 0; _320_15_ < list.length; _320_15_++)
         {
-            ch = list[_283_15_]
+            ch = list[_320_15_]
             if (ch.stone === stone.white)
             {
                 wc.push(ch)
@@ -451,9 +509,9 @@ Score = (function ()
                 bc.push(ch)
             }
             var list1 = _k_.list(ch.grps)
-            for (var _286_19_ = 0; _286_19_ < list1.length; _286_19_++)
+            for (var _323_19_ = 0; _323_19_ < list1.length; _323_19_++)
             {
-                gi = list1[_286_19_]
+                gi = list1[_323_19_]
                 if (!(_k_.in(gi,gs)))
                 {
                     gs.push(this.grps[gi])
@@ -513,19 +571,19 @@ Score = (function ()
             return g.state === 'alive'
         })
         var list = _k_.list(alive)
-        for (var _319_15_ = 0; _319_15_ < list.length; _319_15_++)
+        for (var _356_15_ = 0; _356_15_ < list.length; _356_15_++)
         {
-            ag = list[_319_15_]
+            ag = list[_356_15_]
             var list1 = _k_.list(ag.areas)
-            for (var _320_19_ = 0; _320_19_ < list1.length; _320_19_++)
+            for (var _357_19_ = 0; _357_19_ < list1.length; _357_19_++)
             {
-                ai = list1[_320_19_]
+                ai = list1[_357_19_]
                 challenged = false
                 aa = this.areas[ai]
                 var list2 = _k_.list(aa.grps)
-                for (var _323_23_ = 0; _323_23_ < list2.length; _323_23_++)
+                for (var _360_23_ = 0; _360_23_ < list2.length; _360_23_++)
                 {
-                    gi = list2[_323_23_]
+                    gi = list2[_360_23_]
                     gg = this.grps[gi]
                     if (gg.state === 'alive' && gg.stone !== ag.stone)
                     {
@@ -562,18 +620,18 @@ Score = (function ()
             return g.state === 'dead'
         })
         var list = _k_.list(this.grps)
-        for (var _351_14_ = 0; _351_14_ < list.length; _351_14_++)
+        for (var _388_14_ = 0; _388_14_ < list.length; _388_14_++)
         {
-            g = list[_351_14_]
+            g = list[_388_14_]
             console.log(g.state,g.key)
         }
         this.deadOrAlive()
         points = _k_.copy(this.captures)
         console.log(points)
         var list1 = _k_.list(this.areas)
-        for (var _371_14_ = 0; _371_14_ < list1.length; _371_14_++)
+        for (var _408_14_ = 0; _408_14_ < list1.length; _408_14_++)
         {
-            a = list1[_371_14_]
+            a = list1[_408_14_]
             if (_k_.in(a.color,'wb'))
             {
                 points[stoneColor[a.color]] += a.posl.length
@@ -581,13 +639,13 @@ Score = (function ()
         }
         console.log(points)
         var list2 = _k_.list(dead)
-        for (var _377_15_ = 0; _377_15_ < list2.length; _377_15_++)
+        for (var _414_15_ = 0; _414_15_ < list2.length; _414_15_++)
         {
-            dg = list2[_377_15_]
+            dg = list2[_414_15_]
             var list3 = _k_.list(dg.posl)
-            for (var _378_19_ = 0; _378_19_ < list3.length; _378_19_++)
+            for (var _415_19_ = 0; _415_19_ < list3.length; _415_19_++)
             {
-                dp = list3[_378_19_]
+                dp = list3[_415_19_]
                 points[opponent[stoneColor[dg.stone]]] += 2
             }
         }
@@ -608,14 +666,14 @@ Score = (function ()
         var a, ai, g, gi, n
 
         var list = _k_.list(this.areas)
-        for (var _398_14_ = 0; _398_14_ < list.length; _398_14_++)
+        for (var _435_14_ = 0; _435_14_ < list.length; _435_14_++)
         {
-            a = list[_398_14_]
+            a = list[_435_14_]
             ai = this.areas.indexOf(a)
             var list1 = _k_.list(a.neighbors)
-            for (var _400_18_ = 0; _400_18_ < list1.length; _400_18_++)
+            for (var _437_18_ = 0; _437_18_ < list1.length; _437_18_++)
             {
-                n = list1[_400_18_]
+                n = list1[_437_18_]
                 if (g = this.groupAt(n))
                 {
                     gi = this.grps.indexOf(g)
@@ -644,9 +702,9 @@ Score = (function ()
         var a
 
         var list = _k_.list(this.areas)
-        for (var _413_14_ = 0; _413_14_ < list.length; _413_14_++)
+        for (var _450_14_ = 0; _450_14_ < list.length; _450_14_++)
         {
-            a = list[_413_14_]
+            a = list[_450_14_]
             if (_k_.in(p,a.posl))
             {
                 return a
@@ -659,9 +717,9 @@ Score = (function ()
         var g
 
         var list = _k_.list(this.grps)
-        for (var _418_14_ = 0; _418_14_ < list.length; _418_14_++)
+        for (var _455_14_ = 0; _455_14_ < list.length; _455_14_++)
         {
-            g = list[_418_14_]
+            g = list[_455_14_]
             if (_k_.in(p,g.posl))
             {
                 return g
@@ -725,9 +783,9 @@ Score = (function ()
 
         mx = my = Infinity
         var list = _k_.list(cs)
-        for (var _463_14_ = 0; _463_14_ < list.length; _463_14_++)
+        for (var _500_14_ = 0; _500_14_ < list.length; _500_14_++)
         {
-            c = list[_463_14_]
+            c = list[_500_14_]
             mx = _k_.min(c[0],mx)
             my = _k_.min(c[1],my)
         }
@@ -775,9 +833,9 @@ Score = (function ()
         var n
 
         var list = _k_.list(g.neighbors)
-        for (var _491_14_ = 0; _491_14_ < list.length; _491_14_++)
+        for (var _528_14_ = 0; _528_14_ < list.length; _528_14_++)
         {
-            n = list[_491_14_]
+            n = list[_528_14_]
             if (this.stoneAt(n) === stone.empty && g.stone === this.potentialOwner(this.coord(n)))
             {
                 return true
@@ -790,31 +848,31 @@ Score = (function ()
         var ai, bad, d, ei, n
 
         var list = _k_.list(g.diagonals)
-        for (var _497_14_ = 0; _497_14_ < list.length; _497_14_++)
+        for (var _534_14_ = 0; _534_14_ < list.length; _534_14_++)
         {
-            d = list[_497_14_]
+            d = list[_534_14_]
             if (g.stone === this.stoneAt(d))
             {
                 var list1 = _k_.list(this.posNeighbors(d))
-                for (var _499_22_ = 0; _499_22_ < list1.length; _499_22_++)
+                for (var _536_22_ = 0; _536_22_ < list1.length; _536_22_++)
                 {
-                    n = list1[_499_22_]
+                    n = list1[_536_22_]
                     if (_k_.in(n,g.neighbors) && stone.empty === this.stoneAt(n))
                     {
                         bad = false
                         var list2 = _k_.list(g.eyes)
-                        for (var _502_31_ = 0; _502_31_ < list2.length; _502_31_++)
+                        for (var _539_31_ = 0; _539_31_ < list2.length; _539_31_++)
                         {
-                            ei = list2[_502_31_]
+                            ei = list2[_539_31_]
                             if (_k_.in(n,this.areas[ei].posl) && this.areas[ei].posl.length === 1)
                             {
                                 bad = true
                             }
                         }
                         var list3 = _k_.list(g.areas)
-                        for (var _505_31_ = 0; _505_31_ < list3.length; _505_31_++)
+                        for (var _542_31_ = 0; _542_31_ < list3.length; _542_31_++)
                         {
-                            ai = list3[_505_31_]
+                            ai = list3[_542_31_]
                             if (_k_.in(n,this.areas[ai].posl) && this.areas[ai].posl.length === 1)
                             {
                                 bad = true
@@ -843,9 +901,9 @@ Score = (function ()
         {
             cnt = {'○':0,'●':0,' ':0}
             var list = _k_.list(a.neighbors)
-            for (var _517_18_ = 0; _517_18_ < list.length; _517_18_++)
+            for (var _554_18_ = 0; _554_18_ < list.length; _554_18_++)
             {
-                n = list[_517_18_]
+                n = list[_554_18_]
                 cnt[this.stoneAt(n)]++
             }
             if (cnt['○'] === cnt['●'])
@@ -867,9 +925,9 @@ Score = (function ()
         opponentGroups = []
         opponentSuicides = []
         var list = _k_.list(a.grps)
-        for (var _527_15_ = 0; _527_15_ < list.length; _527_15_++)
+        for (var _564_15_ = 0; _564_15_ < list.length; _564_15_++)
         {
-            gi = list[_527_15_]
+            gi = list[_564_15_]
             if (this.grps[gi].stone !== g.stone)
             {
                 opponentGroups.push(gi)
@@ -895,14 +953,14 @@ Score = (function ()
         if ((1 <= g.eyes.length && g.eyes.length <= 2))
         {
             var list = _k_.list(g.areas)
-            for (var _549_19_ = 0; _549_19_ < list.length; _549_19_++)
+            for (var _586_19_ = 0; _586_19_ < list.length; _586_19_++)
             {
-                ai = list[_549_19_]
+                ai = list[_586_19_]
                 a = this.areas[ai]
                 var list1 = _k_.list(a.grps)
-                for (var _551_23_ = 0; _551_23_ < list1.length; _551_23_++)
+                for (var _588_23_ = 0; _588_23_ < list1.length; _588_23_++)
                 {
-                    gi = list1[_551_23_]
+                    gi = list1[_588_23_]
                     if (this.grps[gi].stone === g.stone)
                     {
                         if (!(_k_.in(this.grps[gi],friends)))
@@ -919,9 +977,9 @@ Score = (function ()
             if (friends.length)
             {
                 var list2 = _k_.list(friends)
-                for (var _559_22_ = 0; _559_22_ < list2.length; _559_22_++)
+                for (var _596_22_ = 0; _596_22_ < list2.length; _596_22_++)
                 {
-                    f = list2[_559_22_]
+                    f = list2[_596_22_]
                     if (f.eyes.length > 1)
                     {
                         return []
@@ -986,9 +1044,9 @@ Score = (function ()
 
         l = 0
         var list = _k_.list(this.neighbors(c))
-        for (var _608_14_ = 0; _608_14_ < list.length; _608_14_++)
+        for (var _645_14_ = 0; _645_14_ < list.length; _645_14_++)
         {
-            n = list[_608_14_]
+            n = list[_645_14_]
             s = this.stoneAt(n)
             if (s === stone.empty)
             {
@@ -1018,9 +1076,9 @@ Score = (function ()
             {
                 g = this.group(this.coord(p))
                 var list = _k_.list(g)
-                for (var _630_23_ = 0; _630_23_ < list.length; _630_23_++)
+                for (var _667_23_ = 0; _667_23_ < list.length; _667_23_++)
                 {
-                    gp = list[_630_23_]
+                    gp = list[_667_23_]
                     if (0 <= (i = allp.indexOf(gp)))
                     {
                         allp.splice(i,1)
@@ -1042,9 +1100,9 @@ Score = (function ()
         while (fp = f.shift())
         {
             var list = _k_.list(this.neighbors(this.coord(fp)))
-            for (var _642_18_ = 0; _642_18_ < list.length; _642_18_++)
+            for (var _679_18_ = 0; _679_18_ < list.length; _679_18_++)
             {
-                n = list[_642_18_]
+                n = list[_679_18_]
                 if (s === this.stoneAt(n))
                 {
                     p = this.pos(n)
@@ -1068,13 +1126,13 @@ Score = (function ()
 
         gn = []
         var list = _k_.list(g)
-        for (var _659_14_ = 0; _659_14_ < list.length; _659_14_++)
+        for (var _696_14_ = 0; _696_14_ < list.length; _696_14_++)
         {
-            p = list[_659_14_]
+            p = list[_696_14_]
             var list1 = _k_.list(this.posNeighbors(p))
-            for (var _660_18_ = 0; _660_18_ < list1.length; _660_18_++)
+            for (var _697_18_ = 0; _697_18_ < list1.length; _697_18_++)
             {
-                n = list1[_660_18_]
+                n = list1[_697_18_]
                 if (!(_k_.in(n,g)) && !(_k_.in(n,gn)))
                 {
                     gn.push(n)
@@ -1090,13 +1148,13 @@ Score = (function ()
 
         nl = []
         var list = _k_.list(pl)
-        for (var _668_14_ = 0; _668_14_ < list.length; _668_14_++)
+        for (var _705_14_ = 0; _705_14_ < list.length; _705_14_++)
         {
-            p = list[_668_14_]
+            p = list[_705_14_]
             var list1 = _k_.list(this.posNeighbors(p))
-            for (var _669_19_ = 0; _669_19_ < list1.length; _669_19_++)
+            for (var _706_19_ = 0; _706_19_ < list1.length; _706_19_++)
             {
-                pn = list1[_669_19_]
+                pn = list1[_706_19_]
                 if (!(_k_.in(pn,pl)) && !(_k_.in(pn,nl)))
                 {
                     nl.push(pn)
@@ -1117,10 +1175,10 @@ Score = (function ()
 
         ns = []
         var list = [[-1,0],[1,0],[0,-1],[0,1]]
-        for (var _681_18_ = 0; _681_18_ < list.length; _681_18_++)
+        for (var _718_18_ = 0; _718_18_ < list.length; _718_18_++)
         {
-            x = list[_681_18_][0]
-            y = list[_681_18_][1]
+            x = list[_718_18_][0]
+            y = list[_718_18_][1]
             n = [c[0] + x,c[1] + y]
             if (this.valid(n))
             {
@@ -1136,13 +1194,13 @@ Score = (function ()
 
         dn = []
         var list = _k_.list(g)
-        for (var _696_14_ = 0; _696_14_ < list.length; _696_14_++)
+        for (var _733_14_ = 0; _733_14_ < list.length; _733_14_++)
         {
-            p = list[_696_14_]
+            p = list[_733_14_]
             var list1 = _k_.list(this.poslist(this.diagonals(this.coord(p))))
-            for (var _697_18_ = 0; _697_18_ < list1.length; _697_18_++)
+            for (var _734_18_ = 0; _734_18_ < list1.length; _734_18_++)
             {
-                d = list1[_697_18_]
+                d = list1[_734_18_]
                 if (!(_k_.in(d,g)) && !(_k_.in(d,dn)) && !(_k_.in(d,n)))
                 {
                     dn.push(d)
@@ -1158,10 +1216,10 @@ Score = (function ()
 
         ns = []
         var list = [[-1,-1],[1,1],[-1,1],[1,-1]]
-        for (var _705_18_ = 0; _705_18_ < list.length; _705_18_++)
+        for (var _742_18_ = 0; _742_18_ < list.length; _742_18_++)
         {
-            x = list[_705_18_][0]
-            y = list[_705_18_][1]
+            x = list[_742_18_][0]
+            y = list[_742_18_][1]
             n = [c[0] + x,c[1] + y]
             if (this.valid(n))
             {
@@ -1186,9 +1244,9 @@ Score = (function ()
 
         color = (color != null ? color : this.nextColor())
         l = []
-        for (var _727_17_ = y = 0, _727_21_ = this.size; (_727_17_ <= _727_21_ ? y < this.size : y > this.size); (_727_17_ <= _727_21_ ? ++y : --y))
+        for (var _764_17_ = y = 0, _764_21_ = this.size; (_764_17_ <= _764_21_ ? y < this.size : y > this.size); (_764_17_ <= _764_21_ ? ++y : --y))
         {
-            for (var _728_21_ = x = 0, _728_25_ = this.size; (_728_21_ <= _728_25_ ? x < this.size : x > this.size); (_728_21_ <= _728_25_ ? ++x : --x))
+            for (var _765_21_ = x = 0, _765_25_ = this.size; (_765_21_ <= _765_25_ ? x < this.size : x > this.size); (_765_21_ <= _765_25_ ? ++x : --x))
             {
                 if (this.legal(color,[x,y]))
                 {
@@ -1205,9 +1263,9 @@ Score = (function ()
 
         m = stone[color]
         var list = _k_.list(this.neighbors(c))
-        for (var _736_14_ = 0; _736_14_ < list.length; _736_14_++)
+        for (var _773_14_ = 0; _773_14_ < list.length; _773_14_++)
         {
-            n = list[_736_14_]
+            n = list[_773_14_]
             s = this.stoneAt(n)
             if (s !== 'empty' && s !== m)
             {
@@ -1225,9 +1283,9 @@ Score = (function ()
         var p, x, y
 
         p = []
-        for (var _752_17_ = y = 0, _752_21_ = this.size; (_752_17_ <= _752_21_ ? y < this.size : y > this.size); (_752_17_ <= _752_21_ ? ++y : --y))
+        for (var _789_17_ = y = 0, _789_21_ = this.size; (_789_17_ <= _789_21_ ? y < this.size : y > this.size); (_789_17_ <= _789_21_ ? ++y : --y))
         {
-            for (var _753_21_ = x = 0, _753_25_ = this.size; (_753_21_ <= _753_25_ ? x < this.size : x > this.size); (_753_21_ <= _753_25_ ? ++x : --x))
+            for (var _790_21_ = x = 0, _790_25_ = this.size; (_790_21_ <= _790_25_ ? x < this.size : x > this.size); (_790_21_ <= _790_25_ ? ++x : --x))
             {
                 p.push(alpha[x] + (this.size - y))
             }
@@ -1241,9 +1299,9 @@ Score = (function ()
 
         s = stone[color]
         l = []
-        for (var _768_17_ = y = 0, _768_21_ = this.size; (_768_17_ <= _768_21_ ? y < this.size : y > this.size); (_768_17_ <= _768_21_ ? ++y : --y))
+        for (var _805_17_ = y = 0, _805_21_ = this.size; (_805_17_ <= _805_21_ ? y < this.size : y > this.size); (_805_17_ <= _805_21_ ? ++y : --y))
         {
-            for (var _769_21_ = x = 0, _769_25_ = this.size; (_769_21_ <= _769_25_ ? x < this.size : x > this.size); (_769_21_ <= _769_25_ ? ++x : --x))
+            for (var _806_21_ = x = 0, _806_25_ = this.size; (_806_21_ <= _806_25_ ? x < this.size : x > this.size); (_806_21_ <= _806_25_ ? ++x : --x))
             {
                 if (s === this.stoneAt(x,y))
                 {
@@ -1285,13 +1343,13 @@ Score = (function ()
 
         g = new Grid(this.grid.toString())
         var list = _k_.list(this.areas)
-        for (var _789_14_ = 0; _789_14_ < list.length; _789_14_++)
+        for (var _826_14_ = 0; _826_14_ < list.length; _826_14_++)
         {
-            a = list[_789_14_]
+            a = list[_826_14_]
             var list1 = _k_.list(a.posl)
-            for (var _790_19_ = 0; _790_19_ < list1.length; _790_19_++)
+            for (var _827_19_ = 0; _827_19_ < list1.length; _827_19_++)
             {
-                aa = list1[_790_19_]
+                aa = list1[_827_19_]
                 g.set(aa,a.color)
             }
         }
@@ -1304,13 +1362,13 @@ Score = (function ()
 
         g = new Grid(this.grid.toString())
         var list = _k_.list(this.areas)
-        for (var _797_14_ = 0; _797_14_ < list.length; _797_14_++)
+        for (var _834_14_ = 0; _834_14_ < list.length; _834_14_++)
         {
-            a = list[_797_14_]
+            a = list[_834_14_]
             var list1 = _k_.list(a.posl)
-            for (var _798_19_ = 0; _798_19_ < list1.length; _798_19_++)
+            for (var _835_19_ = 0; _835_19_ < list1.length; _835_19_++)
             {
-                aa = list1[_798_19_]
+                aa = list1[_835_19_]
                 switch (a.color)
                 {
                     case '?':
@@ -1327,13 +1385,13 @@ Score = (function ()
             }
         }
         var list2 = _k_.list(this.grps)
-        for (var _803_15_ = 0; _803_15_ < list2.length; _803_15_++)
+        for (var _840_15_ = 0; _840_15_ < list2.length; _840_15_++)
         {
-            gr = list2[_803_15_]
+            gr = list2[_840_15_]
             var list3 = _k_.list(gr.posl)
-            for (var _804_19_ = 0; _804_19_ < list3.length; _804_19_++)
+            for (var _841_19_ = 0; _841_19_ < list3.length; _841_19_++)
             {
-                gg = list3[_804_19_]
+                gg = list3[_841_19_]
                 switch (g.at(gg))
                 {
                     case '○':
@@ -1355,13 +1413,13 @@ Score = (function ()
 
         g = new Grid(this.grid.toString())
         var list = _k_.list(this.grps)
-        for (var _819_15_ = 0; _819_15_ < list.length; _819_15_++)
+        for (var _856_15_ = 0; _856_15_ < list.length; _856_15_++)
         {
-            gr = list[_819_15_]
+            gr = list[_856_15_]
             var list1 = _k_.list(gr.posl)
-            for (var _820_19_ = 0; _820_19_ < list1.length; _820_19_++)
+            for (var _857_19_ = 0; _857_19_ < list1.length; _857_19_++)
             {
-                gg = list1[_820_19_]
+                gg = list1[_857_19_]
                 if (gr.state === 'dead')
                 {
                     g.set(gg,'X')
@@ -1377,13 +1435,13 @@ Score = (function ()
 
         g = new Grid(this.grid.toString())
         var list = _k_.list(this.grps)
-        for (var _827_15_ = 0; _827_15_ < list.length; _827_15_++)
+        for (var _864_15_ = 0; _864_15_ < list.length; _864_15_++)
         {
-            gr = list[_827_15_]
+            gr = list[_864_15_]
             var list1 = _k_.list(gr.posl)
-            for (var _828_19_ = 0; _828_19_ < list1.length; _828_19_++)
+            for (var _865_19_ = 0; _865_19_ < list1.length; _865_19_++)
             {
-                gg = list1[_828_19_]
+                gg = list1[_865_19_]
                 if (gr.state === 'dead')
                 {
                     g.set(gg,_k_.r6('X'))
@@ -1408,15 +1466,15 @@ Score = (function ()
 
         grid = new Grid(this.grid.toString())
         var list = _k_.list(this.grps)
-        for (var _847_15_ = 0; _847_15_ < list.length; _847_15_++)
+        for (var _884_15_ = 0; _884_15_ < list.length; _884_15_++)
         {
-            gr = list[_847_15_]
+            gr = list[_884_15_]
             if (0 <= (idx = [].slice.call(arguments,0).indexOf(gr)))
             {
                 var list1 = _k_.list(gr.posl)
-                for (var _849_23_ = 0; _849_23_ < list1.length; _849_23_++)
+                for (var _886_23_ = 0; _886_23_ < list1.length; _886_23_++)
                 {
-                    gg = list1[_849_23_]
+                    gg = list1[_886_23_]
                     c = (arguments[idx].stone === '○' ? '◻' : '◼')
                     grid.set(gg,this.rainbow(idx,c))
                 }
@@ -1424,23 +1482,23 @@ Score = (function ()
             else
             {
                 var list2 = _k_.list(gr.posl)
-                for (var _853_23_ = 0; _853_23_ < list2.length; _853_23_++)
+                for (var _890_23_ = 0; _890_23_ < list2.length; _890_23_++)
                 {
-                    gg = list2[_853_23_]
+                    gg = list2[_890_23_]
                     grid.set(gg,_k_.w2(grid.at(gg)))
                 }
             }
         }
         var list3 = _k_.list(this.areas)
-        for (var _855_15_ = 0; _855_15_ < list3.length; _855_15_++)
+        for (var _892_15_ = 0; _892_15_ < list3.length; _892_15_++)
         {
-            ar = list3[_855_15_]
+            ar = list3[_892_15_]
             if (0 <= (idx = [].slice.call(arguments,0).indexOf(ar)))
             {
                 var list4 = _k_.list(ar.posl)
-                for (var _857_23_ = 0; _857_23_ < list4.length; _857_23_++)
+                for (var _894_23_ = 0; _894_23_ < list4.length; _894_23_++)
                 {
-                    aa = list4[_857_23_]
+                    aa = list4[_894_23_]
                     grid.set(aa,this.rainbow(idx,this.areas.indexOf(ar)))
                 }
             }
@@ -1454,15 +1512,15 @@ Score = (function ()
 
         grid = new Grid(this.grid.toString())
         var list = _k_.list(this.grps)
-        for (var _864_15_ = 0; _864_15_ < list.length; _864_15_++)
+        for (var _901_15_ = 0; _901_15_ < list.length; _901_15_++)
         {
-            gr = list[_864_15_]
+            gr = list[_901_15_]
             if (0 <= (idx = [].slice.call(arguments,0).indexOf(gr)))
             {
                 var list1 = _k_.list(gr.posl)
-                for (var _866_23_ = 0; _866_23_ < list1.length; _866_23_++)
+                for (var _903_23_ = 0; _903_23_ < list1.length; _903_23_++)
                 {
-                    gg = list1[_866_23_]
+                    gg = list1[_903_23_]
                     c = this.grps.indexOf(gr)
                     if (c > 9)
                     {
@@ -1481,15 +1539,15 @@ Score = (function ()
 
         grid = new Grid(this.grid.toString())
         var list = _k_.list(this.chains)
-        for (var _875_15_ = 0; _875_15_ < list.length; _875_15_++)
+        for (var _912_15_ = 0; _912_15_ < list.length; _912_15_++)
         {
-            ch = list[_875_15_]
+            ch = list[_912_15_]
             if (0 <= (idx = [].slice.call(arguments,0).indexOf(ch)))
             {
                 var list1 = _k_.list(ch.posl)
-                for (var _877_23_ = 0; _877_23_ < list1.length; _877_23_++)
+                for (var _914_23_ = 0; _914_23_ < list1.length; _914_23_++)
                 {
-                    cp = list1[_877_23_]
+                    cp = list1[_914_23_]
                     c = this.chains.indexOf(ch)
                     grid.set(cp,this.rainbow(idx,c))
                 }
@@ -1507,7 +1565,7 @@ Score = (function ()
         cs = this.chainString.apply(this,this.chains).split('\n')
         pl = this.size * 2 + 6
         fs = [_k_.w2(_k_.rpad(pl,' areas') + _k_.rpad(pl,' groups') + _k_.rpad(pl,' chains'))]
-        for (var _891_17_ = i = 0, _891_21_ = as.length; (_891_17_ <= _891_21_ ? i < as.length : i > as.length); (_891_17_ <= _891_21_ ? ++i : --i))
+        for (var _928_17_ = i = 0, _928_21_ = as.length; (_928_17_ <= _928_21_ ? i < as.length : i > as.length); (_928_17_ <= _928_21_ ? ++i : --i))
         {
             if (i === 0 || i === as.length - 2)
             {
@@ -1538,7 +1596,7 @@ Score = (function ()
         })).split('\n')
         pl = this.size * 2 + 6
         fs = [_k_.w2(_k_.rpad(pl,' color') + _k_.rpad(pl,' dead') + _k_.rpad(pl,' alive'))]
-        for (var _909_17_ = i = 0, _909_21_ = as.length; (_909_17_ <= _909_21_ ? i < as.length : i > as.length); (_909_17_ <= _909_21_ ? ++i : --i))
+        for (var _946_17_ = i = 0, _946_21_ = as.length; (_946_17_ <= _946_21_ ? i < as.length : i > as.length); (_946_17_ <= _946_21_ ? ++i : --i))
         {
             if (i === 0 || i === as.length - 2)
             {
