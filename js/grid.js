@@ -237,7 +237,7 @@ Grid = (function ()
         for (ri = 0; ri < list.length; ri++)
         {
             row = list[ri]
-            s += _k_.w2('\n│ ')
+            s += '\n' + _k_.w2('│ ')
             s += (            (function (o) {
                 var r_157_22_ = _k_.each_r(o)
                 for (var k in o)
@@ -263,7 +263,7 @@ Grid = (function ()
         s += _k_.w2('└─' + _k_.lpad(this.size * 2,'','─') + '┘')
         if (legend)
         {
-            s += _k_.w3('\n ' + (function (o) {
+            s += '\n ' + _k_.w3(            (function (o) {
                 var r_163_45_ = _k_.each_r(o)
                 for (var k in o)
                 {   

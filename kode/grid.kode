@@ -153,14 +153,14 @@ function Grid
         
         s = w2 '┌─' + lpad(@size*2, '' '─') + '┐'
         for row,ri in @rows
-            s += w2 '\n│ '
+            s += '\n' + w2 '│ '
             s += (row each (v) => v + ' ').join ''
             s += w2 '│' 
             s += ' ' + w3(@size-ri) if legend
         s += '\n'
         s += w2 '└─' + lpad(@size*2, '' '─') + '┘'
         if legend
-            s += w3 '\n ' + alpha[0...@size] each (v) => ' ' + v 
+            s += '\n ' + w3 alpha[0...@size] each (v) => ' ' + v 
         s
         
     toBinarray: ->

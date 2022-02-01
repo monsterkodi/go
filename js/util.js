@@ -12,7 +12,7 @@ class Util
 
     static alpha = 'ABCDEFGHJKLMNOPQRST'
 
-    static ilpha = 'abcdefghijklmnopqrs'
+    static ilpha = 'abcdefghijklmnopqrstuvwxyz'
 
     static splice (s, i, n, r = '')
     {

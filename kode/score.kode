@@ -6,8 +6,8 @@
 0000000    0000000   0000000   000   000  00000000
 ###
 
-{ stoneColor, stone, alpha, opponent } = require './util'
-{ noon } = require 'kxk'
+{ stoneColor, stone, alpha, ilpha, opponent } = require './util'
+{ fs } = require 'kxk'
 { min } = Math
 Grid = require './grid'
 DeadStones = require '@sabaki/deadstones'
@@ -75,10 +75,10 @@ function Score
                         diagonals: @groupDiagonals g, n
                         key:   g.join ' '
                         state: 'unknown'
-        # log @grps
-        # log @groupString @grps
-        log @groupString.apply @, @grps
-        log @groupString.apply @, @areas
+
+        # log @groupString.apply @, @grps
+        # log @grpsString.apply  @, @grps
+        # log @groupString.apply @, @areas
        
     groupIndex: (g) -> @grps.indexOf g
     isLinked: (a,b) -> @groupIndex(b) in a.links
@@ -112,6 +112,7 @@ function Score
 
     chainIndexForGroup: (g) -> 
         
+        return g.chain if g.chain? 
         fi = @grps.indexOf g
         for ch in @chains
             ci = @chains.indexOf ch
@@ -145,13 +146,29 @@ function Score
                 ch = @chains[ci]
                 ch.grps.push gi if gi not in ch.grps
                 for li in g.links
-                    ch.grps.push li if li not in ch.grps
+                    if li not in ch.grps
+                        @grps[li].chain = ci
+                        ch.grps.push li
                 g.chain = ci
             else
                 ci = @chains.length
                 @chains.push grps:[gi]
                 g.chain = ci
+        
+        for ch in @chains
+            for oc in @chains
+                if ch != oc
+                    for gi in ch.grps
+                        if gi in oc.grps
+                            if ch.grps.length > oc.grps.length
+                                @chains.splice @chains.indexOf(oc), 1
+                                break
+                            else
+                                @chains.splice @chains.indexOf(ch), 1
+                                break
                 
+        # log noon @chains
+                        
         for ch in @chains
             ch.areas = []
             ch.posl  = []
@@ -164,12 +181,19 @@ function Score
                 for ai in @grps[gi].eyes
                     ch.eyes.push ai if ai not in ch.eyes
                     
-            n = @poslistNeighbors ch.posl
+            n = @poslNeighbors ch.posl
+            ch.neighbors = n
             ch.libs = n.filter((p) => stone.empty == @stoneAt @coord p).length
             if ch.eyes.length > 1
                 # ch.alive = true
                 @aliveChains [ch]
-           
+
+        # log @chainString.apply @, @chains
+        
+        @fancySchmanzy()
+        
+        @deadOrAlive()
+        
         battle = []
         for ch in @chains
             if not ch.alive
@@ -184,23 +208,48 @@ function Score
                     battle.push ch.areas[0] if ch.areas[0] not in battle
                     
         for ai in battle
-            @chainBattle ai
+            @areaBattle ai
             
         for ch in @chains
             if not ch.alive and not ch.dead
-                log "chain #{@chains.indexOf ch}" ch
-                    
-    # 0000000     0000000   000000000  000000000  000      00000000  
-    # 000   000  000   000     000        000     000      000       
-    # 0000000    000000000     000        000     000      0000000   
-    # 000   000  000   000     000        000     000      000       
-    # 0000000    000   000     000        000     0000000  00000000  
+                @chainBattle ch
+                
+        log @chainString.apply @, @chains
+        
+        @deadOrAlive()        
+
+    #  0000000  000   000   0000000   000  000   000  0000000     0000000   000000000  000000000  000      00000000  
+    # 000       000   000  000   000  000  0000  000  000   000  000   000     000        000     000      000       
+    # 000       000000000  000000000  000  000 0 000  0000000    000000000     000        000     000      0000000   
+    # 000       000   000  000   000  000  000  0000  000   000  000   000     000        000     000      000       
+    #  0000000  000   000  000   000  000  000   000  0000000    000   000     000        000     0000000  00000000  
     
+    chainBattle: (ch) ->
+
+        log "chainBattle #{@chains.indexOf ch}" ch
+        # log @chains
+        for oc in @chains
+            if oc != ch and not oc.dead
+                lostAreas = []
+                for ai in ch.areas
+                    if ai in oc.areas
+                        # log "shares are #{ai} with chain #{@chains.indexOf(oc)}"
+                        if oc.eyes.length > 1
+                            if @chainAreaLibs(ch, ai) <  @chainAreaLibs(oc, ai)
+                                log "lost area #{ai}" @chainAreaLibs(ch, ai), @chainAreaLibs(oc, ai)
+                                lostAreas.push ai
+                log lostAreas, lostAreas.length, ch.areas.length
+                if lostAreas.length == ch.areas.length
+                    log 'lost all areas!' 
+                    @deadChains [ch]
+                    return
+        
     deadChains: (chains) ->
         
         for ch in chains
-            ch.dead  = true
+            ch.dead = true
             for gi in ch.grps
+                log 'dead' @grps[gi].key
                 @grps[gi].state = 'dead'
         
     aliveChains: (chains) ->
@@ -208,13 +257,22 @@ function Score
         for ch in chains
             ch.alive = true
             for gi in ch.grps
+                # log 'alive' @grps[gi].key
                 @grps[gi].state = 'alive'
     
-    chainBattle: (ai) ->
+    #  0000000   00000000   00000000   0000000   0000000     0000000   000000000  000000000  000      00000000  
+    # 000   000  000   000  000       000   000  000   000  000   000     000        000     000      000       
+    # 000000000  0000000    0000000   000000000  0000000    000000000     000        000     000      0000000   
+    # 000   000  000   000  000       000   000  000   000  000   000     000        000     000      000       
+    # 000   000  000   000  00000000  000   000  0000000    000   000     000        000     0000000  00000000  
+    
+    areaBattle: (ai) ->
+        
+        # log "areaBattle" ai
         
         deadAlive = (dead, alive) =>
             
-            @deadChains  dead
+            @deadChains  dead.filter (dc) -> dc.areas.length == 1
             @aliveChains alive
             
         a = @areas[ai]
@@ -236,19 +294,29 @@ function Score
         # log @groupString.apply @, gs
         
         if wc.length and bc.length
-            wc.sort (a,b) -> a.libs - b.libs
-            bc.sort (a,b) -> a.libs - b.libs
-            
-            if wc[0].libs - bc[0].libs > 2
-                # log 'white more libs'
-                deadAlive bc, wc
-            else if bc[0].libs - wc[0].libs > 2
-                # log 'black more libs'
-                deadAlive wc, bc
                         
+            wc.sort (a,b) => @chainAreaLibs(a,ai) - @chainAreaLibs(b,ai)
+            bc.sort (a,b) => @chainAreaLibs(a,ai) - @chainAreaLibs(b,ai)
+            
+            wl = @chainAreaLibs wc[0],ai
+            bl = @chainAreaLibs bc[0],ai
+            
+            if (wl - bl) > 2
+                # log 'white more libs' wl, bl
+                deadAlive bc, wc
+            else if (bl - wl) > 2
+                # log 'black more libs' bl, wl
+                deadAlive wc, bc
+     
+    poslUnion: (a,b) ->
+        
+        a.filter (ai) -> ai in b
+
+    chainAreaLibs: (ch,ai) -> @poslUnion(ch.neighbors, @areas[ai].posl).length
+        
     chainsForArea: (ai) ->
         
-        @chains.filter (ch) -> ai in ch.
+        @chains.filter (ch) -> ai in ch.areas
         
     calcAreas: ->
         
@@ -284,9 +352,11 @@ function Score
                                     
         for g in @grps
             log g.state, g.key
-                    
-        log @areaString 1
-        log @deadString 1
+  
+        @deadOrAlive()
+        
+        # log @areaString 1
+        # log @deadString 1
             
         # binary = @grid.toBinarray()
         # DeadStones.guess(binary).then (guess) ->
@@ -298,10 +368,20 @@ function Score
          
         points = @captures
         
+        log points
+        
         for a in @areas
             if a.color in 'wb'
                 points[stoneColor[a.color]] += a.posl.length
 
+        log points
+        
+        for dg in dead
+            for dp in dg.posl
+                points[opponent[stoneColor[dg.stone]]] += 2
+
+        log points
+        
         if points.white > points.black
             finalScore = 'W+'+(points.white-points.black)
         else
@@ -723,7 +803,7 @@ function Score
                     gn.push n
         gn
 
-    poslistNeighbors: (pl) ->
+    poslNeighbors: (pl) ->
         
         nl = []
         for p in pl
@@ -872,20 +952,81 @@ function Score
     # 000   000  000   000  000   000  000   000  000             000     000     000   000  000  000  0000  000   000  
     #  0000000   000   000   0000000    0000000   000        0000000      000     000   000  000  000   000   0000000   
     
+    rainbow: (idx,c) -> [y5,r5,g2,b8,m3,b4,w4,w8][idx%8](c)
+    
     groupString: ->
         
-        group = arguments[0]
-
         grid = new Grid @grid.toString()
         for gr in @grps
-            if 0 <= (idx = [].slice.call(arguments, 0).indexOf gr)
+            if 0 <= (idx = [].slice.call(arguments, 0).indexOf(gr))
                 for gg in gr.posl
                     c = arguments[idx].stone == '○' ? '◻' : '◼'
-                    grid.set gg, [y5,r4,m4,b7,w4,g2,b2][idx%6](c)
+                    grid.set gg, @rainbow idx, c
+            else
+                for gg in gr.posl
+                    grid.set gg, w2 grid.at gg
         for ar in @areas
-            if 0 <= (idx = [].slice.call(arguments, 0).indexOf ar)
+            if 0 <= (idx = [].slice.call(arguments, 0).indexOf(ar))
                 for aa in ar.posl
-                    grid.set aa, [y5,r4,m4,b7,w4,g2,b2][idx%6](@areas.indexOf ar)
+                    grid.set aa, @rainbow idx, @areas.indexOf ar
         grid.toAnsi 1
+        
+    grpsString: ->
+        
+        grid = new Grid @grid.toString()
+        for gr in @grps
+            if 0 <= (idx = [].slice.call(arguments, 0).indexOf(gr))
+                for gg in gr.posl
+                    c = @grps.indexOf gr
+                    if c > 9 ➜ c = ilpha[c-10]
+                    grid.set gg, @rainbow idx, c
+        grid.toAnsi 1
+        
+    chainString: ->
+
+        grid = new Grid @grid.toString()
+        for ch in @chains
+            if 0 <= (idx = [].slice.call(arguments, 0).indexOf(ch))
+                for cp in ch.posl
+                    # c = arguments[idx].stone == '○' ? '◻' : '◼'
+                    c = @chains.indexOf ch
+                    grid.set cp, @rainbow idx, c
+        grid.toAnsi 1
+        
+    fancySchmanzy: ->
+        
+        as = @groupString.apply(@, @areas).split '\n'
+        gs = @grpsString.apply(@,  @grps).split '\n'
+        cs = @chainString.apply(@, @chains).split '\n'
+        
+        pl = @size*2+6
+        fs = [w2 rpad(pl, ' areas') + rpad(pl, ' groups') + rpad(pl, ' chains')]
+        for i in 0...as.length
+            if i == 0 or i == as.length-2
+                fs.push as[i]+'   '+gs[i]+'   '+cs[i]
+            else if i == as.length-1
+                fs.push as[i]+'     '+gs[i]+'     '+cs[i]
+            else
+                fs.push as[i]+' '+gs[i]+' '+cs[i]
+        log fs.join '\n'
+        log ''
+        
+    deadOrAlive: ->
+        
+        as = @areaString.apply(@, @areas).split '\n'
+        gs = @deadString(1).split '\n'
+        cs = @groupString.apply(@,  @grps.filter((g) -> g.state == 'alive')).split '\n'
+
+        pl = @size*2+6
+        fs = [w2 rpad(pl, ' area color') + rpad(pl, ' dead') + rpad(pl, ' alive')]
+        for i in 0...as.length
+            if i == 0 or i == as.length-2
+                fs.push as[i]+'   '+gs[i]+'   '+cs[i]
+            else if i == as.length-1
+                fs.push as[i]+'     '+gs[i]+'     '+cs[i]
+            else
+                fs.push as[i]+' '+gs[i]+' '+cs[i]
+        log fs.join '\n'
+        log ''
         
 module.exports = Score

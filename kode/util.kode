@@ -38,7 +38,7 @@ class Util
         w:     'white'
         
     @alpha: 'ABCDEFGHJKLMNOPQRST'
-    @ilpha: 'abcdefghijklmnopqrs'
+    @ilpha: 'abcdefghijklmnopqrstuvwxyz'
     
     @splice: (s, i, n, r='') -> s.slice(0,i) + r + s.slice(i+n)
     
