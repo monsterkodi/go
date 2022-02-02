@@ -22,11 +22,7 @@ function Compi
         
     onExit: (signal) => 
       
-      # @proc.stdin.destroy()
-      # @proc.stdout.destroy()
-
       delete @proc
-
       log "#{@name} process exited #{signal}"
 
     newGame: (boardsize, @color, @handicap) ->
@@ -37,7 +33,6 @@ function Compi
         @send "fixed_handicap #{handicap}" if @handicap > 1
 
     genmove: -> 
-        # log "#{@name}: genmove #{@color}"
         ●▸ genmove
         @send "genmove #{@color}"
         
@@ -63,6 +58,8 @@ function Compi
         # log data if "a b c d e f g h j k l m n o p q r s t" in data
         @onStderr data
         
+    onStderr: ->
+        
     onData: (chunk) =>
         
         data = String chunk
@@ -77,8 +74,6 @@ function Compi
         
         @partial = answers.pop()
 
-        # log @name, answers, @partial
-
         for answer in answers
             
             if answer[0] == '='
@@ -88,7 +83,6 @@ function Compi
                             
     ok: (m, data) ->
             
-        # log @name, 'ok --' m, data
         switch m.split(' ')[0]
             
             'genmove'

@@ -8,15 +8,15 @@ kxk = require('kxk')
 elem = kxk.elem
 post = kxk.post
 
-opponent = require('./util').opponent
+opponent = require('./util/util').opponent
 
-Leelaz = require('./leelaz')
-Katago = require('./katago')
-Hara = require('./hara')
+SGF = require('./util/sgf')
+Leelaz = require('./bot/leelaz')
+Katago = require('./bot/katago')
+Hara = require('./bot/hara')
+GNU = require('./bot/gnu')
 Board = require('./board')
 Game = require('./game')
-GNU = require('./gnu')
-SGF = require('./sgf')
 
 Referee = (function ()
 {

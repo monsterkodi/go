@@ -1,0 +1,445 @@
+###
+ 0000000   0000000   000       0000000
+000       000   000  000      000     
+000       000000000  000      000     
+000       000   000  000      000     
+ 0000000  000   000  0000000   0000000
+###
+
+{ stoneColor, opponent, stone, alpha, stoneColor } = require './util/util'
+Print = require './util/print'
+
+function Calc extends Print
+
+    #  0000000   00000000   00000000   0000000   
+    # 000   000  000   000  000       000   000  
+    # 000000000  0000000    0000000   000000000  
+    # 000   000  000   000  000       000   000  
+    # 000   000  000   000  00000000  000   000  
+
+    linkAreas: ->
+        
+        for a in @areas
+            ai = @areas.indexOf a
+            for n in a.neighbors
+                if g = @groupAt n
+                    gi = @grps.indexOf g
+                    if gi not in a.grps
+                        a.grps.push gi
+                    if ai not in g.areas
+                        g.areas.push ai
+                    if a.color == stoneColor[g.stone][0]
+                        if ai not in g.eyes
+                            g.eyes.push ai
+    
+    areaAt: (p) ->
+        
+        for a in @areas
+            return a if p in a.posl
+
+    groupAt: (p) ->
+        
+        for g in @grps
+            if p in g.posl
+                return g
+                
+    areaColor: (g) ->
+        
+        cl = g.map (p) => @potentialOwner @coord p
+        sl = cl.filter((r) -> r?).join ''
+        if '?' in sl
+            '?'
+        else if not '○●' in sl and not '●○' in sl and sl.length > 0
+            c = stoneColor[sl[0]][0]
+        else
+            '?'
+                    
+    calcAreas: ->
+        
+        alive = @grps.filter (g) -> g.state == 'alive'
+        for ag in alive
+            for ai in ag.areas
+                challenged = false
+                aa = @areas[ai]
+                for gi in aa.grps
+                    gg = @grps[gi]
+                    if gg.state != 'dead' and gg.stone != ag.stone 
+                        challenged = true
+                if not challenged
+                    aa.color = stoneColor[ag.stone][0]
+            
+    # 0000000    00000000   0000000   0000000     0000000  000   000   0000000   00000000   00000000  
+    # 000   000  000       000   000  000   000  000       000   000  000   000  000   000  000       
+    # 000   000  0000000   000000000  000   000  0000000   000000000  000000000  00000000   0000000   
+    # 000   000  000       000   000  000   000       000  000   000  000   000  000        000       
+    # 0000000    00000000  000   000  0000000    0000000   000   000  000   000  000        00000000  
+    
+    deadShape: (a) ->
+        
+        if a.posl.length < 6
+            
+            af = a.posl.filter (p) => '?' != @potentialOwner @coord p
+            if af.length < 4 ➜ return true
+            cs = @minCoords af.map @coord
+            ss = cs.map((c) -> ''+c[0]+c[1]).join ' '
+            return ss in [
+                '00 01 11 02 12'
+                '10 01 11 02 12'
+                '00 10 20 11 21'
+                '01 10 20 11 21'
+                '00 10 01 11 20'
+                '00 10 01 11 21'
+                '00 10 01 11 02'
+                '00 10 01 11 12'
+                '00 10 01 11'
+                ]
+        false
+        
+    minCoords: (cs) ->
+        
+        mx = my = Infinity
+        for c in cs
+            mx = min c[0], mx
+            my = min c[1], my
+        cs = cs.map (c) -> [c[0]-mx, c[1]-my]
+        cs.sort (a,b) -> 
+            if a[1] != b[1]
+                a[1] - b[1]
+            else
+                a[0] - b[0]
+
+    # 00000000    0000000   000000000  00000000  000   000  000000000  000   0000000   000      
+    # 000   000  000   000     000     000       0000  000     000     000  000   000  000      
+    # 00000000   000   000     000     0000000   000 0 000     000     000  000000000  000      
+    # 000        000   000     000     000       000  0000     000     000  000   000  000      
+    # 000         0000000      000     00000000  000   000     000     000  000   000  0000000  
+    
+    potentialOwner: (c) ->
+        
+        if stone.empty == @stoneAt c
+            rc = @rayColors c
+            p = rc.filter((r) -> r?).join ''
+            if '○●' in p or '●○' in p 
+                '?'
+            else if p.length
+                p[0]
+            else
+                '?'
+                
+    potentialGroup: (g) ->
+        
+        for n in g.neighbors
+            if @stoneAt(n) == stone.empty and g.stone == @potentialOwner @coord n
+                return true
+                        
+    potentialConnection: (g) ->
+        
+        for d in g.diagonals
+            if g.stone == @stoneAt d
+                for n in @posNeighbors d
+                    if n in g.neighbors and stone.empty == @stoneAt n
+                        bad = false
+                        for ei in g.eyes
+                            if n in @areas[ei].posl and @areas[ei].posl.length == 1
+                                bad = true
+                        for ai in g.areas
+                            if n in @areas[ai].posl and @areas[ai].posl.length == 1 # area length > 1?
+                                bad = true
+                        if not bad
+                            return true
+        false
+        
+    potentialEye: (g, a) ->
+        
+        if a.posl.length < 2 ➜ return false
+        if a.posl.length == 2
+            cnt = '○':0 '●':0 ' ':0
+            for n in a.neighbors
+                cnt[@stoneAt n]++
+            if cnt['○'] == cnt['●'] ➜ return false
+        true
+
+    suicidalEye: (g, a) ->
+        
+        if a.posl.length > 2 ➜ return false
+        opponentGroups = [] 
+        opponentSuicides = []
+        for gi in a.grps
+            if @grps[gi].stone != g.stone
+                opponentGroups.push gi
+                if @grps[gi].eyes.length < 2 and @grps[gi].libs <= 2 
+                    opponentSuicides.push gi
+
+        opponentGroups.length == opponentSuicides.length
+        
+    # 000   000  00000000   0000000   000   000  
+    # 000 0 000  000       000   000  000  000   
+    # 000000000  0000000   000000000  0000000    
+    # 000   000  000       000   000  000  000   
+    # 00     00  00000000  000   000  000   000  
+    
+    weakEye: (g, a) ->
+        
+        a.grps.length > 2
+        
+    weakCollection: (g) ->
+
+        friends = []
+        if 1 <= g.eyes.length <= 2
+            for ai in g.areas
+                a = @areas[ai]
+                for gi in a.grps
+                    if @grps[gi].stone == g.stone
+                        friends.push @grps[gi] if not @grps[gi] in friends
+                        
+            if friends.length <= g.areas.length
+                friends = []
+
+            if friends.length
+                for f in friends
+                    if f.eyes.length > 1
+                        return []
+        friends
+        
+    # 00000000    0000000   000   000  
+    # 000   000  000   000   000 000   
+    # 0000000    000000000    00000    
+    # 000   000  000   000     000     
+    # 000   000  000   000     000     
+    
+    rayColor: (c, d) ->
+        
+        n = [c[0]+d[0], c[1]+d[1]]
+        s = @stoneAt n
+        s == stone.empty ? @rayColor(n, d) : s
+
+    rayColors: (c) ->
+
+        [[1 0] [0 1] [-1 0] [0 -1]].map (r) => @rayColor c, r
+            
+    # 000      000  0000000    00000000  00000000   000000000  000  00000000   0000000  
+    # 000      000  000   000  000       000   000     000     000  000       000       
+    # 000      000  0000000    0000000   0000000       000     000  0000000   0000000   
+    # 000      000  000   000  000       000   000     000     000  000            000  
+    # 0000000  000  0000000    00000000  000   000     000     000  00000000  0000000   
+    
+    countlib: (p) -> @liberties @coord p
+    liberties: (c) ->
+        
+        if @valid c
+            s = @stoneAt c
+            if s != stone.empty
+                g = @group c
+                n = @groupNeighbors g
+                n = n.filter (p) => stone.empty == @stoneAt @coord p
+                return n.length
+        0
+        
+    # 00000000  00000000   00000000  00000000  0000000     0000000   00     00   0000000  
+    # 000       000   000  000       000       000   000  000   000  000   000  000       
+    # 000000    0000000    0000000   0000000   000   000  000   000  000000000  0000000   
+    # 000       000   000  000       000       000   000  000   000  000 0 000       000  
+    # 000       000   000  00000000  00000000  0000000     0000000   000   000  0000000   
+    
+    free: (color, p) -> @freedoms color, @coord p
+    freedoms: (color, c) ->
+
+        l = 0
+        for n in @neighbors c
+            s = @stoneAt n
+            if s == stone.empty then l++
+            else if s == stone[color]
+                if @liberties(n) > 1
+                    l++
+        l
+
+    #  0000000   00000000    0000000   000   000  00000000   
+    # 000        000   000  000   000  000   000  000   000  
+    # 000  0000  0000000    000   000  000   000  00000000   
+    # 000   000  000   000  000   000  000   000  000        
+    #  0000000   000   000   0000000    0000000   000        
+
+    allGroups: ->
+
+        grps = '○':[] '●':[] ' ':[]
+        allp = @allPos()
+        while allp.length
+            p = allp.pop()
+            if s = @stoneAt p
+                g = @group @coord p
+                for gp in g
+                    if 0 <= i = allp.indexOf gp
+                        allp.splice i, 1
+                grps[s].push g.sort()
+        grps
+    
+    group: (c) ->
+        
+        s = @stoneAt c
+        g = [@pos c]
+        f = [@pos c]
+        while fp = f.shift()
+            for n in @neighbors @coord fp
+                if s == @stoneAt n
+                    p = @pos n
+                    if p not in g
+                        g.push p
+                        if p not in f then f.push p
+        g
+        
+    # 000   000  00000000  000   0000000   000   000  0000000     0000000   00000000    0000000  
+    # 0000  000  000       000  000        000   000  000   000  000   000  000   000  000       
+    # 000 0 000  0000000   000  000  0000  000000000  0000000    000   000  0000000    0000000   
+    # 000  0000  000       000  000   000  000   000  000   000  000   000  000   000       000  
+    # 000   000  00000000  000   0000000   000   000  0000000     0000000   000   000  0000000   
+    
+    groupNeighbors: (g) ->
+        
+        gn = []
+        for p in g
+            for n in @posNeighbors p
+                if n not in g and n not in gn
+                    gn.push n
+        gn
+
+    poslNeighbors: (pl) ->
+        
+        nl = []
+        for p in pl
+            for pn in @posNeighbors p
+                if pn not in pl and pn not in nl
+                    nl.push pn
+        nl
+        
+    posNeighbors: (p) ->
+        
+        @poslist @neighbors @coord p
+        
+    neighbors: (c) ->
+        
+        ns = []
+        for [x,y] in [[-1 0] [1 0] [0 -1] [0 1]]
+            n = [c[0]+x, c[1]+y]
+            if @valid n
+                ns.push n
+        ns
+
+    # 0000000    000   0000000    0000000    0000000   000   000   0000000   000       0000000  
+    # 000   000  000  000   000  000        000   000  0000  000  000   000  000      000       
+    # 000   000  000  000000000  000  0000  000   000  000 0 000  000000000  000      0000000   
+    # 000   000  000  000   000  000   000  000   000  000  0000  000   000  000           000  
+    # 0000000    000  000   000   0000000    0000000   000   000  000   000  0000000  0000000   
+    
+    groupDiagonals: (g, n) ->
+        
+        dn = []
+        for p in g
+            for d in @poslist @diagonals @coord p
+                if d not in g and d not in dn and d not in n
+                    dn.push d
+        dn
+        
+    diagonals: (c) ->
+        
+        ns = []
+        for [x,y] in [[-1 -1] [1 1] [-1 1] [1 -1]]
+            n = [c[0]+x, c[1]+y]
+            if @valid n
+                ns.push n
+        ns
+        
+    # 000      00000000   0000000    0000000   000      
+    # 000      000       000        000   000  000      
+    # 000      0000000   000  0000  000000000  000      
+    # 000      000       000   000  000   000  000      
+    # 0000000  00000000   0000000   000   000  0000000  
+    
+    legal: (color, c) ->
+        
+        fr = @freedoms color, c
+        mc = @movecaptures color, c
+        lg = (fr or mc) and @stoneAt(c) == stone.empty
+        if not lg
+            log color, c, fr, mc, @stoneAt c
+        lg
+        
+    all_legal: (color) ->
+        
+        color ?= @nextColor()
+        l = []
+        for y in 0...@size
+            for x in 0...@size
+                if @legal color, [x,y]
+                    l.push @pos [x,y]
+        l
+                
+    movecaptures: (color, c) ->
+
+        m = stone[color]
+        for n in @neighbors c
+            s = @stoneAt n
+            if s != 'empty' and s != m
+                if 1 == @freedoms opponent[color], n
+                    return true
+        false            
+        
+    #  0000000   000      000      00000000    0000000    0000000  
+    # 000   000  000      000      000   000  000   000  000       
+    # 000000000  000      000      00000000   000   000  0000000   
+    # 000   000  000      000      000        000   000       000  
+    # 000   000  0000000  0000000  000         0000000   0000000   
+    
+    allPos: ->
+        
+        p = []
+        for y in 0...@size
+            for x in 0...@size
+                p.push alpha[x]+(@size-y)
+        p
+        
+    # 00000000    0000000    0000000  000    
+    # 000   000  000   000  000       000    
+    # 00000000   000   000  0000000   000    
+    # 000        000   000       000  000    
+    # 000         0000000   0000000   0000000
+    
+    poslUnion: (a,b) ->
+        
+        a.filter (ai) -> ai in b
+
+    poslist: (cl)  -> cl.map @pos
+    
+    #  0000000  000   000   0000000   000  000   000   0000000  
+    # 000       000   000  000   000  000  0000  000  000       
+    # 000       000000000  000000000  000  000 0 000  0000000   
+    # 000       000   000  000   000  000  000  0000       000  
+    #  0000000  000   000  000   000  000  000   000  0000000   
+    
+    chainAreaLibs: (ch,ai) -> @poslUnion(ch.neighbors, @areas[ai].posl).length
+        
+    chainsForArea: (ai) ->
+        
+        @chains.filter (ch) -> ai in ch.areas
+       
+    #  0000000  000000000   0000000   000   000  00000000   0000000
+    # 000          000     000   000  0000  000  000       000     
+    # 0000000      000     000   000  000 0 000  0000000   0000000 
+    #      000     000     000   000  000  0000  000            000
+    # 0000000      000      0000000   000   000  00000000  0000000 
+    
+    allStones: (color) ->
+        
+        s = stone[color]
+        l = []
+        for y in 0...@size
+            for x in 0...@size
+                if s == @stoneAt x,y
+                    l.push @pos [x,y]
+        l
+        
+    stoneAt: (x,y) => @grid.at x,y
+    valid:   (c)   => 0 <= c[0] < @size and 0 <= c[1] < @size
+    coord:   (p)   => [alpha.indexOf(p[0].toUpperCase()), @size-int(p[1..])]
+    pos:     (c)   => alpha[c[0]] + (@size-c[1])
+
+module.exports = Calc

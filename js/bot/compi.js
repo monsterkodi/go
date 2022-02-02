@@ -1,6 +1,6 @@
 // monsterkodi/kode 0.237.0
 
-var _k_ = {profile: function (id) {_k_.hrtime ??= {}; _k_.hrtime[id] = process.hrtime.bigint()}, profilend: function (id) { var b = process.hrtime.bigint()-_k_.hrtime[id]; let f=1000n; for (let u of ['ns','μs','ms','s']) { if (u=='s' || b<f) { return console.log(id+' '+(1000n*b/f)+' '+u); } f*=1000n; }}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}}
+var _k_ = {profile: function (id) {_k_.hrtime ??= {}; _k_.hrtime[id] = process.hrtime.bigint()}, profilend: function (id) { var b = process.hrtime.bigint()-_k_.hrtime[id]; let f=1000n; for (let u of ['ns','μs','ms','s']) { if (u=='s' || b<f) { return console.log(id+' '+(1000n*b/f)+' '+u); } f*=1000n; }}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}}
 
 var args, childp, Compi, opponent, post, stone
 
@@ -86,12 +86,11 @@ Compi = (function ()
         var data
 
         data = String(chunk)
-        if (_k_.in("a b c d e f g h j k l m n o p q r s t",data))
-        {
-            console.log(data)
-        }
         return this.onStderr(data)
     }
+
+    Compi.prototype["onStderr"] = function ()
+    {}
 
     Compi.prototype["onData"] = function (chunk)
     {
@@ -106,9 +105,9 @@ Compi = (function ()
         answers = data.split('\n\n')
         this.partial = answers.pop()
         var list = _k_.list(answers)
-        for (var _82_19_ = 0; _82_19_ < list.length; _82_19_++)
+        for (var _77_19_ = 0; _77_19_ < list.length; _77_19_++)
         {
-            answer = list[_82_19_]
+            answer = list[_77_19_]
             if (answer[0] === '=')
             {
                 this.ok(this.msg.shift(),answer.slice(2))
@@ -142,9 +141,9 @@ Compi = (function ()
                 if (this.color === 'black')
                 {
                     var list = _k_.list(data.split(' '))
-                    for (var _106_26_ = 0; _106_26_ < list.length; _106_26_++)
+                    for (var _100_26_ = 0; _100_26_ < list.length; _100_26_++)
                     {
-                        p = list[_106_26_]
+                        p = list[_100_26_]
                         this.game.setStone(this.game.coord(p),stone.black)
                     }
                     return this.game.moves.push(`black ${data}`)

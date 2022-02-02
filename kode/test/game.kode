@@ -6,7 +6,7 @@ Game = require '../game'
 
     ▸ fromMoves
 
-        # this contains an suicide move (176: O13 by black)
+        # this contains a suicide move (176: O13 by black)
         moves = """
                 Q16 D16 Q4 D4 Q10 O17 M17 R17 R16 Q17 P16 S17 P17 P18 N15 O3 L4 R3 R4 Q3 P4 N2 N5 Q11 F17 P11 F4 N17 M16 R10 D6 B5 J17 C7 R11 R12 C14 D14
                 D13 D15 C12 C15 B14 G16 F16 E18 G15 F18 E3 G17 F14 E13 E12 J16 H16 H17 H15 D11 J18 B15 E14 R9 P14 D3 L2 D8 F6 C11 G9 H9 G8 N10 F13 G10 J7

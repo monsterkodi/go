@@ -8,15 +8,15 @@
 
 kxk = require 'kxk'
 { elem, post } = kxk
-{ opponent }   = require './util'
+{ opponent }   = require './util/util'
 
-Leelaz  = require './leelaz'
-Katago  = require './katago'
-Hara    = require './hara'
+SGF     = require './util/sgf'
+Leelaz  = require './bot/leelaz'
+Katago  = require './bot/katago'
+Hara    = require './bot/hara'
+GNU     = require './bot/gnu'
 Board   = require './board'
 Game    = require './game'
-GNU     = require './gnu'
-SGF     = require './sgf'
 
 function Referee
 

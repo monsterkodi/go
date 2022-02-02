@@ -1,24 +1,26 @@
 
 Score = require '../score'
 
+verbose = 0
+
 scr = (b) ->
     s = new Score b
-    r = s.calcScore()
+    r = s.calcScore verbose
     r
     
 ars = (b) ->
     s = new Score b
-    r = s.calcScore()
+    r = s.calcScore verbose
     s.areaString()
 
 ded = (b) ->
     s = new Score b
-    r = s.calcScore()
+    r = s.calcScore verbose
     s.deadString()
 
 module.exports = { scr, ded, ars}
     
-{ sgfToAlphaNum } = require '../util'
+{ sgfToAlphaNum } = require '../util/util'
 
 ▸ util
     

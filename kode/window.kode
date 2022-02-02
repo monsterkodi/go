@@ -7,11 +7,10 @@
 ###
 
 kxk = require 'kxk'
-{ stone } = require './util'
 { args, kerror, keyinfo, klog, post, stash, win, elem, $ } = kxk
-
-Board   = require './board'
-Referee = require './referee'
+{ stone } = require './util/util'
+Board     = require './board'
+Referee   = require './referee'
 
 function MainWin extends win
     

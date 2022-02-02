@@ -33,10 +33,10 @@ Leelaz = (function ()
             str = _k_.trim(str,'\n')
             playout = {}
             var list = _k_.list(str.split(', '))
-            for (var _37_19_ = 0; _37_19_ < list.length; _37_19_++)
+            for (var _36_19_ = 0; _36_19_ < list.length; _36_19_++)
             {
-                kv = list[_37_19_]
-                var _38_29_ = kv.split(': '); key = _38_29_[0]; value = _38_29_[1]
+                kv = list[_36_19_]
+                var _37_29_ = kv.split(': '); key = _37_29_[0]; value = _37_29_[1]
 
                 switch (key)
                 {

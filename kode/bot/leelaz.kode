@@ -17,7 +17,6 @@ function Leelaz extends Compi
         super @game, 'leelaz' '/opt/homebrew/bin/leelaz' [
             '--gtp'
             '--noponder'
-            # '--cpu-only'
             '--timemanage' 'fast'
             '--logfile' '/Users/kodi/Desktop/leelaz.log'
             ]

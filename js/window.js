@@ -5,8 +5,6 @@ var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c
 var $, args, Board, elem, kerror, keyinfo, klog, kxk, MainWin, post, Referee, stash, stone, win
 
 kxk = require('kxk')
-stone = require('./util').stone
-
 args = kxk.args
 kerror = kxk.kerror
 keyinfo = kxk.keyinfo
@@ -16,6 +14,8 @@ stash = kxk.stash
 win = kxk.win
 elem = kxk.elem
 $ = kxk.$
+
+stone = require('./util/util').stone
 
 Board = require('./board')
 Referee = require('./referee')

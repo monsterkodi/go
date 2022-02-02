@@ -1,6 +1,6 @@
 // monsterkodi/kode 0.237.0
 
-var _k_ = {empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}}
+var _k_
 
 var Move, Moves, stoneColor
 
@@ -14,11 +14,6 @@ Move = (function ()
         this.pos = pos
         this.color = color
         this.captures = captures
-    
-        if (!_k_.empty(this.captures))
-        {
-            console.log(this.pos,this.color,this.captures)
-        }
     }
 
     return Move
@@ -119,6 +114,8 @@ Moves = (function ()
             case 'resign':
                 return this.ended = true
 
+            default:
+                return this.ended = false
         }
 
     }

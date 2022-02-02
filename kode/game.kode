@@ -9,11 +9,11 @@
 kxk = require 'kxk'
 
 { randInt, elem, $ } = kxk
-{ opponent, alpha, stone } = require './util'
+{ opponent, alpha, stone } = require './util/util'
 
 Score = require './score'
-Moves = require './moves'
-Grid  = require './grid'
+Moves = require './util/moves'
+Grid  = require './util/grid'
 
 function Game extends Score
 
@@ -97,8 +97,8 @@ function Game extends Score
         c = @coord p
         
         if not @legal color, c
-            @moves.add "illegal", color
-            error("illegal move:" color, @moves.num(), p) 
+            @moves.add 'illegal' color
+            error 'illegal move:' color, @moves.num(), p
             return '? invalid move'
             
         if @valid c
@@ -161,6 +161,8 @@ function Game extends Score
         
         if valid m.captures
             log 'undoMove captures' m
+            for p in m.captures
+                @setStone @coord(p), stone[opponent[m.color]]
         
         @calcScore()
         @board.annotate()

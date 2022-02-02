@@ -9,7 +9,7 @@
 kxk = require 'kxk'
 { max } = Math
 { elem, kpos, post, randIntRange, $ } = kxk
-{ stone, stoneColor, alpha, opponent } = require './util'
+{ stone, stoneColor, alpha, opponent } = require './util/util'
 
 function Board
 
@@ -213,7 +213,7 @@ function Board
     
     showLastMove: ->
         
-        if @game.start()
+        if @game.start() or @game.moves.lastIsPass()
             @lst.style.display = 'none'
             return
             
@@ -310,6 +310,7 @@ function Board
         @num.innerHTML = ''
         if @game
             for m in @game.moves.m
+                continue if m.pos in ['pass''resign']
                 n = @game.moves.m.indexOf m
                 c = @game.coord m.pos
                 l = elem 'div' class:"number #{m.color}" parent:@num, text:1+n
