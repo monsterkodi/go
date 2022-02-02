@@ -79,16 +79,16 @@ Moves = require '../moves'
         m.lastIsPass() ▸ true
         m.doublePass() ▸ true
         m.end()        ▸ true
-        m.color()      ▸ 'end'
+        m.color()      ▸ 'white'
         m.num()        ▸ 7
         
         m.add 'D5'
-        m.history()    ▸ ['A1''B2''C3''pass''D4''pass''pass']
-        m.lastIsPass() ▸ true
-        m.doublePass() ▸ true
-        m.end()        ▸ true
-        m.color()      ▸ 'end'
-        m.num()        ▸ 7
+        m.history()    ▸ ['A1''B2''C3''pass''D4''pass''pass''D5']
+        m.lastIsPass() ▸ false
+        m.doublePass() ▸ false
+        m.end()        ▸ false
+        m.color()      ▸ 'black'
+        m.num()        ▸ 8
         
     ▸ clear
     

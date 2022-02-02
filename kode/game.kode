@@ -106,7 +106,6 @@ function Game extends Score
             @setStone c, stone[color]
             @moves.add p, color, @capture color
             @calcScore()
-            log 'annotate' p
             @board.annotate?()
             ''
         else

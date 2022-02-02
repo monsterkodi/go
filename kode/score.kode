@@ -96,9 +96,10 @@ function Score
                     # if dg.stone == g.stone and @groupsShareArea g, dg
                     if dg.stone == g.stone 
                         union = @poslUnion @posNeighbors(dp), g.neighbors
-                        ▴ union.length == 2
-                        if @stoneAt(union[0]) == stone.empty or @stoneAt(union[1]) == stone.empty
-                            @createLink g, dg
+                        for i in 0...union.length
+                            if @stoneAt(union[i]) == stone.empty
+                                @createLink g, dg
+                                break
                         
     groupsShareArea: (a,b) ->
         
@@ -182,14 +183,16 @@ function Score
             ch.neighbors = n
             ch.libs = n.filter((p) => stone.empty == @stoneAt @coord p).length
             if ch.eyes.length > 1
-                # ch.alive = true
-                @aliveChains [ch]
+                onelib = ch.grps.map((gi) => @grps[gi]).filter (gr) -> gr.libs == 1
+                if empty onelib
+                    # log 'instant alive!' ch
+                    @aliveChains [ch]
 
         # log @chainString.apply @, @chains
         
-        @fancySchmanzy()
+        # @fancySchmanzy()
         
-        @deadOrAlive()
+        # @deadOrAlive()
         
         return if @areas.length < 2
         
@@ -215,9 +218,9 @@ function Score
                 
         @reevaluateAreaColors()
                                 
-        log @chainString.apply @, @chains
+        # log @chainString.apply @, @chains
         
-        @deadOrAlive()        
+        # @deadOrAlive()        
         
     reevaluateAreaColors: ->
         
@@ -241,7 +244,7 @@ function Score
                         else
                             deadOpponent++
                 if not aliveOpponent and deadOpponent
-                    log 'set area color' ai, stoneColor[ch.stone][0]
+                    # log 'set area color' ai, stoneColor[ch.stone][0]
                     ar.color = stoneColor[ch.stone][0]
                     @aliveChains [ch]
                 if ar.color == stoneColor[ch.stone][0]
@@ -258,16 +261,27 @@ function Score
     
     chainBattle: (ch) ->
 
-        log "chainBattle #{@chains.indexOf ch}" ch
-        # log @chains
+        # log "chainBattle #{@chains.indexOf ch}" ch
+
         for oc in @chains
             if oc != ch and not oc.dead
                 
                 if ch.libs == 1 and (oc.alive or oc.libs > 1)
-                    log 'only 1 lib!' 
+                    # log 'only 1 lib!' 
                     @deadChains [ch]
                     return
-                
+
+                if ch.libs == 2 and (oc.alive or oc.libs > 2)
+                    # log 'only 2 libs!' 
+                    @deadChains [ch]
+                    return
+                    
+                if ch.libs < 5 and ch.areas.length == 1
+                    if @deadShape @areas[ch.areas[0]]
+                        # log 'less than 5 libs in single area with dead shape!' 
+                        @deadChains [ch]
+                        return
+                    
                 lostAreas = []
                 sameAreas = []
                 for ai in ch.areas
@@ -277,16 +291,16 @@ function Score
                         # if oc.eyes.length > 1
                         if oc.eyes.length > 0
                             if @chainAreaLibs(ch, ai) <  @chainAreaLibs(oc, ai)
-                                log "lost area #{ai}" @chainAreaLibs(ch, ai), @chainAreaLibs(oc, ai)
+                                # log "lost area #{ai}" @chainAreaLibs(ch, ai), @chainAreaLibs(oc, ai)
                                 lostAreas.push ai
-                log lostAreas, lostAreas.length, ch.areas.length
+                # log lostAreas, lostAreas.length, ch.areas.length
                 if lostAreas.length == ch.areas.length
-                    log 'lost all areas!' oc
+                    # log 'lost all areas!' oc
                     @deadChains [ch]
                     return
                     
                 if sameAreas.length == ch.areas.length and ch.areas.length <= 2 and (oc.alive or oc.areas.length > ch.areas.length)
-                    log 'shares all areas and has less or other is alive!' oc
+                    # log 'shares all areas and has less or other is alive!' oc
                     @deadChains [ch]
                     return
         
@@ -295,7 +309,7 @@ function Score
         for ch in chains
             ch.dead = true
             for gi in ch.grps
-                log 'dead' @grps[gi].key
+                # log 'dead' @grps[gi].key
                 @grps[gi].state = 'dead'
                 
         @reevaluateAreaColors()
@@ -395,8 +409,8 @@ function Score
         @linkGroups()
         @calcChains()
         
-        log 'before calcAreas'
-        @deadOrAlive()
+        # log 'before calcAreas'
+        # @deadOrAlive()
         
         @calcAreas()
                
@@ -405,10 +419,10 @@ function Score
         
         dead = @grps.filter (g) -> g.state == 'dead'
                                     
-        for g in @grps
-            log g.state, g.key
+        # for g in @grps
+            # log g.state, g.key
   
-        @deadOrAlive()
+        # @deadOrAlive()
         
         # log @areaString 1
         # log @deadString 1
@@ -423,20 +437,14 @@ function Score
          
         points = copy @captures
         
-        log points
-        
         for a in @areas
             if a.color in 'wb'
                 points[stoneColor[a.color]] += a.posl.length
 
-        log points
-        
         for dg in dead
             for dp in dg.posl
                 points[opponent[stoneColor[dg.stone]]] += 2
 
-        log points
-        
         if points.white > points.black
             finalScore = 'W+'+(points.white-points.black)
         else

@@ -11,7 +11,7 @@
 function Move
 
     @: (@pos, @color, @captures) ->
-        log @pos, @color, @captures if valid @captures
+        # log 'move with captures' @pos, @color, @captures if valid @captures
 
 function Moves
 
@@ -36,5 +36,6 @@ function Moves
         switch pos
             'pass'   ➜ @ended = @doublePass()
             'resign' ➜ @ended = true
+                     ➜ @ended = false
 
 module.exports = Moves
