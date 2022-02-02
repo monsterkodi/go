@@ -10,32 +10,47 @@
 
 function Move
 
-    @: (@pos, @color, @captures) ->
-        # log 'move with captures' @pos, @color, @captures if valid @captures
+    @: (@pos, @color, @p, @captures) ->
+        # log 'move with captures' @pos, @color, @p, @captures if valid @captures
 
 function Moves
 
-    @: -> @m = []
+    @: -> 
+        @m = []
+        @p = [0 0]
 
-    num:        -> @m.length
-    pop:        -> @m.pop()
-    clear:      -> @m = []; delete @ended
-    end:        -> @ended ? false
-    last:       -> @m[@m.length-1]
-    start:      -> @m.length == 0
-    history:    -> @m.map (m) -> m.pos
-    resigned:   -> @m[-1]?.pos == 'resign'
-    lastIsPass: -> @m[-1]?.pos == 'pass'
-    singlePass: -> @m[-1]?.pos == 'pass' and @m[-2]?.pos != 'pass'
-    doublePass: -> @m[-1]?.pos == 'pass' == @m[-2]?.pos
-    lastColor:  -> @m.length ? ['white''black'][@m.length%2] : 'start'
-    nextColor:  -> ['black''white'][@m.length%2]
-    color: (c)  -> c ? stoneColor[c] : @nextColor()
+    num: -> @m.length
+    pop: -> 
+        
+        m = @m.pop()
+        @p = @num() ? copy(@last().p) : [0 0]
+        m
+        
+    clear: -> 
+        
+        @m = [] 
+        @p = [0 0] 
+        delete @ended
+            
     add: (pos,color,captures)  ->
-        @m.push new Move pos, @color(color), captures
+        c = @color color
+        @p[(c == 'black') ? 0 : 1] += captures.length if valid captures
+        @m.push new Move pos, c, copy(@p), captures
         switch pos
             'pass'   ➜ @ended = @doublePass()
             'resign' ➜ @ended = true
                      ➜ @ended = false
 
+    start:      -> @m.length == 0
+    history:    -> @m.map (m) -> m.pos
+    color: (c)  -> c ? stoneColor[c] : @nextColor()
+    lastColor:  -> @m.length ? ['white''black'][@m.length%2] : 'start'
+    nextColor:  -> ['black''white'][@m.length%2]
+    lastIsPass: -> @last()?.pos == 'pass'
+    singlePass: -> @last()?.pos == 'pass' and @m[-2]?.pos != 'pass'
+    doublePass: -> @last()?.pos == 'pass' == @m[-2]?.pos
+    resigned:   -> @last()?.pos == 'resign'
+    last:       -> @m[@m.length-1]
+    end:        -> @ended ? false
+                     
 module.exports = Moves

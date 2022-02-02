@@ -6,7 +6,7 @@
  0000000   0000000   000   000  000        000
 ###
 
-{ stone, opponent }  = require './util'
+{ stone, opponent }  = require '../util/util'
 { args, childp, post } = require 'kxk'
 
 function Compi
@@ -39,7 +39,7 @@ function Compi
     opponentMove: (p) ->
 
         @send "play #{opponent[@color]} #{p}"        
-        @send 'showboard'
+        # @send 'showboard'
         
     estimateScore: ->
         
@@ -48,7 +48,7 @@ function Compi
     undo: -> 
         if @msg[-1]?.startsWith 'genmove' then @send 'undo'
         @send 'undo'
-        @send 'showboard'
+        # @send 'showboard'
         
     send: (m) -> @msg.push m; @proc.stdin.write m + '\n'
 

@@ -167,10 +167,11 @@ function Referee
         
         @paused = true
         @redos ?= []
-        while @game.lastPos() in ['pass' 'resign']
-            @redos.unshift @game.moves.pop()
-            @compi.black?.undo()
-            @compi.white?.undo()
+        
+        # while @game.lastPos() in ['pass' 'resign']
+            # @redos.unshift @game.moves.pop()
+            # @compi.black?.undo()
+            # @compi.white?.undo()
             
         m = @game.moves.pop()
         @redos.unshift m

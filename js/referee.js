@@ -186,7 +186,7 @@ Referee = (function ()
 
     Referee.prototype["undo"] = function ()
     {
-        var m, _169_15_, _172_24_, _173_24_, _182_20_, _183_20_
+        var m, _169_15_, _183_20_, _184_20_
 
         console.log('undo')
         if (this.game.start())
@@ -199,12 +199,6 @@ Referee = (function ()
         }
         this.paused = true
         this.redos = ((_169_15_=this.redos) != null ? _169_15_ : [])
-        while (_k_.in(this.game.lastPos(),['pass','resign']))
-        {
-            this.redos.unshift(this.game.moves.pop())
-            ;(this.compi.black != null ? this.compi.black.undo() : undefined)
-            ;(this.compi.white != null ? this.compi.white.undo() : undefined)
-        }
         m = this.game.moves.pop()
         this.redos.unshift(m)
         this.game.undoMove(m)
@@ -214,7 +208,7 @@ Referee = (function ()
 
     Referee.prototype["redo"] = function ()
     {
-        var move, _191_20_, _192_20_
+        var move, _192_20_, _193_20_
 
         if (_k_.empty(this.redos))
         {
@@ -229,7 +223,7 @@ Referee = (function ()
 
     Referee.prototype["jumpToStart"] = function ()
     {
-        var _205_20_, _206_20_
+        var _206_20_, _207_20_
 
         console.log('start')
         if (this.game.start())

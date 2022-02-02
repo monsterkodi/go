@@ -210,6 +210,9 @@ body {
   font-weight: bold;
   flex: 1 1;
 }
+.gameInfoCenter .redos {
+  filter: drop-shadow(0px 1px 1px rgba(0,0,0,0.533));
+}
 .score {
   padding-left: 3px;
   padding-right: 3px;

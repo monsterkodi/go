@@ -4,8 +4,8 @@ var _k_ = {profile: function (id) {_k_.hrtime ??= {}; _k_.hrtime[id] = process.h
 
 var args, childp, Compi, opponent, post, stone
 
-stone = require('./util').stone
-opponent = require('./util').opponent
+stone = require('../util/util').stone
+opponent = require('../util/util').opponent
 
 args = require('kxk').args
 childp = require('kxk').childp
@@ -56,8 +56,7 @@ Compi = (function ()
 
     Compi.prototype["opponentMove"] = function (p)
     {
-        this.send(`play ${opponent[this.color]} ${p}`)
-        return this.send('showboard')
+        return this.send(`play ${opponent[this.color]} ${p}`)
     }
 
     Compi.prototype["estimateScore"] = function ()
@@ -71,8 +70,7 @@ Compi = (function ()
         {
             this.send('undo')
         }
-        this.send('undo')
-        return this.send('showboard')
+        return this.send('undo')
     }
 
     Compi.prototype["send"] = function (m)
