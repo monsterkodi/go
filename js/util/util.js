@@ -14,6 +14,8 @@ class Util
 
     static ilpha = 'abcdefghijklmnopqrstuvwxyz'
 
+    static short = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&$@#%*<>^=+-!0123456789abcdefghijklmnopqrstuvwxyz"
+
     static splice (s, i, n, r = '')
     {
         return s.slice(0,i) + r + s.slice(i + n)

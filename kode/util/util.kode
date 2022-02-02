@@ -40,6 +40,8 @@ class Util
     @alpha: 'ABCDEFGHJKLMNOPQRST'
     @ilpha: 'abcdefghijklmnopqrstuvwxyz'
     
+    @short: "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&$@#%*<>^=+-!0123456789abcdefghijklmnopqrstuvwxyz"
+    
     @splice: (s, i, n, r='') -> s.slice(0,i) + r + s.slice(i+n)
     
     @sgfToAlphaNum: (sgf, size=19) ->

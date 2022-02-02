@@ -19,11 +19,9 @@ function Score extends Calc
         
         @grid = new Grid a
         @size = @grid.size
-        @captures = black:0 white:0
         
     clear: ->
         
-        @captures = black:0 white:0
         @grid.clear @size
         
     #  0000000   0000000   000       0000000   0000000   0000000   0000000   00000000   00000000  
@@ -67,7 +65,11 @@ function Score extends Calc
         # eyes = @areas.filter (a) -> a.color in 'wb'
         # log @groupString.apply @, dead.concat eyes
          
-        points = copy @captures
+        # points = copy @captures
+        if @moves
+            points = black:@moves.p[0], white:@moves.p[1]
+        else
+            points = black:0 white:0
         
         for a in @areas
             if a.color in 'wb'

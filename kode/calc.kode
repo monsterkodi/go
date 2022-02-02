@@ -357,7 +357,7 @@ function Calc extends Print
     legal: (color, c) ->
         
         fr = @freedoms color, c
-        mc = @movecaptures color, c
+        mc = @moveCaptures color, c
         lg = (fr or mc) and @stoneAt(c) == stone.empty
         if not lg
             log color, c, fr, mc, @stoneAt c
@@ -373,7 +373,7 @@ function Calc extends Print
                     l.push @pos [x,y]
         l
                 
-    movecaptures: (color, c) ->
+    moveCaptures: (color, c) ->
 
         m = stone[color]
         for n in @neighbors c

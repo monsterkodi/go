@@ -7,7 +7,7 @@
 ###
 
 Grid = require './grid'
-{ ilpha } = require './util'
+{ short, stone } = require './util'
 
 function Print
 
@@ -61,7 +61,7 @@ function Print
         for gr in @grps
             for gg in gr.posl
                 if gr.state == 'dead'
-                    g.set gg, r6('X') 
+                    g.set gg, gr.stone == stone.white ? r6('X') : b6('X')
                 else
                     g.set gg, w4 g.at gg
             
@@ -88,8 +88,7 @@ function Print
             if 0 <= (idx = [].slice.call(arguments, 0).indexOf(ar))
                 for aa in ar.posl
                     c = @areas.indexOf ar
-                    if c > 9 ➜ c = ilpha[c-10]
-                    grid.set aa, @rainbow idx, c
+                    grid.set aa, @rainbow idx, short[c]
         grid.toAnsi 1
         
     grpsString: ->
@@ -99,8 +98,7 @@ function Print
             if 0 <= (idx = [].slice.call(arguments, 0).indexOf(gr))
                 for gg in gr.posl
                     c = @grps.indexOf gr
-                    if c > 9 ➜ c = ilpha[c-10]
-                    grid.set gg, @rainbow idx, c
+                    grid.set gg, @rainbow idx, short[c]
         grid.toAnsi 1
         
     #  0000000  000   000   0000000   000  000   000   0000000  
@@ -117,7 +115,7 @@ function Print
                 for cp in ch.posl
                     # c = arguments[idx].stone == '○' ? '◻' : '◼'
                     c = @chains.indexOf ch
-                    grid.set cp, @rainbow idx, c
+                    grid.set cp, @rainbow idx, short[c]
         grid.toAnsi 1
         
     # 00000000   0000000   000   000   0000000  000   000  

@@ -125,7 +125,6 @@ function Game extends Score
         pl = []
         for dead in @grps.filter (g) -> g.libs == 0 and g.stone == s
             # log 'game.capture' color, dead.posl.length
-            @captures[color] += dead.posl.length
             pl = pl.concat dead.posl
             for deadPos in dead.posl
                 @removePos deadPos
@@ -160,7 +159,7 @@ function Game extends Score
         @removePos m.pos
         
         if valid m.captures
-            log 'undoMove captures' m
+            @verb 'undoMove captures' m
             for p in m.captures
                 @setStone @coord(p), stone[opponent[m.color]]
         

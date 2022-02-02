@@ -172,12 +172,11 @@ Game = (function ()
         for (var _126_17_ = 0; _126_17_ < list.length; _126_17_++)
         {
             dead = list[_126_17_]
-            this.captures[color] += dead.posl.length
             pl = pl.concat(dead.posl)
             var list1 = _k_.list(dead.posl)
-            for (var _130_24_ = 0; _130_24_ < list1.length; _130_24_++)
+            for (var _129_24_ = 0; _129_24_ < list1.length; _129_24_++)
             {
-                deadPos = list1[_130_24_]
+                deadPos = list1[_129_24_]
                 this.removePos(deadPos)
             }
         }
@@ -186,7 +185,7 @@ Game = (function ()
 
     Game.prototype["setStone"] = function (c, s)
     {
-        var _144_27_, _146_27_
+        var _143_27_, _145_27_
 
         this.grid.set(c,s)
         if (s === stone.empty)
@@ -211,11 +210,11 @@ Game = (function ()
         this.removePos(m.pos)
         if (!_k_.empty(m.captures))
         {
-            console.log('undoMove captures',m)
+            this.verb('undoMove captures',m)
             var list = _k_.list(m.captures)
-            for (var _164_18_ = 0; _164_18_ < list.length; _164_18_++)
+            for (var _163_18_ = 0; _163_18_ < list.length; _163_18_++)
             {
-                p = list[_164_18_]
+                p = list[_163_18_]
                 this.setStone(this.coord(p),stone[opponent[m.color]])
             }
         }
@@ -227,7 +226,7 @@ Game = (function ()
     {
         var i
 
-        for (var _172_17_ = i = 0, _172_21_ = num; (_172_17_ <= _172_21_ ? i < num : i > num); (_172_17_ <= _172_21_ ? ++i : --i))
+        for (var _171_17_ = i = 0, _171_21_ = num; (_171_17_ <= _171_21_ ? i < num : i > num); (_171_17_ <= _171_21_ ? ++i : --i))
         {
             this.genmove()
         }
@@ -262,7 +261,7 @@ Game = (function ()
 
     Game.prototype["clear_board"] = function ()
     {
-        var _196_20_
+        var _195_20_
 
         this.moves.clear()
         this.clear()
@@ -279,7 +278,7 @@ Game = (function ()
         s = ' '
         b = '  '
         b += (function (o) {
-            var r_210_34_ = _k_.each_r(o)
+            var r_209_34_ = _k_.each_r(o)
             for (var k in o)
             {   
                 var m = (function (v)
@@ -288,18 +287,18 @@ Game = (function ()
             })(o[k])
                 if (m != null)
                 {
-                    r_210_34_[k] = m
+                    r_209_34_[k] = m
                 }
             }
-            return typeof o == 'string' ? r_210_34_.join('') : r_210_34_
+            return typeof o == 'string' ? r_209_34_.join('') : r_209_34_
         })(alpha.slice(0,this.size))
         b += '\n'
         y = 0
-        for (var _213_17_ = i = this.size, _213_24_ = 1; (_213_17_ <= _213_24_ ? i <= 1 : i >= 1); (_213_17_ <= _213_24_ ? ++i : --i))
+        for (var _212_17_ = i = this.size, _212_24_ = 1; (_212_17_ <= _212_24_ ? i <= 1 : i >= 1); (_212_17_ <= _212_24_ ? ++i : --i))
         {
             b += _k_.lpad(2,i)
             b += s
-            for (var _216_21_ = x = 0, _216_25_ = this.size; (_216_21_ <= _216_25_ ? x < this.size : x > this.size); (_216_21_ <= _216_25_ ? ++x : --x))
+            for (var _215_21_ = x = 0, _215_25_ = this.size; (_215_21_ <= _215_25_ ? x < this.size : x > this.size); (_215_21_ <= _215_25_ ? ++x : --x))
             {
                 b += this.stoneAt(x,y) + s
             }
@@ -309,7 +308,7 @@ Game = (function ()
         }
         b += '  '
         b += (function (o) {
-            var r_223_34_ = _k_.each_r(o)
+            var r_222_34_ = _k_.each_r(o)
             for (var k in o)
             {   
                 var m = (function (v)
@@ -318,10 +317,10 @@ Game = (function ()
             })(o[k])
                 if (m != null)
                 {
-                    r_223_34_[k] = m
+                    r_222_34_[k] = m
                 }
             }
-            return typeof o == 'string' ? r_223_34_.join('') : r_223_34_
+            return typeof o == 'string' ? r_222_34_.join('') : r_222_34_
         })(alpha.slice(0,this.size))
         b += '\n'
         return b

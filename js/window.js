@@ -113,7 +113,6 @@ MainWin = (function ()
             sb = stone.black
             sw = stone.white
         }
-        console.log(game.moves.p)
         cps = {black:(game.moves.p[0] !== 0 ? game.moves.p[0] + ' ' + sb : ''),white:(game.moves.p[1] !== 0 ? game.moves.p[1] + ' ' + sw : '')}
         elem('span',{class:'move',parent:tl,text:mov.black})
         elem('span',{class:'player',parent:tl,text:game.players.black})

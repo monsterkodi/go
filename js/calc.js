@@ -637,7 +637,7 @@ Calc = (function ()
         var fr, lg, mc
 
         fr = this.freedoms(color,c)
-        mc = this.movecaptures(color,c)
+        mc = this.moveCaptures(color,c)
         lg = (fr || mc) && this.stoneAt(c) === stone.empty
         if (!lg)
         {
@@ -665,7 +665,7 @@ Calc = (function ()
         return l
     }
 
-    Calc.prototype["movecaptures"] = function (color, c)
+    Calc.prototype["moveCaptures"] = function (color, c)
     {
         var m, n, s
 
