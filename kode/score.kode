@@ -7,7 +7,7 @@
 ###
 
 { stoneColor, stone, alpha, ilpha, opponent } = require './util'
-{ fs, noon } = require 'kxk'
+{ fs } = require 'kxk'
 { min } = Math
 Grid = require './grid'
 DeadStones = require '@sabaki/deadstones'
@@ -93,8 +93,12 @@ function Score
         for g in @grps
             for dp in g.diagonals
                 if dg = @groupAt dp
-                    if dg.stone == g.stone and @groupsShareArea g, dg
-                        @createLink g, dg
+                    # if dg.stone == g.stone and @groupsShareArea g, dg
+                    if dg.stone == g.stone 
+                        union = @poslUnion @posNeighbors(dp), g.neighbors
+                        ▴ union.length == 2
+                        if @stoneAt(union[0]) == stone.empty or @stoneAt(union[1]) == stone.empty
+                            @createLink g, dg
                         
     groupsShareArea: (a,b) ->
         
@@ -209,9 +213,17 @@ function Score
             if not ch.alive and not ch.dead
                 @chainBattle ch
                 
+        @reevaluateAreaColors()
+                                
+        log @chainString.apply @, @chains
+        
+        @deadOrAlive()        
+        
+    reevaluateAreaColors: ->
+        
         undecided = @chains.filter (ch) -> not ch.alive and not ch.dead
         
-        log noon undecided
+        # log noon undecided
         
         for ch in undecided
             
@@ -229,7 +241,7 @@ function Score
                         else
                             deadOpponent++
                 if not aliveOpponent and deadOpponent
-                    # log 'set area color' stoneColor[ch.stone][0]
+                    log 'set area color' ai, stoneColor[ch.stone][0]
                     ar.color = stoneColor[ch.stone][0]
                     @aliveChains [ch]
                 if ar.color == stoneColor[ch.stone][0]
@@ -237,10 +249,6 @@ function Score
                     
             if ownedAreas == ch.areas.length and not ch.alive
                 @aliveChains [ch]
-                
-        log @chainString.apply @, @chains
-        
-        @deadOrAlive()        
 
     #  0000000  000   000   0000000   000  000   000  0000000     0000000   000000000  000000000  000      00000000  
     # 000       000   000  000   000  000  0000  000  000   000  000   000     000        000     000      000       
@@ -254,6 +262,12 @@ function Score
         # log @chains
         for oc in @chains
             if oc != ch and not oc.dead
+                
+                if ch.libs == 1 and (oc.alive or oc.libs > 1)
+                    log 'only 1 lib!' 
+                    @deadChains [ch]
+                    return
+                
                 lostAreas = []
                 sameAreas = []
                 for ai in ch.areas
@@ -267,12 +281,12 @@ function Score
                                 lostAreas.push ai
                 log lostAreas, lostAreas.length, ch.areas.length
                 if lostAreas.length == ch.areas.length
-                    log 'lost all areas!' 
+                    log 'lost all areas!' oc
                     @deadChains [ch]
                     return
                     
-                if sameAreas.length == ch.areas.length and oc.areas.length > ch.areas.length
-                    log 'shares all areas and has less!' 
+                if sameAreas.length == ch.areas.length and ch.areas.length <= 2 and (oc.alive or oc.areas.length > ch.areas.length)
+                    log 'shares all areas and has less or other is alive!' oc
                     @deadChains [ch]
                     return
         
@@ -283,6 +297,8 @@ function Score
             for gi in ch.grps
                 log 'dead' @grps[gi].key
                 @grps[gi].state = 'dead'
+                
+        @reevaluateAreaColors()
         
     aliveChains: (chains) ->
         
@@ -359,7 +375,7 @@ function Score
                 aa = @areas[ai]
                 for gi in aa.grps
                     gg = @grps[gi]
-                    if gg.state == 'alive' and gg.stone != ag.stone 
+                    if gg.state != 'dead' and gg.stone != ag.stone 
                         challenged = true
                 if not challenged
                     aa.color = stoneColor[ag.stone][0]
@@ -378,6 +394,10 @@ function Score
         @linkAreas()
         @linkGroups()
         @calcChains()
+        
+        log 'before calcAreas'
+        @deadOrAlive()
+        
         @calcAreas()
                
         return 'B+0' if @chains.length < 2
@@ -465,7 +485,7 @@ function Score
         else if not '○●' in sl and not '●○' in sl and sl.length > 0
             c = stoneColor[sl[0]][0]
         else
-            '.'
+            '?'
             
     # 0000000    00000000   0000000   0000000     0000000  000   000   0000000   00000000   00000000  
     # 000   000  000       000   000  000   000  000       000   000  000   000  000   000  000       
@@ -522,6 +542,8 @@ function Score
                 '?'
             else if p.length
                 p[0]
+            else
+                '?'
                 
     potentialGroup: (g) ->
         
