@@ -223,13 +223,6 @@ function Game extends Score
         b += '\n'
         b
         
-    dump: ->
-        
-        log @showboard()
-        log 'white' @allStones('w').length, @allStones 'w'
-        log 'black' @allStones('b').length, @allStones 'b'
-        log @grid.toString()
-        
     setScore: (score) -> 
 
         if score.endsWith '.0'

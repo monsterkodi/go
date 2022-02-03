@@ -591,7 +591,7 @@ Calc = (function ()
         return ns
     }
 
-    Calc.prototype["groupDiagonals"] = function (g, n)
+    Calc.prototype["poslDiagonals"] = function (g, n = [])
     {
         var d, dn, p
 
@@ -727,15 +727,43 @@ Calc = (function ()
         })
     }
 
+    Calc.prototype["looseChainConnection"] = function (ch)
+    {
+        var cn, oc, on
+
+        var list = _k_.list(this.chains)
+        for (var _426_15_ = 0; _426_15_ < list.length; _426_15_++)
+        {
+            oc = list[_426_15_]
+            if (oc !== ch && oc.stone === ch.stone)
+            {
+                var list1 = _k_.list(ch.diagonals.concat(ch.neighbors))
+                for (var _428_23_ = 0; _428_23_ < list1.length; _428_23_++)
+                {
+                    cn = list1[_428_23_]
+                    var list2 = _k_.list(oc.diagonals.concat(oc.neighbors))
+                    for (var _429_27_ = 0; _429_27_ < list2.length; _429_27_++)
+                    {
+                        on = list2[_429_27_]
+                        if (cn === on)
+                        {
+                            return true
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     Calc.prototype["allStones"] = function (color)
     {
         var l, s, x, y
 
         s = stone[color]
         l = []
-        for (var _434_17_ = y = 0, _434_21_ = this.size; (_434_17_ <= _434_21_ ? y < this.size : y > this.size); (_434_17_ <= _434_21_ ? ++y : --y))
+        for (var _443_17_ = y = 0, _443_21_ = this.size; (_443_17_ <= _443_21_ ? y < this.size : y > this.size); (_443_17_ <= _443_21_ ? ++y : --y))
         {
-            for (var _435_21_ = x = 0, _435_25_ = this.size; (_435_21_ <= _435_25_ ? x < this.size : x > this.size); (_435_21_ <= _435_25_ ? ++x : --x))
+            for (var _444_21_ = x = 0, _444_25_ = this.size; (_444_21_ <= _444_25_ ? x < this.size : x > this.size); (_444_21_ <= _444_25_ ? ++x : --x))
             {
                 if (s === this.stoneAt(x,y))
                 {

@@ -6,7 +6,7 @@
 0000000    0000000   0000000   000   000  00000000
 ###
 
-{ stoneColor, stone, alpha, ilpha, opponent } = require './util/util'
+{ stoneColor, stone, alpha, ilpha, opponent, short } = require './util/util'
 { fs } = require 'kxk'
 { min } = Math
 Grid = require './util/grid'
@@ -38,10 +38,6 @@ function Score extends Calc
         @linkAreas()
         @linkGroups()
         @calcChains()
-        
-        @verb 'before calcAreas'
-        @deadOrAlive() if @verbose
-        
         @calcAreas()
                
         return 'B+0' if @chains.length < 2
@@ -54,18 +50,12 @@ function Score extends Calc
   
         @deadOrAlive() if @verbose
         
-        # log @areaString 1
-        # log @deadString 1
-            
         # binary = @grid.toBinarray()
         # DeadStones.guess(binary).then (guess) ->
             # log noon guess
             
         dead = @grps.filter (g) -> g.state == 'dead'
-        # eyes = @areas.filter (a) -> a.color in 'wb'
-        # log @groupString.apply @, dead.concat eyes
          
-        # points = copy @captures
         if @moves
             points = black:@moves.p[0], white:@moves.p[1]
         else
@@ -96,10 +86,13 @@ function Score extends Calc
         
         for g in @grps
             if not g.alive and not g.dead
+                
+                if g.libs == 1
+                    @deadGroups [g], 'weakling 1 lib'
+                    continue
+                
                 wc = @weakCollection g
                 if valid wc
-                    @verb @groupString g
-                    @verb @groupString.apply @, wc
                     weak = 0
                     for wg in wc
                         if wg.libs == 1
@@ -108,11 +101,9 @@ function Score extends Calc
                         break if wg.libs > 3
                         for ai in wg.eyes
                             if @weakEye wg, @areas[ai]
-                                @verb 'weakEye' ai
                                 weak++
                     if weak >= wc.length
-                        @verb 'seems weak!'
-                        @deadGroups wc
+                        @deadGroups wc, 'weakling collection'
         
     #  0000000   0000000   000       0000000   0000000   00000000    0000000   000   000  00000000    0000000  
     # 000       000   000  000      000       000        000   000  000   000  000   000  000   000  000       
@@ -148,14 +139,10 @@ function Score extends Calc
                         links: []
                         libs:  n.filter((p) => stone.empty == @stoneAt @coord p).length
                         neighbors: n
-                        diagonals: @groupDiagonals g, n
+                        diagonals: @poslDiagonals g, n
                         key:   g.join ' '
                         state: 'unknown'
 
-        # log @groupString.apply @, @grps
-        # log @grpsString.apply  @, @grps
-        # log @groupString.apply @, @areas
-       
     groupIndex: (g) -> @grps.indexOf g
     isLinked: (a,b) -> @groupIndex(b) in a.links
         
@@ -169,14 +156,11 @@ function Score extends Calc
         a.links.push bi if bi not in a.links
         b.links.push ai if ai not in b.links
         
-        # log @groupString.apply @, [a,b]
-        
     linkGroups: ->
         
         for g in @grps
             for dp in g.diagonals
                 if dg = @groupAt dp
-                    # if dg.stone == g.stone and @groupsShareArea g, dg
                     if dg.stone == g.stone 
                         union = @poslUnion @posNeighbors(dp), g.neighbors
                         for i in 0...union.length
@@ -248,8 +232,6 @@ function Score extends Calc
                                 @chains.splice @chains.indexOf(ch), 1
                                 break
                 
-        # log noon @chains
-                        
         for ch in @chains
             ch.areas = []
             ch.posl  = []
@@ -264,15 +246,13 @@ function Score extends Calc
                     
             n = @poslNeighbors ch.posl
             ch.neighbors = n
+            ch.diagonals = @poslDiagonals ch.posl, n
             ch.libs = n.filter((p) => stone.empty == @stoneAt @coord p).length
             if ch.eyes.length > 1
                 onelib = ch.grps.map((gi) => @grps[gi]).filter (gr) -> gr.libs == 1
                 if empty onelib
-                    # log 'instant alive!' ch
-                    @aliveChains [ch]
+                    @aliveChains [ch], 'instant alive!'
 
-        # log @chainString.apply @, @chains
-        
         if @verbose
             @fancySchmanzy() 
             @deadOrAlive()
@@ -281,14 +261,7 @@ function Score extends Calc
         
         battle = []
         for ch in @chains
-            if not ch.alive
-                # log "chain #{@chains.indexOf ch}" ch
-                # log @groupString.apply @, ch.grps.map (gi) => @grps[gi]
-                # log @groupString.apply @, ch.areas.map (ai) => @areas[ai]
-                # if ch.eyes.length > 0
-                    # log 'got one eye'
-                    # log @groupString.apply @, ch.eyes.map (ai) => @areas[ai]
-                    
+            if not ch.alive                    
                 if ch.areas.length == 1
                     battle.push ch.areas[0] if ch.areas[0] not in battle
                     
@@ -301,10 +274,6 @@ function Score extends Calc
                 
         @reevaluateAreaColors()
                                 
-        # log @chainString.apply @, @chains
-        
-        # @deadOrAlive()        
-        
     # 00000000   00000000  00000000  000   000   0000000   000      000   000   0000000   000000000  00000000  
     # 000   000  000       000       000   000  000   000  000      000   000  000   000     000     000       
     # 0000000    0000000   0000000    000 000   000000000  000      000   000  000000000     000     0000000   
@@ -314,8 +283,6 @@ function Score extends Calc
     reevaluateAreaColors: ->
         
         undecided = @chains.filter (ch) -> not ch.alive and not ch.dead
-        
-        # log noon undecided
         
         for ch in undecided
             
@@ -333,42 +300,36 @@ function Score extends Calc
                         else
                             deadOpponent++
                 if not aliveOpponent and deadOpponent
-                    # log 'set area color' ai, stoneColor[ch.stone][0]
                     ar.color = stoneColor[ch.stone][0]
-                    @aliveChains [ch]
+                    @aliveChains [ch], 'last opponent died'
                 if ar.color == stoneColor[ch.stone][0]
                     ownedAreas++
                     
             if ownedAreas == ch.areas.length and not ch.alive
-                @aliveChains [ch]
+                @aliveChains [ch], 'all areas owned'
 
     #  0000000  000   000   0000000   000  000   000  0000000     0000000   000000000  000000000  000      00000000  
     # 000       000   000  000   000  000  0000  000  000   000  000   000     000        000     000      000       
     # 000       000000000  000000000  000  000 0 000  0000000    000000000     000        000     000      0000000   
     # 000       000   000  000   000  000  000  0000  000   000  000   000     000        000     000      000       
     #  0000000  000   000  000   000  000  000   000  0000000    000   000     000        000     0000000  00000000  
-    
+        
     chainBattle: (ch) ->
-
-        # @verb "chainBattle #{@chains.indexOf ch}" ch
 
         for oc in @chains
             if oc != ch and not oc.dead
                 
                 if ch.libs == 1 and (oc.alive or oc.libs > 1)
-                    # log 'only 1 lib!' 
-                    @deadChains [ch]
+                    @deadChains [ch], 'only 1 lib!'
                     return
 
-                if ch.libs == 2 and (oc.alive or oc.libs > 2)
-                    # log 'only 2 libs!' 
-                    @deadChains [ch]
+                if ch.libs == 2 and (oc.alive or oc.libs > 2) and not @looseChainConnection ch
+                    @deadChains [ch], 'only 2 libs!'
                     return
                     
                 if ch.libs < 5 and ch.areas.length == 1
                     if @deadShape @areas[ch.areas[0]]
-                        # log 'less than 5 libs in single area with dead shape!' 
-                        @deadChains [ch]
+                        @deadChains [ch], 'less than 5 libs in single area with dead shape!'
                         return
                 
                 lostAreas = []
@@ -377,49 +338,44 @@ function Score extends Calc
                     if ai in oc.areas
                         if @areas[ai].grps.map((gi) => @grps[gi]).filter((gr) -> gr.stone == ch.stone).length == 1
                             sameAreas.push ai if @areas[ai].posl.length < 10
-                        # log "shares are #{ai} with chain #{@chains.indexOf(oc)}"
-                        # if oc.eyes.length > 1
                         if oc.eyes.length > 0
                             chlib = @chainAreaLibs(ch, ai)
                             if chlib < 6 and chlib <  @chainAreaLibs(oc, ai) and @areas[ai].posl.length < 10
-                                # log "lost area #{ai}" @chainAreaLibs(ch, ai), @chainAreaLibs(oc, ai)
                                 if @areas[ai].grps.map((gi) => @grps[gi]).filter((gr) -> gr.stone == ch.stone).length == 1
                                     lostAreas.push ai
-                # log lostAreas, lostAreas.length, ch.areas.length
+
                 if lostAreas.length == ch.areas.length
-                    @verb 'lost all areas!' oc
-                    @deadChains [ch]
+                    @deadChains [ch], 'lost all areas!' + oc
                     return
                     
                 if sameAreas.length == ch.areas.length and ch.areas.length <= 2 and oc.alive
-                    @verb 'shares all areas and has less or other is alive!' oc
-                    @deadChains [ch]
+                    @deadChains [ch], 'shares all areas and has less or other is alive!' + oc
                     return
         
-    deadChains: (chains) ->
+    deadChains: (chains, reason) ->
         
         for ch in chains
             ch.dead = true
+            @verb R2(y5 rpad 12 'deadChains'), reason, @colorChain ch
             for gi in ch.grps
-                @verb 'dead' @grps[gi].key
                 @grps[gi].state = 'dead'
                 
         @reevaluateAreaColors()
         
-    deadGroups: (groups) ->
+    deadGroups: (groups, reason) ->
         
         for gr in groups
-            @verb 'dead' gr.key
+            @verb R2(y5 rpad 12 'deadGroups'), reason, gr.key
             gr.state = 'dead'
                 
         @reevaluateAreaColors()
         
-    aliveChains: (chains) ->
+    aliveChains: (chains, reason) ->
         
         for ch in chains
             ch.alive = true
+            @verb G2(g5 rpad 12 'aliveChains'), reason, @colorChain ch
             for gi in ch.grps
-                # log 'alive' @grps[gi].key
                 @grps[gi].state = 'alive'
     
     #  0000000   00000000   00000000   0000000   0000000     0000000   000000000  000000000  000      00000000  
@@ -430,20 +386,19 @@ function Score extends Calc
     
     areaBattle: (ai) ->
         
-        # log "areaBattle" ai
-        
-        deadAlive = (dead, alive) =>
-            
-            @deadChains  dead.filter (dc) -> dc.areas.length == 1
-            @aliveChains alive
-            
         a = @areas[ai]
+        
+        return if a.posl.length > 30
+        
+        deadAlive = (dead, alive, reason) =>
+            
+            @deadChains  dead.filter((dc) -> dc.areas.length == 1), reason
+            @aliveChains alive, reason
+            
         chains = @chainsForArea ai
         
         return if chains.length < 2
         
-        # log "battle area #{ai}" 
-        # log chains
         gs = []
         wc = []
         bc = []
@@ -453,8 +408,6 @@ function Score extends Calc
             for gi in ch.grps
                 gs.push @grps[gi] if gi not in gs
                 
-        # log @groupString.apply @, gs
-        
         if wc.length and bc.length
                         
             wc.sort (a,b) => @chainAreaLibs(a,ai) - @chainAreaLibs(b,ai)
@@ -464,11 +417,9 @@ function Score extends Calc
             bl = @chainAreaLibs bc[0],ai
             
             if (wl - bl) > 2 and bl < 4
-                @verb 'white more libs' wl, bl
-                deadAlive bc, wc
+                deadAlive bc, wc, "areaBattle #{ai} white more libs #{wl} > #{bl} area size #{a.posl.length}"
             else if (bl - wl) > 2 and wl < 4
-                @verb 'black more libs' bl, wl
-                deadAlive wc, bc
+                deadAlive wc, bc, "areaBattle #{ai} black more libs #{bl} > #{wl} area size #{a.posl.length}" 
                      
     verb: -> if @verbose then console.log.apply null, arguments
             

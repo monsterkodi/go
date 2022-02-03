@@ -1,6 +1,6 @@
 // monsterkodi/kode 0.237.0
 
-var _k_ = {list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, k: { f:(r,g,b)=>'\x1b[38;5;'+(16+36*r+6*g+b)+'m', F:(r,g,b)=>'\x1b[48;5;'+(16+36*r+6*g+b)+'m', r:(i)=>(i<6)&&_k_.k.f(i,0,0)||_k_.k.f(5,i-5,i-5), R:(i)=>(i<6)&&_k_.k.F(i,0,0)||_k_.k.F(5,i-5,i-5), g:(i)=>(i<6)&&_k_.k.f(0,i,0)||_k_.k.f(i-5,5,i-5), G:(i)=>(i<6)&&_k_.k.F(0,i,0)||_k_.k.F(i-5,5,i-5), b:(i)=>(i<6)&&_k_.k.f(0,0,i)||_k_.k.f(i-5,i-5,5), B:(i)=>(i<6)&&_k_.k.F(0,0,i)||_k_.k.F(i-5,i-5,5), y:(i)=>(i<6)&&_k_.k.f(i,i,0)||_k_.k.f(5,5,i-5), Y:(i)=>(i<6)&&_k_.k.F(i,i,0)||_k_.k.F(5,5,i-5), m:(i)=>(i<6)&&_k_.k.f(i,0,i)||_k_.k.f(5,i-5,5), M:(i)=>(i<6)&&_k_.k.F(i,0,i)||_k_.k.F(5,i-5,5), c:(i)=>(i<6)&&_k_.k.f(0,i,i)||_k_.k.f(i-5,5,5), C:(i)=>(i<6)&&_k_.k.F(0,i,i)||_k_.k.F(i-5,5,5), w:(i)=>'\x1b[38;5;'+(232+(i-1)*3)+'m', W:(i)=>'\x1b[48;5;'+(232+(i-1)*3+2)+'m', wrap:(open,close,reg)=>(s)=>open+(~(s+='').indexOf(close,4)&&s.replace(reg,open)||s)+close, F256:(open)=>_k_.k.wrap(open,'\x1b[39m',new RegExp('\\x1b\\[39m','g')), B256:(open)=>_k_.k.wrap(open,'\x1b[49m',new RegExp('\\x1b\\[49m','g'))}, rpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s+=c} return s}, lpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s=c+s} return s}};_k_.r6=_k_.k.F256(_k_.k.r(6));_k_.b6=_k_.k.F256(_k_.k.b(6));_k_.w2=_k_.k.F256(_k_.k.w(2));_k_.w3=_k_.k.F256(_k_.k.w(3));_k_.w4=_k_.k.F256(_k_.k.w(4));_k_.w6=_k_.k.F256(_k_.k.w(6));_k_.w8=_k_.k.F256(_k_.k.w(8))
+var _k_ = {list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, k: { f:(r,g,b)=>'\x1b[38;5;'+(16+36*r+6*g+b)+'m', F:(r,g,b)=>'\x1b[48;5;'+(16+36*r+6*g+b)+'m', r:(i)=>(i<6)&&_k_.k.f(i,0,0)||_k_.k.f(5,i-5,i-5), R:(i)=>(i<6)&&_k_.k.F(i,0,0)||_k_.k.F(5,i-5,i-5), g:(i)=>(i<6)&&_k_.k.f(0,i,0)||_k_.k.f(i-5,5,i-5), G:(i)=>(i<6)&&_k_.k.F(0,i,0)||_k_.k.F(i-5,5,i-5), b:(i)=>(i<6)&&_k_.k.f(0,0,i)||_k_.k.f(i-5,i-5,5), B:(i)=>(i<6)&&_k_.k.F(0,0,i)||_k_.k.F(i-5,i-5,5), y:(i)=>(i<6)&&_k_.k.f(i,i,0)||_k_.k.f(5,5,i-5), Y:(i)=>(i<6)&&_k_.k.F(i,i,0)||_k_.k.F(5,5,i-5), m:(i)=>(i<6)&&_k_.k.f(i,0,i)||_k_.k.f(5,i-5,5), M:(i)=>(i<6)&&_k_.k.F(i,0,i)||_k_.k.F(5,i-5,5), c:(i)=>(i<6)&&_k_.k.f(0,i,i)||_k_.k.f(i-5,5,5), C:(i)=>(i<6)&&_k_.k.F(0,i,i)||_k_.k.F(i-5,5,5), w:(i)=>'\x1b[38;5;'+(232+(i-1)*3)+'m', W:(i)=>'\x1b[48;5;'+(232+(i-1)*3+2)+'m', wrap:(open,close,reg)=>(s)=>open+(~(s+='').indexOf(close,4)&&s.replace(reg,open)||s)+close, F256:(open)=>_k_.k.wrap(open,'\x1b[39m',new RegExp('\\x1b\\[39m','g')), B256:(open)=>_k_.k.wrap(open,'\x1b[49m',new RegExp('\\x1b\\[49m','g'))}, rpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s+=c} return s}, lpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s=c+s} return s}};_k_.r6=_k_.k.F256(_k_.k.r(6));_k_.g3=_k_.k.F256(_k_.k.g(3));_k_.g5=_k_.k.F256(_k_.k.g(5));_k_.b6=_k_.k.F256(_k_.k.b(6));_k_.Y1=_k_.k.B256(_k_.k.Y(1));_k_.y2=_k_.k.F256(_k_.k.y(2));_k_.y3=_k_.k.F256(_k_.k.y(3));_k_.w1=_k_.k.F256(_k_.k.w(1));_k_.w2=_k_.k.F256(_k_.k.w(2));_k_.w3=_k_.k.F256(_k_.k.w(3));_k_.w4=_k_.k.F256(_k_.k.w(4));_k_.w6=_k_.k.F256(_k_.k.w(6));_k_.w8=_k_.k.F256(_k_.k.w(8))
 
 var Grid, Print, short, stone
 
@@ -227,19 +227,19 @@ Print = (function ()
 
     Print.prototype["fancySchmanzy"] = function ()
     {
-        var as, bd, cs, fs, gs, i, ml, pl, spc
+        var bd, fs, i, ml, pl, s1, s2, s3, spc
 
         bd = this.grid.toString(1).split('\n')
         ml = bd[1].length
-        as = this.groupString.apply(this,this.areas).split('\n')
-        gs = this.grpsString.apply(this,this.grps).split('\n')
-        cs = this.chainString.apply(this,this.chains).split('\n')
+        s1 = this.groupString.apply(this,this.areas).split('\n')
+        s2 = this.chainString.apply(this,this.chains).split('\n')
+        s3 = this.grpsString.apply(this,this.grps).split('\n')
         pl = this.size * 2 + 6
-        fs = [_k_.w2(_k_.rpad(pl,' areas') + _k_.rpad(pl,' groups') + _k_.rpad(pl,' chains'))]
-        for (var _137_17_ = i = 0, _137_21_ = as.length; (_137_17_ <= _137_21_ ? i < as.length : i > as.length); (_137_17_ <= _137_21_ ? ++i : --i))
+        fs = [_k_.w2(_k_.rpad(pl,' areas') + _k_.rpad(pl,' chains') + _k_.rpad(pl,' groups'))]
+        for (var _137_17_ = i = 0, _137_21_ = s1.length; (_137_17_ <= _137_21_ ? i < s1.length : i > s1.length); (_137_17_ <= _137_21_ ? ++i : --i))
         {
             spc = _k_.lpad(ml - bd[i].length,'')
-            fs.push(as[i] + spc + gs[i] + spc + cs[i])
+            fs.push(s1[i] + spc + s2[i] + spc + s3[i])
         }
         console.log(fs.join('\n'))
         console.log('')
@@ -271,6 +271,17 @@ Print = (function ()
     Print.prototype["rainbow"] = function (idx, c)
     {
         return [y5,r5,g2,b8,m3,b4,w4,w8][idx % 8](c)
+    }
+
+    Print.prototype["colorChain"] = function (ch)
+    {
+        var grps
+
+        grps = ch.grps.map(function (gi)
+        {
+            return short[gi]
+        }).join(' ')
+        return _k_.Y1(_k_.y2('chain ') + _k_.y3(short[this.chains.indexOf(ch)]) + _k_.g3(' grps ') + _k_.g5(_k_.rpad(28,grps)) + _k_.w1(_k_.rpad(64,ch.posl.join(' '))))
     }
 
     return Print

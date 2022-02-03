@@ -330,7 +330,7 @@ function Calc extends Print
     # 000   000  000  000   000  000   000  000   000  000  0000  000   000  000           000  
     # 0000000    000  000   000   0000000    0000000   000   000  000   000  0000000  0000000   
     
-    groupDiagonals: (g, n) ->
+    poslDiagonals: (g, n=[]) ->
         
         dn = []
         for p in g
@@ -420,6 +420,15 @@ function Calc extends Print
     chainsForArea: (ai) ->
         
         @chains.filter (ch) -> ai in ch.areas
+        
+    looseChainConnection: (ch) ->
+
+        for oc in @chains
+            if oc != ch and oc.stone == ch.stone
+                for cn in ch.diagonals.concat ch.neighbors
+                    for on in oc.diagonals.concat oc.neighbors
+                        if cn == on
+                            return true
        
     #  0000000  000000000   0000000   000   000  00000000   0000000
     # 000          000     000   000  0000  000  000       000     

@@ -128,15 +128,15 @@ function Print
 
         bd = @grid.toString(1).split '\n'
         ml = bd[1].length        
-        as = @groupString.apply(@, @areas).split '\n'
-        gs = @grpsString.apply(@,  @grps).split '\n'
-        cs = @chainString.apply(@, @chains).split '\n'
+        s1 = @groupString.apply(@, @areas ).split '\n'
+        s2 = @chainString.apply(@, @chains).split '\n'
+        s3 = @grpsString.apply( @, @grps  ).split '\n'
         
         pl = @size*2+6
-        fs = [w2 rpad(pl, ' areas') + rpad(pl, ' groups') + rpad(pl, ' chains')]
-        for i in 0...as.length
+        fs = [w2 rpad(pl, ' areas') + rpad(pl, ' chains') + rpad(pl, ' groups')]
+        for i in 0...s1.length
             spc = lpad ml-bd[i].length, ''
-            fs.push as[i]+spc+gs[i]+spc+cs[i]
+            fs.push s1[i]+spc+s2[i]+spc+s3[i]
         log fs.join '\n'
         log ''
         
@@ -163,5 +163,9 @@ function Print
         log ''
 
     rainbow: (idx,c) -> [y5,r5,g2,b8,m3,b4,w4,w8][idx%8](c)
+    
+    colorChain: (ch) -> 
+        grps = ch.grps.map((gi)->short[gi]).join ' '
+        Y1 y2('chain ') + y3(short[@chains.indexOf ch]) + g3(' grps ') + g5(rpad 28 grps) + w1(rpad 64 ch.posl.join ' ')
     
 module.exports = Print
