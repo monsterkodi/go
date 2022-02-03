@@ -1,6 +1,6 @@
 // monsterkodi/kode 0.237.0
 
-var _k_ = {profile: function (id) {_k_.hrtime ??= {}; _k_.hrtime[id] = process.hrtime.bigint()}, profilend: function (id) { var b = process.hrtime.bigint()-_k_.hrtime[id]; let f=1000n; for (let u of ['ns','μs','ms','s']) { if (u=='s' || b<f) { return console.log(id+' '+(1000n*b/f)+' '+u); } f*=1000n; }}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}}
+var _k_ = {list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}}
 
 var args, childp, Compi, opponent, post, stone
 
@@ -50,7 +50,6 @@ Compi = (function ()
 
     Compi.prototype["genmove"] = function ()
     {
-        _k_.profile('genmove')
         return this.send(`genmove ${this.color}`)
     }
 
@@ -124,7 +123,6 @@ Compi = (function ()
         switch (m.split(' ')[0])
         {
             case 'genmove':
-                _k_.profilend('genmove')
                 if (!(_k_.in('undo',this.msg)))
                 {
                     p = data.split('\n')[0]

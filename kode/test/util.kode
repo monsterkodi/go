@@ -1,7 +1,7 @@
 
 Score = require '../score'
 
-verbose = 0
+verbose = 1
 
 scr = (b) ->
     s = new Score b

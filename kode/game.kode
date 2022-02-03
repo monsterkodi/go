@@ -97,7 +97,7 @@ function Game extends Score
         c = @coord p
         
         if not @legal color, c
-            @moves.add 'illegal' color
+            @moves.add "illegal_#{color}_#{p}" color
             error 'illegal move:' color, @moves.num(), p
             return '? invalid move'
             

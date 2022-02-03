@@ -102,14 +102,13 @@ function Referee
     replay: (moves) ->
             
         for m in moves
-            [c, p] = m.split ' '
-            if not p?
-                p = c
-                c = ['black' 'white'][moves.indexOf(m)%2]
+            spl = m.split ' '
+            [p, b, w] = spl[0..2]
+            c = ['black' 'white'][moves.indexOf(m)%2]
             @game.play c, p
-            if 1
-                @compi.black?.send "play #{c} #{p}"
-                @compi.white?.send "play #{c} #{p}"
+            # if 0
+                # @compi.black?.send "play #{c} #{p}"
+                # @compi.white?.send "play #{c} #{p}"
         
         if score = @game.info.score
             @game.finalScore score

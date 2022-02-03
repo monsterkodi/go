@@ -9,7 +9,7 @@ stoneColor = require('./util').stoneColor
 
 Move = (function ()
 {
-    function Move (pos, color, p, captures)
+    function Move (pos, color, p, captures = [])
     {
         this.pos = pos
         this.color = color
@@ -74,17 +74,17 @@ Moves = (function ()
 
     }
 
-    Moves.prototype["start"] = function ()
-    {
-        return this.m.length === 0
-    }
-
     Moves.prototype["history"] = function ()
     {
         return this.m.map(function (m)
         {
-            return m.pos
+            return m.pos + ' ' + m.p[0] + ' ' + m.p[1] + ((m.captures.length ? (' ' + m.captures.join(' ')) : ''))
         })
+    }
+
+    Moves.prototype["start"] = function ()
+    {
+        return this.m.length === 0
     }
 
     Moves.prototype["color"] = function (c)
@@ -104,28 +104,28 @@ Moves = (function ()
 
     Moves.prototype["lastIsPass"] = function ()
     {
-        var _49_26_
+        var _50_26_
 
         return (this.last() != null ? this.last().pos : undefined) === 'pass'
     }
 
     Moves.prototype["singlePass"] = function ()
     {
-        var _50_26_
+        var _51_26_
 
         return (this.last() != null ? this.last().pos : undefined) === 'pass' && (this.m.slice(-2,-1)[0] != null ? this.m.slice(-2,-1)[0].pos : undefined) !== 'pass'
     }
 
     Moves.prototype["doublePass"] = function ()
     {
-        var _51_26_
+        var _52_26_
 
         return ((this.last() != null ? this.last().pos : undefined) === 'pass' && 'pass' === (this.m.slice(-2,-1)[0] != null ? this.m.slice(-2,-1)[0].pos : undefined))
     }
 
     Moves.prototype["resigned"] = function ()
     {
-        var _52_26_
+        var _53_26_
 
         return (this.last() != null ? this.last().pos : undefined) === 'resign'
     }
@@ -137,9 +137,9 @@ Moves = (function ()
 
     Moves.prototype["end"] = function ()
     {
-        var _54_26_
+        var _55_26_
 
-        return ((_54_26_=this.ended) != null ? _54_26_ : false)
+        return ((_55_26_=this.ended) != null ? _55_26_ : false)
     }
 
     return Moves

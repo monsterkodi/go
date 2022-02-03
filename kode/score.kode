@@ -60,7 +60,9 @@ function Score extends Calc
             points = black:@moves.p[0], white:@moves.p[1]
         else
             points = black:0 white:0
-        
+
+        log 'prisoners' points, @moves
+            
         for a in @areas
             if a.color in 'wb'
                 points[stoneColor[a.color]] += a.posl.length

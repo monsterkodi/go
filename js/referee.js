@@ -114,25 +114,17 @@ Referee = (function ()
 
     Referee.prototype["replay"] = function (moves)
     {
-        var c, m, p, score, _111_28_, _112_28_
+        var b, c, m, p, score, spl, w
 
         var list = _k_.list(moves)
         for (var _104_14_ = 0; _104_14_ < list.length; _104_14_++)
         {
             m = list[_104_14_]
-            var _105_19_ = m.split(' '); c = _105_19_[0]; p = _105_19_[1]
+            spl = m.split(' ')
+            var _106_22_ = spl.slice(0, 3); p = _106_22_[0]; b = _106_22_[1]; w = _106_22_[2]
 
-            if (!(p != null))
-            {
-                p = c
-                c = ['black','white'][moves.indexOf(m) % 2]
-            }
+            c = ['black','white'][moves.indexOf(m) % 2]
             this.game.play(c,p)
-            if (1)
-            {
-                ;(this.compi.black != null ? this.compi.black.send(`play ${c} ${p}`) : undefined)
-                ;(this.compi.white != null ? this.compi.white.send(`play ${c} ${p}`) : undefined)
-            }
         }
         if (score = this.game.info.score)
         {
@@ -151,7 +143,7 @@ Referee = (function ()
 
     Referee.prototype["playerMove"] = function (p, player)
     {
-        var color, next, _131_38_, _131_58_, _145_24_, _146_24_
+        var color, next, _130_38_, _130_58_, _144_24_, _145_24_
 
         if (this.game.end())
         {
@@ -186,7 +178,7 @@ Referee = (function ()
 
     Referee.prototype["undo"] = function ()
     {
-        var m, _169_15_, _183_20_, _184_20_
+        var m, _168_15_, _182_20_, _183_20_
 
         console.log('undo')
         if (this.game.start())
@@ -198,7 +190,7 @@ Referee = (function ()
             return
         }
         this.paused = true
-        this.redos = ((_169_15_=this.redos) != null ? _169_15_ : [])
+        this.redos = ((_168_15_=this.redos) != null ? _168_15_ : [])
         m = this.game.moves.pop()
         this.redos.unshift(m)
         this.game.undoMove(m)
@@ -208,7 +200,7 @@ Referee = (function ()
 
     Referee.prototype["redo"] = function ()
     {
-        var move, _192_20_, _193_20_
+        var move, _191_20_, _192_20_
 
         if (_k_.empty(this.redos))
         {
@@ -223,7 +215,7 @@ Referee = (function ()
 
     Referee.prototype["jumpToStart"] = function ()
     {
-        var _206_20_, _207_20_
+        var _205_20_, _206_20_
 
         console.log('start')
         if (this.game.start())

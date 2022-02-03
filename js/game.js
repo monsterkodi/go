@@ -140,7 +140,7 @@ Game = (function ()
         c = this.coord(p)
         if (!this.legal(color,c))
         {
-            this.moves.add('illegal',color)
+            this.moves.add(`illegal_${color}_${p}`,color)
             console.error('illegal move:',color,this.moves.num(),p)
             return '? invalid move'
         }

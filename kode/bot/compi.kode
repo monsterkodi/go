@@ -33,7 +33,7 @@ function Compi
         @send "fixed_handicap #{handicap}" if @handicap > 1
 
     genmove: -> 
-        ●▸ genmove
+        # ●▸ genmove
         @send "genmove #{@color}"
         
     opponentMove: (p) ->
@@ -87,7 +87,7 @@ function Compi
             
             'genmove'
                 
-                ●▪ genmove
+                # ●▪ genmove
                 
                 if not 'undo' in @msg
                     p = data.split('\n')[0]

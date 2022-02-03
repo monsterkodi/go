@@ -10,7 +10,7 @@
 
 function Move
 
-    @: (@pos, @color, @p, @captures) ->
+    @: (@pos, @color, @p, @captures=[]) ->
         # log 'move with captures' @pos, @color, @p, @captures if valid @captures
 
 function Moves
@@ -41,8 +41,9 @@ function Moves
             'resign' ➜ @ended = true
                      ➜ @ended = false
 
+    history:    -> @m.map (m) -> 
+                    m.pos + ' ' + m.p[0] + ' ' + m.p[1] + (m.captures.length ? (' ' + m.captures.join ' ') : '')
     start:      -> @m.length == 0
-    history:    -> @m.map (m) -> m.pos
     color: (c)  -> c ? stoneColor[c] : @nextColor()
     lastColor:  -> @m.length ? ['white''black'][@m.length%2] : 'start'
     nextColor:  -> ['black''white'][@m.length%2]
