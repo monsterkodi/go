@@ -44,6 +44,7 @@ function Score extends Calc
         return 'B+0' if @areas.length  < 2
                     
         @weaklings()
+        @suicidals()
         
         for g in @grps
             @verb g.state, g.key
@@ -79,7 +80,8 @@ function Score extends Calc
             finalScore = 'W+'+(points.white-points.black)
         else
             finalScore = 'B+'+(points.black-points.white)
-            
+          
+        @verb 'score.calcScore' finalScore
         finalScore
         
     # 000   000  00000000   0000000   000   000  000      000  000   000   0000000    0000000  
@@ -91,26 +93,23 @@ function Score extends Calc
     weaklings: ->
         
         for g in @grps
-            if not g.alive and not g.dead
-                
+            if g.state not in ['alive' 'dead']
                 if g.libs == 1
                     @deadGroups [g], 'weakling 1 lib'
                     continue
                 
-                wc = @weakCollection g
-                if valid wc
-                    weak = 0
-                    for wg in wc
-                        if wg.libs == 1
-                            weak = wc.length
-                            break
-                        break if wg.libs > 3
-                        for ai in wg.eyes
-                            if @weakEye wg, @areas[ai]
-                                weak++
-                    if weak >= wc.length
-                        @deadGroups wc, 'weakling collection'
-        
+    suicidals: ->
+        for g in @grps
+            if g.state not in ['alive' 'dead']
+                if g.areas.length == 2
+                    for ai in g.areas
+                        a = @areas[ai]
+                        if @suicidalArea a
+                            ch = @chains[g.chain]
+                            if ch.areas.length == ch.libs
+                                @deadChains [ch] 'chain at suicidal area with as many libs as areas!'
+                                break
+                    
     #  0000000   0000000   000       0000000   0000000   00000000    0000000   000   000  00000000    0000000  
     # 000       000   000  000      000       000        000   000  000   000  000   000  000   000  000       
     # 000       000000000  000      000       000  0000  0000000    000   000  000   000  00000000   0000000   
@@ -128,26 +127,23 @@ function Score extends Calc
                 n = @groupNeighbors g
                 if s == stone.empty
                     @areas.push 
-                        area:  g
-                        posl:  g
+                        color: @areaColor g
                         key:   g.join ' '
                         grps:  []
-                        color: @areaColor g
-                        state: 'neutral'
+                        posl:  g
                         neighbors: n
                 else
                     @grps.push
                         stone: s
-                        group: g
-                        posl:  g
+                        key:   g.join ' '
+                        state: 'unknown'
                         areas: []
                         eyes:  []
                         links: []
                         libs:  n.filter((p) => stone.empty == @stoneAt @coord p).length
+                        posl:  g
                         neighbors: n
                         diagonals: @poslDiagonals g, n
-                        key:   g.join ' '
-                        state: 'unknown'
 
     groupIndex: (g) -> @grps.indexOf g
     isLinked: (a,b) -> @groupIndex(b) in a.links

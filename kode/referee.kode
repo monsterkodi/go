@@ -141,8 +141,10 @@ function Referee
         @compi[next]?.opponentMove p
             
         if @game.end()
-            @compi.black?.send 'final_score'
-            @compi.white?.send 'final_score'
+            if @compi.black? and @compi.black.name != 'katago'
+                @compi.black?.send 'final_score'
+            else if @compi.white? and @compi.white.name != 'katago'
+                @compi.white?.send 'final_score'
         else
             # log "#{next} genmove" @compi[next]
             @compi[next]?.genmove()
@@ -155,23 +157,14 @@ function Referee
     
     undo: ->
         
-        log 'undo'
         return if @game.start()
         return if @game.handicap > 1 and @game.moves.num() == 1
         
-        # return if valid @compi.black?.msg
-        # return if valid @compi.white?.msg
-        
-        # log 'undo' @game.moves
+        log 'undo'
         
         @paused = true
         @redos ?= []
         
-        # while @game.lastPos() in ['pass' 'resign']
-            # @redos.unshift @game.moves.pop()
-            # @compi.black?.undo()
-            # @compi.white?.undo()
-            
         m = @game.moves.pop()
         @redos.unshift m
         

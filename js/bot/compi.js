@@ -41,11 +41,11 @@ Compi = (function ()
         this.handicap = handicap
     
         this.send(`boardsize ${boardsize}`)
-        this.send("komi 0")
         if (this.handicap > 1)
         {
-            return this.send(`fixed_handicap ${handicap}`)
+            this.send(`fixed_handicap ${handicap}`)
         }
+        return this.send("komi 0")
     }
 
     Compi.prototype["genmove"] = function ()
@@ -149,6 +149,7 @@ Compi = (function ()
                 return this.game.setScore(data.split(' ')[0])
 
             case 'final_score':
+                console.log(this.name,'final_score',`'${data}'`)
                 return this.game.finalScore(data)
 
             case 'showboard':

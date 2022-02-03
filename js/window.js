@@ -166,6 +166,7 @@ MainWin = (function ()
                 return this.referee.genMove()
 
             case 'calcscore':
+                this.referee.game.calcScore()
                 return this.referee.board.annotate()
 
             case 'numbers':

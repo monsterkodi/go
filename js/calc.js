@@ -317,80 +317,36 @@ Calc = (function ()
         return true
     }
 
-    Calc.prototype["suicidalEye"] = function (g, a)
+    Calc.prototype["suicidalArea"] = function (a)
     {
-        var gi, opponentGroups, opponentSuicides
+        var c, g, gi, groups, suicides
 
         if (a.posl.length > 2)
         {
             return false
         }
-        opponentGroups = []
-        opponentSuicides = []
-        var list = _k_.list(a.grps)
-        for (var _167_15_ = 0; _167_15_ < list.length; _167_15_++)
+        if (a.posl.length === 1)
         {
-            gi = list[_167_15_]
-            if (this.grps[gi].stone !== g.stone)
+            groups = {black:[],white:[]}
+            suicides = {black:[],white:[]}
+            var list = _k_.list(a.grps)
+            for (var _169_19_ = 0; _169_19_ < list.length; _169_19_++)
             {
-                opponentGroups.push(gi)
-                if (this.grps[gi].eyes.length < 2 && this.grps[gi].libs <= 2)
+                gi = list[_169_19_]
+                g = this.grps[gi]
+                if (g.libs === 1)
                 {
-                    opponentSuicides.push(gi)
+                    return false
+                }
+                c = stoneColor[g.stone]
+                groups[c].push(gi)
+                if (g.eyes.length < 2 && g.libs <= 2)
+                {
+                    suicides[c].push(gi)
                 }
             }
+            return groups.black.length && groups.white.length && suicides.black.length === groups.black.length && suicides.white.length === groups.white.length
         }
-        return opponentGroups.length === opponentSuicides.length
-    }
-
-    Calc.prototype["weakEye"] = function (g, a)
-    {
-        return a.grps.length > 2
-    }
-
-    Calc.prototype["weakCollection"] = function (g)
-    {
-        var a, ai, f, friends, gi
-
-        friends = []
-        if ((1 <= g.eyes.length && g.eyes.length <= 2))
-        {
-            var list = _k_.list(g.areas)
-            for (var _189_19_ = 0; _189_19_ < list.length; _189_19_++)
-            {
-                ai = list[_189_19_]
-                a = this.areas[ai]
-                var list1 = _k_.list(a.grps)
-                for (var _191_23_ = 0; _191_23_ < list1.length; _191_23_++)
-                {
-                    gi = list1[_191_23_]
-                    if (this.grps[gi].stone === g.stone)
-                    {
-                        if (!(_k_.in(this.grps[gi],friends)))
-                        {
-                            friends.push(this.grps[gi])
-                        }
-                    }
-                }
-            }
-            if (friends.length <= g.areas.length)
-            {
-                friends = []
-            }
-            if (friends.length)
-            {
-                var list2 = _k_.list(friends)
-                for (var _199_22_ = 0; _199_22_ < list2.length; _199_22_++)
-                {
-                    f = list2[_199_22_]
-                    if (f.eyes.length > 1)
-                    {
-                        return []
-                    }
-                }
-            }
-        }
-        return friends
     }
 
     Calc.prototype["rayColor"] = function (c, d)
@@ -447,9 +403,9 @@ Calc = (function ()
 
         l = 0
         var list = _k_.list(this.neighbors(c))
-        for (var _248_14_ = 0; _248_14_ < list.length; _248_14_++)
+        for (var _225_14_ = 0; _225_14_ < list.length; _225_14_++)
         {
-            n = list[_248_14_]
+            n = list[_225_14_]
             s = this.stoneAt(n)
             if (s === stone.empty)
             {
@@ -479,9 +435,9 @@ Calc = (function ()
             {
                 g = this.group(this.coord(p))
                 var list = _k_.list(g)
-                for (var _270_23_ = 0; _270_23_ < list.length; _270_23_++)
+                for (var _247_23_ = 0; _247_23_ < list.length; _247_23_++)
                 {
-                    gp = list[_270_23_]
+                    gp = list[_247_23_]
                     if (0 <= (i = allp.indexOf(gp)))
                     {
                         allp.splice(i,1)
@@ -503,9 +459,9 @@ Calc = (function ()
         while (fp = f.shift())
         {
             var list = _k_.list(this.neighbors(this.coord(fp)))
-            for (var _282_18_ = 0; _282_18_ < list.length; _282_18_++)
+            for (var _259_18_ = 0; _259_18_ < list.length; _259_18_++)
             {
-                n = list[_282_18_]
+                n = list[_259_18_]
                 if (s === this.stoneAt(n))
                 {
                     p = this.pos(n)
@@ -540,9 +496,9 @@ Calc = (function ()
                 while (fp = f.shift())
                 {
                     var list = _k_.list(this.neighbors(this.coord(fp)))
-                    for (var _302_26_ = 0; _302_26_ < list.length; _302_26_++)
+                    for (var _279_26_ = 0; _279_26_ < list.length; _279_26_++)
                     {
-                        n = list[_302_26_]
+                        n = list[_279_26_]
                         if (s === this.stoneAt(n))
                         {
                             p = this.pos(n)
@@ -573,13 +529,13 @@ Calc = (function ()
 
         gn = []
         var list = _k_.list(g)
-        for (var _321_14_ = 0; _321_14_ < list.length; _321_14_++)
+        for (var _298_14_ = 0; _298_14_ < list.length; _298_14_++)
         {
-            p = list[_321_14_]
+            p = list[_298_14_]
             var list1 = _k_.list(this.posNeighbors(p))
-            for (var _322_18_ = 0; _322_18_ < list1.length; _322_18_++)
+            for (var _299_18_ = 0; _299_18_ < list1.length; _299_18_++)
             {
-                n = list1[_322_18_]
+                n = list1[_299_18_]
                 if (!(_k_.in(n,g)) && !(_k_.in(n,gn)))
                 {
                     gn.push(n)
@@ -595,13 +551,13 @@ Calc = (function ()
 
         nl = []
         var list = _k_.list(pl)
-        for (var _330_14_ = 0; _330_14_ < list.length; _330_14_++)
+        for (var _307_14_ = 0; _307_14_ < list.length; _307_14_++)
         {
-            p = list[_330_14_]
+            p = list[_307_14_]
             var list1 = _k_.list(this.posNeighbors(p))
-            for (var _331_19_ = 0; _331_19_ < list1.length; _331_19_++)
+            for (var _308_19_ = 0; _308_19_ < list1.length; _308_19_++)
             {
-                pn = list1[_331_19_]
+                pn = list1[_308_19_]
                 if (!(_k_.in(pn,pl)) && !(_k_.in(pn,nl)))
                 {
                     nl.push(pn)
@@ -630,10 +586,10 @@ Calc = (function ()
 
         ns = []
         var list = [[-1,0],[1,0],[0,-1],[0,1]]
-        for (var _347_18_ = 0; _347_18_ < list.length; _347_18_++)
+        for (var _324_18_ = 0; _324_18_ < list.length; _324_18_++)
         {
-            x = list[_347_18_][0]
-            y = list[_347_18_][1]
+            x = list[_324_18_][0]
+            y = list[_324_18_][1]
             n = [c[0] + x,c[1] + y]
             if (this.valid(n))
             {
@@ -649,13 +605,13 @@ Calc = (function ()
 
         dn = []
         var list = _k_.list(g)
-        for (var _362_14_ = 0; _362_14_ < list.length; _362_14_++)
+        for (var _339_14_ = 0; _339_14_ < list.length; _339_14_++)
         {
-            p = list[_362_14_]
+            p = list[_339_14_]
             var list1 = _k_.list(this.poslist(this.diagonals(this.coord(p))))
-            for (var _363_18_ = 0; _363_18_ < list1.length; _363_18_++)
+            for (var _340_18_ = 0; _340_18_ < list1.length; _340_18_++)
             {
-                d = list1[_363_18_]
+                d = list1[_340_18_]
                 if (!(_k_.in(d,g)) && !(_k_.in(d,dn)) && !(_k_.in(d,n)))
                 {
                     dn.push(d)
@@ -671,10 +627,10 @@ Calc = (function ()
 
         ns = []
         var list = [[-1,-1],[1,1],[-1,1],[1,-1]]
-        for (var _371_18_ = 0; _371_18_ < list.length; _371_18_++)
+        for (var _348_18_ = 0; _348_18_ < list.length; _348_18_++)
         {
-            x = list[_371_18_][0]
-            y = list[_371_18_][1]
+            x = list[_348_18_][0]
+            y = list[_348_18_][1]
             n = [c[0] + x,c[1] + y]
             if (this.valid(n))
             {
@@ -704,9 +660,9 @@ Calc = (function ()
 
         color = (color != null ? color : this.nextColor())
         l = []
-        for (var _396_17_ = y = 0, _396_21_ = this.size; (_396_17_ <= _396_21_ ? y < this.size : y > this.size); (_396_17_ <= _396_21_ ? ++y : --y))
+        for (var _373_17_ = y = 0, _373_21_ = this.size; (_373_17_ <= _373_21_ ? y < this.size : y > this.size); (_373_17_ <= _373_21_ ? ++y : --y))
         {
-            for (var _397_21_ = x = 0, _397_25_ = this.size; (_397_21_ <= _397_25_ ? x < this.size : x > this.size); (_397_21_ <= _397_25_ ? ++x : --x))
+            for (var _374_21_ = x = 0, _374_25_ = this.size; (_374_21_ <= _374_25_ ? x < this.size : x > this.size); (_374_21_ <= _374_25_ ? ++x : --x))
             {
                 if (this.legal(color,[x,y]))
                 {
@@ -723,9 +679,9 @@ Calc = (function ()
 
         cpts = []
         var list = _k_.list(this.attachedGroups(p,opponent[color]))
-        for (var _405_14_ = 0; _405_14_ < list.length; _405_14_++)
+        for (var _382_14_ = 0; _382_14_ < list.length; _382_14_++)
         {
-            g = list[_405_14_]
+            g = list[_382_14_]
             n = this.poslNeighbors(g)
             if (this.poslEmpty(n).length < 2)
             {
@@ -740,9 +696,9 @@ Calc = (function ()
         var p, x, y
 
         p = []
-        for (var _420_17_ = y = 0, _420_21_ = this.size; (_420_17_ <= _420_21_ ? y < this.size : y > this.size); (_420_17_ <= _420_21_ ? ++y : --y))
+        for (var _397_17_ = y = 0, _397_21_ = this.size; (_397_17_ <= _397_21_ ? y < this.size : y > this.size); (_397_17_ <= _397_21_ ? ++y : --y))
         {
-            for (var _421_21_ = x = 0, _421_25_ = this.size; (_421_21_ <= _421_25_ ? x < this.size : x > this.size); (_421_21_ <= _421_25_ ? ++x : --x))
+            for (var _398_21_ = x = 0, _398_25_ = this.size; (_398_21_ <= _398_25_ ? x < this.size : x > this.size); (_398_21_ <= _398_25_ ? ++x : --x))
             {
                 p.push(alpha[x] + (this.size - y))
             }
@@ -781,19 +737,19 @@ Calc = (function ()
         var cn, oc, on
 
         var list = _k_.list(this.chains)
-        for (var _451_15_ = 0; _451_15_ < list.length; _451_15_++)
+        for (var _428_15_ = 0; _428_15_ < list.length; _428_15_++)
         {
-            oc = list[_451_15_]
+            oc = list[_428_15_]
             if (oc !== ch && oc.stone === ch.stone)
             {
                 var list1 = _k_.list(ch.diagonals.concat(ch.neighbors))
-                for (var _453_23_ = 0; _453_23_ < list1.length; _453_23_++)
+                for (var _430_23_ = 0; _430_23_ < list1.length; _430_23_++)
                 {
-                    cn = list1[_453_23_]
+                    cn = list1[_430_23_]
                     var list2 = _k_.list(oc.diagonals.concat(oc.neighbors))
-                    for (var _454_27_ = 0; _454_27_ < list2.length; _454_27_++)
+                    for (var _431_27_ = 0; _431_27_ < list2.length; _431_27_++)
                     {
-                        on = list2[_454_27_]
+                        on = list2[_431_27_]
                         if (cn === on)
                         {
                             return true
@@ -810,9 +766,9 @@ Calc = (function ()
 
         s = stone[color]
         l = []
-        for (var _468_17_ = y = 0, _468_21_ = this.size; (_468_17_ <= _468_21_ ? y < this.size : y > this.size); (_468_17_ <= _468_21_ ? ++y : --y))
+        for (var _445_17_ = y = 0, _445_21_ = this.size; (_445_17_ <= _445_21_ ? y < this.size : y > this.size); (_445_17_ <= _445_21_ ? ++y : --y))
         {
-            for (var _469_21_ = x = 0, _469_25_ = this.size; (_469_21_ <= _469_25_ ? x < this.size : x > this.size); (_469_21_ <= _469_25_ ? ++x : --x))
+            for (var _446_21_ = x = 0, _446_25_ = this.size; (_446_21_ <= _446_25_ ? x < this.size : x > this.size); (_446_21_ <= _446_25_ ? ++x : --x))
             {
                 if (s === this.stoneAt(x,y))
                 {

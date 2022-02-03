@@ -159,48 +159,25 @@ function Calc extends Print
             if cnt['○'] == cnt['●'] ➜ return false
         true
 
-    suicidalEye: (g, a) ->
+    suicidalArea: (a) ->
         
         if a.posl.length > 2 ➜ return false
-        opponentGroups = [] 
-        opponentSuicides = []
-        for gi in a.grps
-            if @grps[gi].stone != g.stone
-                opponentGroups.push gi
-                if @grps[gi].eyes.length < 2 and @grps[gi].libs <= 2 
-                    opponentSuicides.push gi
+        if a.posl.length == 1
+            
+            groups = black:[], white:[] 
+            suicides = black:[], white:[] 
+            for gi in a.grps
+                g = @grps[gi]
+                if g.libs == 1 then return false
+                c = stoneColor[g.stone]
+                groups[c].push gi
+                if g.eyes.length < 2 and g.libs <= 2 
+                    suicides[c].push gi
 
-        opponentGroups.length == opponentSuicides.length
-        
-    # 000   000  00000000   0000000   000   000  
-    # 000 0 000  000       000   000  000  000   
-    # 000000000  0000000   000000000  0000000    
-    # 000   000  000       000   000  000  000   
-    # 00     00  00000000  000   000  000   000  
-    
-    weakEye: (g, a) ->
-        
-        a.grps.length > 2
-        
-    weakCollection: (g) ->
-
-        friends = []
-        if 1 <= g.eyes.length <= 2
-            for ai in g.areas
-                a = @areas[ai]
-                for gi in a.grps
-                    if @grps[gi].stone == g.stone
-                        friends.push @grps[gi] if not @grps[gi] in friends
-                        
-            if friends.length <= g.areas.length
-                friends = []
-
-            if friends.length
-                for f in friends
-                    if f.eyes.length > 1
-                        return []
-        friends
-        
+            groups.black.length and groups.white.length and 
+            suicides.black.length == groups.black.length and 
+            suicides.white.length == groups.white.length 
+                
     # 00000000    0000000   000   000  
     # 000   000  000   000   000 000   
     # 0000000    000000000    00000    

@@ -20,7 +20,7 @@ function Compi
         @proc.stderr.on 'data' @onDataError
         @proc.once 'exit' @onExit
         
-    onExit: (signal) => 
+    onExit: (signal) =>
       
       delete @proc
       log "#{@name} process exited #{signal}"
@@ -29,8 +29,8 @@ function Compi
 
         # @send "time_settings 0 10 1"
         @send "boardsize #{boardsize}"
-        @send "komi 0"
         @send "fixed_handicap #{handicap}" if @handicap > 1
+        @send "komi 0"
 
     genmove: -> 
         # ●▸ genmove
@@ -106,7 +106,7 @@ function Compi
                 @game.setScore data.split(' ')[0]
                 
             'final_score'
-                
+                log @name, 'final_score' "'#{data}'"
                 @game.finalScore data
                 
             'showboard'
