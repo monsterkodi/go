@@ -287,6 +287,28 @@ function Calc extends Print
                         if p not in f then f.push p
         g
         
+    attachedGroups: (p, color) ->
+        
+        sn = @poslist @neighbors @coord p
+        ag = []
+            
+        while np = sn.shift()
+            nc = @coord np
+            s = @stoneAt nc
+            if stoneColor[s] == color
+                g = [@pos nc]
+                f = [@pos nc]
+                while fp = f.shift()
+                    for n in @neighbors @coord fp
+                        if s == @stoneAt n
+                            p = @pos n
+                            if p not in g
+                                g.push p
+                                if p in sn then sn.splice sn.indexOf(p), 1
+                                if p not in f then f.push p
+                ag.push g
+        ag
+        
     # 000   000  00000000  000   0000000   000   000  0000000     0000000   00000000    0000000  
     # 0000  000  000       000  000        000   000  000   000  000   000  000   000  000       
     # 000 0 000  0000000   000  000  0000  000000000  0000000    000   000  0000000    0000000   
@@ -310,6 +332,10 @@ function Calc extends Print
                 if pn not in pl and pn not in nl
                     nl.push pn
         nl
+        
+    poslEmpty: (pl) ->
+        
+        pl.filter (p) => stone.empty == @stoneAt @coord p
         
     posNeighbors: (p) ->
         
@@ -355,13 +381,13 @@ function Calc extends Print
     # 0000000  00000000   0000000   000   000  0000000  
     
     legal: (color, c) ->
-        
+
         fr = @freedoms color, c
-        mc = @moveCaptures color, c
-        lg = (fr or mc) and @stoneAt(c) == stone.empty
+        mc = @fastCapture @pos(c), color
+        lg = (fr or mc.length) and @stoneAt(c) == stone.empty
         if not lg
             log color, c, fr, mc, @stoneAt c
-        lg
+        mc.length ? mc : lg
         
     all_legal: (color) ->
         
@@ -373,15 +399,14 @@ function Calc extends Print
                     l.push @pos [x,y]
         l
                 
-    moveCaptures: (color, c) ->
+    fastCapture: (p, color) ->
 
-        m = stone[color]
-        for n in @neighbors c
-            s = @stoneAt n
-            if s != 'empty' and s != m
-                if 1 == @freedoms opponent[color], n
-                    return true
-        false            
+        cpts = []
+        for g in @attachedGroups p, opponent[color]
+            n = @poslNeighbors g
+            if @poslEmpty(n).length < 2
+                cpts = cpts.concat g
+        cpts        
         
     #  0000000   000      000      00000000    0000000    0000000  
     # 000   000  000      000      000   000  000   000  000       

@@ -523,19 +523,63 @@ Calc = (function ()
         return g
     }
 
+    Calc.prototype["attachedGroups"] = function (p, color)
+    {
+        var ag, f, fp, g, n, nc, np, s, sn
+
+        sn = this.poslist(this.neighbors(this.coord(p)))
+        ag = []
+        while (np = sn.shift())
+        {
+            nc = this.coord(np)
+            s = this.stoneAt(nc)
+            if (stoneColor[s] === color)
+            {
+                g = [this.pos(nc)]
+                f = [this.pos(nc)]
+                while (fp = f.shift())
+                {
+                    var list = _k_.list(this.neighbors(this.coord(fp)))
+                    for (var _302_26_ = 0; _302_26_ < list.length; _302_26_++)
+                    {
+                        n = list[_302_26_]
+                        if (s === this.stoneAt(n))
+                        {
+                            p = this.pos(n)
+                            if (!(_k_.in(p,g)))
+                            {
+                                g.push(p)
+                                if (_k_.in(p,sn))
+                                {
+                                    sn.splice(sn.indexOf(p),1)
+                                }
+                                if (!(_k_.in(p,f)))
+                                {
+                                    f.push(p)
+                                }
+                            }
+                        }
+                    }
+                }
+                ag.push(g)
+            }
+        }
+        return ag
+    }
+
     Calc.prototype["groupNeighbors"] = function (g)
     {
         var gn, n, p
 
         gn = []
         var list = _k_.list(g)
-        for (var _299_14_ = 0; _299_14_ < list.length; _299_14_++)
+        for (var _321_14_ = 0; _321_14_ < list.length; _321_14_++)
         {
-            p = list[_299_14_]
+            p = list[_321_14_]
             var list1 = _k_.list(this.posNeighbors(p))
-            for (var _300_18_ = 0; _300_18_ < list1.length; _300_18_++)
+            for (var _322_18_ = 0; _322_18_ < list1.length; _322_18_++)
             {
-                n = list1[_300_18_]
+                n = list1[_322_18_]
                 if (!(_k_.in(n,g)) && !(_k_.in(n,gn)))
                 {
                     gn.push(n)
@@ -551,13 +595,13 @@ Calc = (function ()
 
         nl = []
         var list = _k_.list(pl)
-        for (var _308_14_ = 0; _308_14_ < list.length; _308_14_++)
+        for (var _330_14_ = 0; _330_14_ < list.length; _330_14_++)
         {
-            p = list[_308_14_]
+            p = list[_330_14_]
             var list1 = _k_.list(this.posNeighbors(p))
-            for (var _309_19_ = 0; _309_19_ < list1.length; _309_19_++)
+            for (var _331_19_ = 0; _331_19_ < list1.length; _331_19_++)
             {
-                pn = list1[_309_19_]
+                pn = list1[_331_19_]
                 if (!(_k_.in(pn,pl)) && !(_k_.in(pn,nl)))
                 {
                     nl.push(pn)
@@ -565,6 +609,14 @@ Calc = (function ()
             }
         }
         return nl
+    }
+
+    Calc.prototype["poslEmpty"] = function (pl)
+    {
+        return pl.filter((function (p)
+        {
+            return stone.empty === this.stoneAt(this.coord(p))
+        }).bind(this))
     }
 
     Calc.prototype["posNeighbors"] = function (p)
@@ -578,10 +630,10 @@ Calc = (function ()
 
         ns = []
         var list = [[-1,0],[1,0],[0,-1],[0,1]]
-        for (var _321_18_ = 0; _321_18_ < list.length; _321_18_++)
+        for (var _347_18_ = 0; _347_18_ < list.length; _347_18_++)
         {
-            x = list[_321_18_][0]
-            y = list[_321_18_][1]
+            x = list[_347_18_][0]
+            y = list[_347_18_][1]
             n = [c[0] + x,c[1] + y]
             if (this.valid(n))
             {
@@ -597,13 +649,13 @@ Calc = (function ()
 
         dn = []
         var list = _k_.list(g)
-        for (var _336_14_ = 0; _336_14_ < list.length; _336_14_++)
+        for (var _362_14_ = 0; _362_14_ < list.length; _362_14_++)
         {
-            p = list[_336_14_]
+            p = list[_362_14_]
             var list1 = _k_.list(this.poslist(this.diagonals(this.coord(p))))
-            for (var _337_18_ = 0; _337_18_ < list1.length; _337_18_++)
+            for (var _363_18_ = 0; _363_18_ < list1.length; _363_18_++)
             {
-                d = list1[_337_18_]
+                d = list1[_363_18_]
                 if (!(_k_.in(d,g)) && !(_k_.in(d,dn)) && !(_k_.in(d,n)))
                 {
                     dn.push(d)
@@ -619,10 +671,10 @@ Calc = (function ()
 
         ns = []
         var list = [[-1,-1],[1,1],[-1,1],[1,-1]]
-        for (var _345_18_ = 0; _345_18_ < list.length; _345_18_++)
+        for (var _371_18_ = 0; _371_18_ < list.length; _371_18_++)
         {
-            x = list[_345_18_][0]
-            y = list[_345_18_][1]
+            x = list[_371_18_][0]
+            y = list[_371_18_][1]
             n = [c[0] + x,c[1] + y]
             if (this.valid(n))
             {
@@ -637,13 +689,13 @@ Calc = (function ()
         var fr, lg, mc
 
         fr = this.freedoms(color,c)
-        mc = this.moveCaptures(color,c)
-        lg = (fr || mc) && this.stoneAt(c) === stone.empty
+        mc = this.fastCapture(this.pos(c),color)
+        lg = (fr || mc.length) && this.stoneAt(c) === stone.empty
         if (!lg)
         {
             console.log(color,c,fr,mc,this.stoneAt(c))
         }
-        return lg
+        return (mc.length ? mc : lg)
     }
 
     Calc.prototype["all_legal"] = function (color)
@@ -652,9 +704,9 @@ Calc = (function ()
 
         color = (color != null ? color : this.nextColor())
         l = []
-        for (var _370_17_ = y = 0, _370_21_ = this.size; (_370_17_ <= _370_21_ ? y < this.size : y > this.size); (_370_17_ <= _370_21_ ? ++y : --y))
+        for (var _396_17_ = y = 0, _396_21_ = this.size; (_396_17_ <= _396_21_ ? y < this.size : y > this.size); (_396_17_ <= _396_21_ ? ++y : --y))
         {
-            for (var _371_21_ = x = 0, _371_25_ = this.size; (_371_21_ <= _371_25_ ? x < this.size : x > this.size); (_371_21_ <= _371_25_ ? ++x : --x))
+            for (var _397_21_ = x = 0, _397_25_ = this.size; (_397_21_ <= _397_25_ ? x < this.size : x > this.size); (_397_21_ <= _397_25_ ? ++x : --x))
             {
                 if (this.legal(color,[x,y]))
                 {
@@ -665,25 +717,22 @@ Calc = (function ()
         return l
     }
 
-    Calc.prototype["moveCaptures"] = function (color, c)
+    Calc.prototype["fastCapture"] = function (p, color)
     {
-        var m, n, s
+        var cpts, g, n
 
-        m = stone[color]
-        var list = _k_.list(this.neighbors(c))
-        for (var _379_14_ = 0; _379_14_ < list.length; _379_14_++)
+        cpts = []
+        var list = _k_.list(this.attachedGroups(p,opponent[color]))
+        for (var _405_14_ = 0; _405_14_ < list.length; _405_14_++)
         {
-            n = list[_379_14_]
-            s = this.stoneAt(n)
-            if (s !== 'empty' && s !== m)
+            g = list[_405_14_]
+            n = this.poslNeighbors(g)
+            if (this.poslEmpty(n).length < 2)
             {
-                if (1 === this.freedoms(opponent[color],n))
-                {
-                    return true
-                }
+                cpts = cpts.concat(g)
             }
         }
-        return false
+        return cpts
     }
 
     Calc.prototype["allPos"] = function ()
@@ -691,9 +740,9 @@ Calc = (function ()
         var p, x, y
 
         p = []
-        for (var _395_17_ = y = 0, _395_21_ = this.size; (_395_17_ <= _395_21_ ? y < this.size : y > this.size); (_395_17_ <= _395_21_ ? ++y : --y))
+        for (var _420_17_ = y = 0, _420_21_ = this.size; (_420_17_ <= _420_21_ ? y < this.size : y > this.size); (_420_17_ <= _420_21_ ? ++y : --y))
         {
-            for (var _396_21_ = x = 0, _396_25_ = this.size; (_396_21_ <= _396_25_ ? x < this.size : x > this.size); (_396_21_ <= _396_25_ ? ++x : --x))
+            for (var _421_21_ = x = 0, _421_25_ = this.size; (_421_21_ <= _421_25_ ? x < this.size : x > this.size); (_421_21_ <= _421_25_ ? ++x : --x))
             {
                 p.push(alpha[x] + (this.size - y))
             }
@@ -732,19 +781,19 @@ Calc = (function ()
         var cn, oc, on
 
         var list = _k_.list(this.chains)
-        for (var _426_15_ = 0; _426_15_ < list.length; _426_15_++)
+        for (var _451_15_ = 0; _451_15_ < list.length; _451_15_++)
         {
-            oc = list[_426_15_]
+            oc = list[_451_15_]
             if (oc !== ch && oc.stone === ch.stone)
             {
                 var list1 = _k_.list(ch.diagonals.concat(ch.neighbors))
-                for (var _428_23_ = 0; _428_23_ < list1.length; _428_23_++)
+                for (var _453_23_ = 0; _453_23_ < list1.length; _453_23_++)
                 {
-                    cn = list1[_428_23_]
+                    cn = list1[_453_23_]
                     var list2 = _k_.list(oc.diagonals.concat(oc.neighbors))
-                    for (var _429_27_ = 0; _429_27_ < list2.length; _429_27_++)
+                    for (var _454_27_ = 0; _454_27_ < list2.length; _454_27_++)
                     {
-                        on = list2[_429_27_]
+                        on = list2[_454_27_]
                         if (cn === on)
                         {
                             return true
@@ -761,9 +810,9 @@ Calc = (function ()
 
         s = stone[color]
         l = []
-        for (var _443_17_ = y = 0, _443_21_ = this.size; (_443_17_ <= _443_21_ ? y < this.size : y > this.size); (_443_17_ <= _443_21_ ? ++y : --y))
+        for (var _468_17_ = y = 0, _468_21_ = this.size; (_468_17_ <= _468_21_ ? y < this.size : y > this.size); (_468_17_ <= _468_21_ ? ++y : --y))
         {
-            for (var _444_21_ = x = 0, _444_25_ = this.size; (_444_21_ <= _444_25_ ? x < this.size : x > this.size); (_444_21_ <= _444_25_ ? ++x : --x))
+            for (var _469_21_ = x = 0, _469_25_ = this.size; (_469_21_ <= _469_25_ ? x < this.size : x > this.size); (_469_21_ <= _469_25_ ? ++x : --x))
             {
                 if (s === this.stoneAt(x,y))
                 {

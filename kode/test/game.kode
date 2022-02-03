@@ -43,7 +43,4 @@ Game = require '../game'
 
         g = Game.fromMoves moves
         g.grid.toString() ▸ board
-        # log ars board
-        # log ded board
-        # log scr board
         

@@ -61,16 +61,20 @@ function Score extends Calc
         else
             points = black:0 white:0
 
-        log 'prisoners' points, @moves
+        @verb 'prisoners' points
             
         for a in @areas
             if a.color in 'wb'
+                @verb 'add area points' @areas.indexOf(a), a.color, a.posl.length
                 points[stoneColor[a.color]] += a.posl.length
 
         for dg in dead
+            @verb 'add dead group points' @grps.indexOf(dg), opponent[stoneColor[dg.stone]], dg.posl.length*2
             for dp in dg.posl
                 points[opponent[stoneColor[dg.stone]]] += 2
 
+        @verb 'points' points
+                        
         if points.white > points.black
             finalScore = 'W+'+(points.white-points.black)
         else

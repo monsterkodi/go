@@ -42,7 +42,10 @@ function Moves
                      ➜ @ended = false
 
     history:    -> @m.map (m) -> 
-                    m.pos + ' ' + m.p[0] + ' ' + m.p[1] + (m.captures.length ? (' ' + m.captures.join ' ') : '')
+                    if m.p[0] or m.p[1]
+                        m.pos + ' ' + m.p[0] + ' ' + m.p[1] + (m.captures.length ? (' ' + m.captures.join ' ') : '')
+                    else
+                        m.pos
     start:      -> @m.length == 0
     color: (c)  -> c ? stoneColor[c] : @nextColor()
     lastColor:  -> @m.length ? ['white''black'][@m.length%2] : 'start'

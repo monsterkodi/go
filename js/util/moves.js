@@ -78,7 +78,14 @@ Moves = (function ()
     {
         return this.m.map(function (m)
         {
-            return m.pos + ' ' + m.p[0] + ' ' + m.p[1] + ((m.captures.length ? (' ' + m.captures.join(' ')) : ''))
+            if (m.p[0] || m.p[1])
+            {
+                return m.pos + ' ' + m.p[0] + ' ' + m.p[1] + ((m.captures.length ? (' ' + m.captures.join(' ')) : ''))
+            }
+            else
+            {
+                return m.pos
+            }
         })
     }
 
@@ -104,28 +111,28 @@ Moves = (function ()
 
     Moves.prototype["lastIsPass"] = function ()
     {
-        var _50_26_
+        var _53_26_
 
         return (this.last() != null ? this.last().pos : undefined) === 'pass'
     }
 
     Moves.prototype["singlePass"] = function ()
     {
-        var _51_26_
+        var _54_26_
 
         return (this.last() != null ? this.last().pos : undefined) === 'pass' && (this.m.slice(-2,-1)[0] != null ? this.m.slice(-2,-1)[0].pos : undefined) !== 'pass'
     }
 
     Moves.prototype["doublePass"] = function ()
     {
-        var _52_26_
+        var _55_26_
 
         return ((this.last() != null ? this.last().pos : undefined) === 'pass' && 'pass' === (this.m.slice(-2,-1)[0] != null ? this.m.slice(-2,-1)[0].pos : undefined))
     }
 
     Moves.prototype["resigned"] = function ()
     {
-        var _53_26_
+        var _56_26_
 
         return (this.last() != null ? this.last().pos : undefined) === 'resign'
     }
@@ -137,9 +144,9 @@ Moves = (function ()
 
     Moves.prototype["end"] = function ()
     {
-        var _55_26_
+        var _58_26_
 
-        return ((_55_26_=this.ended) != null ? _55_26_ : false)
+        return ((_58_26_=this.ended) != null ? _58_26_ : false)
     }
 
     return Moves

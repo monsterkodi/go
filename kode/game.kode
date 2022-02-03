@@ -31,11 +31,8 @@ function Game extends Score
         moves = moves.split ' '
         
         g = new Game size:19 'sgf' 'sgf' 0
-        
-        for m in moves
-            # log moves.indexOf(m)+1,m
-            g.play m
-            
+
+        g.addMove m for m in moves
         g
                 
     boardsize: (@size) -> @clear_board()
@@ -84,13 +81,12 @@ function Game extends Score
     
     play: (color, p) ->
 
-        if not p 
+        if not p
             p = color
             color = @nextColor()
                     
         if p.toLowerCase() in ['pass' 'resign' 'illegal']
             @moves.add p.toLowerCase(), color
-            # @updateTitle()
             @board.annotate?()
             return ''
 
@@ -110,7 +106,7 @@ function Game extends Score
             ''
         else
             '? invalid color or coordinate'
-            
+                        
     #  0000000   0000000   00000000   000000000  000   000  00000000   00000000
     # 000       000   000  000   000     000     000   000  000   000  000     
     # 000       000000000  00000000      000     000   000  0000000    0000000 
@@ -129,7 +125,27 @@ function Game extends Score
             for deadPos in dead.posl
                 @removePos deadPos
         pl
+
+    addMove: (p) ->
+
+        # ● addMove
+        color = @nextColor()
+                    
+        if p in ['pass' 'resign']
+            @moves.add p, color
+            return
+
+        c = @coord p
         
+        if cpts = @legal color, c
+            for deadPos in cpts ? []
+                @removePos deadPos
+            @setStone c, stone[color]
+            @moves.add p, color, cpts ? []
+        else
+            error 'illegal move:' color, @moves.num(), p
+            @moves.add 'pass' color
+                
     #  0000000  00000000  000000000   0000000  000000000   0000000   000   000  00000000  
     # 000       000          000     000          000     000   000  0000  000  000       
     # 0000000   0000000      000     0000000      000     000   000  000 0 000  0000000   
