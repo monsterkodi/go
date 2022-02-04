@@ -141,9 +141,10 @@ function Referee
         @compi[next]?.opponentMove p
             
         if @game.end()
-            if @compi.black? and @compi.black.name != 'katago'
+            if @compi.black? #and @compi.black.name != 'katago'
                 @compi.black?.send 'final_score'
-            else if @compi.white? and @compi.white.name != 'katago'
+            # else 
+            if @compi.white? #and @compi.white.name != 'katago'
                 @compi.white?.send 'final_score'
         else
             # log "#{next} genmove" @compi[next]

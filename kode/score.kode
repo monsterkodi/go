@@ -11,7 +11,7 @@
 { min } = Math
 Grid = require './util/grid'
 Calc = require './calc'
-DeadStones = require '@sabaki/deadstones'
+# DeadStones = require '@sabaki/deadstones'
 
 function Score extends Calc
 
@@ -325,9 +325,12 @@ function Score extends Calc
                     @deadChains [ch], 'only 1 lib!'
                     return
 
-                if ch.libs == 2 and (oc.alive or oc.libs > 2) and not @looseChainConnection ch
-                    @deadChains [ch], 'only 2 libs!'
-                    return
+                if ch.libs == 2 and (oc.alive or oc.libs > 2)
+                    if not @looseChainConnection ch
+                        @deadChains [ch], 'only 2 libs!'
+                        return
+                    # else
+                        # log '2 libs but looseChainConnection' @chains.indexOf(ch), ch
                     
                 if ch.libs < 5 and ch.areas.length == 1
                     if @deadShape @areas[ch.areas[0]]

@@ -419,19 +419,25 @@ function Calc extends Print
     
     chainAreaLibs: (ch,ai) -> @poslUnion(ch.neighbors, @areas[ai].posl).length
         
-    chainsForArea: (ai) ->
-        
-        @chains.filter (ch) -> ai in ch.areas
+    chainsForArea: (ai) -> @chains.filter (ch) -> ai in ch.areas
         
     looseChainConnection: (ch) ->
 
         for oc in @chains
             if oc != ch and oc.stone == ch.stone
-                for cn in ch.diagonals.concat ch.neighbors
-                    for on in oc.diagonals.concat oc.neighbors
-                        if cn == on
+                for cn in ch.neighbors
+                    for on in oc.neighbors
+                        if cn == on and stone.empty == @stoneAt on
                             return true
-       
+                            
+                for cn in ch.diagonals
+                    for on in oc.neighbors
+                        if cn == on and stone.empty == @stoneAt on
+                            for cn in ch.neighbors
+                                for on in oc.diagonals
+                                    if cn == on and stone.empty == @stoneAt on
+                                        return true
+                                   
     #  0000000  000000000   0000000   000   000  00000000   0000000
     # 000          000     000   000  0000  000  000       000     
     # 0000000      000     000   000  000 0 000  0000000   0000000 
@@ -448,9 +454,10 @@ function Calc extends Print
                     l.push @pos [x,y]
         l
         
-    stoneAt: (x,y) => @grid.at x,y
-    valid:   (c)   => 0 <= c[0] < @size and 0 <= c[1] < @size
-    coord:   (p)   => [alpha.indexOf(p[0].toUpperCase()), @size-int(p[1..])]
-    pos:     (c)   => alpha[c[0]] + (@size-c[1])
+    stoneAtPos: (p)  => @grid.at p
+    stoneAt:    (x,y) => @grid.at x,y
+    valid:      (c)   => 0 <= c[0] < @size and 0 <= c[1] < @size
+    coord:      (p)   => [alpha.indexOf(p[0].toUpperCase()), @size-int(p[1..])]
+    pos:        (c)   => alpha[c[0]] + (@size-c[1])
 
 module.exports = Calc

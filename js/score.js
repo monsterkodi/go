@@ -2,7 +2,7 @@
 
 var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, k: { f:(r,g,b)=>'\x1b[38;5;'+(16+36*r+6*g+b)+'m', F:(r,g,b)=>'\x1b[48;5;'+(16+36*r+6*g+b)+'m', r:(i)=>(i<6)&&_k_.k.f(i,0,0)||_k_.k.f(5,i-5,i-5), R:(i)=>(i<6)&&_k_.k.F(i,0,0)||_k_.k.F(5,i-5,i-5), g:(i)=>(i<6)&&_k_.k.f(0,i,0)||_k_.k.f(i-5,5,i-5), G:(i)=>(i<6)&&_k_.k.F(0,i,0)||_k_.k.F(i-5,5,i-5), b:(i)=>(i<6)&&_k_.k.f(0,0,i)||_k_.k.f(i-5,i-5,5), B:(i)=>(i<6)&&_k_.k.F(0,0,i)||_k_.k.F(i-5,i-5,5), y:(i)=>(i<6)&&_k_.k.f(i,i,0)||_k_.k.f(5,5,i-5), Y:(i)=>(i<6)&&_k_.k.F(i,i,0)||_k_.k.F(5,5,i-5), m:(i)=>(i<6)&&_k_.k.f(i,0,i)||_k_.k.f(5,i-5,5), M:(i)=>(i<6)&&_k_.k.F(i,0,i)||_k_.k.F(5,i-5,5), c:(i)=>(i<6)&&_k_.k.f(0,i,i)||_k_.k.f(i-5,5,5), C:(i)=>(i<6)&&_k_.k.F(0,i,i)||_k_.k.F(i-5,5,5), w:(i)=>'\x1b[38;5;'+(232+(i-1)*3)+'m', W:(i)=>'\x1b[48;5;'+(232+(i-1)*3+2)+'m', wrap:(open,close,reg)=>(s)=>open+(~(s+='').indexOf(close,4)&&s.replace(reg,open)||s)+close, F256:(open)=>_k_.k.wrap(open,'\x1b[39m',new RegExp('\\x1b\\[39m','g')), B256:(open)=>_k_.k.wrap(open,'\x1b[49m',new RegExp('\\x1b\\[49m','g'))}, rpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s+=c} return s}};_k_.R2=_k_.k.B256(_k_.k.R(2));_k_.G2=_k_.k.B256(_k_.k.G(2));_k_.g5=_k_.k.F256(_k_.k.g(5));_k_.y5=_k_.k.F256(_k_.k.y(5))
 
-var alpha, Calc, DeadStones, fs, Grid, ilpha, opponent, Score, short, stone, stoneColor
+var alpha, Calc, fs, Grid, ilpha, opponent, Score, short, stone, stoneColor
 
 stoneColor = require('./util/util').stoneColor
 stone = require('./util/util').stone
@@ -17,7 +17,6 @@ min = Math.min
 
 Grid = require('./util/grid')
 Calc = require('./calc')
-DeadStones = require('@sabaki/deadstones')
 
 Score = (function ()
 {
@@ -559,10 +558,13 @@ Score = (function ()
                     this.deadChains([ch],'only 1 lib!')
                     return
                 }
-                if (ch.libs === 2 && (oc.alive || oc.libs > 2) && !this.looseChainConnection(ch))
+                if (ch.libs === 2 && (oc.alive || oc.libs > 2))
                 {
-                    this.deadChains([ch],'only 2 libs!')
-                    return
+                    if (!this.looseChainConnection(ch))
+                    {
+                        this.deadChains([ch],'only 2 libs!')
+                        return
+                    }
                 }
                 if (ch.libs < 5 && ch.areas.length === 1)
                 {
@@ -575,9 +577,9 @@ Score = (function ()
                 lostAreas = []
                 sameAreas = []
                 var list1 = _k_.list(ch.areas)
-                for (var _339_23_ = 0; _339_23_ < list1.length; _339_23_++)
+                for (var _342_23_ = 0; _342_23_ < list1.length; _342_23_++)
                 {
-                    ai = list1[_339_23_]
+                    ai = list1[_342_23_]
                     if (_k_.in(ai,oc.areas))
                     {
                         if (this.areas[ai].grps.map((function (gi)
@@ -631,15 +633,15 @@ Score = (function ()
         var ch, gi
 
         var list = _k_.list(chains)
-        for (var _359_15_ = 0; _359_15_ < list.length; _359_15_++)
+        for (var _362_15_ = 0; _362_15_ < list.length; _362_15_++)
         {
-            ch = list[_359_15_]
+            ch = list[_362_15_]
             ch.dead = true
             this.verb(_k_.R2(_k_.y5(_k_.rpad(12,'deadChains'))),reason,this.colorChain(ch))
             var list1 = _k_.list(ch.grps)
-            for (var _362_19_ = 0; _362_19_ < list1.length; _362_19_++)
+            for (var _365_19_ = 0; _365_19_ < list1.length; _365_19_++)
             {
-                gi = list1[_362_19_]
+                gi = list1[_365_19_]
                 this.grps[gi].state = 'dead'
             }
         }
@@ -651,9 +653,9 @@ Score = (function ()
         var gr
 
         var list = _k_.list(groups)
-        for (var _369_15_ = 0; _369_15_ < list.length; _369_15_++)
+        for (var _372_15_ = 0; _372_15_ < list.length; _372_15_++)
         {
-            gr = list[_369_15_]
+            gr = list[_372_15_]
             this.verb(_k_.R2(_k_.y5(_k_.rpad(12,'deadGroups'))),reason,gr.key)
             gr.state = 'dead'
         }
@@ -665,15 +667,15 @@ Score = (function ()
         var ch, gi
 
         var list = _k_.list(chains)
-        for (var _377_15_ = 0; _377_15_ < list.length; _377_15_++)
+        for (var _380_15_ = 0; _380_15_ < list.length; _380_15_++)
         {
-            ch = list[_377_15_]
+            ch = list[_380_15_]
             ch.alive = true
             this.verb(_k_.G2(_k_.g5(_k_.rpad(12,'aliveChains'))),reason,this.colorChain(ch))
             var list1 = _k_.list(ch.grps)
-            for (var _380_19_ = 0; _380_19_ < list1.length; _380_19_++)
+            for (var _383_19_ = 0; _383_19_ < list1.length; _383_19_++)
             {
-                gi = list1[_380_19_]
+                gi = list1[_383_19_]
                 this.grps[gi].state = 'alive'
             }
         }
@@ -705,9 +707,9 @@ Score = (function ()
         wc = []
         bc = []
         var list = _k_.list(chains)
-        for (var _407_15_ = 0; _407_15_ < list.length; _407_15_++)
+        for (var _410_15_ = 0; _410_15_ < list.length; _410_15_++)
         {
-            ch = list[_407_15_]
+            ch = list[_410_15_]
             if (ch.stone === stone.white)
             {
                 wc.push(ch)
@@ -717,9 +719,9 @@ Score = (function ()
                 bc.push(ch)
             }
             var list1 = _k_.list(ch.grps)
-            for (var _410_19_ = 0; _410_19_ < list1.length; _410_19_++)
+            for (var _413_19_ = 0; _413_19_ < list1.length; _413_19_++)
             {
-                gi = list1[_410_19_]
+                gi = list1[_413_19_]
                 if (!(_k_.in(gi,gs)))
                 {
                     gs.push(this.grps[gi])

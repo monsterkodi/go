@@ -21,6 +21,7 @@ Calc = (function ()
         this["coord"] = this["coord"].bind(this)
         this["valid"] = this["valid"].bind(this)
         this["stoneAt"] = this["stoneAt"].bind(this)
+        this["stoneAtPos"] = this["stoneAtPos"].bind(this)
         return Calc.__super__.constructor.apply(this, arguments)
     }
 
@@ -737,22 +738,49 @@ Calc = (function ()
         var cn, oc, on
 
         var list = _k_.list(this.chains)
-        for (var _428_15_ = 0; _428_15_ < list.length; _428_15_++)
+        for (var _426_15_ = 0; _426_15_ < list.length; _426_15_++)
         {
-            oc = list[_428_15_]
+            oc = list[_426_15_]
             if (oc !== ch && oc.stone === ch.stone)
             {
-                var list1 = _k_.list(ch.diagonals.concat(ch.neighbors))
-                for (var _430_23_ = 0; _430_23_ < list1.length; _430_23_++)
+                var list1 = _k_.list(ch.neighbors)
+                for (var _428_23_ = 0; _428_23_ < list1.length; _428_23_++)
                 {
-                    cn = list1[_430_23_]
-                    var list2 = _k_.list(oc.diagonals.concat(oc.neighbors))
-                    for (var _431_27_ = 0; _431_27_ < list2.length; _431_27_++)
+                    cn = list1[_428_23_]
+                    var list2 = _k_.list(oc.neighbors)
+                    for (var _429_27_ = 0; _429_27_ < list2.length; _429_27_++)
                     {
-                        on = list2[_431_27_]
-                        if (cn === on)
+                        on = list2[_429_27_]
+                        if (cn === on && stone.empty === this.stoneAt(on))
                         {
                             return true
+                        }
+                    }
+                }
+                var list3 = _k_.list(ch.diagonals)
+                for (var _433_23_ = 0; _433_23_ < list3.length; _433_23_++)
+                {
+                    cn = list3[_433_23_]
+                    var list4 = _k_.list(oc.neighbors)
+                    for (var _434_27_ = 0; _434_27_ < list4.length; _434_27_++)
+                    {
+                        on = list4[_434_27_]
+                        if (cn === on && stone.empty === this.stoneAt(on))
+                        {
+                            var list5 = _k_.list(ch.neighbors)
+                            for (var _436_35_ = 0; _436_35_ < list5.length; _436_35_++)
+                            {
+                                cn = list5[_436_35_]
+                                var list6 = _k_.list(oc.diagonals)
+                                for (var _437_39_ = 0; _437_39_ < list6.length; _437_39_++)
+                                {
+                                    on = list6[_437_39_]
+                                    if (cn === on && stone.empty === this.stoneAt(on))
+                                    {
+                                        return true
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -766,9 +794,9 @@ Calc = (function ()
 
         s = stone[color]
         l = []
-        for (var _445_17_ = y = 0, _445_21_ = this.size; (_445_17_ <= _445_21_ ? y < this.size : y > this.size); (_445_17_ <= _445_21_ ? ++y : --y))
+        for (var _451_17_ = y = 0, _451_21_ = this.size; (_451_17_ <= _451_21_ ? y < this.size : y > this.size); (_451_17_ <= _451_21_ ? ++y : --y))
         {
-            for (var _446_21_ = x = 0, _446_25_ = this.size; (_446_21_ <= _446_25_ ? x < this.size : x > this.size); (_446_21_ <= _446_25_ ? ++x : --x))
+            for (var _452_21_ = x = 0, _452_25_ = this.size; (_452_21_ <= _452_25_ ? x < this.size : x > this.size); (_452_21_ <= _452_25_ ? ++x : --x))
             {
                 if (s === this.stoneAt(x,y))
                 {
@@ -777,6 +805,11 @@ Calc = (function ()
             }
         }
         return l
+    }
+
+    Calc.prototype["stoneAtPos"] = function (p)
+    {
+        return this.grid.at(p)
     }
 
     Calc.prototype["stoneAt"] = function (x, y)

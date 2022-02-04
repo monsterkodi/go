@@ -143,7 +143,7 @@ Referee = (function ()
 
     Referee.prototype["playerMove"] = function (p, player)
     {
-        var color, next, _130_38_, _130_58_, _144_27_, _145_28_, _146_32_, _147_28_
+        var color, next, _130_38_, _130_58_, _144_27_, _145_28_, _147_27_, _148_28_
 
         if (this.game.end())
         {
@@ -167,11 +167,11 @@ Referee = (function ()
         ;(this.compi[next] != null ? this.compi[next].opponentMove(p) : undefined)
         if (this.game.end())
         {
-            if ((this.compi.black != null) && this.compi.black.name !== 'katago')
+            if ((this.compi.black != null))
             {
-                return (this.compi.black != null ? this.compi.black.send('final_score') : undefined)
+                ;(this.compi.black != null ? this.compi.black.send('final_score') : undefined)
             }
-            else if ((this.compi.white != null) && this.compi.white.name !== 'katago')
+            if ((this.compi.white != null))
             {
                 return (this.compi.white != null ? this.compi.white.send('final_score') : undefined)
             }
@@ -184,7 +184,7 @@ Referee = (function ()
 
     Referee.prototype["undo"] = function ()
     {
-        var m, _166_15_, _175_20_, _176_20_
+        var m, _167_15_, _176_20_, _177_20_
 
         if (this.game.start())
         {
@@ -196,7 +196,7 @@ Referee = (function ()
         }
         console.log('undo')
         this.paused = true
-        this.redos = ((_166_15_=this.redos) != null ? _166_15_ : [])
+        this.redos = ((_167_15_=this.redos) != null ? _167_15_ : [])
         m = this.game.moves.pop()
         this.redos.unshift(m)
         this.game.undoMove(m)
@@ -206,7 +206,7 @@ Referee = (function ()
 
     Referee.prototype["redo"] = function ()
     {
-        var move, _184_20_, _185_20_
+        var move, _185_20_, _186_20_
 
         if (_k_.empty(this.redos))
         {
@@ -221,7 +221,7 @@ Referee = (function ()
 
     Referee.prototype["jumpToStart"] = function ()
     {
-        var _198_20_, _199_20_
+        var _199_20_, _200_20_
 
         console.log('start')
         if (this.game.start())
