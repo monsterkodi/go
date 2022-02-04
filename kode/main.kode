@@ -6,7 +6,7 @@
 000   000  000   000  000  000   000
 ###
 
-{ app, post } = require 'kxk'
+{ app, post, win } = require 'kxk'
 
 { BrowserWindow } = require 'electron'
     
@@ -28,8 +28,8 @@ class Main extends app
             prefsSeperator: '▸'
             width:          1024
             height:         768
-            minWidth:       300
-            minHeight:      300
+            minWidth:       800
+            minHeight:      600
             
         @opt.onQuit = @quit
         @opt.onShow = @onShow
@@ -57,7 +57,14 @@ class Main extends app
                 if toSave == 0
                     @exitApp()
             'delay'
-                            
+       
+    onWinResize: (win) =>
+        
+        br = win.getBounds()
+        win.setMinSize br.height - 30, 0
+        # if br.height - 30 > br.width
+            # win.setSize br.width, br.width+30
+        
     onWinReady: (win) => 
                     
 new Main

@@ -135,9 +135,6 @@ body {
 .liberty {
   font-size: 13px;
 }
-.legend {
-  font-size: 13px;
-}
 .number {
   text-align: center;
   line-height: 1.56;
@@ -157,10 +154,12 @@ body {
 .eye.b {
   filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.533));
   background-color: #000;
+  opacity: 0.9;
 }
 .eye.w {
   filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.533));
   background-color: #fff;
+  opacity: 0.9;
 }
 #titlebar {
   display: flex;

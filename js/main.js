@@ -2,10 +2,11 @@
 
 var _k_
 
-var abs, app, BrowserWindow, post, wins
+var abs, app, BrowserWindow, post, win, wins
 
 app = require('kxk').app
 post = require('kxk').post
+win = require('kxk').win
 
 BrowserWindow = require('electron').BrowserWindow
 
@@ -23,9 +24,10 @@ class Main extends app
 {
     constructor ()
     {
-        super({dir:__dirname,pkg:require('../package.json'),dirs:['../pug','../styl'],index:'index.html',icon:'../img/app.ico',about:'../img/about.png',prefsSeperator:'▸',width:1024,height:768,minWidth:300,minHeight:300})
+        super({dir:__dirname,pkg:require('../package.json'),dirs:['../pug','../styl'],index:'index.html',icon:'../img/app.ico',about:'../img/about.png',prefsSeperator:'▸',width:1024,height:768,minWidth:800,minHeight:600})
     
         this.onWinReady = this.onWinReady.bind(this)
+        this.onWinResize = this.onWinResize.bind(this)
         this.quit = this.quit.bind(this)
         this.opt.onQuit = this.quit
         this.opt.onShow = this.onShow
@@ -57,6 +59,14 @@ class Main extends app
             }).bind(this))
             return 'delay'
         }
+    }
+
+    onWinResize (win)
+    {
+        var br
+
+        br = win.getBounds()
+        return win.setMinSize(br.height - 30,0)
     }
 
     onWinReady (win)

@@ -13,9 +13,9 @@ kxk = require 'kxk'
 
 function Board
 
-    @: (parent, @size=19) ->
+    @: (@parent, @size=19) ->
         
-        @div = elem 'div' class:'board'     parent:parent
+        @div = elem 'div' class:'board'     parent:@parent
         @img = elem 'img' class:'wood'      src:'../img/board.png' parent:@div
         # @blk = elem 'div' class:'blank'     parent:@div
         @shd = elem 'div' class:'shadows'   parent:@div
@@ -56,10 +56,18 @@ function Board
      
         post.on 'variation' @onVariation
         post.on 'resize' @onResize
+        @scaleFonts()
                 
     onResize: =>
-        
+
+        @scaleFonts()        
         @annotate()
+        
+    scaleFonts: ->
+        
+        s = @div.getBoundingClientRect().height/(@size+1)
+        s = max 10 s/6
+        @lgd.style.fontSize = "#{s}px"
         
     # 000      000  000   000  00000000   0000000  
     # 000      000  0000  000  000       000       
@@ -102,7 +110,7 @@ function Board
                     else if x and y
                         @ctx.arc s/2+x*d*(int(-@size/2) + 2), s/2+y*d*(int(-@size/2) + 2), s/180, 0, 2 * Math.PI, false
                     @ctx.fill()
-                
+
     # 000      00000000   0000000   00000000  000   000  0000000    
     # 000      000       000        000       0000  000  000   000  
     # 000      0000000   000  0000  0000000   000 0 000  000   000  
@@ -112,7 +120,7 @@ function Board
     legend: ->
         
         d = 100/(@size+1)
-        
+                
         for x in 0...@size
             
             n = elem 'div' class:'legend' text:alpha[x], parent:@lgd
@@ -132,7 +140,7 @@ function Board
             n.style.top = "#{d*(x+1)}%"
             
             @lgd.style.display = window.stash.get('legend') ? 'initial' : 'none'
-         
+                    
     # 000000000   0000000    0000000    0000000   000      00000000  
     #    000     000   000  000        000        000      000       
     #    000     000   000  000  0000  000  0000  000      0000000   
@@ -293,11 +301,13 @@ function Board
     
     annotate: ->
 
+        @div.remove()
         @showLastMove()
         @numbers()
         @liberties()
         @territory()
         @game.updateTitle()
+        @parent.appendChild @div
     
     # 000   000  000   000  00     00  0000000    00000000  00000000    0000000  
     # 0000  000  000   000  000   000  000   000  000       000   000  000       
