@@ -13,6 +13,8 @@ Grid = require './util/grid'
 Calc = require './calc'
 # DeadStones = require '@sabaki/deadstones'
 
+SORT = true
+
 function Score extends Calc
 
     @: (a) ->
@@ -125,6 +127,8 @@ function Score extends Calc
         for s,gl of allg
             for g in gl
                 n = @groupNeighbors g
+                g.sort() if SORT
+                n.sort() if SORT
                 if s == stone.empty
                     @areas.push 
                         color: @areaColor g
@@ -247,6 +251,8 @@ function Score extends Calc
                     ch.eyes.push ai if ai not in ch.eyes
                     
             n = @poslNeighbors ch.posl
+            n.sort() if SORT
+            ch.posl.sort() if SORT
             ch.neighbors = n
             ch.diagonals = @poslDiagonals ch.posl, n
             ch.libs = n.filter((p) => stone.empty == @stoneAt @coord p).length
@@ -362,6 +368,7 @@ function Score extends Calc
         for ch in chains
             ch.dead = true
             @verb R2(y5 rpad 12 'deadChains'), reason, @colorChain ch
+            @verb @chainString ch
             for gi in ch.grps
                 @grps[gi].state = 'dead'
                 
@@ -415,16 +422,18 @@ function Score extends Calc
                 
         if wc.length and bc.length
                         
-            wc.sort (a,b) => @chainAreaLibs(a,ai) - @chainAreaLibs(b,ai)
-            bc.sort (a,b) => @chainAreaLibs(a,ai) - @chainAreaLibs(b,ai)
+            wc.sort (a,b) => @chainAreaLibs(b,ai) - @chainAreaLibs(a,ai) 
+            bc.sort (a,b) => @chainAreaLibs(b,ai) - @chainAreaLibs(a,ai)
             
             wl = @chainAreaLibs wc[0],ai
             bl = @chainAreaLibs bc[0],ai
             
             if (wl - bl) > 2 and bl < 4
-                deadAlive bc, wc, "areaBattle #{ai} white more libs #{wl} > #{bl} area size #{a.posl.length}"
+                if not @looseChainConnection bc[0]
+                    deadAlive bc, wc, "areaBattle #{ai} white more libs #{wl} > #{bl} area size #{a.posl.length}"
             else if (bl - wl) > 2 and wl < 4
-                deadAlive wc, bc, "areaBattle #{ai} black more libs #{bl} > #{wl} area size #{a.posl.length}" 
+                if not @looseChainConnection wc[0]
+                    deadAlive wc, bc, "areaBattle #{ai} black more libs #{bl} > #{wl} area size #{a.posl.length}" 
                      
     verb: -> if @verbose then console.log.apply null, arguments
             
