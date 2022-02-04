@@ -548,7 +548,7 @@ Score = (function ()
                     ar.color = stoneColor[ch.stone][0]
                     this.aliveChains([ch],'last opponent died')
                 }
-                if (ar.color === stoneColor[ch.stone][0])
+                if (ar.color === stoneColor[ch.stone][0] && !this.weakEye(ar))
                 {
                     ownedAreas++
                 }
@@ -560,14 +560,19 @@ Score = (function ()
         }
     }
 
+    Score.prototype["weakEye"] = function (a)
+    {
+        return a.grps.length > 2
+    }
+
     Score.prototype["chainBattle"] = function (ch)
     {
         var ai, chlib, lostAreas, oc, sameAreas
 
         var list = _k_.list(this.chains)
-        for (var _327_15_ = 0; _327_15_ < list.length; _327_15_++)
+        for (var _329_15_ = 0; _329_15_ < list.length; _329_15_++)
         {
-            oc = list[_327_15_]
+            oc = list[_329_15_]
             if (oc !== ch && !oc.dead)
             {
                 if (ch.libs === 1 && (oc.alive || oc.libs > 1))
@@ -594,9 +599,9 @@ Score = (function ()
                 lostAreas = []
                 sameAreas = []
                 var list1 = _k_.list(ch.areas)
-                for (var _348_23_ = 0; _348_23_ < list1.length; _348_23_++)
+                for (var _350_23_ = 0; _350_23_ < list1.length; _350_23_++)
                 {
-                    ai = list1[_348_23_]
+                    ai = list1[_350_23_]
                     if (_k_.in(ai,oc.areas))
                     {
                         if (this.areas[ai].grps.map((function (gi)
@@ -650,16 +655,16 @@ Score = (function ()
         var ch, gi
 
         var list = _k_.list(chains)
-        for (var _368_15_ = 0; _368_15_ < list.length; _368_15_++)
+        for (var _370_15_ = 0; _370_15_ < list.length; _370_15_++)
         {
-            ch = list[_368_15_]
+            ch = list[_370_15_]
             ch.dead = true
             this.verb(_k_.R2(_k_.y5(_k_.rpad(12,'deadChains'))),reason,this.colorChain(ch))
             this.verb(this.chainString(ch))
             var list1 = _k_.list(ch.grps)
-            for (var _372_19_ = 0; _372_19_ < list1.length; _372_19_++)
+            for (var _374_19_ = 0; _374_19_ < list1.length; _374_19_++)
             {
-                gi = list1[_372_19_]
+                gi = list1[_374_19_]
                 this.grps[gi].state = 'dead'
             }
         }
@@ -671,9 +676,9 @@ Score = (function ()
         var gr
 
         var list = _k_.list(groups)
-        for (var _379_15_ = 0; _379_15_ < list.length; _379_15_++)
+        for (var _381_15_ = 0; _381_15_ < list.length; _381_15_++)
         {
-            gr = list[_379_15_]
+            gr = list[_381_15_]
             this.verb(_k_.R2(_k_.y5(_k_.rpad(12,'deadGroups'))),reason,gr.key)
             gr.state = 'dead'
         }
@@ -685,15 +690,15 @@ Score = (function ()
         var ch, gi
 
         var list = _k_.list(chains)
-        for (var _387_15_ = 0; _387_15_ < list.length; _387_15_++)
+        for (var _389_15_ = 0; _389_15_ < list.length; _389_15_++)
         {
-            ch = list[_387_15_]
+            ch = list[_389_15_]
             ch.alive = true
             this.verb(_k_.G2(_k_.g5(_k_.rpad(12,'aliveChains'))),reason,this.colorChain(ch))
             var list1 = _k_.list(ch.grps)
-            for (var _390_19_ = 0; _390_19_ < list1.length; _390_19_++)
+            for (var _392_19_ = 0; _392_19_ < list1.length; _392_19_++)
             {
-                gi = list1[_390_19_]
+                gi = list1[_392_19_]
                 this.grps[gi].state = 'alive'
             }
         }
@@ -725,9 +730,9 @@ Score = (function ()
         wc = []
         bc = []
         var list = _k_.list(chains)
-        for (var _417_15_ = 0; _417_15_ < list.length; _417_15_++)
+        for (var _419_15_ = 0; _419_15_ < list.length; _419_15_++)
         {
-            ch = list[_417_15_]
+            ch = list[_419_15_]
             if (ch.stone === stone.white)
             {
                 wc.push(ch)
@@ -737,9 +742,9 @@ Score = (function ()
                 bc.push(ch)
             }
             var list1 = _k_.list(ch.grps)
-            for (var _420_19_ = 0; _420_19_ < list1.length; _420_19_++)
+            for (var _422_19_ = 0; _422_19_ < list1.length; _422_19_++)
             {
-                gi = list1[_420_19_]
+                gi = list1[_422_19_]
                 if (!(_k_.in(gi,gs)))
                 {
                     gs.push(this.grps[gi])

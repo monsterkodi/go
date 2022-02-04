@@ -7,7 +7,7 @@
 ###
 
 kxk = require 'kxk'
-{ max } = Math
+{ max, min } = Math
 { elem, kpos, post, randIntRange, $ } = kxk
 { stone, stoneColor, alpha, opponent } = require './util/util'
 
@@ -47,6 +47,9 @@ function Board
         
         @num.style.display = window.stash.get('numbers') ? 'initial' : 'none'
         @lib.style.display = window.stash.get('liberties') ? 'initial' : 'none'
+        
+        @showTerritory = window.stash.get 'territory'
+        @trr.style.display = window.stash.get('territory') ? 'initial' : 'none'
         
         @lst = elem 'div' class:"last" parent:@hlt
         @lst.style = "display:none;"
@@ -140,15 +143,15 @@ function Board
         
         window.stash.set 'numbers' not window.stash.get 'numbers'
         @num.style.display = window.stash.get('numbers') ? 'initial' : 'none'
-        if window.stash.get('numbers') and window.stash.get 'liberties'
-            @toggleLiberties()
+        # if window.stash.get('numbers') and window.stash.get 'liberties'
+            # @toggleLiberties()
             
     toggleLiberties: ->
         
         window.stash.set 'liberties' not window.stash.get 'liberties'
         @lib.style.display = window.stash.get('liberties') ? 'initial' : 'none'
-        if window.stash.get('liberties') and window.stash.get 'numbers'
-            @toggleNumbers()
+        # if window.stash.get('liberties') and window.stash.get 'numbers'
+            # @toggleNumbers()
 
     toggleLegend: ->
         
@@ -156,9 +159,10 @@ function Board
         @lgd.style.display = window.stash.get('legend') ? 'initial' : 'none'
 
     toggleTerritory: ->
-        
-        window.stash.set 'territory' not window.stash.get 'territory'            
-        @trr.style.display = window.stash.get('territory') ? 'initial' : 'none'
+
+        @showTerritory = not @showTerritory
+        window.stash.set 'territory' @showTerritory
+        @trr.style.display = @showTerritory ? 'initial' : 'none'
         
     # 00     00   0000000   000   000   0000000  00000000  
     # 000   000  000   000  000   000  000       000       
@@ -265,14 +269,10 @@ function Board
         d = 100/(@size+1)
         cn = stoneColor[s]
         cn += 1+(c[0]+c[1])%15 if cn == 'white'
-        src = "../img/stone_#{cn}.png" 
-        stn = elem 'img' class:"stone pos#{c[0]}_#{c[1]}" src:src, width:"auto", height:"#{d}%" parent:@stn
-        shd = elem 'img' class:"shadow pos#{c[0]}_#{c[1]}" src:'../img/shadow_hard.png', width:"auto", height:"#{1.15*d}%" parent:@shd
         x = (c[0]+0.5)*100/(@size+1)
         y = (c[1]+0.5)*100/(@size+1)
-
-        stn.style = "left:#{x}%; top:#{y}%;" 
-        shd.style = "left:#{x}%; top:#{y}%;"
+        shd = elem 'img' class:"shadow pos#{c[0]}_#{c[1]}" src:'../img/shadow_hard.png' width:'auto' height:"#{1.15*d}%" style:"left:#{x}%; top:#{y}%;" parent:@shd
+        stn = elem 'img' class:"stone pos#{c[0]}_#{c[1]}"  src:"../img/stone_#{cn}.png" width:'auto' height:"#{d}%"      style:"left:#{x}%; top:#{y}%;" parent:@stn
         
     clear: ->
         
@@ -308,24 +308,33 @@ function Board
     numbers: ->
         
         @num.innerHTML = ''
-        if @game
-            for m in @game.moves.m
-                continue if m.pos in ['pass''resign']
-                n = @game.moves.m.indexOf m
-                c = @game.coord m.pos
-                l = elem 'div' class:"number #{m.color}" parent:@num, text:1+n
-                p = @coordToPrcnt c
-                l.style = "left:#{p.x}%; top:#{p.y}%;" 
-                s = @div.getBoundingClientRect().height/(@size+1)
-                s = max 16 int s/3
-                l.style.fontSize = "#{int(2*s/3)}px"
-                l.style.width = "#{s}px"
-                l.style.height = "#{s}px"
-                l.style.borderRadius = "#{s}px"
-                if stone.empty == @game.stoneAt m.pos
-                    l.style.backgroundColor = m.color
+        return if not @game
+            
+        s = @div.getBoundingClientRect().height/(@size+1)
+        s = max 16 int s/3
+        log 'num' s
+        
+        for m in @game.moves.m
+            continue if m.pos in ['pass''resign']
+            n = @game.moves.m.indexOf m
+            c = @game.coord m.pos
+            l = elem 'div' class:"number #{m.color}" parent:@num, text:1+n
+            p = @coordToPrcnt c
+            l.style = "left:#{p.x}%; top:#{p.y}%;" 
+            l.style.fontSize = "#{int(2*s/3)}px"
+            l.style.width = "#{s}px"
+            l.style.height = "#{s}px"
+            l.style.borderRadius = "#{s}px"
+            if stone.empty == @game.stoneAt m.pos
+                l.style.backgroundColor = m.color
+                l.classList.add 'empty'
                     
     onVariation: (variation) =>
+
+        return if not @game
+                
+        s = @div.getBoundingClientRect().height/(@size+1)
+        s = max 16 s/3
         
         color = @game.nextColor()
         for m in variation
@@ -334,9 +343,7 @@ function Board
             l = elem 'div' class:"number #{color}" parent:@num, text:1+n
             p = @coordToPrcnt c
             l.style = "left:#{p.x}%; top:#{p.y}%;" 
-            s = @div.getBoundingClientRect().height/(@size+1)
-            s = max 16 int s/3
-            l.style.fontSize = "#{int(2*s/3)}px"
+            l.style.fontSize = "#{2*s/3}px"
             l.style.width = "#{s}px"
             l.style.height = "#{s}px"
             l.style.borderRadius = "#{s}px"
@@ -353,13 +360,20 @@ function Board
     liberties: ->
         
         @lib.innerHTML = ''
-        if @game
-            for color in ['black' 'white']
-                for s in @game.allStones color
-                    c = @game.coord s
-                    l = elem 'div' class:"liberty #{color}" parent:@lib, text:@game.liberties c
-                    p = @coordToPrcnt c
-                    l.style = "left:#{p.x}%; top:#{p.y}%;" 
+        return if not @game
+                
+        s = @div.getBoundingClientRect().height/(@size+1)
+        s = min 15 s/6
+        
+        for color in ['black' 'white']
+            for st in @game.allStones color
+                c = @game.coord st
+                libs = @game.liberties c
+                if libs == 1 and @showTerritory ➜ continue
+                c[0]+= 0.13
+                c[1]+= 0.1
+                p = @coordToPrcnt c
+                l = elem 'div' class:"liberty #{color}" parent:@lib, text:libs, style: "left:#{p.x}%; top:#{p.y}%; font-size: #{s}px;" 
 
     # 000000000  00000000  00000000   00000000   000  000000000   0000000   00000000   000   000  
     #    000     000       000   000  000   000  000     000     000   000  000   000   000 000   

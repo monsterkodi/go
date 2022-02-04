@@ -52,7 +52,6 @@ body
     right               0
     left                0
     top                 titlebarHeight
-    scroll              none
     overflow            hidden
     pointer-events      auto
     font-size           14px
@@ -104,6 +103,7 @@ body
 
 .numbers
 .liberties
+.territory
 .legends
     fill-abs()
     
@@ -135,10 +135,12 @@ body
 .legend
     position            absolute
     color               black
-    font-size           11px
     font-family         titlebarFont
     transform           translate(-50%, -50%)
 
+.liberty
+    font-size           13px
+    
 .legend
     font-size           13px
 
@@ -149,17 +151,19 @@ body
         color               white
     &.white
         color               black
-
+    &.empty
+        filter              drop-shadow(2px 2px 2px #0008)
+        
 .liberty.black
     color               white
 
-.eye.w
-.eye.W
-    background-color    white
-
 .eye.b
-.eye.B
+    filter              drop-shadow(2px 2px 2px #0008)
     background-color    black
+
+.eye.w
+    filter              drop-shadow(2px 2px 2px #0008)
+    background-color    white
     
 // 000000000  000  000000000  000      00000000  0000000     0000000   00000000 
 //    000     000     000     000      000       000   000  000   000  000   000
@@ -193,7 +197,7 @@ body
         filter          drop-shadow(0px 1px 1px #000d)
     background-image    url("../../img/board.png")
     background-repeat   repeat, no-repeat
-    background-size     contain
+    background-size     cover
     background-position-x   center
     border-top-left-radius  6px
     border-top-right-radius 6px
@@ -205,8 +209,8 @@ body
     
 .gameInfoLeft
 .gameInfoRight
-    flex                1 1 100px
-    width               100px
+    flex                1 1 220px
+    width               220px
     padding-left        3px
     padding-right       3px
 .gameInfoLeft

@@ -36,7 +36,6 @@ body {
   right: 0;
   left: 0;
   top: 30px;
-  scroll: none;
   overflow: hidden;
   pointer-events: auto;
   font-size: 14px;
@@ -90,6 +89,7 @@ body {
 }
 .numbers,
 .liberties,
+.territory,
 .legends {
   position: absolute;
   bottom: 0;
@@ -129,9 +129,11 @@ body {
 .legend {
   position: absolute;
   color: #000;
-  font-size: 11px;
   font-family: titlebarFont;
   transform: translate(-50%, -50%);
+}
+.liberty {
+  font-size: 13px;
 }
 .legend {
   font-size: 13px;
@@ -146,16 +148,19 @@ body {
 .number.white {
   color: #000;
 }
+.number.empty {
+  filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.533));
+}
 .liberty.black {
   color: #fff;
 }
-.eye.w,
-.eye.W {
-  background-color: #fff;
-}
-.eye.b,
-.eye.B {
+.eye.b {
+  filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.533));
   background-color: #000;
+}
+.eye.w {
+  filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.533));
+  background-color: #fff;
 }
 #titlebar {
   display: flex;
@@ -177,7 +182,7 @@ body {
   transform: translate(-50%, 20%);
   background-image: url("../../img/board.png");
   background-repeat: repeat, no-repeat;
-  background-size: contain;
+  background-size: cover;
   background-position-x: center;
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
@@ -197,8 +202,8 @@ body {
 }
 .gameInfoLeft,
 .gameInfoRight {
-  flex: 1 1 100px;
-  width: 100px;
+  flex: 1 1 220px;
+  width: 220px;
   padding-left: 3px;
   padding-right: 3px;
 }
