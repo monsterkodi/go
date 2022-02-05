@@ -26,7 +26,7 @@ function Moves
         @p = @num() ? copy(@last().p) : [0 0]
         m
         
-    clear: -> 
+    clear: ->
         
         @m = [] 
         @p = [0 0] 

@@ -1,0 +1,202 @@
+###
+000000000  00000000   00000000  00000000
+   000     000   000  000       000     
+   000     0000000    0000000   0000000 
+   000     000   000  000       000     
+   000     000   000  00000000  00000000
+###
+
+function Tree
+
+    @: (@parent) ->
+        
+        @parentCursor = copy @parent.cursor if @parent
+        @moves  = []
+        @cursor = mvi:-1, ali:0
+        
+    addMove: (pos, cpt=[]) ->
+        
+        log 'add\n'
+        
+        if @cursor.ali
+            mv = @moves[@cursor.mvi]
+            tr = mv.alt[@cursor.ali-1]
+            tr.addMove pos, cpt
+        else        
+            @cursor.mvi = @moves.length
+            @cursor.ali = 0
+            @moves.push pos:pos, cpt:cpt, alt:[]
+        
+        log @toString() + '\n'
+        
+    altMove: (pos, cpt) ->
+        
+        log 'alt\n'
+        
+        @cursor.mvi++
+        @cursor.ali = @moves[@cursor.mvi].alt.length+1
+        t = new Tree @
+        @moves[@cursor.mvi].alt.push t
+        t.addMove pos, cpt
+        
+        log @toString() + '\n'
+        
+    navigateUp: ->
+        
+        if @cursor.ali
+            mv = @moves[@cursor.mvi]
+            tr = mv.alt[@cursor.ali-1]
+            if tr.cursor.mvi > 0
+                tr.navigateUp()
+                if tr.cursor.mvi < 0
+                    @cursor.ali = 0
+                    @cursor.mvi--
+        else 
+            if  @cursor.mvi > 0 then @cursor.mvi--
+            
+    navigateDown: ->
+        
+        if @cursor.ali
+            mv = @moves[@cursor.mvi]
+            tr = mv.alt[@cursor.ali-1]
+            if tr.cursor.mvi < tr.moves.length-1
+                tr.navigateDown()
+        else if @cursor.mvi < @moves.length-1
+            @cursor.mvi++
+
+    navigateLeft: ->  
+        
+        if @cursor.ali
+            mv = @moves[@cursor.mvi]
+            tr = mv.alt[@cursor.ali-1]
+            if tr.cursor.mvi > 0
+                tr.navigateLeft()
+            else
+                if tr.cursor.mvi == 0
+                    tr.cursor.mvi = -1
+                @cursor.ali--
+        
+    navigateRight: ->  
+        
+        mv = @moves[@cursor.mvi]        
+        if @cursor.ali < mv.alt.length
+            @cursor.ali++
+            tr = mv.alt[@cursor.ali-1]
+            tr.cursor.mvi = 0
+            
+    navigate: (dir) ->
+
+        log dir + '\n'
+        
+        switch dir
+            'up'    ➜ @navigateUp()
+            'down'  ➜ @navigateDown()
+            'right' ➜ @navigateRight()
+            'left'  ➜ @navigateLeft()
+            
+        log @toString() + '\n'
+        
+    deselect: ->
+            
+        if @cursor.ali
+            mv = @moves[@cursor.mvi]
+            tr = mv.alt[@cursor.ali-1]
+            tr.deselect()
+            
+        @cursor.mvi = -1
+        @cursor.ali = 0
+        
+    select: (mvi, ali) ->
+        
+        # log mvi, ali
+        if 0 <= mvi < @moves.length
+            
+            if ali
+                if mv = @moves[mvi]
+                    if tr = mv.alt[ali-1]
+                        @deselect()
+                        @cursor.mvi = mvi
+                        @cursor.ali = ali
+                        tr.cursor.mvi = 0
+                        tr.cursor.ali = 0
+                        log @toString() + '\n'
+                        return
+                    else 
+                        log 'FORK!'
+                else
+                    log 'FARK!'
+            else
+                @deselect()
+                @cursor.mvi = mvi
+                @cursor.ali = 0
+                log @toString() + '\n'
+                return
+                
+        if tr = @treeAtMviAli mvi, ali
+            @deselect()
+            @cursor.mvi = @mviForTree tr
+            @cursor.ali = @aliForTree tr
+            tr.cursor.mvi = @relativeMvi mvi, tr
+            tr.cursor.ali = 0
+            log @toString() + '\n'
+            
+    treeAtMviAli: (mvi, ali) ->
+        
+        while mvi > 0
+            if mv = @moves[mvi]
+                if ali <= mv.alt.length
+                    return mv.alt[ali-1]
+            mvi--
+        
+    mviForTree: (tr) -> 
+        
+        mvi = 0
+        while tr.parent
+            mvi += tr.parentCursor.mvi
+            tr = tr.parent
+        mvi
+        
+    aliForTree: (tr) ->
+        
+        ali = 0
+        while tr.parent
+            ali += tr.parentCursor.ali
+            tr = tr.parent
+        ali
+        
+    relativeMvi: (mvi, tr) ->
+        
+        mvi - @mviForTree tr
+            
+    depth: -> @moves.length
+    width: -> 
+        w = 1
+        for m in @moves
+            for t in m.alt
+                w += t.width()
+        w
+    
+    toLines: ->
+
+        s = []
+        a = []
+        for mi in 0...@moves.length
+            m = @moves[mi]
+            if @cursor.ali == 0 and @cursor.mvi == mi
+                s.push rpad 4 m.pos+'◂'
+            else
+                s.push rpad 4 m.pos
+            a.push m.alt
+            
+        for i in a.length-1..0
+            for t in a[i]
+                li = 0
+                for tl in t.toLines()
+                    s[i+li] ?= rpad 4
+                    s[i+li] += tl
+                    li++
+        s
+                    
+    toString: -> @toLines().map((l) -> rtrim l).join '\n'
+
+module.exports = Tree

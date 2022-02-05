@@ -1,0 +1,177 @@
+###
+000000000  00000000   00000000  00000000
+   000     000   000  000       000     
+   000     0000000    0000000   0000000 
+   000     000   000  000       000     
+   000     000   000  00000000  00000000
+###
+
+Tree = require '../tree'
+
+▸ tree
+    
+    t = new Tree
+
+    ▸ init
+        
+        t.toString() ▸ ''
+        
+        t.addMove 'C3'
+        
+        t.toString() ▸ 'C3◂'
+        
+        t.addMove 'B2'
+        
+        t.toString() ▸ 
+        """
+        C3
+        B2◂
+        """
+        
+    ▸ navigate
+    
+        t.navigate 'up'
+
+        t.toString() ▸ 
+        """
+        C3◂
+        B2
+        """
+
+        for d in ['up''left''right']
+            t.navigate d
+    
+            t.toString() ▸ 
+            """
+            C3◂
+            B2
+            """
+        
+        t.altMove 'B3'
+        
+        t.toString() ▸ 
+        """
+        C3
+        B2  B3◂
+        """
+        
+        t.navigate 'up'
+        
+        t.toString() ▸ 
+        """
+        C3
+        B2  B3◂
+        """
+
+        for d in ['up''down''right']
+            t.navigate d
+            
+            t.toString() ▸ 
+            """
+            C3
+            B2  B3◂
+            """
+
+        t.navigate 'left'
+        
+        t.toString() ▸ 
+        """
+        C3
+        B2◂ B3
+        """
+
+        for d in ['left''down']
+            t.navigate 'left'
+            
+            t.toString() ▸ 
+            """
+            C3
+            B2◂ B3
+            """
+
+        t.navigate 'right'
+        
+        t.toString() ▸ 
+        """
+        C3
+        B2  B3◂
+        """
+        
+    ▸ addmove
+    
+        t.addMove 'A1'
+        
+        t.toString() ▸ 
+        """
+        C3
+        B2  B3
+            A1◂
+        """
+
+        t.addMove 'A2'
+        
+        t.toString() ▸ 
+        """
+        C3
+        B2  B3
+            A1
+            A2◂
+        """
+
+        t.addMove 'A3'
+        
+        t.toString() ▸ 
+        """
+        C3
+        B2  B3
+            A1
+            A2
+            A3◂
+        """
+        
+    ▸ select
+    
+        t.select 1 1
+
+        t.toString() ▸ 
+        """
+        C3
+        B2  B3◂
+            A1
+            A2
+            A3
+        """
+
+        t.select 0 0
+
+        t.toString() ▸ 
+        """
+        C3◂
+        B2  B3
+            A1
+            A2
+            A3
+        """
+
+        t.select 1 0
+
+        t.toString() ▸ 
+        """
+        C3
+        B2◂ B3
+            A1
+            A2
+            A3
+        """
+
+        t.select 2 1
+
+        t.toString() ▸ 
+        """
+        C3
+        B2  B3
+            A1◂
+            A2
+            A3
+        """
+        
