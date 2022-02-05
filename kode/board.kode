@@ -16,10 +16,10 @@ function Board
     @: (@parent, @size=19) ->
         
         @div = elem 'div' class:'board'     parent:@parent
-        @img = elem 'img' class:'wood'      src:'../img/board.png' parent:@div
+        @img = elem 'img' class:'wood'      src:'../img/spacer.png' parent:@div
         # @blk = elem 'div' class:'blank'     parent:@div
         @shd = elem 'div' class:'shadows'   parent:@div
-        @lgd = elem 'div' class:'legends'   parent:@div
+        @leg = elem 'div' class:'legends'   parent:@div
         
         @div.addEventListener 'mousemove'  @onMouseMove
         @div.addEventListener 'mousedown'  @onMouseDown
@@ -37,19 +37,18 @@ function Board
         @stn = elem 'div' class:'stones'      parent:@div
         @lib = elem 'div' class:'liberties'   parent:@div
         @num = elem 'div' class:'numbers'     parent:@div
-        @trr = elem 'div' class:'territory'   parent:@div
+        @ter = elem 'div' class:'territory'   parent:@div
         @hlt = elem 'div' class:'highlts'     parent:@div
         @hvw = elem 'div' class:"hover white" parent:@hlt
         @hvb = elem 'div' class:"hover black" parent:@hlt
         @hvw.style = "width:#{h}%; height:#{h}%; display:none;" 
         @hvb.style = "width:#{h}%; height:#{h}%; display:none;" 
         @hvr = white:@hvw, black:@hvb
-        
-        @num.style.display = window.stash.get('numbers') ? 'initial' : 'none'
-        @lib.style.display = window.stash.get('liberties') ? 'initial' : 'none'
-        
-        @showTerritory = window.stash.get 'territory'
-        @trr.style.display = window.stash.get('territory') ? 'initial' : 'none'
+       
+        @show = {}
+        for key in ['numbers''liberties''territory''legend']
+            @show[key] = window.stash.get key
+            @[key[...3]].style.display = @show[key] ? 'initial' : 'none'
         
         @lst = elem 'div' class:"last" parent:@hlt
         @lst.style = "display:none;"
@@ -67,7 +66,7 @@ function Board
         
         s = @div.getBoundingClientRect().height/(@size+1)
         s = max 10 s/6
-        @lgd.style.fontSize = "#{s}px"
+        @leg.style.fontSize = "#{s}px"
         
     # 000      000  000   000  00000000   0000000  
     # 000      000  0000  000  000       000       
@@ -123,23 +122,23 @@ function Board
                 
         for x in 0...@size
             
-            n = elem 'div' class:'legend' text:alpha[x], parent:@lgd
+            n = elem 'div' class:'legend' text:alpha[x], parent:@leg
             n.style.left = "#{d*(x+1)}%"
             n.style.top = "#{d/4}%"
             
-            n = elem 'div' class:'legend' text:alpha[x], parent:@lgd
+            n = elem 'div' class:'legend' text:alpha[x], parent:@leg
             n.style.left = "#{d*(x+1)}%"
             n.style.top = "#{100-d/4}%"
 
-            n = elem 'div' class:'legend' text:@size-x, parent:@lgd
+            n = elem 'div' class:'legend' text:@size-x, parent:@leg
             n.style.left = "#{d/4}%"
             n.style.top = "#{d*(x+1)}%"
             
-            n = elem 'div' class:'legend' text:@size-x, parent:@lgd
+            n = elem 'div' class:'legend' text:@size-x, parent:@leg
             n.style.left = "#{100-d/4}%"
             n.style.top = "#{d*(x+1)}%"
             
-            @lgd.style.display = window.stash.get('legend') ? 'initial' : 'none'
+            @leg.style.display = window.stash.get('legend') ? 'initial' : 'none'
                     
     # 000000000   0000000    0000000    0000000   000      00000000  
     #    000     000   000  000        000        000      000       
@@ -147,30 +146,15 @@ function Board
     #    000     000   000  000   000  000   000  000      000       
     #    000      0000000    0000000    0000000   0000000  00000000  
     
-    toggleNumbers: ->
+    toggleNumbers:    -> @toggleShow 'numbers'
+    toggleLiberties:  -> @toggleShow 'liberties'
+    toggleTerritory:  -> @toggleShow 'territory'
+    toggleLegend:     -> @toggleShow 'legend'
+    toggleShow: (key) ->
         
-        window.stash.set 'numbers' not window.stash.get 'numbers'
-        @num.style.display = window.stash.get('numbers') ? 'initial' : 'none'
-        # if window.stash.get('numbers') and window.stash.get 'liberties'
-            # @toggleLiberties()
-            
-    toggleLiberties: ->
-        
-        window.stash.set 'liberties' not window.stash.get 'liberties'
-        @lib.style.display = window.stash.get('liberties') ? 'initial' : 'none'
-        # if window.stash.get('liberties') and window.stash.get 'numbers'
-            # @toggleNumbers()
-
-    toggleLegend: ->
-        
-        window.stash.set 'legend' not window.stash.get 'legend'            
-        @lgd.style.display = window.stash.get('legend') ? 'initial' : 'none'
-
-    toggleTerritory: ->
-
-        @showTerritory = not @showTerritory
-        window.stash.set 'territory' @showTerritory
-        @trr.style.display = @showTerritory ? 'initial' : 'none'
+        @show[key] = not @show[key]
+        window.stash.set key, @show[key]
+        @[key[...3]].style.display = @show[key] ? 'initial' : 'none'
         
     # 00     00   0000000   000   000   0000000  00000000  
     # 000   000  000   000  000   000  000       000       
@@ -230,8 +214,7 @@ function Board
             return
             
         r = @coordToPrcnt @game.lastCoord()
-        # log 'showLastMove' r, @game.lastPos(), @game.lastColor()
-        d = @div.getBoundingClientRect().height/(@size+1)
+        d = @divRect.height/(@size+1)
         @lst.style.left         = "#{r.x}%"
         @lst.style.top          = "#{r.y}%"
         @lst.style.width        = "#{0.5*d}px"
@@ -285,7 +268,7 @@ function Board
     clear: ->
         
         @lst.style.display = 'none'
-        @trr.innerHTML = ''
+        @ter.innerHTML = ''
         @num.innerHTML = ''
         @lib.innerHTML = ''
         @stn.innerHTML = ''
@@ -301,6 +284,7 @@ function Board
     
     annotate: ->
 
+        @divRect = @div.getBoundingClientRect()
         @div.remove()
         @showLastMove()
         @numbers()
@@ -320,9 +304,8 @@ function Board
         @num.innerHTML = ''
         return if not @game
             
-        s = @div.getBoundingClientRect().height/(@size+1)
+        s = @divRect.height/(@size+1)
         s = max 16 int s/3
-        log 'num' s
         
         for m in @game.moves.m
             continue if m.pos in ['pass''resign']
@@ -336,14 +319,14 @@ function Board
             l.style.height = "#{s}px"
             l.style.borderRadius = "#{s}px"
             if stone.empty == @game.stoneAt m.pos
-                l.style.backgroundColor = m.color
+                l.style.backgroundColor = m.color == 'white' ? '#faeeea' : 'black'
                 l.classList.add 'empty'
                     
     onVariation: (variation) =>
 
         return if not @game
                 
-        s = @div.getBoundingClientRect().height/(@size+1)
+        s = @divRect.height/(@size+1)
         s = max 16 s/3
         
         color = @game.nextColor()
@@ -370,16 +353,16 @@ function Board
     liberties: ->
         
         @lib.innerHTML = ''
-        return if not @game
+        return if not @game or not @show.liberties
                 
-        s = @div.getBoundingClientRect().height/(@size+1)
+        s = @divRect.height/(@size+1)
         s = min 15 s/6
         
         for color in ['black' 'white']
             for st in @game.allStones color
                 c = @game.coord st
                 libs = @game.liberties c
-                if libs == 1 and @showTerritory ➜ continue
+                if libs == 1 and @show.territory ➜ continue
                 c[0]+= 0.13
                 c[1]+= 0.1
                 p = @coordToPrcnt c
@@ -393,26 +376,26 @@ function Board
     
     territory: ->
         
-        @trr.innerHTML = ''
+        @ter.innerHTML = ''
         if @game
             if @game.moves.num() > 1
-                            
+
+                s = @divRect.height/(@size+1)
+                s /= 4
+                s = s.toFixed 2
+                
                 for a in @game.areas
                     if a.color in 'wbWB'
                         for p in a.posl
-                            e = elem 'div' class:"eye #{a.color}" parent:@trr
+                            e = elem 'div' class:"eye #{a.color}" parent:@ter
                             r = @coordToPrcnt @game.coord p
-                            s = 22/(@size+1)
-                            s = s.toFixed 2
-                            e.style = "left:#{r.x}%; top:#{r.y}%; width:#{s}%; height:#{s}%;" 
+                            e.style = "left:#{r.x}%; top:#{r.y}%; width:#{s}px; height:#{s}px; border-radius:#{s}px;" 
                     
                 for g in @game.grps
                     if g.state == 'dead'
                         for p in g.posl
-                            e = elem 'div' class:"eye #{opponent[stoneColor[g.stone]][0]}" parent:@trr
+                            e = elem 'div' class:"eye #{opponent[stoneColor[g.stone]][0]}" parent:@ter
                             r = @coordToPrcnt @game.coord p
-                            s = 22/(@size+1)
-                            s = s.toFixed 2
-                            e.style = "left:#{r.x}%; top:#{r.y}%; width:#{s}%; height:#{s}%;" 
+                            e.style = "left:#{r.x}%; top:#{r.y}%; width:#{s}px; height:#{s}px; border-radius:#{s}px;" 
 
 module.exports = Board

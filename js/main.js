@@ -2,11 +2,10 @@
 
 var _k_
 
-var abs, app, BrowserWindow, post, win, wins
+var abs, app, BrowserWindow, post, wins
 
 app = require('kxk').app
 post = require('kxk').post
-win = require('kxk').win
 
 BrowserWindow = require('electron').BrowserWindow
 
@@ -62,12 +61,7 @@ class Main extends app
     }
 
     onWinResize (win)
-    {
-        var br
-
-        br = win.getBounds()
-        return win.setMinSize(br.height - 30,0)
-    }
+    {}
 
     onWinReady (win)
     {}

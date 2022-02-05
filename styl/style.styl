@@ -30,6 +30,9 @@ fill-abs()
     right               0
     left                0
     top                 0
+    
+board-img()
+    background-image    url("../../img/board.png")
 
 // 0000000     0000000   0000000    000   000
 // 000   000  000   000  000   000   000 000 
@@ -57,14 +60,6 @@ body
     font-size           14px
     font-family         titlebarFont
     
-.row
-    display             flex
-    justify-content     center
-    background-image    url("../../img/board.png")
-    background-repeat   repeat, no-repeat
-    background-size     contain
-    background-position-x  center
-
 // 0000000     0000000    0000000   00000000   0000000    
 // 000   000  000   000  000   000  000   000  000   000  
 // 0000000    000   000  000000000  0000000    000   000  
@@ -76,6 +71,7 @@ body
 
 .wood
     opacity             0
+    width               auto
     
 .wood
 .blank
@@ -83,7 +79,8 @@ body
 
 .blank
     fill-abs()
-    background-color    #666
+    background-color    rgb(242,200,113)
+    opacity             0.5
     
 .lines
     position            absolute
@@ -145,7 +142,7 @@ body
     text-align          center
     line-height         1.56
     &.black
-        color               white
+        color               #faeeea
     &.white
         color               black
     &.empty
@@ -157,11 +154,11 @@ body
 .eye.b
     filter              drop-shadow(2px 2px 2px #0008)
     background-color    black
-    opacity             0.9
+    opacity             0.85
 
 .eye.w
     filter              drop-shadow(2px 2px 2px #0008)
-    background-color    white
+    background-color    #faeeea
     opacity             0.9
     
 // 000000000  000  000000000  000      00000000  0000000     0000000   00000000 
@@ -184,7 +181,17 @@ body
     font                titlebarFont
     flex                1 1
     
+.row
+    board-img()
+    display             flex
+    justify-content     center
+    background-position-x  center
+    background-position-y  -24px
+    border-radius       6px
+    
 .gameInfo
+    board-img()
+    justify-content     center
     position            absolute
     left                50%
     transform           translate(-50%, 20%)
@@ -194,9 +201,6 @@ body
     & .white
         color           white
         filter          drop-shadow(0px 1px 1px #000d)
-    background-image    url("../../img/board.png")
-    background-repeat   repeat, no-repeat
-    background-size     cover
     background-position-x   center
     border-top-left-radius  6px
     border-top-right-radius 6px

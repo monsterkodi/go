@@ -6,7 +6,7 @@
 000   000  000   000  000  000   000
 ###
 
-{ app, post, win } = require 'kxk'
+{ app, post } = require 'kxk'
 
 { BrowserWindow } = require 'electron'
     
@@ -60,8 +60,8 @@ class Main extends app
        
     onWinResize: (win) =>
         
-        br = win.getBounds()
-        win.setMinSize br.height - 30, 0
+        # br = win.getBounds()
+        # win.setMinSize br.height - 30, 0
         # if br.height - 30 > br.width
             # win.setSize br.width, br.width+30
         
