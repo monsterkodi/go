@@ -19,47 +19,74 @@ Tree = (function ()
         this.cursor = {mvi:-1,ali:0}
     }
 
-    Tree.prototype["addMove"] = function (pos, cpt = [])
+    Tree.prototype["cursorTree"] = function ()
     {
-        var mv, tr
-
-        console.log('add\n')
         if (this.cursor.ali)
         {
-            mv = this.moves[this.cursor.mvi]
-            tr = mv.alt[this.cursor.ali - 1]
+            return this.moves[this.cursor.mvi].alt[this.cursor.ali - 1]
+        }
+    }
+
+    Tree.prototype["addMove"] = function (pos, cpt = [])
+    {
+        var t, tr
+
+        console.log('add\n')
+        if (tr = this.cursorTree())
+        {
             tr.addMove(pos,cpt)
         }
         else
         {
-            this.cursor.mvi = this.moves.length
-            this.cursor.ali = 0
-            this.moves.push({pos:pos,cpt:cpt,alt:[]})
+            if (this.cursor.mvi === this.moves.length - 1)
+            {
+                this.cursor.mvi = this.moves.length
+                this.cursor.ali = 0
+                this.moves.push({pos:pos,cpt:cpt,alt:[]})
+            }
+            else
+            {
+                this.cursor.mvi++
+                this.cursor.ali = this.moves[this.cursor.mvi].alt.length + 1
+                t = new Tree(this)
+                this.moves[this.cursor.mvi].alt.push(t)
+                t.addMove(pos,cpt)
+            }
         }
         console.log(this.toString() + '\n')
     }
 
-    Tree.prototype["altMove"] = function (pos, cpt)
+    Tree.prototype["navigate"] = function (dir)
     {
-        var t
+        console.log(dir + '\n')
+        switch (dir)
+        {
+            case 'up':
+                this.navigateUp()
+                break
+            case 'down':
+                this.navigateDown()
+                break
+            case 'right':
+                this.navigateRight()
+                break
+            case 'left':
+                this.navigateLeft()
+                break
+            case 'back':
+                this.navigateBack()
+                break
+        }
 
-        console.log('alt\n')
-        this.cursor.mvi++
-        this.cursor.ali = this.moves[this.cursor.mvi].alt.length + 1
-        t = new Tree(this)
-        this.moves[this.cursor.mvi].alt.push(t)
-        t.addMove(pos,cpt)
         console.log(this.toString() + '\n')
     }
 
     Tree.prototype["navigateUp"] = function ()
     {
-        var mv, tr
+        var tr
 
-        if (this.cursor.ali)
+        if (tr = this.cursorTree())
         {
-            mv = this.moves[this.cursor.mvi]
-            tr = mv.alt[this.cursor.ali - 1]
             if (tr.cursor.mvi > 0)
             {
                 tr.navigateUp()
@@ -81,12 +108,10 @@ Tree = (function ()
 
     Tree.prototype["navigateDown"] = function ()
     {
-        var mv, tr
+        var tr
 
-        if (this.cursor.ali)
+        if (tr = this.cursorTree())
         {
-            mv = this.moves[this.cursor.mvi]
-            tr = mv.alt[this.cursor.ali - 1]
             if (tr.cursor.mvi < tr.moves.length - 1)
             {
                 return tr.navigateDown()
@@ -100,12 +125,10 @@ Tree = (function ()
 
     Tree.prototype["navigateLeft"] = function ()
     {
-        var mv, tr
+        var tr
 
-        if (this.cursor.ali)
+        if (tr = this.cursorTree())
         {
-            mv = this.moves[this.cursor.mvi]
-            tr = mv.alt[this.cursor.ali - 1]
             if (tr.cursor.mvi > 0)
             {
                 return tr.navigateLeft()
@@ -134,40 +157,51 @@ Tree = (function ()
         }
     }
 
-    Tree.prototype["navigate"] = function (dir)
+    Tree.prototype["navigateBack"] = function ()
     {
-        console.log(dir + '\n')
-        switch (dir)
-        {
-            case 'up':
-                this.navigateUp()
-                break
-            case 'down':
-                this.navigateDown()
-                break
-            case 'right':
-                this.navigateRight()
-                break
-            case 'left':
-                this.navigateLeft()
-                break
-        }
+        var tr, _113_23_, _114_23_
 
-        console.log(this.toString() + '\n')
+        if (tr = this.cursorTree())
+        {
+            return tr.navigateBack()
+        }
+        else
+        {
+            if (this.cursor.mvi === 0)
+            {
+                ;(this.parent != null ? this.parent.navigateLeftmost() : undefined)
+                return (this.parent != null ? this.parent.navigateUp() : undefined)
+            }
+            else
+            {
+                return this.navigateUp()
+            }
+        }
     }
 
-    Tree.prototype["deselect"] = function ()
+    Tree.prototype["navigateLeftmost"] = function ()
     {
-        var mv, tr
+        var tr
 
-        if (this.cursor.ali)
+        if (tr = this.cursorTree())
         {
-            mv = this.moves[this.cursor.mvi]
-            tr = mv.alt[this.cursor.ali - 1]
-            tr.deselect()
+            if (tr.cursor.ali)
+            {
+                return tr.navigateLeftmost()
+            }
+            else
+            {
+                tr.cursor.mvi = -1
+                return this.cursor.ali = 0
+            }
         }
-        this.cursor.mvi = -1
-        return this.cursor.ali = 0
+        else
+        {
+            if (this.parent)
+            {
+                return this.cursor.mvi = -1
+            }
+        }
     }
 
     Tree.prototype["select"] = function (mvi, ali)
@@ -218,6 +252,18 @@ Tree = (function ()
             tr.cursor.ali = 0
             console.log(this.toString() + '\n')
         }
+    }
+
+    Tree.prototype["deselect"] = function ()
+    {
+        var tr
+
+        if (tr = this.cursorTree())
+        {
+            tr.deselect()
+        }
+        this.cursor.mvi = -1
+        return this.cursor.ali = 0
     }
 
     Tree.prototype["treeAtMviAli"] = function (mvi, ali)
@@ -279,13 +325,13 @@ Tree = (function ()
 
         w = 1
         var list = _k_.list(this.moves)
-        for (var _174_14_ = 0; _174_14_ < list.length; _174_14_++)
+        for (var _215_14_ = 0; _215_14_ < list.length; _215_14_++)
         {
-            m = list[_174_14_]
+            m = list[_215_14_]
             var list1 = _k_.list(m.alt)
-            for (var _175_18_ = 0; _175_18_ < list1.length; _175_18_++)
+            for (var _216_18_ = 0; _216_18_ < list1.length; _216_18_++)
             {
-                t = list1[_175_18_]
+                t = list1[_216_18_]
                 w += t.width()
             }
         }
@@ -294,11 +340,11 @@ Tree = (function ()
 
     Tree.prototype["toLines"] = function ()
     {
-        var a, i, li, m, mi, s, t, tl, _195_28_
+        var a, i, li, m, mi, s, t, tl, _242_28_
 
         s = []
         a = []
-        for (var _183_18_ = mi = 0, _183_22_ = this.moves.length; (_183_18_ <= _183_22_ ? mi < this.moves.length : mi > this.moves.length); (_183_18_ <= _183_22_ ? ++mi : --mi))
+        for (var _230_18_ = mi = 0, _230_22_ = this.moves.length; (_230_18_ <= _230_22_ ? mi < this.moves.length : mi > this.moves.length); (_230_18_ <= _230_22_ ? ++mi : --mi))
         {
             m = this.moves[mi]
             if (this.cursor.ali === 0 && this.cursor.mvi === mi)
@@ -311,18 +357,18 @@ Tree = (function ()
             }
             a.push(m.alt)
         }
-        for (var _191_17_ = i = a.length - 1, _191_29_ = 0; (_191_17_ <= _191_29_ ? i <= 0 : i >= 0); (_191_17_ <= _191_29_ ? ++i : --i))
+        for (var _238_17_ = i = a.length - 1, _238_29_ = 0; (_238_17_ <= _238_29_ ? i <= 0 : i >= 0); (_238_17_ <= _238_29_ ? ++i : --i))
         {
             var list = _k_.list(a[i])
-            for (var _192_18_ = 0; _192_18_ < list.length; _192_18_++)
+            for (var _239_18_ = 0; _239_18_ < list.length; _239_18_++)
             {
-                t = list[_192_18_]
+                t = list[_239_18_]
                 li = 0
                 var list1 = _k_.list(t.toLines())
-                for (var _194_23_ = 0; _194_23_ < list1.length; _194_23_++)
+                for (var _241_23_ = 0; _241_23_ < list1.length; _241_23_++)
                 {
-                    tl = list1[_194_23_]
-                    s[i + li] = ((_195_28_=s[i + li]) != null ? _195_28_ : _k_.rpad(4))
+                    tl = list1[_241_23_]
+                    s[i + li] = ((_242_28_=s[i + li]) != null ? _242_28_ : _k_.rpad(4))
                     s[i + li] += tl
                     li++
                 }

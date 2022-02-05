@@ -14,76 +14,40 @@ function Tree
         @moves  = []
         @cursor = mvi:-1, ali:0
         
+    cursorTree: -> @moves[@cursor.mvi].alt[@cursor.ali-1] if @cursor.ali
+        
+    #  0000000   0000000    0000000    00     00   0000000   000   000  00000000  
+    # 000   000  000   000  000   000  000   000  000   000  000   000  000       
+    # 000000000  000   000  000   000  000000000  000   000   000 000   0000000   
+    # 000   000  000   000  000   000  000 0 000  000   000     000     000       
+    # 000   000  0000000    0000000    000   000   0000000       0      00000000  
+    
     addMove: (pos, cpt=[]) ->
         
         log 'add\n'
         
-        if @cursor.ali
-            mv = @moves[@cursor.mvi]
-            tr = mv.alt[@cursor.ali-1]
+        if tr = @cursorTree()
             tr.addMove pos, cpt
-        else        
-            @cursor.mvi = @moves.length
-            @cursor.ali = 0
-            @moves.push pos:pos, cpt:cpt, alt:[]
-        
-        log @toString() + '\n'
-        
-    altMove: (pos, cpt) ->
-        
-        log 'alt\n'
-        
-        @cursor.mvi++
-        @cursor.ali = @moves[@cursor.mvi].alt.length+1
-        t = new Tree @
-        @moves[@cursor.mvi].alt.push t
-        t.addMove pos, cpt
-        
-        log @toString() + '\n'
-        
-    navigateUp: ->
-        
-        if @cursor.ali
-            mv = @moves[@cursor.mvi]
-            tr = mv.alt[@cursor.ali-1]
-            if tr.cursor.mvi > 0
-                tr.navigateUp()
-                if tr.cursor.mvi < 0
-                    @cursor.ali = 0
-                    @cursor.mvi--
-        else 
-            if  @cursor.mvi > 0 then @cursor.mvi--
-            
-    navigateDown: ->
-        
-        if @cursor.ali
-            mv = @moves[@cursor.mvi]
-            tr = mv.alt[@cursor.ali-1]
-            if tr.cursor.mvi < tr.moves.length-1
-                tr.navigateDown()
-        else if @cursor.mvi < @moves.length-1
-            @cursor.mvi++
-
-    navigateLeft: ->  
-        
-        if @cursor.ali
-            mv = @moves[@cursor.mvi]
-            tr = mv.alt[@cursor.ali-1]
-            if tr.cursor.mvi > 0
-                tr.navigateLeft()
+        else
+            if @cursor.mvi == @moves.length-1
+                @cursor.mvi = @moves.length
+                @cursor.ali = 0
+                @moves.push pos:pos, cpt:cpt, alt:[]
             else
-                if tr.cursor.mvi == 0
-                    tr.cursor.mvi = -1
-                @cursor.ali--
+                @cursor.mvi++
+                @cursor.ali = @moves[@cursor.mvi].alt.length+1
+                t = new Tree @
+                @moves[@cursor.mvi].alt.push t
+                t.addMove pos, cpt
         
-    navigateRight: ->  
+        log @toString() + '\n'
         
-        mv = @moves[@cursor.mvi]        
-        if @cursor.ali < mv.alt.length
-            @cursor.ali++
-            tr = mv.alt[@cursor.ali-1]
-            tr.cursor.mvi = 0
-            
+    # 000   000   0000000   000   000  000   0000000    0000000   000000000  00000000  
+    # 0000  000  000   000  000   000  000  000        000   000     000     000       
+    # 000 0 000  000000000   000 000   000  000  0000  000000000     000     0000000   
+    # 000  0000  000   000     000     000  000   000  000   000     000     000       
+    # 000   000  000   000      0      000   0000000   000   000     000     00000000  
+    
     navigate: (dir) ->
 
         log dir + '\n'
@@ -93,19 +57,82 @@ function Tree
             'down'  ➜ @navigateDown()
             'right' ➜ @navigateRight()
             'left'  ➜ @navigateLeft()
+            'back'  ➜ @navigateBack()
             
-        log @toString() + '\n'
+        log @toString() + '\n'                    
         
-    deselect: ->
+    navigateUp: ->
+        
+        if tr = @cursorTree()
+            if tr.cursor.mvi > 0
+                tr.navigateUp()
+                if tr.cursor.mvi < 0
+                    @cursor.ali = 0
+                    @cursor.mvi--
+        else 
+            if @cursor.mvi > 0 then @cursor.mvi--
             
-        if @cursor.ali
-            mv = @moves[@cursor.mvi]
+    navigateDown: ->
+        
+        if tr = @cursorTree()
+            if tr.cursor.mvi < tr.moves.length-1
+                tr.navigateDown()
+        else if @cursor.mvi < @moves.length-1
+            @cursor.mvi++
+
+    navigateLeft: ->  
+        
+        if tr = @cursorTree()
+            if tr.cursor.mvi > 0
+                tr.navigateLeft()
+            else
+                if tr.cursor.mvi == 0
+                    tr.cursor.mvi = -1
+                @cursor.ali--
+        
+    navigateRight: ->
+        
+        mv = @moves[@cursor.mvi]        
+        if @cursor.ali < mv.alt.length
+            @cursor.ali++
             tr = mv.alt[@cursor.ali-1]
-            tr.deselect()
+            tr.cursor.mvi = 0
             
-        @cursor.mvi = -1
-        @cursor.ali = 0
+    # 0000000     0000000    0000000  000   000  
+    # 000   000  000   000  000       000  000   
+    # 0000000    000000000  000       0000000    
+    # 000   000  000   000  000       000  000   
+    # 0000000    000   000   0000000  000   000  
+    
+    navigateBack: ->
         
+        if tr = @cursorTree()
+            tr.navigateBack()
+        else
+            if @cursor.mvi == 0
+                @parent?.navigateLeftmost()
+                @parent?.navigateUp()
+            else
+                @navigateUp()
+            
+    navigateLeftmost: ->  
+        
+        if tr = @cursorTree()
+            if tr.cursor.ali
+                tr.navigateLeftmost()
+            else
+                tr.cursor.mvi = -1
+                @cursor.ali = 0
+        else
+            if @parent
+                @cursor.mvi = -1
+                    
+    #  0000000  00000000  000      00000000   0000000  000000000  
+    # 000       000       000      000       000          000     
+    # 0000000   0000000   000      0000000   000          000     
+    #      000  000       000      000       000          000     
+    # 0000000   00000000  0000000  00000000   0000000     000     
+    
     select: (mvi, ali) ->
         
         # log mvi, ali
@@ -140,6 +167,20 @@ function Tree
             tr.cursor.ali = 0
             log @toString() + '\n'
             
+    deselect: ->
+            
+        if tr = @cursorTree()
+            tr.deselect()
+            
+        @cursor.mvi = -1
+        @cursor.ali = 0
+            
+    # 000000000  00000000   00000000  00000000   0000000   000000000  
+    #    000     000   000  000       000       000   000     000     
+    #    000     0000000    0000000   0000000   000000000     000     
+    #    000     000   000  000       000       000   000     000     
+    #    000     000   000  00000000  00000000  000   000     000     
+    
     treeAtMviAli: (mvi, ali) ->
         
         while mvi > 0
@@ -175,6 +216,12 @@ function Tree
             for t in m.alt
                 w += t.width()
         w
+    
+    # 000000000   0000000   000      000  000   000  00000000   0000000  
+    #    000     000   000  000      000  0000  000  000       000       
+    #    000     000   000  000      000  000 0 000  0000000   0000000   
+    #    000     000   000  000      000  000  0000  000            000  
+    #    000      0000000   0000000  000  000   000  00000000  0000000   
     
     toLines: ->
 
