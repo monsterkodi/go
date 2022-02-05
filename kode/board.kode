@@ -262,8 +262,8 @@ function Board
         cn += 1+(c[0]+c[1])%15 if cn == 'white'
         x = (c[0]+0.5)*100/(@size+1)
         y = (c[1]+0.5)*100/(@size+1)
-        shd = elem 'img' class:"shadow pos#{c[0]}_#{c[1]}" src:'../img/shadow_hard.png' width:'auto' height:"#{1.15*d}%" style:"left:#{x}%; top:#{y}%;" parent:@shd
-        stn = elem 'img' class:"stone pos#{c[0]}_#{c[1]}"  src:"../img/stone_#{cn}.png" width:'auto' height:"#{d}%"      style:"left:#{x}%; top:#{y}%;" parent:@stn
+        shd = elem 'img' class:"shadow pos#{c[0]}_#{c[1]}" src:'../img/shadow.png' width:'auto' height:"#{1.15*d}%" style:"left:#{x}%; top:#{y}%;" parent:@shd
+        stn = elem 'img' class:"stone pos#{c[0]}_#{c[1]}"  src:"../img/stone_#{cn}.png" width:'auto' height:"#{d}%" style:"left:#{x}%; top:#{y}%;" parent:@stn
         
     clear: ->
         

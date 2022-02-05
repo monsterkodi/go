@@ -307,7 +307,7 @@ Board = (function ()
         }
         x = (c[0] + 0.5) * 100 / (this.size + 1)
         y = (c[1] + 0.5) * 100 / (this.size + 1)
-        shd = elem('img',{class:`shadow pos${c[0]}_${c[1]}`,src:'../img/shadow_hard.png',width:'auto',height:`${1.15 * d}%`,style:`left:${x}%; top:${y}%;`,parent:this.shd})
+        shd = elem('img',{class:`shadow pos${c[0]}_${c[1]}`,src:'../img/shadow.png',width:'auto',height:`${1.15 * d}%`,style:`left:${x}%; top:${y}%;`,parent:this.shd})
         return stn = elem('img',{class:`stone pos${c[0]}_${c[1]}`,src:`../img/stone_${cn}.png`,width:'auto',height:`${d}%`,style:`left:${x}%; top:${y}%;`,parent:this.stn})
     }
 
