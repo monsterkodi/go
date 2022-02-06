@@ -2,7 +2,7 @@
 
 var _k_ = {empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}}
 
-var Board, elem, Game, GNU, Hara, Katago, kxk, Leelaz, opponent, post, Referee, SGF
+var Board, elem, Game, GNU, Hara, Katago, kxk, Leelaz, opponent, post, Referee, SGF, Tree
 
 kxk = require('kxk')
 elem = kxk.elem
@@ -16,6 +16,7 @@ Katago = require('./bot/katago')
 Hara = require('./bot/hara')
 GNU = require('./bot/gnu')
 Board = require('./board')
+Tree = require('./tree')
 Game = require('./game')
 
 Referee = (function ()
@@ -36,15 +37,16 @@ Referee = (function ()
 
     Referee.prototype["newGame"] = function (gi = {})
     {
-        var info, moves, _43_33_, _44_33_, _45_33_, _46_33_, _47_33_, _48_33_, _82_20_, _83_20_
+        var info, moves, _44_33_, _45_33_, _46_33_, _47_33_, _48_33_, _49_33_, _84_20_, _85_20_
 
-        this.white = ((_43_33_=gi.white) != null ? _43_33_ : this.white)
-        this.black = ((_44_33_=gi.black) != null ? _44_33_ : this.black)
-        this.handicap = ((_45_33_=gi.handicap) != null ? _45_33_ : this.handicap)
-        this.boardsize = ((_46_33_=gi.size) != null ? _46_33_ : this.boardsize)
-        moves = ((_47_33_=gi.moves) != null ? _47_33_ : [])
-        info = ((_48_33_=gi.info) != null ? _48_33_ : {})
+        this.white = ((_44_33_=gi.white) != null ? _44_33_ : this.white)
+        this.black = ((_45_33_=gi.black) != null ? _45_33_ : this.black)
+        this.handicap = ((_46_33_=gi.handicap) != null ? _46_33_ : this.handicap)
+        this.boardsize = ((_47_33_=gi.size) != null ? _47_33_ : this.boardsize)
+        moves = ((_48_33_=gi.moves) != null ? _48_33_ : [])
+        info = ((_49_33_=gi.info) != null ? _49_33_ : {})
         this.redos = []
+        this.tree = new Tree
         if (this.white === 'leelaz' || this.black === 'leelaz')
         {
             this.boardsize = 19
@@ -114,23 +116,22 @@ Referee = (function ()
 
     Referee.prototype["replay"] = function (moves)
     {
-        var b, c, m, p, score, spl, w
+        var b, m, p, score, spl, w
 
         var list = _k_.list(moves)
-        for (var _104_14_ = 0; _104_14_ < list.length; _104_14_++)
+        for (var _106_14_ = 0; _106_14_ < list.length; _106_14_++)
         {
-            m = list[_104_14_]
+            m = list[_106_14_]
             spl = m.split(' ')
-            var _106_22_ = spl.slice(0, 3); p = _106_22_[0]; b = _106_22_[1]; w = _106_22_[2]
+            var _108_22_ = spl.slice(0, 3); p = _108_22_[0]; b = _108_22_[1]; w = _108_22_[2]
 
-            c = ['black','white'][moves.indexOf(m) % 2]
-            this.game.play(c,p)
+            this.game.play(p)
         }
         if (score = this.game.info.score)
         {
             return this.game.finalScore(score)
         }
-        else
+        else if (!this.game.paused)
         {
             return (this.compi[this.game.nextColor()] != null ? this.compi[this.game.nextColor()].genmove() : undefined)
         }
@@ -143,8 +144,18 @@ Referee = (function ()
 
     Referee.prototype["playerMove"] = function (p, player)
     {
-        var color, next, _130_38_, _130_58_, _144_27_, _145_28_, _147_27_, _148_28_
+        var color, next, _135_38_, _135_58_, _150_27_, _151_28_, _153_27_, _154_28_
 
+        if (this.game.paused)
+        {
+            console.log('paused playerMove',player,p)
+            if (player === 'human')
+            {
+                this.tree.addMove(p)
+                this.game.play(p)
+            }
+            return
+        }
         if (this.game.end())
         {
             return
@@ -162,7 +173,8 @@ Referee = (function ()
         {
             return console.error(`wrong player: ${player}`,color,this.game.players)
         }
-        this.game.play(color,p)
+        this.game.play(p)
+        this.tree.addMove(p)
         next = opponent[color]
         ;(this.compi[next] != null ? this.compi[next].opponentMove(p) : undefined)
         if (this.game.end())
@@ -184,7 +196,7 @@ Referee = (function ()
 
     Referee.prototype["undo"] = function ()
     {
-        var m, _167_15_, _176_20_, _177_20_
+        var m, _173_15_, _182_20_, _183_20_
 
         if (this.game.start())
         {
@@ -195,8 +207,8 @@ Referee = (function ()
             return
         }
         console.log('undo')
-        this.paused = true
-        this.redos = ((_167_15_=this.redos) != null ? _167_15_ : [])
+        this.game.paused = true
+        this.redos = ((_173_15_=this.redos) != null ? _173_15_ : [])
         m = this.game.moves.pop()
         this.redos.unshift(m)
         this.game.undoMove(m)
@@ -206,7 +218,7 @@ Referee = (function ()
 
     Referee.prototype["redo"] = function ()
     {
-        var move, _185_20_, _186_20_
+        var move, _192_20_, _193_20_
 
         if (_k_.empty(this.redos))
         {
@@ -214,14 +226,39 @@ Referee = (function ()
         }
         move = this.redos.shift()
         console.log('redo',move)
-        this.game.play(move.color,move.pos)
+        this.game.play(move.pos)
         ;(this.compi.black != null ? this.compi.black.send(`play ${move.color} ${move.pos}`) : undefined)
         return (this.compi.white != null ? this.compi.white.send(`play ${move.color} ${move.pos}`) : undefined)
     }
 
+    Referee.prototype["navigate"] = function (action)
+    {
+        var moves
+
+        this.game.paused = true
+        console.log('navigate',action)
+        switch (action)
+        {
+            case 'left':
+            case 'right':
+            case 'up':
+            case 'down':
+            case 'back':
+                this.tree.navigate(action)
+                this.game = new Game(this.board,this.white,this.black,this.handicap)
+                this.game.paused = true
+                this.board.game = this.game
+                moves = this.tree.history()
+                console.log('moves',moves)
+                return this.replay(moves)
+
+        }
+
+    }
+
     Referee.prototype["jumpToStart"] = function ()
     {
-        var _199_20_, _200_20_
+        var _231_20_, _232_20_
 
         console.log('start')
         if (this.game.start())

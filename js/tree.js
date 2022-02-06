@@ -144,18 +144,39 @@ Tree = (function ()
     {
         var mv, tr
 
-        mv = this.moves[this.cursor.mvi]
-        if (this.cursor.ali < mv.alt.length)
+        if (tr = this.cursorTree())
         {
-            this.cursor.ali++
-            tr = mv.alt[this.cursor.ali - 1]
-            return tr.cursor.mvi = 0
+            if (tr.cursor.mvi > 0)
+            {
+                return tr.navigateRight()
+            }
+            else
+            {
+                mv = this.moves[this.cursor.mvi]
+                if (this.cursor.ali < mv.alt.length)
+                {
+                    tr.cursor.mvi = -1
+                    this.cursor.ali++
+                    tr = this.cursorTree()
+                    return tr.cursor.mvi = 0
+                }
+            }
+        }
+        else
+        {
+            mv = this.moves[this.cursor.mvi]
+            if (this.cursor.ali < mv.alt.length)
+            {
+                this.cursor.ali++
+                tr = this.cursorTree()
+                return tr.cursor.mvi = 0
+            }
         }
     }
 
     Tree.prototype["navigateBack"] = function ()
     {
-        var tr, _114_23_, _115_23_
+        var tr, _125_23_, _126_23_
 
         if (tr = this.cursorTree())
         {
@@ -205,7 +226,7 @@ Tree = (function ()
         var ali, miai, mvi, tr
 
         miai = [].splice.call(arguments,0)
-        var _140_19_ = miai; mvi = _140_19_[0]; ali = _140_19_[1]
+        var _151_19_ = miai; mvi = _151_19_[0]; ali = _151_19_[1]
 
         if (ali)
         {
@@ -280,26 +301,55 @@ Tree = (function ()
 
         w = 1
         var list = _k_.list(this.moves)
-        for (var _185_14_ = 0; _185_14_ < list.length; _185_14_++)
+        for (var _196_14_ = 0; _196_14_ < list.length; _196_14_++)
         {
-            m = list[_185_14_]
+            m = list[_196_14_]
             var list1 = _k_.list(m.alt)
-            for (var _186_18_ = 0; _186_18_ < list1.length; _186_18_++)
+            for (var _197_18_ = 0; _197_18_ < list1.length; _197_18_++)
             {
-                t = list1[_186_18_]
+                t = list1[_197_18_]
                 w += t.width()
             }
         }
         return w
     }
 
+    Tree.prototype["history"] = function ()
+    {
+        var h, tr
+
+        if (this.cursor.mvi)
+        {
+            if (tr = this.cursorTree())
+            {
+                h = this.moves.slice(0, typeof this.cursor.mvi === 'number' ? this.cursor.mvi : -1).map(function (m)
+                {
+                    return m.pos
+                })
+                h = h.concat(tr.history())
+            }
+            else
+            {
+                h = this.moves.slice(0, typeof this.cursor.mvi === 'number' ? this.cursor.mvi+1 : Infinity).map(function (m)
+                {
+                    return m.pos
+                })
+            }
+        }
+        else
+        {
+            h = [this.moves[0].pos]
+        }
+        return h
+    }
+
     Tree.prototype["toLines"] = function ()
     {
-        var a, i, li, lo, m, mi, ps, rc, s, t, tl, tls, to, tw, _217_28_
+        var a, i, li, lo, m, mi, ps, rc, s, t, tl, tls, to, tw, _246_28_
 
         s = []
         a = []
-        for (var _200_18_ = mi = 0, _200_22_ = this.moves.length; (_200_18_ <= _200_22_ ? mi < this.moves.length : mi > this.moves.length); (_200_18_ <= _200_22_ ? ++mi : --mi))
+        for (var _229_18_ = mi = 0, _229_22_ = this.moves.length; (_229_18_ <= _229_22_ ? mi < this.moves.length : mi > this.moves.length); (_229_18_ <= _229_22_ ? ++mi : --mi))
         {
             m = this.moves[mi]
             ps = (m.alt.length ? '─' : ' ')
@@ -315,20 +365,20 @@ Tree = (function ()
         }
         to = 0
         lo = 0
-        for (var _211_17_ = i = a.length - 1, _211_29_ = 0; (_211_17_ <= _211_29_ ? i <= 0 : i >= 0); (_211_17_ <= _211_29_ ? ++i : --i))
+        for (var _240_17_ = i = a.length - 1, _240_29_ = 0; (_240_17_ <= _240_29_ ? i <= 0 : i >= 0); (_240_17_ <= _240_29_ ? ++i : --i))
         {
             var list = _k_.list(a[i])
-            for (var _212_18_ = 0; _212_18_ < list.length; _212_18_++)
+            for (var _241_18_ = 0; _241_18_ < list.length; _241_18_++)
             {
-                t = list[_212_18_]
+                t = list[_241_18_]
                 tw = 4
                 li = 0
                 tls = t.toLines()
                 var list1 = _k_.list(tls)
-                for (var _216_23_ = 0; _216_23_ < list1.length; _216_23_++)
+                for (var _245_23_ = 0; _245_23_ < list1.length; _245_23_++)
                 {
-                    tl = list1[_216_23_]
-                    s[i + li] = ((_217_28_=s[i + li]) != null ? _217_28_ : _k_.rpad(4))
+                    tl = list1[_245_23_]
+                    s[i + li] = ((_246_28_=s[i + li]) != null ? _246_28_ : _k_.rpad(4))
                     s[i + li] = _k_.rpad(lo,s[i + li],(li === 0 ? '─' : ' '))
                     s[i + li] += tl
                     if (li === 0 && a[i].indexOf(t) < a[i].length - 1)

@@ -22,7 +22,7 @@ function Tree
     # 000000000  000   000  000   000  000000000  000   000   000 000   0000000   
     # 000   000  000   000  000   000  000 0 000  000   000     000     000       
     # 000   000  0000000    0000000    000   000   0000000       0      00000000  
-    
+        
     addMove: (pos, cpt=[]) ->
         
         log 'add\n'
@@ -93,12 +93,23 @@ function Tree
         
     navigateRight: ->
         
-        mv = @moves[@cursor.mvi]        
-        if @cursor.ali < mv.alt.length
-            @cursor.ali++
-            tr = mv.alt[@cursor.ali-1]
-            tr.cursor.mvi = 0
-            
+        if tr = @cursorTree()
+            if tr.cursor.mvi > 0
+                tr.navigateRight()
+            else 
+                mv = @moves[@cursor.mvi]
+                if @cursor.ali < mv.alt.length
+                    tr.cursor.mvi = -1
+                    @cursor.ali++
+                    tr = @cursorTree()
+                    tr.cursor.mvi = 0
+        else
+            mv = @moves[@cursor.mvi]
+            if @cursor.ali < mv.alt.length
+                @cursor.ali++
+                tr = @cursorTree()
+                tr.cursor.mvi = 0
+        
     # 0000000     0000000    0000000  000   000  
     # 000   000  000   000  000       000  000   
     # 0000000    000000000  000       0000000    
@@ -160,11 +171,11 @@ function Tree
         @cursor.mvi = -1
         @cursor.ali = 0
             
-    # 000000000  00000000   00000000  00000000   0000000   000000000  
-    #    000     000   000  000       000       000   000     000     
-    #    000     0000000    0000000   0000000   000000000     000     
-    #    000     000   000  000       000       000   000     000     
-    #    000     000   000  00000000  00000000  000   000     000     
+    # 000000000  00000000   00000000  00000000         0000000   000000000  
+    #    000     000   000  000       000             000   000     000     
+    #    000     0000000    0000000   0000000         000000000     000     
+    #    000     000   000  000       000             000   000     000     
+    #    000     000   000  00000000  00000000        000   000     000     
     
     
     cursorTree: -> @moves[@cursor.mvi].alt[@cursor.ali-1] if @cursor.ali
@@ -187,6 +198,24 @@ function Tree
                 w += t.width()
         w
     
+    # 000   000  000   0000000  000000000   0000000   00000000   000   000  
+    # 000   000  000  000          000     000   000  000   000   000 000   
+    # 000000000  000  0000000      000     000   000  0000000      00000    
+    # 000   000  000       000     000     000   000  000   000     000     
+    # 000   000  000  0000000      000      0000000   000   000     000     
+    
+    history: ->
+        
+        if @cursor.mvi
+            if tr = @cursorTree()
+                h = @moves[...@cursor.mvi].map (m) -> m.pos
+                h = h.concat tr.history()
+            else
+                h = @moves[..@cursor.mvi].map (m) -> m.pos
+        else
+            h = [@moves[0].pos]
+        h
+        
     # 000000000   0000000   000      000  000   000  00000000   0000000  
     #    000     000   000  000      000  0000  000  000       000       
     #    000     000   000  000      000  000 0 000  0000000   0000000   

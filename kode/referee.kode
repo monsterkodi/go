@@ -16,6 +16,7 @@ Katago  = require './bot/katago'
 Hara    = require './bot/hara'
 GNU     = require './bot/gnu'
 Board   = require './board'
+Tree    = require './tree'
 Game    = require './game'
 
 function Referee
@@ -47,6 +48,7 @@ function Referee
         moves      = gi.moves    ? []
         info       = gi.info     ? {}
         @redos     = []
+        @tree      = new Tree
         
         if @white == 'leelaz' or @black == 'leelaz' then @boardsize = 19
         
@@ -104,15 +106,11 @@ function Referee
         for m in moves
             spl = m.split ' '
             [p, b, w] = spl[0..2]
-            c = ['black' 'white'][moves.indexOf(m)%2]
-            @game.play c, p
-            # if 0
-                # @compi.black?.send "play #{c} #{p}"
-                # @compi.white?.send "play #{c} #{p}"
+            @game.play p
         
         if score = @game.info.score
             @game.finalScore score
-        else
+        else if not @game.paused
             @compi[@game.nextColor()]?.genmove()
 
     # 00     00   0000000   000   000  00000000  
@@ -125,8 +123,15 @@ function Referee
     
     playerMove: (p, player) =>
         
+        if @game.paused
+            log 'paused playerMove' player, p
+            if player == 'human'
+                @tree.addMove p
+                @game.play p
+            return
+        
         return if @game.end()
-        if valid @redos 
+        if valid @redos
             if player in [@compi.black?.name, @compi.white?.name]
                 return
             @redos = []
@@ -135,16 +140,17 @@ function Referee
                 
         return error("wrong player: #{player}", color, @game.players) if @game.players[color] != player
         
-        @game.play color, p
+        @game.play p
+        @tree.addMove p
         
         next = opponent[color]
         @compi[next]?.opponentMove p
             
         if @game.end()
-            if @compi.black? #and @compi.black.name != 'katago'
+            if @compi.black?
                 @compi.black?.send 'final_score'
             # else 
-            if @compi.white? #and @compi.white.name != 'katago'
+            if @compi.white?
                 @compi.white?.send 'final_score'
         else
             # log "#{next} genmove" @compi[next]
@@ -163,7 +169,7 @@ function Referee
         
         log 'undo'
         
-        @paused = true
+        @game.paused = true
         @redos ?= []
         
         m = @game.moves.pop()
@@ -177,13 +183,39 @@ function Referee
         @compi.white?.undo()
             
     redo: ->
+        
         return if empty @redos
         
         move = @redos.shift()
         log 'redo' move
-        @game.play move.color, move.pos
+        @game.play move.pos
         @compi.black?.send "play #{move.color} #{move.pos}"
         @compi.white?.send "play #{move.color} #{move.pos}"
+        
+    # 000   000   0000000   000   000  000   0000000    0000000   000000000  00000000  
+    # 0000  000  000   000  000   000  000  000        000   000     000     000       
+    # 000 0 000  000000000   000 000   000  000  0000  000000000     000     0000000   
+    # 000  0000  000   000     000     000  000   000  000   000     000     000       
+    # 000   000  000   000      0      000   0000000   000   000     000     00000000  
+    
+    navigate: (action) ->
+        
+        @game.paused = true
+        
+        log 'navigate' action
+        switch action
+            'left'
+            'right'
+            'up'
+            'down'
+            'back'  
+                    @tree.navigate action
+                    @game = new Game @board, @white, @black, @handicap
+                    @game.paused = true
+                    @board.game = @game
+                    moves = @tree.history()
+                    log 'moves' moves
+                    @replay moves
             
     #       000  000   000  00     00  00000000   
     #       000  000   000  000   000  000   000  

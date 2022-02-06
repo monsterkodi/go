@@ -648,10 +648,6 @@ Calc = (function ()
         fr = this.freedoms(color,c)
         mc = this.fastCapture(this.pos(c),color)
         lg = (fr || mc.length) && this.stoneAt(c) === stone.empty
-        if (!lg)
-        {
-            console.log(color,c,fr,mc,this.stoneAt(c))
-        }
         return (mc.length ? mc : lg)
     }
 

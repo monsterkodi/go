@@ -144,6 +144,13 @@ MainWin = (function ()
             case 'save as ...':
                 return SGF.saveAsDialog()
 
+            case 'up':
+            case 'down':
+            case 'left':
+            case 'right':
+            case 'back':
+                return this.referee.navigate(action)
+
             case 'undo':
                 return this.referee.undo()
 

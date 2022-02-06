@@ -19,12 +19,19 @@ function Game extends Score
 
     @: (board, white, black, @handicap) ->
         
+        @info = {}
         @players = {black, white}
         super board.size
         @board = board
         @moves = new Moves
         @boardsize @board.size
         
+    # 00000000  00000000    0000000   00     00  00     00   0000000   000   000  00000000   0000000  
+    # 000       000   000  000   000  000   000  000   000  000   000  000   000  000       000       
+    # 000000    0000000    000   000  000000000  000000000  000   000   000 000   0000000   0000000   
+    # 000       000   000  000   000  000 0 000  000 0 000  000   000     000     000            000  
+    # 000       000   000   0000000   000   000  000   000   0000000       0      00000000  0000000   
+    
     @fromMoves: (moves) ->
 
         moves = moves.replace /\n+/g ' '
@@ -68,7 +75,7 @@ function Game extends Score
         
         if valid l
             p = l[randInt l.length]
-            @play color, p
+            @play p
             p
         else
             'pass'
@@ -79,11 +86,9 @@ function Game extends Score
     # 000        000      000   000     000     
     # 000        0000000  000   000     000     
     
-    play: (color, p) ->
+    play: (p) ->
 
-        if not p
-            p = color
-            color = @nextColor()
+        color = @nextColor()
                     
         if p.toLowerCase() in ['pass' 'resign' 'illegal']
             @moves.add p.toLowerCase(), color
@@ -188,8 +193,8 @@ function Game extends Score
             @genmove()
         @showboard()
         
-    black: (p) -> @play 'B' p
-    white: (p) -> @play 'W' p
+    black: (p) -> @play p
+    white: (p) -> @play p
     color: (p) ->
         
         switch @stoneAt @coord p

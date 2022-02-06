@@ -132,40 +132,41 @@ function MainWin extends win
     onMenuAction: (action, args) =>
                
         switch action.toLowerCase()
-            'save'                      ➜ @referee.game.save(); @saveStash()
-            'open'                      ➜ SGF.openDialog()
-            'save as ...'               ➜ SGF.saveAsDialog()
-            'undo'                      ➜ @referee.undo()
-            'redo'                      ➜ @referee.redo()
-            'start'                     ➜ @referee.jumpToStart()
-            'end'                       ➜ @referee.jumpToEnd()
-            'pass'                      ➜ @referee.playerMove 'pass'   'human'
-            'resign'                    ➜ @referee.playerMove 'resign' 'human'
-            'genmove'                   ➜ @referee.genMove()
-            'calcscore'                 ➜ @referee.game.calcScore(); @referee.board.annotate()
-            'numbers'                   ➜ @referee.board.toggleNumbers()
-            'legend'                    ➜ @referee.board.toggleLegend()
-            'liberties'                 ➜ @referee.board.toggleLiberties()
-            'territory'                 ➜ @referee.board.toggleTerritory()
-            'new game'                  ➜ @referee.newGame()
-            'gnu human'                 ➜ @referee.newGame black:'gnu'    white:'human'
-            'human gnu'                 ➜ @referee.newGame black:'human'  white:'gnu'
-            'human human'               ➜ @referee.newGame black:'human'  white:'human'               
-            'gnu gnu'                   ➜ @referee.newGame black:'gnu'    white:'gnu'  
-            'leelaz human'              ➜ @referee.newGame black:'leelaz' white:'human' 
-            'human leelaz'              ➜ @referee.newGame black:'human'  white:'leelaz' 
-            'leelaz leelaz'             ➜ @referee.newGame black:'leelaz' white:'leelaz'
-            'gnu leelaz'                ➜ @referee.newGame black:'gnu'    white:'leelaz'   
-            'gnu hara'                  ➜ @referee.newGame black:'gnu'    white:'hara'   
-            'hara hara'                 ➜ @referee.newGame black:'hara'   white:'hara'   
-            'katago katago'             ➜ @referee.newGame black:'katago' white:'katago'   
-            'hara katago'               ➜ @referee.newGame black:'hara'   white:'katago'   
-            'gnu katago'                ➜ @referee.newGame black:'gnu'    white:'katago'   
-            '7x7''9x9''13x13''19x19'    ➜ @referee.newGame size:int action
+            'save'                          ➜ @referee.game.save(); @saveStash()
+            'open'                          ➜ SGF.openDialog()
+            'save as ...'                   ➜ SGF.saveAsDialog()
+            'up''down''left''right''back'   ➜ @referee.navigate action
+            'undo'                          ➜ @referee.undo()
+            'redo'                          ➜ @referee.redo()
+            'start'                         ➜ @referee.jumpToStart()
+            'end'                           ➜ @referee.jumpToEnd()
+            'pass'                          ➜ @referee.playerMove 'pass'   'human'
+            'resign'                        ➜ @referee.playerMove 'resign' 'human'
+            'genmove'                       ➜ @referee.genMove()
+            'calcscore'                     ➜ @referee.game.calcScore(); @referee.board.annotate()
+            'numbers'                       ➜ @referee.board.toggleNumbers()
+            'legend'                        ➜ @referee.board.toggleLegend()
+            'liberties'                     ➜ @referee.board.toggleLiberties()
+            'territory'                     ➜ @referee.board.toggleTerritory()
+            'new game'                      ➜ @referee.newGame()
+            'gnu human'                     ➜ @referee.newGame black:'gnu'    white:'human'
+            'human gnu'                     ➜ @referee.newGame black:'human'  white:'gnu'
+            'human human'                   ➜ @referee.newGame black:'human'  white:'human'               
+            'gnu gnu'                       ➜ @referee.newGame black:'gnu'    white:'gnu'  
+            'leelaz human'                  ➜ @referee.newGame black:'leelaz' white:'human' 
+            'human leelaz'                  ➜ @referee.newGame black:'human'  white:'leelaz' 
+            'leelaz leelaz'                 ➜ @referee.newGame black:'leelaz' white:'leelaz'
+            'gnu leelaz'                    ➜ @referee.newGame black:'gnu'    white:'leelaz'   
+            'gnu hara'                      ➜ @referee.newGame black:'gnu'    white:'hara'   
+            'hara hara'                     ➜ @referee.newGame black:'hara'   white:'hara'   
+            'katago katago'                 ➜ @referee.newGame black:'katago' white:'katago'   
+            'hara katago'                   ➜ @referee.newGame black:'hara'   white:'katago'   
+            'gnu katago'                    ➜ @referee.newGame black:'gnu'    white:'katago'   
+            '7x7''9x9''13x13''19x19'        ➜ @referee.newGame size:int action
             '0''1''2''3''4'
-            '5''6''7''8''9'             ➜ @referee.newGame handicap: int action
-                                        ➜
-                                          klog "menuAction '#{action}'" # args     
-                                          super action, args
+            '5''6''7''8''9'                 ➜ @referee.newGame handicap: int action
+                                            ➜
+                                              klog "menuAction '#{action}'" # args     
+                                              super action, args
            
 new MainWin            

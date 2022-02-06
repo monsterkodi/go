@@ -10,11 +10,14 @@ go
     open                    cmdctrl+o
     save                    cmdctrl+s
     save as ...             cmdctrl+shift+s
+    --
+    up                      up
+    down                    down
+    left                    left
+    right                   right
     ---
-    start                   down
-    end                     up
-    undo                    left
-    redo                    right
+    undo                    cmdctrl+z
+    redo                    cmdctrl+shift+z
     ----
     pass                    p
     resign                  r
