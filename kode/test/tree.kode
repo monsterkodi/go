@@ -64,7 +64,7 @@ Tree = require '../tree'
         t.toString() ▸ 
         """
         C3
-        B2  B3◂
+        B2──B3◂
         """
         
         t.navigate 'up'
@@ -72,7 +72,7 @@ Tree = require '../tree'
         t.toString() ▸ 
         """
         C3
-        B2  B3◂
+        B2──B3◂
         """
 
         for d in ['up''down''right']
@@ -81,7 +81,7 @@ Tree = require '../tree'
             t.toString() ▸ 
             """
             C3
-            B2  B3◂
+            B2──B3◂
             """
 
         t.navigate 'left'
@@ -89,7 +89,7 @@ Tree = require '../tree'
         t.toString() ▸ 
         """
         C3
-        B2◂ B3
+        B2◂─B3
         """
 
         for d in ['left''down']
@@ -98,7 +98,7 @@ Tree = require '../tree'
             t.toString() ▸ 
             """
             C3
-            B2◂ B3
+            B2◂─B3
             """
 
         t.navigate 'right'
@@ -106,7 +106,7 @@ Tree = require '../tree'
         t.toString() ▸ 
         """
         C3
-        B2  B3◂
+        B2──B3◂
         """
         
     #  0000000   0000000    0000000    00     00   0000000   000   000  00000000  
@@ -115,14 +115,14 @@ Tree = require '../tree'
     # 000   000  000   000  000   000  000 0 000  000   000     000     000       
     # 000   000  0000000    0000000    000   000   0000000       0      00000000  
     
-    ▸ addmove
+    ▸ addmove1
     
         t.addMove 'A1'
         
         t.toString() ▸ 
         """
         C3
-        B2  B3
+        B2──B3
             A1◂
         """
 
@@ -131,7 +131,7 @@ Tree = require '../tree'
         t.toString() ▸ 
         """
         C3
-        B2  B3
+        B2──B3
             A1
             A2◂
         """
@@ -141,7 +141,7 @@ Tree = require '../tree'
         t.toString() ▸ 
         """
         C3
-        B2  B3
+        B2──B3
             A1
             A2
             A3◂
@@ -153,47 +153,47 @@ Tree = require '../tree'
     #      000  000       000      000       000          000     
     # 0000000   00000000  0000000  00000000   0000000     000     
     
-    ▸ select
+    ▸ select1
     
-        t.select 1 1
+        t.select 1 1 0
 
         t.toString() ▸ 
         """
         C3
-        B2  B3◂
+        B2──B3◂
             A1
             A2
             A3
         """
 
-        t.select 0 0
+        t.select 0
 
-        t.toString() ▸ 
+        t.toString() ▸
         """
         C3◂
-        B2  B3
+        B2──B3
             A1
             A2
             A3
         """
 
-        t.select 1 0
+        t.select 1
 
         t.toString() ▸ 
         """
         C3
-        B2◂ B3
+        B2◂─B3
             A1
             A2
             A3
         """
 
-        t.select 2 1
+        t.select 1 1 1
 
         t.toString() ▸ 
         """
         C3
-        B2  B3
+        B2──B3
             A1◂
             A2
             A3
@@ -212,9 +212,9 @@ Tree = require '../tree'
         t.toString() ▸ 
         """
         C3
-        B2  B3
+        B2──B3
             A1
-            A2  A3◂
+            A2──A3◂
             A3
         """
         
@@ -223,9 +223,9 @@ Tree = require '../tree'
         t.toString() ▸ 
         """
         C3
-        B2  B3
+        B2──B3
             A1
-            A2  A3
+            A2──A3
             A3  A2◂
         """
         
@@ -234,9 +234,9 @@ Tree = require '../tree'
         t.toString() ▸ 
         """
         C3
-        B2  B3
+        B2──B3
             A1
-            A2  A3
+            A2──A3
             A3  A2
                 A4◂
         """
@@ -247,11 +247,11 @@ Tree = require '../tree'
         t.toString() ▸ 
         """
         C3
-        B2  B3
+        B2──B3
             A1
-            A2  A3
+            A2──A3
             A3  A2
-                A4  A5◂
+                A4──A5◂
         """
         
         t.navigate 'back'
@@ -259,11 +259,11 @@ Tree = require '../tree'
         t.toString() ▸ 
         """
         C3
-        B2  B3
+        B2──B3
             A1
-            A2  A3
+            A2──A3
             A3  A2◂
-                A4  A5
+                A4──A5
         """
         
         t.addMove 'A6'
@@ -271,11 +271,11 @@ Tree = require '../tree'
         t.toString() ▸ 
         """
         C3
-        B2  B3
+        B2──B3
             A1
-            A2  A3
+            A2──A3
             A3  A2
-                A4  A5  A6◂
+                A4──A5──A6◂
         """
 
     # 0000000     0000000    0000000  000   000  
@@ -291,11 +291,11 @@ Tree = require '../tree'
         t.toString() ▸ 
         """
         C3
-        B2  B3
+        B2──B3
             A1
-            A2  A3
+            A2──A3
             A3  A2◂
-                A4  A5  A6
+                A4──A5──A6
         """
 
         t.navigate 'back'
@@ -303,10 +303,226 @@ Tree = require '../tree'
         t.toString() ▸ 
         """
         C3
-        B2  B3
+        B2──B3
             A1
-            A2  A3◂
+            A2──A3◂
             A3  A2
-                A4  A5  A6
+                A4──A5──A6
         """
+
+        t.navigate 'back'
+        
+        t.toString() ▸ 
+        """
+        C3
+        B2──B3
+            A1◂
+            A2──A3
+            A3  A2
+                A4──A5──A6
+        """
+
+        t.navigate 'back'
+        
+        t.toString() ▸ 
+        """
+        C3
+        B2──B3◂
+            A1
+            A2──A3
+            A3  A2
+                A4──A5──A6
+        """
+
+        t.navigate 'back'
+        
+        t.toString() ▸ 
+        """
+        C3◂
+        B2──B3
+            A1
+            A2──A3
+            A3  A2
+                A4──A5──A6
+        """
+
+        t.navigate 'back'
+        
+        t.toString() ▸ 
+        """
+        C3◂
+        B2──B3
+            A1
+            A2──A3
+            A3  A2
+                A4──A5──A6
+        """
+
+    #  0000000  00000000  000      00000000   0000000  000000000  00000   
+    # 000       000       000      000       000          000        000  
+    # 0000000   0000000   000      0000000   000          000       000   
+    #      000  000       000      000       000          000      000    
+    # 0000000   00000000  0000000  00000000   0000000     000     000000  
+    
+    ▸ select2
+        
+        t.select 1 1 2 1 2
+        
+        t.toString() ▸ 
+        """
+        C3
+        B2──B3
+            A1
+            A2──A3
+            A3  A2
+                A4◂─A5──A6
+        """
+        
+        t.select 1 1 2 1 2 1 0
+        
+        t.toString() ▸ 
+        """
+        C3
+        B2──B3
+            A1
+            A2──A3
+            A3  A2
+                A4──A5◂─A6
+        """
+
+        t.select 1 1 2 1 0
+        
+        t.toString() ▸ 
+        """
+        C3
+        B2──B3
+            A1
+            A2──A3◂
+            A3  A2
+                A4──A5──A6
+        """
+        
+    #  0000000   0000000    0000000    00     00   0000000   000   000  00000000  00000   
+    # 000   000  000   000  000   000  000   000  000   000  000   000  000          000  
+    # 000000000  000   000  000   000  000000000  000   000   000 000   0000000     000   
+    # 000   000  000   000  000   000  000 0 000  000   000     000     000        000    
+    # 000   000  0000000    0000000    000   000   0000000       0      00000000  000000  
+    
+    ▸ addmove2
+    
+        t.addMove 'A7'
+        
+        t.toString() ▸
+        """
+        C3
+        B2──B3
+            A1
+            A2──A3
+            A3  A2──────────A7◂
+                A4──A5──A6
+        """
+
+        t.addMove 'A8'
+        
+        t.toString() ▸ 
+        """
+        C3
+        B2──B3
+            A1
+            A2──A3
+            A3  A2──────────A7
+                A4──A5──A6  A8◂
+        """
+        
+        t.navigate 'back'
+        t.navigate 'back'
+        t.navigate 'back'
+        
+        t.toString() ▸ 
+        """
+        C3
+        B2──B3
+            A1◂
+            A2──A3
+            A3  A2──────────A7
+                A4──A5──A6  A8
+        """
+        
+        t.addMove 'B12'
+
+        t.toString() ▸ 
+        """
+        C3
+        B2──B3
+            A1
+            A2──A3──────────────B12◂
+            A3  A2──────────A7
+                A4──A5──A6  A8
+        """
+
+        t.addMove 'B13'
+
+        t.toString() ▸ 
+        """
+        C3
+        B2──B3
+            A1
+            A2──A3──────────────B12
+            A3  A2──────────A7  B13◂
+                A4──A5──A6  A8
+        """
+        
+        t.select 1
+        
+        t.addMove 'B14'
+        
+        t.toString() ▸ 
+        """
+        C3
+        B2──B3
+        B14◂A1
+            A2──A3──────────────B12
+            A3  A2──────────A7  B13
+                A4──A5──A6  A8
+        """
+        
+        t.addMove 'B15'
+        t.navigate 'back'
+        
+        t.toString() ▸ 
+        """
+        C3
+        B2──B3
+        B14◂A1
+        B15 A2──A3──────────────B12
+            A3  A2──────────A7  B13
+                A4──A5──A6  A8
+        """
+        
+        t.addMove 'B16'
+         
+        t.toString() ▸ 
+        """
+        C3
+        B2──────B3
+        B14     A1
+        B15─B16◂A2──A3──────────────B12
+                A3  A2──────────A7  B13
+                    A4──A5──A6  A8
+        """
+        
+        t.addMove 'C3'
+        t.navigate 'back'
+        t.addMove 'C4'
+
+        t.toString() ▸ 
+        """
+        C3
+        B2──────────B3
+        B14         A1
+        B15─B16     A2──A3──────────────B12
+            C3──C4◂ A3  A2──────────A7  B13
+                        A4──A5──A6  A8
+        """
+        
         

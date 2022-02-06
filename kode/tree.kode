@@ -6,6 +6,9 @@
    000     000   000  00000000  00000000
 ###
 
+{ kstr } = require 'kxk'
+{ max } = Math
+
 function Tree
 
     @: (@parent) ->
@@ -13,9 +16,7 @@ function Tree
         @parentCursor = copy @parent.cursor if @parent
         @moves  = []
         @cursor = mvi:-1, ali:0
-        
-    cursorTree: -> @moves[@cursor.mvi].alt[@cursor.ali-1] if @cursor.ali
-        
+                
     #  0000000   0000000    0000000    00     00   0000000   000   000  00000000  
     # 000   000  000   000  000   000  000   000  000   000  000   000  000       
     # 000000000  000   000  000   000  000000000  000   000   000 000   0000000   
@@ -133,40 +134,24 @@ function Tree
     #      000  000       000      000       000          000     
     # 0000000   00000000  0000000  00000000   0000000     000     
     
-    select: (mvi, ali) ->
+    select: ->
         
-        # log mvi, ali
-        if 0 <= mvi < @moves.length
-            
-            if ali
-                if mv = @moves[mvi]
-                    if tr = mv.alt[ali-1]
-                        @deselect()
-                        @cursor.mvi = mvi
-                        @cursor.ali = ali
-                        tr.cursor.mvi = 0
-                        tr.cursor.ali = 0
-                        log @toString() + '\n'
-                        return
-                    else 
-                        log 'FORK!'
-                else
-                    log 'FARK!'
-            else
-                @deselect()
+        miai = [].splice.call arguments, 0
+        [mvi, ali] = miai
+
+        if ali
+            if tr = @treeAt mvi, ali
                 @cursor.mvi = mvi
-                @cursor.ali = 0
-                log @toString() + '\n'
-                return
-                
-        if tr = @treeAtMviAli mvi, ali
+                @cursor.ali = ali
+                tr.select.apply tr, miai[2..]
+            else
+                log 'no tree'
+        else
             @deselect()
-            @cursor.mvi = @mviForTree tr
-            @cursor.ali = @aliForTree tr
-            tr.cursor.mvi = @relativeMvi mvi, tr
-            tr.cursor.ali = 0
-            log @toString() + '\n'
-            
+            @cursor.mvi = mvi
+            @cursor.ali = 0
+            return
+                
     deselect: ->
             
         if tr = @cursorTree()
@@ -181,34 +166,19 @@ function Tree
     #    000     000   000  000       000       000   000     000     
     #    000     000   000  00000000  00000000  000   000     000     
     
-    treeAtMviAli: (mvi, ali) ->
+    
+    cursorTree: -> @moves[@cursor.mvi].alt[@cursor.ali-1] if @cursor.ali
+    
+    treeAt: (mvi, ali) ->
         
-        while mvi > 0
-            if mv = @moves[mvi]
-                if ali <= mv.alt.length
-                    return mv.alt[ali-1]
-            mvi--
+        if 0 <= mvi < @moves.length
+            return @ if ali < 1
+            mv = @moves[mvi]
+            if 0 < ali <= mv.alt.length
+                return mv.alt[ali-1]
+        log 'no tree at' mvi, ali
+        log @toString()
         
-    mviForTree: (tr) -> 
-        
-        mvi = 0
-        while tr.parent
-            mvi += tr.parentCursor.mvi
-            tr = tr.parent
-        mvi
-        
-    aliForTree: (tr) ->
-        
-        ali = 0
-        while tr.parent
-            ali += tr.parentCursor.ali
-            tr = tr.parent
-        ali
-        
-    relativeMvi: (mvi, tr) ->
-        
-        mvi - @mviForTree tr
-            
     depth: -> @moves.length
     width: -> 
         w = 1
@@ -229,19 +199,34 @@ function Tree
         a = []
         for mi in 0...@moves.length
             m = @moves[mi]
+            ps = m.alt.length ? '─' : ' '
             if @cursor.ali == 0 and @cursor.mvi == mi
-                s.push rpad 4 m.pos+'◂'
+                s.push rpad 4 m.pos+'◂', ps
             else
-                s.push rpad 4 m.pos
+                s.push rpad 4 m.pos, ps
             a.push m.alt
             
+        to = 0
+        lo = 0  
         for i in a.length-1..0
             for t in a[i]
+                tw = 4
                 li = 0
-                for tl in t.toLines()
+                tls = t.toLines()
+                for tl in tls
                     s[i+li] ?= rpad 4
+                    s[i+li]  = rpad lo, s[i+li], li == 0 ? '─' : ' '
                     s[i+li] += tl
+                    
+                    if li == 0 and a[i].indexOf(t) < a[i].length-1
+                        rc = kstr.rcnt s[i+li], ' '
+                        s[i+li] = rtrim s[i+li]
+                        s[i+li] += rpad rc, '' '─'
+                    
+                    tw = max tw, tl.length
                     li++
+                to += tw
+                lo = to + 4
         s
                     
     toString: -> @toLines().map((l) -> rtrim l).join '\n'
