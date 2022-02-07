@@ -40,7 +40,7 @@ game
         gnu hara
         hara hara
         katago katago
-        hara katago
+        katago leelaz
         gnu katago
     boardsize 
         7x7                 t

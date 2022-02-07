@@ -100,17 +100,24 @@ function Score extends Calc
                     @deadGroups [g], 'weakling 1 lib'
                     continue
                 
+    #  0000000  000   000  000   0000000  000  0000000     0000000   000       0000000  
+    # 000       000   000  000  000       000  000   000  000   000  000      000       
+    # 0000000   000   000  000  000       000  000   000  000000000  000      0000000   
+    #      000  000   000  000  000       000  000   000  000   000  000           000  
+    # 0000000    0000000   000   0000000  000  0000000    000   000  0000000  0000000   
+    
     suicidals: ->
+        
         for g in @grps
             if g.state not in ['alive' 'dead']
                 if g.areas.length == 2
                     for ai in g.areas
                         a = @areas[ai]
                         if @suicidalArea a
-                            ch = @chains[g.chain]
-                            if ch.areas.length == ch.libs
-                                @deadChains [ch] 'chain at suicidal area with as many libs as areas!'
-                                break
+                            if ch = @chains[g.chain]
+                                if ch.areas.length == ch.libs
+                                    @deadChains [ch] 'chain at suicidal area with as many libs as areas!'
+                                    break
                     
     #  0000000   0000000   000       0000000   0000000   00000000    0000000   000   000  00000000    0000000  
     # 000       000   000  000      000       000        000   000  000   000  000   000  000   000  000       

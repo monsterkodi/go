@@ -13,13 +13,11 @@ function varee
 
     @: (@parent, @tree) ->
         
+        log 'varee'
         @div = elem 'div' class:'varee' parent:@parent        
         
         @canvas = elem 'canvas' class:'treelines' parent:@div
         @ctx = @canvas.getContext '2d'
-        @ctx.strokeStyle = 'black'
-        @ctx.lineWidth = 14
-        @ctx.lineCap = 'round'
                 
         @hlt = elem 'div' class:'highlts' parent:@div
         @stn = elem 'div' class:'stones'  parent:@div
@@ -50,20 +48,25 @@ function varee
         
     drawLines: ->
         
-        @canvas.width  = 100
-        @canvas.height = @tree.moves.length*50
+        @canvas.width  = 200
+        @canvas.height = @tree.moves.length*100
         
         if @tree.moves.length > 1
             
-            @ctx.strokeStyle = '#000d'
-            @ctx.lineWidth = 3
-            @ctx.lineCap = 'round'
+            # @ctx.lineWidth = 0.5
             
+            @ctx.strokeStyle = '#800'
             @ctx.beginPath()
-            @ctx.moveTo 25 25
-            @ctx.lineTo 25 25+50*(@tree.moves.length-1)
+            @ctx.moveTo 48 50
+            @ctx.lineTo 48 50+100*(@tree.moves.length-1)
             @ctx.stroke()   
-        
+
+            @ctx.strokeStyle = '#ff8'
+            @ctx.beginPath()
+            @ctx.moveTo 53 50
+            @ctx.lineTo 53 50+100*(@tree.moves.length-1)
+            @ctx.stroke()   
+            
     onResize: =>
         
         br = @parent.getBoundingClientRect()
@@ -73,6 +76,7 @@ function varee
     remove: ->
         
         if @div
+            log 'remove'
             post.off 'resize' @onResize
             post.off 'tree'   @onTree
             @parent.removeChild @div

@@ -41,6 +41,8 @@ function Referee
     newGame: (gi={}) =>
 
         # log noon gi
+        @varee?.remove()
+        @parent.innerHTML = ''
         
         @white     = gi.white    ? @white
         @black     = gi.black    ? @black
@@ -50,6 +52,7 @@ function Referee
         info       = gi.info     ? {}
         @redos     = []
         @tree      = new Tree
+        @varee     = new Varee @parent, @tree if window.stash.get 'varee'
         
         if @white == 'leelaz' or @black == 'leelaz' then @boardsize = 19
         
@@ -58,8 +61,6 @@ function Referee
         window.stash.set 'black'     @black
         window.stash.set 'handicap'  @handicap
         window.stash.set 'moves'     moves
-                
-        @parent.innerHTML = ''
                 
         @board = new Board @parent, @boardsize
         @game  = new Game  @board, @white, @black, @handicap
@@ -93,10 +94,7 @@ function Referee
                 
             if @compi.white and @handicap > 1
                 @compi.white.genmove()
-                
-        if window.stash.get('varee', false) and not @varee
-            @varee = new Varee @parent, @tree
-            
+                            
     # 00000000   00000000  00000000   000       0000000   000   000  
     # 000   000  000       000   000  000      000   000   000 000   
     # 0000000    0000000   00000000   000      000000000    00000    
@@ -240,8 +238,14 @@ function Referee
         while valid @redos
             @redo()
             
+    # 000000000   0000000    0000000    0000000   000      00000000  000000000  00000000   00000000  00000000  
+    #    000     000   000  000        000        000      000          000     000   000  000       000       
+    #    000     000   000  000  0000  000  0000  000      0000000      000     0000000    0000000   0000000   
+    #    000     000   000  000   000  000   000  000      000          000     000   000  000       000       
+    #    000      0000000    0000000    0000000   0000000  00000000     000     000   000  00000000  00000000  
+    
     toggleTree: ->
-        
+        log 'toggleTree'
         if @varee
             @varee.remove()
             delete @varee
@@ -249,5 +253,6 @@ function Referee
         else
             window.stash.set 'varee' true
             @varee = new Varee @parent, @tree
+            post.emit 'tree'
                     
 module.exports = Referee

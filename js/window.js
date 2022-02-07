@@ -227,8 +227,8 @@ MainWin = (function ()
             case 'katago katago':
                 return this.referee.newGame({black:'katago',white:'katago'})
 
-            case 'hara katago':
-                return this.referee.newGame({black:'hara',white:'katago'})
+            case 'katago leelaz':
+                return this.referee.newGame({black:'katago',white:'leelaz'})
 
             case 'gnu katago':
                 return this.referee.newGame({black:'gnu',white:'katago'})

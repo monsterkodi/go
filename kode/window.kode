@@ -161,7 +161,7 @@ function MainWin extends win
             'gnu hara'                      ➜ @referee.newGame black:'gnu'    white:'hara'   
             'hara hara'                     ➜ @referee.newGame black:'hara'   white:'hara'   
             'katago katago'                 ➜ @referee.newGame black:'katago' white:'katago'   
-            'hara katago'                   ➜ @referee.newGame black:'hara'   white:'katago'   
+            'katago leelaz'                 ➜ @referee.newGame black:'katago' white:'leelaz'   
             'gnu katago'                    ➜ @referee.newGame black:'gnu'    white:'katago'   
             '7x7''9x9''13x13''19x19'        ➜ @referee.newGame size:int action
             '0''1''2''3''4'

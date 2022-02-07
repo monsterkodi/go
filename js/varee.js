@@ -19,12 +19,10 @@ varee = (function ()
     
         this["onResize"] = this["onResize"].bind(this)
         this["onTree"] = this["onTree"].bind(this)
+        console.log('varee')
         this.div = elem('div',{class:'varee',parent:this.parent})
         this.canvas = elem('canvas',{class:'treelines',parent:this.div})
         this.ctx = this.canvas.getContext('2d')
-        this.ctx.strokeStyle = 'black'
-        this.ctx.lineWidth = 14
-        this.ctx.lineCap = 'round'
         this.hlt = elem('div',{class:'highlts',parent:this.div})
         this.stn = elem('div',{class:'stones',parent:this.div})
         this.crs = elem('div',{class:'cursor',parent:this.hlt})
@@ -35,18 +33,18 @@ varee = (function ()
 
     varee.prototype["onTree"] = function ()
     {
-        var ali, ctr, mv, mvi, _41_33_
+        var ali, ctr, mv, mvi, _39_33_
 
         this.stn.innerHTML = ''
         var list = _k_.list(this.tree.moves)
-        for (var _35_15_ = 0; _35_15_ < list.length; _35_15_++)
+        for (var _33_15_ = 0; _33_15_ < list.length; _33_15_++)
         {
-            mv = list[_35_15_]
+            mv = list[_33_15_]
             elem({class:`varii ${mv.color}`,text:mv.pos,parent:this.stn})
         }
         this.crs.classList.remove('black')
         this.crs.classList.remove('white')
-        ctr = ((_41_33_=this.tree.cursorTree()) != null ? _41_33_ : this.tree)
+        ctr = ((_39_33_=this.tree.cursorTree()) != null ? _39_33_ : this.tree)
         this.crs.classList.add(ctr.moves[ctr.cursor.mvi].color)
         mvi = this.tree.cursor.mvi
         ali = this.tree.cursor.ali
@@ -57,16 +55,19 @@ varee = (function ()
 
     varee.prototype["drawLines"] = function ()
     {
-        this.canvas.width = 100
-        this.canvas.height = this.tree.moves.length * 50
+        this.canvas.width = 200
+        this.canvas.height = this.tree.moves.length * 100
         if (this.tree.moves.length > 1)
         {
-            this.ctx.strokeStyle = '#000d'
-            this.ctx.lineWidth = 3
-            this.ctx.lineCap = 'round'
+            this.ctx.strokeStyle = '#800'
             this.ctx.beginPath()
-            this.ctx.moveTo(25,25)
-            this.ctx.lineTo(25,25 + 50 * (this.tree.moves.length - 1))
+            this.ctx.moveTo(48,50)
+            this.ctx.lineTo(48,50 + 100 * (this.tree.moves.length - 1))
+            this.ctx.stroke()
+            this.ctx.strokeStyle = '#ff8'
+            this.ctx.beginPath()
+            this.ctx.moveTo(53,50)
+            this.ctx.lineTo(53,50 + 100 * (this.tree.moves.length - 1))
             return this.ctx.stroke()
         }
     }
@@ -84,6 +85,7 @@ varee = (function ()
     {
         if (this.div)
         {
+            console.log('remove')
             post.off('resize',this.onResize)
             post.off('tree',this.onTree)
             this.parent.removeChild(this.div)

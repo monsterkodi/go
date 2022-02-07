@@ -99,9 +99,6 @@ Board = (function ()
         this.ctx.strokeStyle = 'black'
         this.ctx.lineWidth = (this.size === 19 ? 2 : (this.size === 13 ? 2.5 : 3))
         this.ctx.lineCap = 'round'
-        this.ctx.fillStyle = '#f6c67111'
-        this.ctx.rect(0,0,s,s)
-        this.ctx.fill()
         this.ctx.fillStyle = 'black'
         for (var _92_17_ = i = 0, _92_21_ = this.size; (_92_17_ <= _92_21_ ? i < this.size : i > this.size); (_92_17_ <= _92_21_ ? ++i : --i))
         {
