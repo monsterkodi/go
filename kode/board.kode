@@ -81,7 +81,7 @@ function Board
         @ctx = @canvas.getContext '2d'
         @ctx.strokeStyle = 'black'
         @ctx.lineWidth = @size == 19 ? 2 : @size == 13 ? 2.5 : 3
-        @ctx.lineCap = "round"
+        @ctx.lineCap = 'round'
 
         @ctx.fillStyle = '#f6c67111'
         @ctx.rect 0,0,s,s

@@ -98,7 +98,7 @@ Board = (function ()
         this.ctx = this.canvas.getContext('2d')
         this.ctx.strokeStyle = 'black'
         this.ctx.lineWidth = (this.size === 19 ? 2 : (this.size === 13 ? 2.5 : 3))
-        this.ctx.lineCap = "round"
+        this.ctx.lineCap = 'round'
         this.ctx.fillStyle = '#f6c67111'
         this.ctx.rect(0,0,s,s)
         this.ctx.fill()

@@ -159,12 +159,11 @@ body {
   background-color: rgba(80,30,0,0.05);
   box-shadow: inset 1px 1px 6px rgba(80,30,0,0.8);
   border-radius: 6px;
-  padding: 12px;
   position: absolute;
   top: 10px;
   bottom: 10px;
   right: 10px;
-  overflow: scroll;
+  overflow: auto;
 }
 .varee .stones,
 .varee .highlts {
@@ -176,33 +175,42 @@ body {
   display: block;
 }
 .varii {
-  margin: 10px;
   text-align: center;
-  line-height: 40px;
-  width: 40px;
-  height: 40px;
+  line-height: 50px;
+  width: 50px;
+  height: 50px;
   background-size: contain;
+  background-position-x: 3.1px;
+  background-position-y: 2.5px;
 }
 .varii.black {
   color: #faeeea;
-  background-image: url("../../img/stone_black.png");
+  background-image: url("../../img/varii_black.png");
 }
 .varii.white {
   color: #000;
-  background-image: url("../../img/stone_white1.png");
+  background-image: url("../../img/varii_white.png");
 }
 .cursor {
   position: absolute;
   display: block;
   transform: translate(-50%, -50%);
+  width: 30px;
+  height: 30px;
+  border-radius: 30px;
 }
 .cursor.white {
-  border: 5px solid #dcc864;
+  border: 10px solid #969600;
   opacity: 0.9;
 }
 .cursor.black {
-  border: 5px solid #969600;
+  border: 10px solid #969600;
   opacity: 0.9;
+}
+.treelines {
+  position: absolute;
+  top: 12px;
+  left: 12px;
 }
 #titlebar {
   display: flex;

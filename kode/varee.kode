@@ -13,12 +13,17 @@ function varee
 
     @: (@parent, @tree) ->
         
-        @div = elem 'div' class:'varee'   parent:@parent        
+        @div = elem 'div' class:'varee' parent:@parent        
+        
+        @canvas = elem 'canvas' class:'treelines' parent:@div
+        @ctx = @canvas.getContext '2d'
+        @ctx.strokeStyle = 'black'
+        @ctx.lineWidth = 14
+        @ctx.lineCap = 'round'
+                
         @hlt = elem 'div' class:'highlts' parent:@div
         @stn = elem 'div' class:'stones'  parent:@div
         @crs = elem 'div' class:'cursor'  parent:@hlt
-        @crs.style.width  = "#{40}px"
-        @crs.style.height = "#{40}px"
         
         post.on 'resize' @onResize
         post.on 'tree'   @onTree
@@ -38,9 +43,26 @@ function varee
             
         mvi = @tree.cursor.mvi
         ali = @tree.cursor.ali
-        @crs.style.left = "#{ali*50+30}px"
-        @crs.style.top  = "#{mvi*50+30}px"
-        @crs.style.borderRadius = "#{40}px"
+        @crs.style.left = "#{ali*50+25}px"
+        @crs.style.top  = "#{mvi*50+25}px"
+
+        @drawLines()
+        
+    drawLines: ->
+        
+        @canvas.width  = 100
+        @canvas.height = @tree.moves.length*50
+        
+        if @tree.moves.length > 1
+            
+            @ctx.strokeStyle = '#000d'
+            @ctx.lineWidth = 3
+            @ctx.lineCap = 'round'
+            
+            @ctx.beginPath()
+            @ctx.moveTo 25 25
+            @ctx.lineTo 25 25+50*(@tree.moves.length-1)
+            @ctx.stroke()   
         
     onResize: =>
         
