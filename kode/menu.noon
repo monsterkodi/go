@@ -59,6 +59,7 @@ game
         9                   9
     
 view
+    tree                    alt+t
     numbers                 alt+n
     liberties               alt+l
     legend                  cmdctrl+l

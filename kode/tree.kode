@@ -6,7 +6,7 @@
    000     000   000  00000000  00000000
 ###
 
-{ kstr } = require 'kxk'
+{ kstr, post } = require 'kxk'
 { max } = Math
 
 function Tree
@@ -33,15 +33,18 @@ function Tree
             if @cursor.mvi == @moves.length-1
                 @cursor.mvi = @moves.length
                 @cursor.ali = 0
-                @moves.push pos:pos, cpt:cpt, alt:[]
+                @moves.push pos:pos, cpt:cpt, alt:[], color:@nextColor()
+                post.emit 'tree'
             else
                 @cursor.mvi++
                 @cursor.ali = @moves[@cursor.mvi].alt.length+1
-                t = new Tree @
-                @moves[@cursor.mvi].alt.push t
-                t.addMove pos, cpt
+                tr = new Tree @
+                @moves[@cursor.mvi].alt.push tr
+                tr.addMove pos, cpt
         
         log @toString() + '\n'
+        
+    nextColor: -> ['black''white'][@history().length%2]
         
     # 000   000   0000000   000   000  000   0000000    0000000   000000000  00000000  
     # 0000  000  000   000  000   000  000  000        000   000     000     000       
@@ -59,8 +62,10 @@ function Tree
             'right' ➜ @navigateRight()
             'left'  ➜ @navigateLeft()
             'back'  ➜ @navigateBack()
-            
-        log @toString() + '\n'                    
+
+        log @toString() + '\n'  
+        
+        post.emit 'tree'
         
     navigateUp: ->
         
@@ -213,7 +218,10 @@ function Tree
             else
                 h = @moves[..@cursor.mvi].map (m) -> m.pos
         else
-            h = [@moves[0].pos]
+            if @moves.length
+                h = [@moves[0].pos]
+            else
+                h = []
         h
         
     # 000000000   0000000   000      000  000   000  00000000   0000000  

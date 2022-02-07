@@ -1,0 +1,59 @@
+###
+000   000   0000000   00000000   00000000  00000000
+000   000  000   000  000   000  000       000     
+ 000 000   000000000  0000000    0000000   0000000 
+   000     000   000  000   000  000       000     
+    0      000   000  000   000  00000000  00000000
+###
+
+{ elem, post } = require 'kxk'
+{ max } = Math
+
+function varee
+
+    @: (@parent, @tree) ->
+        
+        @div = elem 'div' class:'varee'   parent:@parent        
+        @hlt = elem 'div' class:'highlts' parent:@div
+        @stn = elem 'div' class:'stones'  parent:@div
+        @crs = elem 'div' class:'cursor'  parent:@hlt
+        @crs.style.width  = "#{40}px"
+        @crs.style.height = "#{40}px"
+        
+        post.on 'resize' @onResize
+        post.on 'tree'   @onTree
+        @onResize()
+        
+    onTree: =>
+        
+        @stn.innerHTML = ''
+        for mv in @tree.moves
+            elem class:"varii #{mv.color}" text: mv.pos, parent:@stn
+
+        @crs.classList.remove 'black'
+        @crs.classList.remove 'white'
+        
+        ctr = @tree.cursorTree() ? @tree
+        @crs.classList.add ctr.moves[ctr.cursor.mvi].color
+            
+        mvi = @tree.cursor.mvi
+        ali = @tree.cursor.ali
+        @crs.style.left = "#{ali*50+30}px"
+        @crs.style.top  = "#{mvi*50+30}px"
+        @crs.style.borderRadius = "#{40}px"
+        
+    onResize: =>
+        
+        br = @parent.getBoundingClientRect()
+        w  = max 0 (br.width - br.height)/2
+        @div.style.width = "#{w}px"
+        
+    remove: ->
+        
+        if @div
+            post.off 'resize' @onResize
+            post.off 'tree'   @onTree
+            @parent.removeChild @div
+            delete @div
+
+module.exports = varee

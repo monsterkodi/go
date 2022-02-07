@@ -144,6 +144,7 @@ function MainWin extends win
             'resign'                        ➜ @referee.playerMove 'resign' 'human'
             'genmove'                       ➜ @referee.genMove()
             'calcscore'                     ➜ @referee.game.calcScore(); @referee.board.annotate()
+            'tree'                          ➜ @referee.toggleTree() 
             'numbers'                       ➜ @referee.board.toggleNumbers()
             'legend'                        ➜ @referee.board.toggleLegend()
             'liberties'                     ➜ @referee.board.toggleLiberties()

@@ -161,6 +161,57 @@ body
     background-color    #faeeea
     opacity             0.9
     
+// 000   000   0000000   00000000   00000000  00000000  
+// 000   000  000   000  000   000  000       000       
+//  000 000   000000000  0000000    0000000   0000000   
+//    000     000   000  000   000  000       000       
+//     0      000   000  000   000  00000000  00000000  
+
+.varee
+    background-color    rgba(80,30,0,0.05)
+    box-shadow          inset 1px 1px 6px rgba(80,30,0,0.8)
+    border-radius       6px
+    padding             12px
+    position            absolute
+    top                 10px
+    bottom              10px
+    right               10px
+    overflow            scroll
+    & .stones
+    & .highlts
+        position        absolute
+        bottom          12px
+        right           12px
+        left            12px
+        top             12px
+        display         block
+.varii
+    margin                  10px
+    text-align              center
+    line-height             40px
+    width                   40px
+    height                  40px
+    background-size         contain
+    &.black
+        color               #faeeea
+        background-image    url("../../img/stone_black.png")
+    &.white
+        color               black
+        background-image    url("../../img/stone_white1.png")
+
+.cursor
+    &.white
+        border          5px solid rgb(220,200,100)
+        // border          5px solid black
+        opacity         0.9
+    &.black
+        border          5px solid rgb(150,150,0)
+        // border          5px solid white
+        opacity         0.9
+    position            absolute
+    display             block
+    transform           translate(-50%, -50%)
+        
 // 000000000  000  000000000  000      00000000  0000000     0000000   00000000 
 //    000     000     000     000      000       000   000  000   000  000   000
 //    000     000     000     000      0000000   0000000    000000000  0000000  

@@ -16,6 +16,7 @@ Katago  = require './bot/katago'
 Hara    = require './bot/hara'
 GNU     = require './bot/gnu'
 Board   = require './board'
+Varee   = require './varee'
 Tree    = require './tree'
 Game    = require './game'
 
@@ -27,7 +28,7 @@ function Referee
         @handicap  = window.stash.get 'handicap'    0
         @white     = window.stash.get 'white'       'human'
         @black     = window.stash.get 'black'       'human'
-        
+                
         post.on 'newGame'    @newGame
         post.on 'playerMove' @playerMove
 
@@ -51,8 +52,6 @@ function Referee
         @tree      = new Tree
         
         if @white == 'leelaz' or @black == 'leelaz' then @boardsize = 19
-        
-        # log @boardsize, @handicap, info, gi
         
         window.stash.set 'size'      @boardsize
         window.stash.set 'white'     @white
@@ -94,6 +93,9 @@ function Referee
                 
             if @compi.white and @handicap > 1
                 @compi.white.genmove()
+                
+        if window.stash.get('varee', false) and not @varee
+            @varee = new Varee @parent, @tree
             
     # 00000000   00000000  00000000   000       0000000   000   000  
     # 000   000  000       000   000  000      000   000   000 000   
@@ -225,7 +227,7 @@ function Referee
     
     jumpToStart: ->
         
-        log 'start'
+        # log 'start'
         return if @game.start()
         @redos = @game.moves.m.concat @redos
         @compi.black?.send "clear_board"
@@ -234,8 +236,18 @@ function Referee
         
     jumpToEnd: ->
 
-        log 'end'
+        # log 'end'
         while valid @redos
             @redo()
+            
+    toggleTree: ->
+        
+        if @varee
+            @varee.remove()
+            delete @varee
+            window.stash.set 'varee' false
+        else
+            window.stash.set 'varee' true
+            @varee = new Varee @parent, @tree
                     
 module.exports = Referee

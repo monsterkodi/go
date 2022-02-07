@@ -176,6 +176,9 @@ MainWin = (function ()
                 this.referee.game.calcScore()
                 return this.referee.board.annotate()
 
+            case 'tree':
+                return this.referee.toggleTree()
+
             case 'numbers':
                 return this.referee.board.toggleNumbers()
 

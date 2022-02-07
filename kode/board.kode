@@ -50,17 +50,14 @@ function Board
             @show[key] = window.stash.get key
             @[key[...3]].style.display = @show[key] ? 'initial' : 'none'
         
-        @lst = elem 'div' class:"last" parent:@hlt
+        @lst = elem 'div' class:'last' parent:@hlt
         @lst.style = "display:none;"
      
         post.on 'variation' @onVariation
         post.on 'resize' @onResize
         @scaleFonts()
                 
-    onResize: =>
-
-        @scaleFonts()        
-        @annotate()
+    onResize: => @scaleFonts()        
         
     scaleFonts: ->
         
@@ -285,7 +282,8 @@ function Board
     annotate: ->
 
         @divRect = @div.getBoundingClientRect()
-        @div.remove()
+        @parent.removeChild @div
+        # @div.remove()
         @showLastMove()
         @numbers()
         @liberties()
@@ -325,7 +323,10 @@ function Board
     onVariation: (variation) =>
 
         return if not @game
-                
+        
+        if not @divRect
+            @divRect = @div.getBoundingClientRect()
+        
         s = @divRect.height/(@size+1)
         s = max 16 s/3
         
