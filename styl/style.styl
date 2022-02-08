@@ -172,19 +172,20 @@ body
     box-shadow          inset 1px 1px 6px rgba(80,30,0,0.8)
     border-radius       6px
     position            absolute
-    top                 10px
-    bottom              10px
-    right               10px
+    border              2px solid
+    border-left-color   #1001
+    border-top-color    #1001
+    border-bottom-color #ff04
+    border-right-color  #ff04
     overflow            auto
     & .stones
     & .highlts
         position        absolute
-        bottom          12px
-        right           12px
-        left            12px
-        top             12px
         display         block
 .varii
+    opacity                 0.5
+    position                absolute
+    display                 block
     text-align              center
     line-height             50px
     width                   50px
@@ -198,7 +199,15 @@ body
         background-image    url("../../img/varii_white.png")
     background-position-x   3.1px
     background-position-y   2.5px
+    
+// .varii.horiz
+    // display                 inline-grid
 
+// .variirow
+    // height                  50px
+    // display                 inline
+    // white-space             nowrap
+    
 .cursor
     &.white
         border          10px solid rgb(150,150,0)
@@ -215,10 +224,7 @@ body
         
 .treelines
     position            absolute
-    top                 12px
-    left                12px
     transform           scale3d(0.5, 0.5, 1) translate3d(-50%, -50%, 0px)
-    // border              1px solid
     
 // 000000000  000  000000000  000      00000000  0000000     0000000   00000000 
 //    000     000     000     000      000       000   000  000   000  000   000
@@ -402,6 +408,7 @@ body
 ::-webkit-scrollbar
     height                  frameWidth  
     background-color        transparent
+    border-radius           frameWidth
 ::-webkit-scrollbar-track
     background-color        transparent
     

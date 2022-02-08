@@ -11,7 +11,7 @@ go
     save                    cmdctrl+s
     save as ...             cmdctrl+shift+s
     --
-    up                      up
+    back                    up
     down                    down
     left                    left
     right                   right

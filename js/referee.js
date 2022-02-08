@@ -52,7 +52,7 @@ Referee = (function ()
         this.tree = new Tree
         if (window.stash.get('varee'))
         {
-            this.varee = new Varee(this.parent,this.tree)
+            this.varee = new Varee(this.parent,this.tree,this.boardsize)
         }
         if (this.white === 'leelaz' || this.black === 'leelaz')
         {

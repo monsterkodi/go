@@ -22,7 +22,7 @@ body {
   color: #999;
 }
 .titlebar-version {
-  color: #444;
+  color: #d80;
 }
 .titlebar-dot {
   color: #333;
@@ -90,10 +90,10 @@ body {
   color: #333;
 }
 ::-webkit-scrollbar-corner {
-  background-color: #111;
+  background-color: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: #444;
+  background-color: #d80;
 }
 ::-webkit-scrollbar-thumb:hover {
   background-color: #b00;

@@ -26,7 +26,7 @@ Tree = (function ()
 
     Tree.prototype["addMove"] = function (pos, cpt = [])
     {
-        var tr
+        var tr, _37_25_
 
         console.log('add\n')
         if (tr = this.cursorTree())
@@ -40,7 +40,7 @@ Tree = (function ()
                 this.cursor.mvi = this.moves.length
                 this.cursor.ali = 0
                 this.moves.push({pos:pos,cpt:cpt,alt:[],color:this.nextColor()})
-                post.emit('tree')
+                ;(typeof post.emit === "function" ? post.emit('tree') : undefined)
             }
             else
             {
@@ -61,6 +61,8 @@ Tree = (function ()
 
     Tree.prototype["navigate"] = function (dir)
     {
+        var _68_17_
+
         console.log(dir + '\n')
         switch (dir)
         {
@@ -82,7 +84,7 @@ Tree = (function ()
         }
 
         console.log(this.toString() + '\n')
-        return post.emit('tree')
+        return (typeof post.emit === "function" ? post.emit('tree') : undefined)
     }
 
     Tree.prototype["navigateUp"] = function ()
@@ -358,7 +360,7 @@ Tree = (function ()
         return h
     }
 
-    Tree.prototype["toLines"] = function ()
+    Tree.prototype["rowStrings"] = function ()
     {
         var a, i, li, lo, m, mi, ps, rc, s, t, tl, tls, to, tw, _254_28_
 
@@ -388,7 +390,7 @@ Tree = (function ()
                 t = list[_249_18_]
                 tw = 4
                 li = 0
-                tls = t.toLines()
+                tls = t.rowStrings()
                 var list1 = _k_.list(tls)
                 for (var _253_23_ = 0; _253_23_ < list1.length; _253_23_++)
                 {
@@ -414,10 +416,64 @@ Tree = (function ()
 
     Tree.prototype["toString"] = function ()
     {
-        return this.toLines().map(function (l)
+        return this.rowStrings().map(function (l)
         {
             return _k_.rtrim(l)
         }).join('\n')
+    }
+
+    Tree.prototype["toColumns"] = function ()
+    {
+        var columns, cursor, treeToColumn
+
+        columns = []
+        cursor = {x:0,y:0}
+        treeToColumn = function (tree, col, row)
+        {
+            var ai, alt, column, fillCol, mi, mv
+
+            fillCol = function ()
+            {
+                while (col >= columns.length)
+                {
+                    columns.push([])
+                }
+            }
+            fillCol()
+            column = null
+            while (!column)
+            {
+                column = columns[col]
+                for (var _291_26_ = mi = tree.moves.length - 1, _291_47_ = 0; (_291_26_ <= _291_47_ ? mi <= 0 : mi >= 0); (_291_26_ <= _291_47_ ? ++mi : --mi))
+                {
+                    if (column[mi + row])
+                    {
+                        column[row] = '-'
+                        col++
+                        fillCol()
+                        column = null
+                        break
+                    }
+                }
+            }
+            for (var _299_22_ = mi = tree.moves.length - 1, _299_43_ = 0; (_299_22_ <= _299_43_ ? mi <= 0 : mi >= 0); (_299_22_ <= _299_43_ ? ++mi : --mi))
+            {
+                mv = tree.moves[mi]
+                column[row + mi] = mv.pos
+                if (tree.cursor.mvi === mi)
+                {
+                    cursor.x = col + tree.cursor.ali
+                    cursor.y = row + mi
+                }
+                for (var _305_26_ = ai = 0, _305_30_ = mv.alt.length; (_305_26_ <= _305_30_ ? ai < mv.alt.length : ai > mv.alt.length); (_305_26_ <= _305_30_ ? ++ai : --ai))
+                {
+                    alt = mv.alt[ai]
+                    treeToColumn(alt,col + ai + 1,row + mi)
+                }
+            }
+        }
+        treeToColumn(this,0,0)
+        return {cursor:cursor,columns:columns}
     }
 
     return Tree

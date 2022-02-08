@@ -551,3 +551,73 @@ Tree = require '../tree'
         
         t.history() ▸ ['C3''B2''B14''B16''C4']
         
+    #  0000000   0000000   000      000   000  00     00  000   000   0000000  
+    # 000       000   000  000      000   000  000   000  0000  000  000       
+    # 000       000   000  000      000   000  000000000  000 0 000  0000000   
+    # 000       000   000  000      000   000  000 0 000  000  0000       000  
+    #  0000000   0000000   0000000   0000000   000   000  000   000  0000000   
+    
+    ▸ columns
+    
+        t.toColumns() ▸ 
+            cursor:     x:2 y:4
+            columns:    [[
+                            'C3'
+                            'B2'
+                            'B14'
+                            'B15'
+                        ],[
+                            undefined
+                            '-'
+                            undefined
+                            'B16'
+                            'C3'
+                        ],[
+                            undefined
+                            '-'
+                            undefined
+                            undefined
+                            'C4'
+                        ],[
+                            undefined
+                            'B3'
+                            'A1'
+                            'A2'
+                            'A3'
+                        ],[
+                            undefined
+                            undefined
+                            undefined
+                            'A3'
+                            'A2'
+                            'A4'
+                        ],[
+                            undefined
+                            undefined
+                            undefined
+                            '-'
+                            '-'
+                            'A5'
+                        ],[
+                            undefined
+                            undefined
+                            undefined
+                            '-'
+                            '-'
+                            'A6'
+                        ],[
+                            undefined
+                            undefined
+                            undefined
+                            '-'
+                            'A7'
+                            'A8'
+                        ],[
+                            undefined
+                            undefined
+                            undefined
+                            'B12'
+                            'B13'
+                        ]]
+                
+                

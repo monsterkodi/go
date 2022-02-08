@@ -52,7 +52,7 @@ function Referee
         info       = gi.info     ? {}
         @redos     = []
         @tree      = new Tree
-        @varee     = new Varee @parent, @tree if window.stash.get 'varee'
+        @varee     = new Varee @parent, @tree, @boardsize if window.stash.get 'varee'
         
         if @white == 'leelaz' or @black == 'leelaz' then @boardsize = 19
         
