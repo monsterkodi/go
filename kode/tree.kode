@@ -86,15 +86,18 @@ function Tree
         else if @cursor.mvi < @moves.length-1
             @cursor.mvi++
 
-    navigateLeft: ->  
+    navigateLeft: ->
         
         if tr = @cursorTree()
-            if tr.cursor.mvi > 0
+            
+            if tr.cursor.ali > 0
                 tr.navigateLeft()
-            else
-                if tr.cursor.mvi == 0
-                    tr.cursor.mvi = -1
-                @cursor.ali--
+                return
+            
+            if tr.cursor.mvi == 0 and tr.cursor.ali == 0
+                tr.cursor.mvi = -1
+                
+        @cursor.ali-- if @cursor.ali
         
     navigateRight: ->
         
@@ -183,7 +186,12 @@ function Tree
     #    000     000   000  00000000  00000000        000   000     000     
     
     
-    cursorTree: -> @moves[@cursor.mvi].alt[@cursor.ali-1] if @cursor.ali
+    cursorTree: ->
+    
+        if @cursor.mvi >= 0
+            if @cursor.ali
+                # @moves[@cursor.mvi]?.alt[@cursor.ali-1]
+                @moves[@cursor.mvi]?.alt[@cursor.ali-1]
     
     treeAt: (mvi, ali) ->
         
@@ -292,12 +300,15 @@ function Tree
                 
                 for mi in tree.moves.length-1..0
                     if column[mi+row]
-                        column[row] = '-'
+                        if not column[row] 
+                            column[row] = '-'
                         col++
                         fillCol()
                         column = null
                         break
 
+            treeCol = col
+                        
             vlines.push [[col,row], [col,row+tree.moves.length-1]]
             for mi in tree.moves.length-1..0
                 mv = tree.moves[mi]
@@ -305,13 +316,16 @@ function Tree
                 if tree.cursor.mvi == mi 
                     cursor.x = col+tree.cursor.ali
                     cursor.y = row+mi
-                
+
+                lastTreeColumn = col
+                    
                 for ai in 0...mv.alt.length
                     alt = mv.alt[ai]
-                    lastTreeColumn = col+ai+1
-                    treeToColumn alt, col+ai+1, row+mi
+                    lastTreeColumn = treeToColumn alt, col+ai+1, row+mi
                     
                 if mv.alt.length ➜ hlines.push [[col,row+mi], [lastTreeColumn,row+mi]]
+                    
+            treeCol
                     
         treeToColumn @, 0 0
         

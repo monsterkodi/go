@@ -6,7 +6,7 @@
     0      000   000  000   000  00000000  00000000
 ###
 
-{ elem, noon, post } = require 'kxk'
+{ elem, post } = require 'kxk'
 { max } = Math
 
 function Varee
@@ -15,7 +15,7 @@ function Varee
         
         @div = elem 'div' class:'varee' parent:@parent        
         
-        @width  = 100
+        @width  = 110
         @height = 800
         @canvas = elem 'canvas' class:'treelines' parent:@div
         @ctx = @canvas.getContext '2d'
@@ -51,13 +51,13 @@ function Varee
                                 elem class:"varii #{color}" 
                                      text:pos, 
                                      parent:@stn, 
-                                     style:"left:#{x*50}px; top:#{y*50}px;"
+                                     style:"left:#{25+x*50}px; top:#{25+y*50}px;"
         
         @crs.classList.remove 'black'
         @crs.classList.remove 'white'
         @crs.classList.add color = ['black''white'][cursor.y%2]
-        @crs.style.left = "#{cursor.x*50+25}px"
-        @crs.style.top  = "#{cursor.y*50+25}px"
+        @crs.style.left = "#{cursor.x*50+50}px"
+        @crs.style.top  = "#{cursor.y*50+50}px"
         
         @crs.scrollIntoViewIfNeeded()
 
@@ -72,9 +72,8 @@ function Varee
     drawLines: (lines) ->
         
         {hlines,vlines} = lines
-        log noon lines
+
         @canvas.width  = @width
-        # @canvas.height = @tree.moves.length*100
         @canvas.height = @height
         
         mw = @width
@@ -83,31 +82,31 @@ function Varee
         @ctx.strokeStyle = '#800'
         @ctx.beginPath()
         for vl in vlines
-            @ctx.moveTo 50+vl[0][0]*100-2, 50+vl[0][1]*100
-            @ctx.lineTo 50+vl[1][0]*100-2, 50+vl[1][1]*100
+            @ctx.moveTo 100+vl[0][0]*100-1, 100+vl[0][1]*100
+            @ctx.lineTo 100+vl[1][0]*100-1, 100+vl[1][1]*100
         @ctx.stroke()   
 
         @ctx.strokeStyle = '#ff8'
         @ctx.beginPath()
         for vl in vlines
-            @ctx.moveTo 50+vl[0][0]*100+2, 50+vl[0][1]*100
-            @ctx.lineTo 50+vl[1][0]*100+2, 50+vl[1][1]*100
+            @ctx.moveTo 100+vl[0][0]*100+2, 100+vl[0][1]*100
+            @ctx.lineTo 100+vl[1][0]*100+2, 100+vl[1][1]*100
             mh = max mh, 100+vl[1][1]*100
         @ctx.stroke() 
         
         @ctx.strokeStyle = '#800'
         @ctx.beginPath()
         for hl in hlines
-            @ctx.moveTo 50+hl[0][0]*100, 50+hl[0][1]*100-2
-            @ctx.lineTo 50+hl[1][0]*100, 50+hl[1][1]*100-2
+            @ctx.moveTo 100+hl[0][0]*100, 100+hl[0][1]*100-1
+            @ctx.lineTo 100+hl[1][0]*100, 100+hl[1][1]*100-1
         @ctx.stroke() 
         
         @ctx.strokeStyle = '#ff8'
         @ctx.beginPath()
         for hl in hlines
-            @ctx.moveTo 50+hl[0][0]*100, 50+hl[0][1]*100+2
-            @ctx.lineTo 50+hl[1][0]*100, 50+hl[1][1]*100+2
-            mw = max mw, 100+hl[1][0]*100
+            @ctx.moveTo 100+hl[0][0]*100, 100+hl[0][1]*100+2
+            @ctx.lineTo 100+hl[1][0]*100, 100+hl[1][1]*100+2
+            mw = max mw, 110+hl[1][0]*100
         @ctx.stroke()
                     
         # log mw, mh
