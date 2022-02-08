@@ -424,13 +424,15 @@ Tree = (function ()
 
     Tree.prototype["toColumns"] = function ()
     {
-        var columns, cursor, treeToColumn
+        var columns, cursor, hlines, treeToColumn, vlines
 
         columns = []
         cursor = {x:0,y:0}
+        hlines = []
+        vlines = []
         treeToColumn = function (tree, col, row)
         {
-            var ai, alt, column, fillCol, mi, mv
+            var ai, alt, column, fillCol, lastTreeColumn, mi, mv
 
             fillCol = function ()
             {
@@ -444,7 +446,7 @@ Tree = (function ()
             while (!column)
             {
                 column = columns[col]
-                for (var _291_26_ = mi = tree.moves.length - 1, _291_47_ = 0; (_291_26_ <= _291_47_ ? mi <= 0 : mi >= 0); (_291_26_ <= _291_47_ ? ++mi : --mi))
+                for (var _293_26_ = mi = tree.moves.length - 1, _293_47_ = 0; (_293_26_ <= _293_47_ ? mi <= 0 : mi >= 0); (_293_26_ <= _293_47_ ? ++mi : --mi))
                 {
                     if (column[mi + row])
                     {
@@ -456,7 +458,8 @@ Tree = (function ()
                     }
                 }
             }
-            for (var _299_22_ = mi = tree.moves.length - 1, _299_43_ = 0; (_299_22_ <= _299_43_ ? mi <= 0 : mi >= 0); (_299_22_ <= _299_43_ ? ++mi : --mi))
+            vlines.push([[col,row],[col,row + tree.moves.length - 1]])
+            for (var _302_22_ = mi = tree.moves.length - 1, _302_43_ = 0; (_302_22_ <= _302_43_ ? mi <= 0 : mi >= 0); (_302_22_ <= _302_43_ ? ++mi : --mi))
             {
                 mv = tree.moves[mi]
                 column[row + mi] = mv.pos
@@ -465,15 +468,20 @@ Tree = (function ()
                     cursor.x = col + tree.cursor.ali
                     cursor.y = row + mi
                 }
-                for (var _305_26_ = ai = 0, _305_30_ = mv.alt.length; (_305_26_ <= _305_30_ ? ai < mv.alt.length : ai > mv.alt.length); (_305_26_ <= _305_30_ ? ++ai : --ai))
+                for (var _309_26_ = ai = 0, _309_30_ = mv.alt.length; (_309_26_ <= _309_30_ ? ai < mv.alt.length : ai > mv.alt.length); (_309_26_ <= _309_30_ ? ++ai : --ai))
                 {
                     alt = mv.alt[ai]
+                    lastTreeColumn = col + ai + 1
                     treeToColumn(alt,col + ai + 1,row + mi)
+                }
+                if (mv.alt.length)
+                {
+                    hlines.push([[col,row + mi],[lastTreeColumn,row + mi]])
                 }
             }
         }
         treeToColumn(this,0,0)
-        return {cursor:cursor,columns:columns}
+        return {cursor:cursor,columns:columns,lines:{hlines:hlines,vlines:vlines}}
     }
 
     return Tree

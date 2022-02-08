@@ -6,7 +6,7 @@
     0      000   000  000   000  00000000  00000000
 ###
 
-{ elem, post } = require 'kxk'
+{ elem, noon, post } = require 'kxk'
 { max } = Math
 
 function Varee
@@ -16,7 +16,7 @@ function Varee
         @div = elem 'div' class:'varee' parent:@parent        
         
         @width  = 100
-        @height = 100
+        @height = 800
         @canvas = elem 'canvas' class:'treelines' parent:@div
         @ctx = @canvas.getContext '2d'
                 
@@ -39,19 +39,15 @@ function Varee
         
         @stn.innerHTML = ''
         
-        {columns,cursor} = @tree.toColumns()
+        {columns,cursor,lines} = @tree.toColumns()
 
-        hlines = []
-        vlines = []
-        for x,column of columns
-            for y,pos of column
+        for column,x in columns
+            for pos,y in column
                 switch pos 
                     undefined ➜
-                    '-'       ➜ hlines.push [x,y]
+                    '-'       ➜ 
                               ➜
                                 color = ['black''white'][y%2]
-                                vlines.push [x,y]
-                                hlines.push [x,y] if x and y and column[y-1] in [undefined,'-']
                                 elem class:"varii #{color}" 
                                      text:pos, 
                                      parent:@stn, 
@@ -65,7 +61,7 @@ function Varee
         
         @crs.scrollIntoViewIfNeeded()
 
-        @drawLines hlines, vlines
+        @drawLines lines
         
     # 000      000  000   000  00000000   0000000  
     # 000      000  0000  000  000       000       
@@ -73,9 +69,10 @@ function Varee
     # 000      000  000  0000  000            000  
     # 0000000  000  000   000  00000000  0000000   
     
-    drawLines: (hlines, vlines) ->
+    drawLines: (lines) ->
         
-        log hlines
+        {hlines,vlines} = lines
+        log noon lines
         @canvas.width  = @width
         # @canvas.height = @tree.moves.length*100
         @canvas.height = @height
@@ -86,39 +83,39 @@ function Varee
         @ctx.strokeStyle = '#800'
         @ctx.beginPath()
         for vl in vlines
-            @ctx.moveTo 50+vl[0]*100-3, 50+vl[1]*100
-            @ctx.lineTo 50+vl[0]*100-3, 50+vl[1]*100+50
+            @ctx.moveTo 50+vl[0][0]*100-2, 50+vl[0][1]*100
+            @ctx.lineTo 50+vl[1][0]*100-2, 50+vl[1][1]*100
         @ctx.stroke()   
 
         @ctx.strokeStyle = '#ff8'
         @ctx.beginPath()
         for vl in vlines
-            @ctx.moveTo 50+vl[0]*100+3, 50+vl[1]*100
-            @ctx.lineTo 50+vl[0]*100+3, 50+vl[1]*100+50
-            mh = max mh, 50+vl[1]*100+50
+            @ctx.moveTo 50+vl[0][0]*100+2, 50+vl[0][1]*100
+            @ctx.lineTo 50+vl[1][0]*100+2, 50+vl[1][1]*100
+            mh = max mh, 100+vl[1][1]*100
         @ctx.stroke() 
         
         @ctx.strokeStyle = '#800'
         @ctx.beginPath()
         for hl in hlines
-            @ctx.moveTo 50+hl[0]*100,    50+hl[1]*100-2
-            @ctx.lineTo 50+hl[0]*100+50, 50+hl[1]*100-2
+            @ctx.moveTo 50+hl[0][0]*100, 50+hl[0][1]*100-2
+            @ctx.lineTo 50+hl[1][0]*100, 50+hl[1][1]*100-2
         @ctx.stroke() 
         
         @ctx.strokeStyle = '#ff8'
         @ctx.beginPath()
         for hl in hlines
-            @ctx.moveTo 50+hl[0]*100,    50+hl[1]*100+2
-            @ctx.lineTo 50+hl[0]*100+50, 50+hl[1]*100+2
-            mw = max mw, 50+hl[0]*100+50
+            @ctx.moveTo 50+hl[0][0]*100, 50+hl[0][1]*100+2
+            @ctx.lineTo 50+hl[1][0]*100, 50+hl[1][1]*100+2
+            mw = max mw, 100+hl[1][0]*100
         @ctx.stroke()
                     
         # log mw, mh
         if mw > @width or mh > @height
             @width  = mw
             @height = mh
-            # log @width, @height
-            @drawLines hlines, vlines
+            log 'redraw' @width, @height
+            @drawLines lines
             
     # 00000000   00000000   0000000  000  0000000  00000000  
     # 000   000  000       000       000     000   000       

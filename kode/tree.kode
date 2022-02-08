@@ -278,6 +278,8 @@ function Tree
         
         columns = []
         cursor  = x:0 y:0
+        hlines  = []
+        vlines  = []
         
         treeToColumn = (tree, col, row) ->
             
@@ -296,19 +298,27 @@ function Tree
                         column = null
                         break
 
+            vlines.push [[col,row], [col,row+tree.moves.length-1]]
             for mi in tree.moves.length-1..0
                 mv = tree.moves[mi]
                 column[row+mi] = mv.pos
                 if tree.cursor.mvi == mi 
                     cursor.x = col+tree.cursor.ali
                     cursor.y = row+mi
+                
                 for ai in 0...mv.alt.length
                     alt = mv.alt[ai]
+                    lastTreeColumn = col+ai+1
                     treeToColumn alt, col+ai+1, row+mi
+                    
+                if mv.alt.length ➜ hlines.push [[col,row+mi], [lastTreeColumn,row+mi]]
                     
         treeToColumn @, 0 0
         
         cursor:  cursor
         columns: columns
+        lines:  
+            hlines:hlines
+            vlines:vlines
 
 module.exports = Tree

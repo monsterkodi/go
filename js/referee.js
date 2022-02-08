@@ -286,7 +286,6 @@ Referee = (function ()
 
     Referee.prototype["toggleTree"] = function ()
     {
-        console.log('toggleTree')
         if (this.varee)
         {
             this.varee.remove()
@@ -296,7 +295,7 @@ Referee = (function ()
         else
         {
             window.stash.set('varee',true)
-            this.varee = new Varee(this.parent,this.tree)
+            this.varee = new Varee(this.parent,this.tree,this.boardsize)
             return post.emit('tree')
         }
     }
