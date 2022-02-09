@@ -52,6 +52,7 @@ function Referee
         info       = gi.info     ? {}
         @redos     = []
         @tree      = new Tree
+        @tree.load gi.tree if gi.tree
         @varee     = new Varee @parent, @tree, @boardsize if window.stash.get 'varee'
         
         if @white == 'leelaz' or @black == 'leelaz' then @boardsize = 19
@@ -94,7 +95,18 @@ function Referee
                 
             if @compi.white and @handicap > 1
                 @compi.white.genmove()
-                            
+
+    #  0000000   0000000   000   000  00000000  
+    # 000       000   000  000   000  000       
+    # 0000000   000000000   000 000   0000000   
+    #      000  000   000     000     000       
+    # 0000000   000   000      0      00000000  
+    
+    save: ->
+        
+        @game.save()
+        @tree.save()        
+                
     # 00000000   00000000  00000000   000       0000000   000   000  
     # 000   000  000       000   000  000      000   000   000 000   
     # 0000000    0000000   00000000   000      000000000    00000    
@@ -202,7 +214,6 @@ function Referee
         
         @game.paused = true
         
-        log 'navigate' action
         switch action
             'left'
             'right'
@@ -214,7 +225,6 @@ function Referee
                     @game.paused = true
                     @board.game = @game
                     moves = @tree.history()
-                    log 'moves' moves
                     @replay moves
             
     #       000  000   000  00     00  00000000   

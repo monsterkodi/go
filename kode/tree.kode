@@ -13,7 +13,6 @@ function Tree
 
     @: (@parent) ->
         
-        @parentCursor = copy @parent.cursor if @parent
         @moves  = []
         @cursor = mvi:-1, ali:0
                 
@@ -24,8 +23,6 @@ function Tree
     # 000   000  0000000    0000000    000   000   0000000       0      00000000  
         
     addMove: (pos, cpt=[]) ->
-        
-        log 'add\n'
         
         if tr = @cursorTree()
             tr.addMove pos, cpt
@@ -42,8 +39,6 @@ function Tree
                 @moves[@cursor.mvi].alt.push tr
                 tr.addMove pos, cpt
         
-        log @toString() + '\n'
-        
     nextColor: -> ['black''white'][@history().length%2]
         
     # 000   000   0000000   000   000  000   0000000    0000000   000000000  00000000  
@@ -54,8 +49,6 @@ function Tree
     
     navigate: (dir) ->
 
-        log dir + '\n'
-        
         switch dir
             'up'    ➜ @navigateUp()
             'down'  ➜ @navigateDown()
@@ -63,7 +56,7 @@ function Tree
             'left'  ➜ @navigateLeft()
             'back'  ➜ @navigateBack()
 
-        log @toString() + '\n'  
+        log @toString()
         
         post.emit? 'tree'
         
@@ -163,8 +156,6 @@ function Tree
                 @cursor.mvi = mvi
                 @cursor.ali = ali
                 tr.select.apply tr, miai[2..]
-            else
-                log 'no tree'
         else
             @deselect()
             @cursor.mvi = mvi
@@ -190,7 +181,6 @@ function Tree
     
         if @cursor.mvi >= 0
             if @cursor.ali
-                # @moves[@cursor.mvi]?.alt[@cursor.ali-1]
                 @moves[@cursor.mvi]?.alt[@cursor.ali-1]
     
     treeAt: (mvi, ali) ->
@@ -200,8 +190,6 @@ function Tree
             mv = @moves[mvi]
             if 0 < ali <= mv.alt.length
                 return mv.alt[ali-1]
-        log 'no tree at' mvi, ali
-        log @toString()
         
     depth: -> @moves.length
     width: -> 
@@ -232,11 +220,11 @@ function Tree
                 h = []
         h
         
-    #  0000000  000000000  00000000   000  000   000   0000000    0000000  
-    # 000          000     000   000  000  0000  000  000        000       
-    # 0000000      000     0000000    000  000 0 000  000  0000  0000000   
-    #      000     000     000   000  000  000  0000  000   000       000  
-    # 0000000      000     000   000  000  000   000   0000000   0000000   
+    #  0000000  000000000  00000000   000  000   000   0000000 
+    # 000          000     000   000  000  0000  000  000      
+    # 0000000      000     0000000    000  000 0 000  000  0000
+    #      000     000     000   000  000  000  0000  000   000
+    # 0000000      000     000   000  000  000   000   0000000 
     
     rowStrings: ->
 
@@ -329,10 +317,33 @@ function Tree
                     
         treeToColumn @, 0 0
         
+        for column in columns
+            for mi in 0...column.length
+                column[mi] = '' if not column[mi]
+        
         cursor:  cursor
         columns: columns
         lines:  
             hlines:hlines
             vlines:vlines
-
+            
+    toPOD: ->
+        
+        cursor:@cursor
+        moves: @moves each (m) -> 
+        
+    fromPOD: (pod) ->
+        
+        @cursor = pod.cursor
+        @moves  = pod.moves each (m) ->
+            
+    #  0000000   0000000   000   000  00000000  
+    # 000       000   000  000   000  000       
+    # 0000000   000000000   000 000   0000000   
+    #      000  000   000     000     000       
+    # 0000000   000   000      0      00000000  
+    
+    save: -> window.stash.set 'tree' @toPOD()
+    load: (pod) ->  @fromPOD pod
+            
 module.exports = Tree

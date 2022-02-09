@@ -38,7 +38,7 @@ Referee = (function ()
 
     Referee.prototype["newGame"] = function (gi = {})
     {
-        var info, moves, _44_14_, _47_33_, _48_33_, _49_33_, _50_33_, _51_33_, _52_33_, _84_20_, _85_20_
+        var info, moves, _44_14_, _47_33_, _48_33_, _49_33_, _50_33_, _51_33_, _52_33_, _85_20_, _86_20_
 
         ;(this.varee != null ? this.varee.remove() : undefined)
         this.parent.innerHTML = ''
@@ -50,6 +50,10 @@ Referee = (function ()
         info = ((_52_33_=gi.info) != null ? _52_33_ : {})
         this.redos = []
         this.tree = new Tree
+        if (gi.tree)
+        {
+            this.tree.load(gi.tree)
+        }
         if (window.stash.get('varee'))
         {
             this.varee = new Varee(this.parent,this.tree,this.boardsize)
@@ -120,16 +124,22 @@ Referee = (function ()
         }
     }
 
+    Referee.prototype["save"] = function ()
+    {
+        this.game.save()
+        return this.tree.save()
+    }
+
     Referee.prototype["replay"] = function (moves)
     {
         var b, m, p, score, spl, w
 
         var list = _k_.list(moves)
-        for (var _106_14_ = 0; _106_14_ < list.length; _106_14_++)
+        for (var _118_14_ = 0; _118_14_ < list.length; _118_14_++)
         {
-            m = list[_106_14_]
+            m = list[_118_14_]
             spl = m.split(' ')
-            var _108_22_ = spl.slice(0, 3); p = _108_22_[0]; b = _108_22_[1]; w = _108_22_[2]
+            var _120_22_ = spl.slice(0, 3); p = _120_22_[0]; b = _120_22_[1]; w = _120_22_[2]
 
             this.game.play(p)
         }
@@ -150,7 +160,7 @@ Referee = (function ()
 
     Referee.prototype["playerMove"] = function (p, player)
     {
-        var color, next, _135_38_, _135_58_, _150_27_, _151_28_, _153_27_, _154_28_
+        var color, next, _147_38_, _147_58_, _162_27_, _163_28_, _165_27_, _166_28_
 
         if (this.game.paused)
         {
@@ -202,7 +212,7 @@ Referee = (function ()
 
     Referee.prototype["undo"] = function ()
     {
-        var m, _173_15_, _182_20_, _183_20_
+        var m, _185_15_, _194_20_, _195_20_
 
         if (this.game.start())
         {
@@ -214,7 +224,7 @@ Referee = (function ()
         }
         console.log('undo')
         this.game.paused = true
-        this.redos = ((_173_15_=this.redos) != null ? _173_15_ : [])
+        this.redos = ((_185_15_=this.redos) != null ? _185_15_ : [])
         m = this.game.moves.pop()
         this.redos.unshift(m)
         this.game.undoMove(m)
@@ -224,7 +234,7 @@ Referee = (function ()
 
     Referee.prototype["redo"] = function ()
     {
-        var move, _192_20_, _193_20_
+        var move, _204_20_, _205_20_
 
         if (_k_.empty(this.redos))
         {
@@ -242,7 +252,6 @@ Referee = (function ()
         var moves
 
         this.game.paused = true
-        console.log('navigate',action)
         switch (action)
         {
             case 'left':
@@ -255,7 +264,6 @@ Referee = (function ()
                 this.game.paused = true
                 this.board.game = this.game
                 moves = this.tree.history()
-                console.log('moves',moves)
                 return this.replay(moves)
 
         }
@@ -264,7 +272,7 @@ Referee = (function ()
 
     Referee.prototype["jumpToStart"] = function ()
     {
-        var _231_20_, _232_20_
+        var _241_20_, _242_20_
 
         if (this.game.start())
         {

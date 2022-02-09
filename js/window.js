@@ -51,7 +51,7 @@ MainWin = (function ()
     MainWin.prototype["onLoad"] = function ()
     {
         this.restore()
-        return this.referee.newGame({black:window.stash.get('black','human'),white:window.stash.get('white','gnu'),size:window.stash.get('size',9),handicap:window.stash.get('handicap',0),moves:window.stash.get('moves',[])})
+        return this.referee.newGame({black:window.stash.get('black','human'),white:window.stash.get('white','gnu'),size:window.stash.get('size',9),handicap:window.stash.get('handicap',0),moves:window.stash.get('moves',[]),tree:window.stash.get('tree',{})})
     }
 
     MainWin.prototype["onResize"] = function ()
@@ -134,15 +134,15 @@ MainWin = (function ()
     {
         switch (action.toLowerCase())
         {
-            case 'save':
-                this.referee.game.save()
-                return this.saveStash()
-
             case 'open':
                 return SGF.openDialog()
 
             case 'save as ...':
                 return SGF.saveAsDialog()
+
+            case 'save':
+                this.referee.save()
+                return this.saveStash()
 
             case 'up':
             case 'down':

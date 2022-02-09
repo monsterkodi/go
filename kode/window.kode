@@ -54,6 +54,7 @@ function MainWin extends win
             size:     window.stash.get 'size'      9
             handicap: window.stash.get 'handicap'  0
             moves:    window.stash.get 'moves'     []
+            tree:     window.stash.get 'tree'      {}
             
     onResize: =>
         
@@ -71,6 +72,12 @@ function MainWin extends win
         if bounds = window.stash.get 'bounds' then @setBounds bounds
         post.emit 'restore'
    
+    #  0000000   0000000   000   000  00000000   0000000  000000000   0000000    0000000  000   000  
+    # 000       000   000  000   000  000       000          000     000   000  000       000   000  
+    # 0000000   000000000   000 000   0000000   0000000      000     000000000  0000000   000000000  
+    #      000  000   000     000     000            000     000     000   000       000  000   000  
+    # 0000000   000   000      0      00000000  0000000      000     000   000  0000000   000   000  
+    
     saveStash: =>
     
         window.stash.set 'bounds' @getBounds()
@@ -132,9 +139,9 @@ function MainWin extends win
     onMenuAction: (action, args) =>
                
         switch action.toLowerCase()
-            'save'                          ➜ @referee.game.save(); @saveStash()
             'open'                          ➜ SGF.openDialog()
             'save as ...'                   ➜ SGF.saveAsDialog()
+            'save'                          ➜ @referee.save(); @saveStash()
             'up''down''left''right''back'   ➜ @referee.navigate action
             'undo'                          ➜ @referee.undo()
             'redo'                          ➜ @referee.redo()

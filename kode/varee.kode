@@ -44,7 +44,7 @@ function Varee
         for column,x in columns
             for pos,y in column
                 switch pos 
-                    undefined ➜
+                    ''        ➜
                     '-'       ➜ 
                               ➜
                                 color = ['black''white'][y%2]

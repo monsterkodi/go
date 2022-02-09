@@ -52,7 +52,7 @@ Varee = (function ()
                 pos = list1[y]
                 switch (pos)
                 {
-                    case undefined:
+                    case '':
                     case '-':
                         break
                     default:
