@@ -18,7 +18,9 @@ ded = (b) ->
     r = s.calcScore verbose
     s.deadString()
 
-module.exports = { scr, ded, ars}
+module.exports = { scr, ded, ars }
+
+global.test = true
     
 { sgfToAlphaNum } = require '../util/util'
 

@@ -8,6 +8,8 @@
 
 Tree = require '../tree'
 
+# global.test = true
+
 ▸ tree
     
     t = new Tree
@@ -34,7 +36,7 @@ Tree = require '../tree'
         B2◂
         """
         
-        log t.toPOD()
+        # log t.toPOD()
         
     # 000   000   0000000   000   000  000   0000000    0000000   000000000  00000000  
     # 0000  000  000   000  000   000  000  000        000   000     000     000       
@@ -636,4 +638,56 @@ Tree = require '../tree'
         t2 = new Tree().fromPOD p
         
         t.toString() ▸ t2.toString()
+        
+        t = new Tree().fromPOD
+            cursor: mvi:1 ali:1
+            moves:  [
+                        pos:  'E5'
+                    ,
+                        pos:  'E6'
+                        alt:    [
+                                    cursor: mvi:2 ali:0 
+                                    moves:  [
+                                                pos:  'D6'
+                                            ,
+                                                pos:  'E6'
+                                            ,
+                                                pos:  'F6'
+                                            ]
+                                ]
+                    ,
+                        pos:  'F5'
+                    ,
+                        pos:  'F6'
+                    ,
+                        pos:  'E7'
+                    ,
+                        pos:  'F7'
+                    ,
+                        pos:  'F8'
+                    ]
+        
+        t.toString() ▸ 
+            """
+            E5
+            E6──D6
+            F5  E6
+            F6  F6◂
+            E7
+            F7
+            F8
+            """
+        
+        t.navigate 'left'
+        
+        t.toString() ▸ 
+            """
+            E5
+            E6──D6
+            F5  E6
+            F6  F6◂
+            E7
+            F7
+            F8
+            """
         

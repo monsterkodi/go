@@ -235,7 +235,6 @@ function Referee
     
     jumpToStart: ->
         
-        # log 'start'
         return if @game.start()
         @redos = @game.moves.m.concat @redos
         @compi.black?.send "clear_board"
@@ -244,7 +243,6 @@ function Referee
         
     jumpToEnd: ->
 
-        # log 'end'
         while valid @redos
             @redo()
             

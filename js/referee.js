@@ -272,7 +272,7 @@ Referee = (function ()
 
     Referee.prototype["jumpToStart"] = function ()
     {
-        var _241_20_, _242_20_
+        var _240_20_, _241_20_
 
         if (this.game.start())
         {
