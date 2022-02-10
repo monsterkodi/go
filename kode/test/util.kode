@@ -1,7 +1,8 @@
 
 Score = require '../score'
 
-verbose = 1
+global.test = false
+verbose = global.test
 
 scr = (b) ->
     s = new Score b
@@ -20,8 +21,6 @@ ded = (b) ->
 
 module.exports = { scr, ded, ars }
 
-global.test = true
-    
 { sgfToAlphaNum } = require '../util/util'
 
 ▸ util

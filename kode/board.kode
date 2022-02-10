@@ -18,8 +18,8 @@ function Board
         @div = elem 'div' class:'board'     parent:@parent
         @img = elem 'img' class:'wood'      src:'../img/spacer.png' parent:@div
         # @blk = elem 'div' class:'blank'     parent:@div
-        @shd = elem 'div' class:'shadows'   parent:@div
-        @leg = elem 'div' class:'legends'   parent:@div
+        @shd = elem 'div' class:'shadows'     parent:@div
+        @coo = elem 'div' class:'coordinates' parent:@div
         
         @div.addEventListener 'mousemove'  @onMouseMove
         @div.addEventListener 'mousedown'  @onMouseDown
@@ -32,7 +32,7 @@ function Board
         h = 90/(@size+1)
 
         @lines()
-        @legend()
+        @coordinates()
         
         @stn = elem 'div' class:'stones'      parent:@div
         @lib = elem 'div' class:'liberties'   parent:@div
@@ -46,7 +46,7 @@ function Board
         @hvr = white:@hvw, black:@hvb
        
         @show = {}
-        for key in ['numbers''liberties''territory''legend']
+        for key in ['numbers''liberties''territory''coordinates']
             @show[key] = window.stash.get key
             @[key[...3]].style.display = @show[key] ? 'initial' : 'none'
         
@@ -63,7 +63,7 @@ function Board
         
         s = @div.getBoundingClientRect().height/(@size+1)
         s = max 10 s/6
-        @leg.style.fontSize = "#{s}px"
+        @coo.style.fontSize = "#{s}px"
         
     # 000      000  000   000  00000000   0000000  
     # 000      000  0000  000  000       000       
@@ -101,35 +101,35 @@ function Board
                         @ctx.arc s/2+x*d*(int(-@size/2) + 2), s/2+y*d*(int(-@size/2) + 2), s/280, 0, 2 * Math.PI, false
                     @ctx.fill()
 
-    # 000      00000000   0000000   00000000  000   000  0000000    
-    # 000      000       000        000       0000  000  000   000  
-    # 000      0000000   000  0000  0000000   000 0 000  000   000  
-    # 000      000       000   000  000       000  0000  000   000  
-    # 0000000  00000000   0000000   00000000  000   000  0000000    
+    #  0000000   0000000    0000000   00000000   0000000    000  000   000   0000000   000000000  00000000   0000000  
+    # 000       000   000  000   000  000   000  000   000  000  0000  000  000   000     000     000       000       
+    # 000       000   000  000   000  0000000    000   000  000  000 0 000  000000000     000     0000000   0000000   
+    # 000       000   000  000   000  000   000  000   000  000  000  0000  000   000     000     000            000  
+    #  0000000   0000000    0000000   000   000  0000000    000  000   000  000   000     000     00000000  0000000   
     
-    legend: ->
+    coordinates: ->
         
         d = 100/(@size+1)
                 
         for x in 0...@size
             
-            n = elem 'div' class:'legend' text:alpha[x], parent:@leg
+            n = elem 'div' class:'coordinate' text:alpha[x], parent:@coo
             n.style.left = "#{d*(x+1)}%"
             n.style.top = "#{d/4}%"
             
-            n = elem 'div' class:'legend' text:alpha[x], parent:@leg
+            n = elem 'div' class:'coordinate' text:alpha[x], parent:@coo
             n.style.left = "#{d*(x+1)}%"
             n.style.top = "#{100-d/4}%"
 
-            n = elem 'div' class:'legend' text:@size-x, parent:@leg
+            n = elem 'div' class:'coordinate' text:@size-x, parent:@coo
             n.style.left = "#{d/4}%"
             n.style.top = "#{d*(x+1)}%"
             
-            n = elem 'div' class:'legend' text:@size-x, parent:@leg
+            n = elem 'div' class:'coordinate' text:@size-x, parent:@coo
             n.style.left = "#{100-d/4}%"
             n.style.top = "#{d*(x+1)}%"
             
-            @leg.style.display = window.stash.get('legend') ? 'initial' : 'none'
+            @coo.style.display = window.stash.get('coordinates') ? 'initial' : 'none'
                     
     # 000000000   0000000    0000000    0000000   000      00000000  
     #    000     000   000  000        000        000      000       
@@ -137,11 +137,11 @@ function Board
     #    000     000   000  000   000  000   000  000      000       
     #    000      0000000    0000000    0000000   0000000  00000000  
     
-    toggleNumbers:    -> @toggleShow 'numbers'
-    toggleLiberties:  -> @toggleShow 'liberties'
-    toggleTerritory:  -> @toggleShow 'territory'
-    toggleLegend:     -> @toggleShow 'legend'
-    toggleShow: (key) ->
+    toggleNumbers:     -> @toggleShow 'numbers'
+    toggleLiberties:   -> @toggleShow 'liberties'
+    toggleTerritory:   -> @toggleShow 'territory'
+    toggleCoordinates: -> @toggleShow 'coordinates'
+    toggleShow: (key)  ->
         
         @show[key] = not @show[key]
         window.stash.set key, @show[key]

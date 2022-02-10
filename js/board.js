@@ -37,7 +37,7 @@ Board = (function ()
         this.div = elem('div',{class:'board',parent:this.parent})
         this.img = elem('img',{class:'wood',src:'../img/spacer.png',parent:this.div})
         this.shd = elem('div',{class:'shadows',parent:this.div})
-        this.leg = elem('div',{class:'legends',parent:this.div})
+        this.coo = elem('div',{class:'coordinates',parent:this.div})
         this.div.addEventListener('mousemove',this.onMouseMove)
         this.div.addEventListener('mousedown',this.onMouseDown)
         this.div.addEventListener('mouseleave',this.onMouseLeave)
@@ -47,7 +47,7 @@ Board = (function ()
         d = s / (this.size + 1)
         h = 90 / (this.size + 1)
         this.lines()
-        this.legend()
+        this.coordinates()
         this.stn = elem('div',{class:'stones',parent:this.div})
         this.lib = elem('div',{class:'liberties',parent:this.div})
         this.num = elem('div',{class:'numbers',parent:this.div})
@@ -59,7 +59,7 @@ Board = (function ()
         this.hvb.style = `width:${h}%; height:${h}%; display:none;`
         this.hvr = {white:this.hvw,black:this.hvb}
         this.show = {}
-        var list = ['numbers','liberties','territory','legend']
+        var list = ['numbers','liberties','territory','coordinates']
         for (var _49_16_ = 0; _49_16_ < list.length; _49_16_++)
         {
             key = list[_49_16_]
@@ -84,7 +84,7 @@ Board = (function ()
 
         s = this.div.getBoundingClientRect().height / (this.size + 1)
         s = _k_.max(10,s / 6)
-        return this.leg.style.fontSize = `${s}px`
+        return this.coo.style.fontSize = `${s}px`
     }
 
     Board.prototype["lines"] = function ()
@@ -129,26 +129,26 @@ Board = (function ()
         }
     }
 
-    Board.prototype["legend"] = function ()
+    Board.prototype["coordinates"] = function ()
     {
         var d, n, x
 
         d = 100 / (this.size + 1)
         for (var _114_17_ = x = 0, _114_21_ = this.size; (_114_17_ <= _114_21_ ? x < this.size : x > this.size); (_114_17_ <= _114_21_ ? ++x : --x))
         {
-            n = elem('div',{class:'legend',text:alpha[x],parent:this.leg})
+            n = elem('div',{class:'coordinate',text:alpha[x],parent:this.coo})
             n.style.left = `${d * (x + 1)}%`
             n.style.top = `${d / 4}%`
-            n = elem('div',{class:'legend',text:alpha[x],parent:this.leg})
+            n = elem('div',{class:'coordinate',text:alpha[x],parent:this.coo})
             n.style.left = `${d * (x + 1)}%`
             n.style.top = `${100 - d / 4}%`
-            n = elem('div',{class:'legend',text:this.size - x,parent:this.leg})
+            n = elem('div',{class:'coordinate',text:this.size - x,parent:this.coo})
             n.style.left = `${d / 4}%`
             n.style.top = `${d * (x + 1)}%`
-            n = elem('div',{class:'legend',text:this.size - x,parent:this.leg})
+            n = elem('div',{class:'coordinate',text:this.size - x,parent:this.coo})
             n.style.left = `${100 - d / 4}%`
             n.style.top = `${d * (x + 1)}%`
-            this.leg.style.display = (window.stash.get('legend') ? 'initial' : 'none')
+            this.coo.style.display = (window.stash.get('coordinates') ? 'initial' : 'none')
         }
     }
 
@@ -167,9 +167,9 @@ Board = (function ()
         return this.toggleShow('territory')
     }
 
-    Board.prototype["toggleLegend"] = function ()
+    Board.prototype["toggleCoordinates"] = function ()
     {
-        return this.toggleShow('legend')
+        return this.toggleShow('coordinates')
     }
 
     Board.prototype["toggleShow"] = function (key)

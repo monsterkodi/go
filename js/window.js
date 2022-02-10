@@ -182,8 +182,8 @@ MainWin = (function ()
             case 'numbers':
                 return this.referee.board.toggleNumbers()
 
-            case 'legend':
-                return this.referee.board.toggleLegend()
+            case 'coordinates':
+                return this.referee.board.toggleCoordinates()
 
             case 'liberties':
                 return this.referee.board.toggleLiberties()

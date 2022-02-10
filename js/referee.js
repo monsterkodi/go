@@ -50,7 +50,7 @@ Referee = (function ()
         info = ((_52_33_=gi.info) != null ? _52_33_ : {})
         this.redos = []
         this.tree = new Tree
-        if (window.stash.get('varee'))
+        if (window.stash.get('varee',true))
         {
             this.varee = new Varee(this.parent,this.tree,this.boardsize)
         }

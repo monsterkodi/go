@@ -62,7 +62,7 @@ view
     tree                    alt+t
     numbers                 alt+n
     liberties               alt+l
-    legend                  cmdctrl+l
+    coordinates             cmdctrl+l
     territory               cmdctrl+t
         
 # 000   000  000  000   000  0000000     0000000   000   000

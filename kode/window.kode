@@ -153,7 +153,7 @@ function MainWin extends win
             'calcscore'                     ➜ @referee.game.calcScore(); @referee.board.annotate()
             'tree'                          ➜ @referee.toggleTree() 
             'numbers'                       ➜ @referee.board.toggleNumbers()
-            'legend'                        ➜ @referee.board.toggleLegend()
+            'coordinates'                   ➜ @referee.board.toggleCoordinates()
             'liberties'                     ➜ @referee.board.toggleLiberties()
             'territory'                     ➜ @referee.board.toggleTerritory()
             'new game'                      ➜ @referee.newGame()

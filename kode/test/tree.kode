@@ -639,6 +639,9 @@ Tree = require '../tree'
         
         t.toString() ▸ t2.toString()
         
+        log t.toString()
+        log p
+        
         t = new Tree().fromPOD
             cursor: mvi:1 ali:1
             moves:  [
