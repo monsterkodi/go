@@ -100,7 +100,7 @@ Varee = (function ()
             vl = list1[_91_15_]
             this.ctx.moveTo(100 + vl[0][0] * 100 + 2,100 + vl[0][1] * 100)
             this.ctx.lineTo(100 + vl[1][0] * 100 + 2,100 + vl[1][1] * 100)
-            mh = _k_.max(mh,100 + vl[1][1] * 100)
+            mh = _k_.max(mh,200 + vl[1][1] * 100)
         }
         this.ctx.stroke()
         this.ctx.strokeStyle = '#800'

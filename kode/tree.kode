@@ -14,7 +14,6 @@ function Tree
     @: (@parent) ->
         
         @moves  = []
-        @cursor = mvi:-1, ali:0
                 
     #  0000000   0000000    0000000    00     00   0000000   000   000  00000000  
     # 000   000  000   000  000   000  000   000  000   000  000   000  000       
@@ -23,10 +22,14 @@ function Tree
     # 000   000  0000000    0000000    000   000   0000000       0      00000000  
         
     addMove: (pos, cpt=[]) ->
-        
+
         if tr = @cursorTree()
             tr.addMove pos, cpt
         else
+            log r3('add'), y4 pos
+            if empty @moves
+                @cursor = mvi:-1, ali:0
+            
             if @cursor.mvi == @moves.length-1
                 @cursor.mvi = @moves.length
                 @cursor.ali = 0
@@ -56,18 +59,15 @@ function Tree
             'left'  ➜ @navigateLeft()
             'back'  ➜ @navigateBack()
 
-        log @toString()
+        log g2('nav'), b7 dir
+        log @toColors()
         
         post.emit? 'tree'
         
     navigateUp: ->
         
         if tr = @cursorTree()
-            if tr.cursor.mvi > 0
-                tr.navigateUp()
-                if tr.cursor.mvi < 0
-                    @cursor.ali = 0
-                    @cursor.mvi--
+            tr.navigateUp()
         else 
             if @cursor.mvi > 0 then @cursor.mvi--
             
@@ -81,35 +81,32 @@ function Tree
 
     navigateLeft: ->
         
+        canGoLeft = @cursor.ali > 0
         if tr = @cursorTree()
-            
-            if tr.cursor.ali > 0
-                tr.navigateLeft()
-                return
-            
-            if tr.cursor.mvi == 0 and tr.cursor.ali == 0
-                tr.cursor.mvi = -1
+            if tr.cursor
+                if tr.cursor.ali > 0
+                    tr.navigateLeft()
+                    return
+                if tr.cursor.mvi == 0 and canGoLeft
+                    tr.deselect()
                 
-        @cursor.ali-- if @cursor.ali
+        if canGoLeft
+            @cursor.ali-- 
+            if @cursor.ali
+                @moves[@cursor.mvi].alt[@cursor.ali-1].cursor = mvi:0, ali:0
         
     navigateRight: ->
-        
+
+        canGoRight = @cursor.ali < @moves[@cursor.mvi].alt.length
         if tr = @cursorTree()
-            if tr.cursor.mvi > 0
+            if tr.cursor.mvi
                 tr.navigateRight()
-            else 
-                mv = @moves[@cursor.mvi]
-                if @cursor.ali < mv.alt.length
-                    tr.cursor.mvi = -1
-                    @cursor.ali++
-                    tr = @cursorTree()
-                    tr.cursor.mvi = 0
-        else
-            mv = @moves[@cursor.mvi]
-            if @cursor.ali < mv.alt.length
-                @cursor.ali++
-                tr = @cursorTree()
-                tr.cursor.mvi = 0
+                return
+            tr.deselect() if canGoRight
+
+        if canGoRight
+            @cursor.ali++ 
+            @moves[@cursor.mvi].alt[@cursor.ali-1].cursor = mvi:0, ali:0
         
     # 0000000     0000000    0000000  000   000  
     # 000   000  000   000  000       000  000   
@@ -118,27 +115,23 @@ function Tree
     # 0000000    000   000   0000000  000   000  
     
     navigateBack: ->
-        
         if tr = @cursorTree()
             tr.navigateBack()
         else
-            if @cursor.mvi == 0
-                @parent?.navigateLeftmost()
-                @parent?.navigateUp()
+            if @parent and @cursor.mvi == 0
+                delete @cursor
+                @parent.navigateLeftmost()
+                @parent.navigateUp()
             else
                 @navigateUp()
             
     navigateLeftmost: ->  
         
         if tr = @cursorTree()
-            if tr.cursor.ali
+            if tr.cursor?.ali
                 tr.navigateLeftmost()
             else
-                tr.cursor.mvi = -1
                 @cursor.ali = 0
-        else
-            if @parent
-                @cursor.mvi = -1
                     
     #  0000000  00000000  000      00000000   0000000  000000000  
     # 000       000       000      000       000          000     
@@ -153,22 +146,17 @@ function Tree
 
         if ali
             if tr = @treeAt mvi, ali
-                @cursor.mvi = mvi
-                @cursor.ali = ali
+                @cursor = {mvi, ali}
                 tr.select.apply tr, miai[2..]
         else
             @deselect()
-            @cursor.mvi = mvi
-            @cursor.ali = 0
-            return
+            @cursor = {mvi, ali:0}
                 
     deselect: ->
             
         if tr = @cursorTree()
             tr.deselect()
-            
-        @cursor.mvi = -1
-        @cursor.ali = 0
+        delete @cursor
             
     # 000000000  00000000   00000000  00000000         0000000   000000000  
     #    000     000   000  000       000             000   000     000     
@@ -176,12 +164,10 @@ function Tree
     #    000     000   000  000       000             000   000     000     
     #    000     000   000  00000000  00000000        000   000     000     
     
-    
     cursorTree: ->
     
-        if @cursor.mvi >= 0
-            if @cursor.ali
-                @moves[@cursor.mvi]?.alt[@cursor.ali-1]
+        if @cursor?.ali
+            @moves[@cursor.mvi]?.alt[@cursor.ali-1]
     
     treeAt: (mvi, ali) ->
         
@@ -233,7 +219,7 @@ function Tree
         for mi in 0...@moves.length
             m = @moves[mi]
             ps = m.alt.length ? '─' : ' '
-            if @cursor.ali == 0 and @cursor.mvi == mi
+            if @cursor?.ali == 0 and @cursor.mvi == mi
                 s.push rpad 4 m.pos+'◂', ps
             else
                 s.push rpad 4 m.pos, ps
@@ -263,6 +249,11 @@ function Tree
         s
                     
     toString: -> @rowStrings().map((l) -> rtrim l).join '\n'
+    
+    toColors: -> 
+        s = @toString()
+        s = s.replace /─/g, w2('─')
+        s = s.replace /◂/g, B3 y5('◂')
     
     #  0000000   0000000   000      000   000  00     00  000   000   0000000  
     # 000       000   000  000      000   000  000   000  0000  000  000       
@@ -301,7 +292,7 @@ function Tree
             for mi in tree.moves.length-1..0
                 mv = tree.moves[mi]
                 column[row+mi] = mv.pos
-                if tree.cursor.mvi == mi 
+                if tree.cursor?.mvi == mi 
                     cursor.x = col+tree.cursor.ali
                     cursor.y = row+mi
 
@@ -327,15 +318,37 @@ function Tree
             hlines:hlines
             vlines:vlines
             
-    toPOD: ->
+    # 00000000    0000000   0000000    
+    # 000   000  000   000  000   000  
+    # 00000000   000   000  000   000  
+    # 000        000   000  000   000  
+    # 000         0000000   0000000    
+    
+    toPOD: =>
+
+        moves = @moves.map (m) => 
+            o = pos: m.pos
+            if not m.alt?
+                # log 'toPod' noon @
+                return o
+            if m.alt?.length
+                o.alt = m.alt.map (a) -> a.toPOD()
+            else if not m.alt?
+                log 'toPOD no alt???? ----------------------- ' @
+            o
         
-        cursor:@cursor
-        moves: @moves each (m) -> 
+        cursor: @cursor
+        moves:  moves
         
     fromPOD: (pod) ->
         
         @cursor = pod.cursor
-        @moves  = pod.moves each (m) ->
+        @moves  = pod.moves.map (m) =>
+            o = pos:m.pos, alt:[]
+            if valid m.alt
+                o.alt = m.alt.map (a) => new Tree(@).fromPOD(a)
+            o
+        @
             
     #  0000000   0000000   000   000  00000000  
     # 000       000   000  000   000  000       
@@ -344,6 +357,10 @@ function Tree
     # 0000000   000   000      0      00000000  
     
     save: -> window.stash.set 'tree' @toPOD()
-    load: (pod) ->  @fromPOD pod
+    load: (pod) -> 
+        log pod
+        @fromPOD pod
+        log @toString()
+        post.emit 'tree'
             
 module.exports = Tree

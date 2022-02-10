@@ -54,7 +54,7 @@ function MainWin extends win
             size:     window.stash.get 'size'      9
             handicap: window.stash.get 'handicap'  0
             moves:    window.stash.get 'moves'     []
-            tree:     window.stash.get 'tree'      {}
+            tree:     window.stash.get 'tree'
             
     onResize: =>
         
@@ -174,7 +174,7 @@ function MainWin extends win
             '0''1''2''3''4'
             '5''6''7''8''9'                 ➜ @referee.newGame handicap: int action
                                             ➜
-                                              klog "menuAction '#{action}'" # args     
+                                              # log "menuAction '#{action}'" # args     
                                               super action, args
            
 new MainWin            

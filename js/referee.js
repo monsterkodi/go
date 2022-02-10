@@ -38,7 +38,7 @@ Referee = (function ()
 
     Referee.prototype["newGame"] = function (gi = {})
     {
-        var info, moves, _44_14_, _47_33_, _48_33_, _49_33_, _50_33_, _51_33_, _52_33_, _85_20_, _86_20_
+        var info, moves, _44_14_, _47_33_, _48_33_, _49_33_, _50_33_, _51_33_, _52_33_, _84_20_, _85_20_
 
         ;(this.varee != null ? this.varee.remove() : undefined)
         this.parent.innerHTML = ''
@@ -50,10 +50,6 @@ Referee = (function ()
         info = ((_52_33_=gi.info) != null ? _52_33_ : {})
         this.redos = []
         this.tree = new Tree
-        if (gi.tree)
-        {
-            this.tree.load(gi.tree)
-        }
         if (window.stash.get('varee'))
         {
             this.varee = new Varee(this.parent,this.tree,this.boardsize)
@@ -108,7 +104,11 @@ Referee = (function ()
         ;(this.compi.white != null ? this.compi.white.newGame(this.boardsize,'white',this.handicap) : undefined)
         if (!_k_.empty(moves))
         {
-            return this.replay(moves)
+            this.replay(moves)
+            if (gi.tree)
+            {
+                return this.tree.load(gi.tree)
+            }
         }
         else
         {

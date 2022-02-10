@@ -91,7 +91,7 @@ function Varee
         for vl in vlines
             @ctx.moveTo 100+vl[0][0]*100+2, 100+vl[0][1]*100
             @ctx.lineTo 100+vl[1][0]*100+2, 100+vl[1][1]*100
-            mh = max mh, 100+vl[1][1]*100
+            mh = max mh, 200+vl[1][1]*100
         @ctx.stroke() 
         
         @ctx.strokeStyle = '#800'

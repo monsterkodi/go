@@ -52,7 +52,6 @@ function Referee
         info       = gi.info     ? {}
         @redos     = []
         @tree      = new Tree
-        @tree.load gi.tree if gi.tree
         @varee     = new Varee @parent, @tree, @boardsize if window.stash.get 'varee'
         
         if @white == 'leelaz' or @black == 'leelaz' then @boardsize = 19
@@ -87,6 +86,7 @@ function Referee
         
         if valid moves
             @replay moves
+            @tree.load gi.tree if gi.tree
         else
             @game.updateTitle()
                     

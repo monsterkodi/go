@@ -80,9 +80,8 @@ function Board
         @canvas = elem 'canvas' class:'lines' height:s, width:s, parent:@div
         @ctx = @canvas.getContext '2d'
         @ctx.strokeStyle = 'black'
-        # @ctx.lineWidth = @size == 19 ? 2 : @size == 13 ? 2.5 : 3
-        @ctx.lineWidth = 1.5
-        @ctx.fillStyle = 'black'
+        @ctx.lineWidth   = 1.5
+        @ctx.fillStyle   = 'black'
                 
         for i in 0...@size
             @ctx.beginPath()
