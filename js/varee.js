@@ -73,7 +73,7 @@ Varee = (function ()
 
     Varee.prototype["drawLines"] = function (lines)
     {
-        var hl, hlines, mh, mw, vl, vlines
+        var h00, h01, h10, h11, hl, hlines, mh, mw, v00, v01, v10, v11, vl, vlines
 
         hlines = lines.hlines
         vlines = lines.vlines
@@ -82,55 +82,53 @@ Varee = (function ()
         this.canvas.height = this.height
         mw = this.width
         mh = this.height
-        this.ctx.strokeStyle = '#800'
-        this.ctx.beginPath()
         var list = _k_.list(vlines)
-        for (var _84_15_ = 0; _84_15_ < list.length; _84_15_++)
+        for (var _82_15_ = 0; _82_15_ < list.length; _82_15_++)
         {
-            vl = list[_84_15_]
-            this.ctx.moveTo(100 + vl[0][0] * 100 - 1,100 + vl[0][1] * 100)
-            this.ctx.lineTo(100 + vl[1][0] * 100 - 1,100 + vl[1][1] * 100)
+            vl = list[_82_15_]
+            v00 = 100 + vl[0][0] * 100
+            v01 = 100 + vl[0][1] * 100
+            v10 = 100 + vl[1][0] * 100
+            v11 = 100 + vl[1][1] * 100
+            this.ctx.beginPath()
+            this.ctx.strokeStyle = '#800'
+            this.ctx.moveTo(v00 - 1,v01)
+            this.ctx.lineTo(v10 - 1,v11)
+            this.ctx.stroke()
+            this.ctx.strokeStyle = '#ff8'
+            this.ctx.beginPath()
+            this.ctx.moveTo(v00 + 2,v01)
+            this.ctx.lineTo(v10 + 2,v11)
+            mh = _k_.max(mh,100 + v11)
+            this.ctx.stroke()
         }
-        this.ctx.stroke()
-        this.ctx.strokeStyle = '#ff8'
-        this.ctx.beginPath()
-        var list1 = _k_.list(vlines)
-        for (var _91_15_ = 0; _91_15_ < list1.length; _91_15_++)
+        var list1 = _k_.list(hlines)
+        for (var _100_15_ = 0; _100_15_ < list1.length; _100_15_++)
         {
-            vl = list1[_91_15_]
-            this.ctx.moveTo(100 + vl[0][0] * 100 + 2,100 + vl[0][1] * 100)
-            this.ctx.lineTo(100 + vl[1][0] * 100 + 2,100 + vl[1][1] * 100)
-            mh = _k_.max(mh,200 + vl[1][1] * 100)
+            hl = list1[_100_15_]
+            h00 = 100 + hl[0][0] * 100
+            h01 = 100 + hl[0][1] * 100
+            h10 = 100 + hl[1][0] * 100
+            h11 = 100 + hl[1][1] * 100
+            this.ctx.strokeStyle = '#800'
+            this.ctx.beginPath()
+            this.ctx.moveTo(h00,h01 - 1)
+            this.ctx.lineTo(h10,h11 - 1)
+            this.ctx.stroke()
+            this.ctx.strokeStyle = '#ff8'
+            this.ctx.beginPath()
+            this.ctx.moveTo(h00,h01 + 2)
+            this.ctx.lineTo(h10,h11 + 2)
+            mw = _k_.max(mw,10 + h10)
+            this.ctx.stroke()
         }
-        this.ctx.stroke()
-        this.ctx.strokeStyle = '#800'
-        this.ctx.beginPath()
-        var list2 = _k_.list(hlines)
-        for (var _99_15_ = 0; _99_15_ < list2.length; _99_15_++)
-        {
-            hl = list2[_99_15_]
-            this.ctx.moveTo(100 + hl[0][0] * 100,100 + hl[0][1] * 100 - 1)
-            this.ctx.lineTo(100 + hl[1][0] * 100,100 + hl[1][1] * 100 - 1)
-        }
-        this.ctx.stroke()
-        this.ctx.strokeStyle = '#ff8'
-        this.ctx.beginPath()
-        var list3 = _k_.list(hlines)
-        for (var _106_15_ = 0; _106_15_ < list3.length; _106_15_++)
-        {
-            hl = list3[_106_15_]
-            this.ctx.moveTo(100 + hl[0][0] * 100,100 + hl[0][1] * 100 + 2)
-            this.ctx.lineTo(100 + hl[1][0] * 100,100 + hl[1][1] * 100 + 2)
-            mw = _k_.max(mw,110 + hl[1][0] * 100)
-        }
-        this.ctx.stroke()
         if (mw > this.width || mh > this.height)
         {
             this.width = mw
             this.height = mh
-            console.log('redraw',this.width,this.height)
-            return this.drawLines(lines)
+            this.drawLines(lines)
         }
+        return this
     }
 
     Varee.prototype["onResize"] = function ()

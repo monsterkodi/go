@@ -63,8 +63,6 @@ Tree = (function ()
 
     Tree.prototype["navigate"] = function (dir)
     {
-        var _66_17_
-
         switch (dir)
         {
             case 'up':
@@ -92,7 +90,6 @@ Tree = (function ()
         {
             console.log(this.toColors())
         }
-        return (typeof post.emit === "function" ? post.emit('tree') : undefined)
     }
 
     Tree.prototype["navigateUp"] = function ()
@@ -107,7 +104,8 @@ Tree = (function ()
         {
             if (this.cursor.mvi > 0)
             {
-                return this.cursor.mvi--
+                this.cursor.mvi--
+                return this.cursorChanged()
             }
         }
     }
@@ -125,7 +123,8 @@ Tree = (function ()
         }
         else if (this.cursor.mvi < this.moves.length - 1)
         {
-            return this.cursor.mvi++
+            this.cursor.mvi++
+            return this.cursorChanged()
         }
     }
 
@@ -157,8 +156,9 @@ Tree = (function ()
             this.cursor.ali--
             if (this.cursor.ali)
             {
-                return this.moves[this.cursor.mvi].alt[this.cursor.ali - 1].cursor = {mvi:0,ali:0}
+                this.moves[this.cursor.mvi].alt[this.cursor.ali - 1].cursor = {mvi:0,ali:0}
             }
+            return this.cursorChanged()
         }
     }
 
@@ -182,8 +182,16 @@ Tree = (function ()
         if (canGoRight)
         {
             this.cursor.ali++
-            return this.moves[this.cursor.mvi].alt[this.cursor.ali - 1].cursor = {mvi:0,ali:0}
+            this.moves[this.cursor.mvi].alt[this.cursor.ali - 1].cursor = {mvi:0,ali:0}
+            return this.cursorChanged()
         }
+    }
+
+    Tree.prototype["cursorChanged"] = function ()
+    {
+        var _118_17_
+
+        return (typeof post.emit === "function" ? post.emit('tree') : undefined)
     }
 
     Tree.prototype["navigateBack"] = function ()
@@ -211,7 +219,7 @@ Tree = (function ()
 
     Tree.prototype["navigateLeftmost"] = function ()
     {
-        var tr, _133_24_
+        var tr, _140_24_
 
         if (tr = this.cursorTree())
         {
@@ -231,7 +239,7 @@ Tree = (function ()
         var ali, miai, mvi, tr
 
         miai = [].splice.call(arguments,0)
-        var _147_19_ = miai; mvi = _147_19_[0]; ali = _147_19_[1]
+        var _154_19_ = miai; mvi = _154_19_[0]; ali = _154_19_[1]
 
         if (ali)
         {
@@ -261,7 +269,7 @@ Tree = (function ()
 
     Tree.prototype["cursorTree"] = function ()
     {
-        var tr, _171_18_
+        var tr, _178_18_
 
         if ((this.cursor != null ? this.cursor.ali : undefined))
         {
@@ -310,13 +318,13 @@ Tree = (function ()
 
         w = 1
         var list = _k_.list(this.moves)
-        for (var _196_14_ = 0; _196_14_ < list.length; _196_14_++)
+        for (var _203_14_ = 0; _203_14_ < list.length; _203_14_++)
         {
-            m = list[_196_14_]
+            m = list[_203_14_]
             var list1 = _k_.list(m.alt)
-            for (var _197_18_ = 0; _197_18_ < list1.length; _197_18_++)
+            for (var _204_18_ = 0; _204_18_ < list1.length; _204_18_++)
             {
-                t = list1[_197_18_]
+                t = list1[_204_18_]
                 w += t.width()
             }
         }
@@ -361,11 +369,11 @@ Tree = (function ()
 
     Tree.prototype["rowStrings"] = function ()
     {
-        var a, i, li, lo, m, mi, ps, rc, s, t, tl, tls, to, tw, _235_22_, _249_28_
+        var a, i, li, lo, m, mi, ps, rc, s, t, tl, tls, to, tw, _242_22_, _256_28_
 
         s = []
         a = []
-        for (var _232_18_ = mi = 0, _232_22_ = this.moves.length; (_232_18_ <= _232_22_ ? mi < this.moves.length : mi > this.moves.length); (_232_18_ <= _232_22_ ? ++mi : --mi))
+        for (var _239_18_ = mi = 0, _239_22_ = this.moves.length; (_239_18_ <= _239_22_ ? mi < this.moves.length : mi > this.moves.length); (_239_18_ <= _239_22_ ? ++mi : --mi))
         {
             m = this.moves[mi]
             ps = (m.alt.length ? '─' : ' ')
@@ -381,20 +389,20 @@ Tree = (function ()
         }
         to = 0
         lo = 0
-        for (var _243_17_ = i = a.length - 1, _243_29_ = 0; (_243_17_ <= _243_29_ ? i <= 0 : i >= 0); (_243_17_ <= _243_29_ ? ++i : --i))
+        for (var _250_17_ = i = a.length - 1, _250_29_ = 0; (_250_17_ <= _250_29_ ? i <= 0 : i >= 0); (_250_17_ <= _250_29_ ? ++i : --i))
         {
             var list = _k_.list(a[i])
-            for (var _244_18_ = 0; _244_18_ < list.length; _244_18_++)
+            for (var _251_18_ = 0; _251_18_ < list.length; _251_18_++)
             {
-                t = list[_244_18_]
+                t = list[_251_18_]
                 tw = 4
                 li = 0
                 tls = t.rowStrings()
                 var list1 = _k_.list(tls)
-                for (var _248_23_ = 0; _248_23_ < list1.length; _248_23_++)
+                for (var _255_23_ = 0; _255_23_ < list1.length; _255_23_++)
                 {
-                    tl = list1[_248_23_]
-                    s[i + li] = ((_249_28_=s[i + li]) != null ? _249_28_ : _k_.rpad(4))
+                    tl = list1[_255_23_]
+                    s[i + li] = ((_256_28_=s[i + li]) != null ? _256_28_ : _k_.rpad(4))
                     s[i + li] = _k_.rpad(lo,s[i + li],(li === 0 ? '─' : ' '))
                     s[i + li] += tl
                     if (li === 0 && a[i].indexOf(t) < a[i].length - 1)
@@ -444,7 +452,7 @@ Tree = (function ()
         vlines = []
         treeToColumn = function (tree, col, row)
         {
-            var ai, alt, column, fillCol, lastTreeColumn, mi, mv, treeCol, _311_30_
+            var ai, alt, column, fillCol, lastTreeColumn, mi, mv, treeCol, _318_30_
 
             fillCol = function ()
             {
@@ -458,7 +466,7 @@ Tree = (function ()
             while (!column)
             {
                 column = columns[col]
-                for (var _296_26_ = mi = tree.moves.length - 1, _296_47_ = 0; (_296_26_ <= _296_47_ ? mi <= 0 : mi >= 0); (_296_26_ <= _296_47_ ? ++mi : --mi))
+                for (var _303_26_ = mi = tree.moves.length - 1, _303_47_ = 0; (_303_26_ <= _303_47_ ? mi <= 0 : mi >= 0); (_303_26_ <= _303_47_ ? ++mi : --mi))
                 {
                     if (column[mi + row])
                     {
@@ -475,7 +483,7 @@ Tree = (function ()
             }
             treeCol = col
             vlines.push([[col,row],[col,row + tree.moves.length - 1]])
-            for (var _308_22_ = mi = tree.moves.length - 1, _308_43_ = 0; (_308_22_ <= _308_43_ ? mi <= 0 : mi >= 0); (_308_22_ <= _308_43_ ? ++mi : --mi))
+            for (var _315_22_ = mi = tree.moves.length - 1, _315_43_ = 0; (_315_22_ <= _315_43_ ? mi <= 0 : mi >= 0); (_315_22_ <= _315_43_ ? ++mi : --mi))
             {
                 mv = tree.moves[mi]
                 column[row + mi] = mv.pos
@@ -485,7 +493,7 @@ Tree = (function ()
                     cursor.y = row + mi
                 }
                 lastTreeColumn = col
-                for (var _317_26_ = ai = 0, _317_30_ = mv.alt.length; (_317_26_ <= _317_30_ ? ai < mv.alt.length : ai > mv.alt.length); (_317_26_ <= _317_30_ ? ++ai : --ai))
+                for (var _324_26_ = ai = 0, _324_30_ = mv.alt.length; (_324_26_ <= _324_30_ ? ai < mv.alt.length : ai > mv.alt.length); (_324_26_ <= _324_30_ ? ++ai : --ai))
                 {
                     alt = mv.alt[ai]
                     lastTreeColumn = treeToColumn(alt,col + ai + 1,row + mi)
@@ -499,10 +507,10 @@ Tree = (function ()
         }
         treeToColumn(this,0,0)
         var list = _k_.list(columns)
-        for (var _327_19_ = 0; _327_19_ < list.length; _327_19_++)
+        for (var _334_19_ = 0; _334_19_ < list.length; _334_19_++)
         {
-            column = list[_327_19_]
-            for (var _328_22_ = mi = 0, _328_26_ = column.length; (_328_22_ <= _328_26_ ? mi < column.length : mi > column.length); (_328_22_ <= _328_26_ ? ++mi : --mi))
+            column = list[_334_19_]
+            for (var _335_22_ = mi = 0, _335_26_ = column.length; (_335_22_ <= _335_26_ ? mi < column.length : mi > column.length); (_335_22_ <= _335_26_ ? ++mi : --mi))
             {
                 if (!column[mi])
                 {
@@ -519,7 +527,7 @@ Tree = (function ()
 
         moves = this.moves.map((function (m)
         {
-            var o, _347_24_, _350_20_, _352_29_
+            var o, _354_24_, _357_20_, _359_29_
 
             o = {pos:m.pos}
             if (!(m.alt != null))
@@ -569,9 +577,7 @@ Tree = (function ()
 
     Tree.prototype["load"] = function (pod)
     {
-        console.log(pod)
         this.fromPOD(pod)
-        console.log(this.toString())
         return post.emit('tree')
     }
 

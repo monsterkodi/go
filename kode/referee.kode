@@ -136,7 +136,6 @@ function Referee
     playerMove: (p, player) =>
         
         if @game.paused
-            log 'paused playerMove' player, p
             if player == 'human'
                 @tree.addMove p
                 @game.play p

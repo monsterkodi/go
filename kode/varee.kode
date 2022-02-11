@@ -44,14 +44,14 @@ function Varee
         for column,x in columns
             for pos,y in column
                 switch pos 
-                    ''        ➜
-                    '-'       ➜ 
-                              ➜
-                                color = ['black''white'][y%2]
-                                elem class:"varii #{color}" 
-                                     text:pos, 
-                                     parent:@stn, 
-                                     style:"left:#{25+x*50}px; top:#{25+y*50}px;"
+                    '' 
+                    '-' ➜
+                        ➜
+                           color = ['black''white'][y%2]
+                           elem class:"varii #{color}" 
+                                text:pos, 
+                                parent:@stn, 
+                                style:"left:#{25+x*50}px; top:#{25+y*50}px;"
         
         @crs.classList.remove 'black'
         @crs.classList.remove 'white'
@@ -78,43 +78,49 @@ function Varee
         
         mw = @width
         mh = @height
-            
-        @ctx.strokeStyle = '#800'
-        @ctx.beginPath()
-        for vl in vlines
-            @ctx.moveTo 100+vl[0][0]*100-1, 100+vl[0][1]*100
-            @ctx.lineTo 100+vl[1][0]*100-1, 100+vl[1][1]*100
-        @ctx.stroke()   
 
-        @ctx.strokeStyle = '#ff8'
-        @ctx.beginPath()
         for vl in vlines
-            @ctx.moveTo 100+vl[0][0]*100+2, 100+vl[0][1]*100
-            @ctx.lineTo 100+vl[1][0]*100+2, 100+vl[1][1]*100
-            mh = max mh, 200+vl[1][1]*100
-        @ctx.stroke() 
+            v00 = 100+vl[0][0]*100
+            v01 = 100+vl[0][1]*100
+            v10 = 100+vl[1][0]*100
+            v11 = 100+vl[1][1]*100
+            @ctx.beginPath()
+            @ctx.strokeStyle = '#800'
+            @ctx.moveTo v00-1, v01
+            @ctx.lineTo v10-1, v11
+            @ctx.stroke()   
+
+            @ctx.strokeStyle = '#ff8'
+            @ctx.beginPath()
+            @ctx.moveTo v00+2, v01
+            @ctx.lineTo v10+2, v11
+            mh = max mh, 100+v11
+            @ctx.stroke() 
         
-        @ctx.strokeStyle = '#800'
-        @ctx.beginPath()
         for hl in hlines
-            @ctx.moveTo 100+hl[0][0]*100, 100+hl[0][1]*100-1
-            @ctx.lineTo 100+hl[1][0]*100, 100+hl[1][1]*100-1
-        @ctx.stroke() 
+            h00 = 100+hl[0][0]*100
+            h01 = 100+hl[0][1]*100
+            h10 = 100+hl[1][0]*100
+            h11 = 100+hl[1][1]*100
+            
+            @ctx.strokeStyle = '#800'
+            @ctx.beginPath()
+            @ctx.moveTo h00, h01-1
+            @ctx.lineTo h10, h11-1
+            @ctx.stroke() 
         
-        @ctx.strokeStyle = '#ff8'
-        @ctx.beginPath()
-        for hl in hlines
-            @ctx.moveTo 100+hl[0][0]*100, 100+hl[0][1]*100+2
-            @ctx.lineTo 100+hl[1][0]*100, 100+hl[1][1]*100+2
-            mw = max mw, 110+hl[1][0]*100
-        @ctx.stroke()
-                    
-        # log mw, mh
+            @ctx.strokeStyle = '#ff8'
+            @ctx.beginPath()
+            @ctx.moveTo h00, h01+2
+            @ctx.lineTo h10, h11+2
+            mw = max mw, 10+h10
+            @ctx.stroke()
+                
         if mw > @width or mh > @height
             @width  = mw
             @height = mh
-            log 'redraw' @width, @height
             @drawLines lines
+        @
             
     # 00000000   00000000   0000000  000  0000000  00000000  
     # 000   000  000       000       000     000   000       

@@ -63,14 +63,14 @@ function Tree
         log g2('nav'), b7 dir if global.test
         log @toColors() if global.test
         
-        post.emit? 'tree'
-        
     navigateUp: ->
         
         if tr = @cursorTree()
             tr.navigateUp()
         else 
-            if @cursor.mvi > 0 then @cursor.mvi--
+            if @cursor.mvi > 0 
+                @cursor.mvi--
+                @cursorChanged()
             
     navigateDown: ->
         
@@ -79,6 +79,7 @@ function Tree
                 tr.navigateDown()
         else if @cursor.mvi < @moves.length-1
             @cursor.mvi++
+            @cursorChanged()
 
     navigateLeft: ->
         
@@ -96,6 +97,7 @@ function Tree
             @cursor.ali-- 
             if @cursor.ali
                 @moves[@cursor.mvi].alt[@cursor.ali-1].cursor = mvi:0, ali:0
+            @cursorChanged()
         
     navigateRight: ->
 
@@ -109,6 +111,11 @@ function Tree
         if canGoRight
             @cursor.ali++ 
             @moves[@cursor.mvi].alt[@cursor.ali-1].cursor = mvi:0, ali:0
+            @cursorChanged()
+           
+    cursorChanged: ->
+        
+        post.emit? 'tree'
             
     # 0000000     0000000    0000000  000   000  
     # 000   000  000   000  000       000  000   
@@ -374,9 +381,9 @@ function Tree
     
     save: -> window.stash.set 'tree' @toPOD()
     load: (pod) -> 
-        log pod
+        # log pod
         @fromPOD pod
-        log @toString()
+        # log @toString()
         post.emit 'tree'
             
 module.exports = Tree
