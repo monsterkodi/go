@@ -31,6 +31,7 @@ function Referee
                 
         post.on 'newGame'    @newGame
         post.on 'playerMove' @playerMove
+        post.on 'altMove'    @altMove
 
     # 000   000  00000000  000   000         0000000    0000000   00     00  00000000  
     # 0000  000  000       000 0 000        000        000   000  000   000  000       
@@ -163,6 +164,11 @@ function Referee
                 @compi.white?.send 'final_score'
         else
             @compi[next]?.genmove()
+            
+    altMove: (p) =>
+        
+        @navigate 'back'
+        @playerMove p, @game.players[@game.nextColor()]
                             
     # 000   000  000   000  0000000     0000000   
     # 000   000  0000  000  000   000  000   000  
