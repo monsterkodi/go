@@ -38,16 +38,16 @@ Referee = (function ()
 
     Referee.prototype["newGame"] = function (gi = {})
     {
-        var info, moves, _44_14_, _47_33_, _48_33_, _49_33_, _50_33_, _51_33_, _52_33_, _84_20_, _85_20_
+        var info, moves, _43_14_, _46_33_, _47_33_, _48_33_, _49_33_, _50_33_, _51_33_, _83_20_, _84_20_
 
         ;(this.varee != null ? this.varee.remove() : undefined)
         this.parent.innerHTML = ''
-        this.white = ((_47_33_=gi.white) != null ? _47_33_ : this.white)
-        this.black = ((_48_33_=gi.black) != null ? _48_33_ : this.black)
-        this.handicap = ((_49_33_=gi.handicap) != null ? _49_33_ : this.handicap)
-        this.boardsize = ((_50_33_=gi.size) != null ? _50_33_ : this.boardsize)
-        moves = ((_51_33_=gi.moves) != null ? _51_33_ : [])
-        info = ((_52_33_=gi.info) != null ? _52_33_ : {})
+        this.white = ((_46_33_=gi.white) != null ? _46_33_ : this.white)
+        this.black = ((_47_33_=gi.black) != null ? _47_33_ : this.black)
+        this.handicap = ((_48_33_=gi.handicap) != null ? _48_33_ : this.handicap)
+        this.boardsize = ((_49_33_=gi.size) != null ? _49_33_ : this.boardsize)
+        moves = ((_50_33_=gi.moves) != null ? _50_33_ : [])
+        info = ((_51_33_=gi.info) != null ? _51_33_ : {})
         this.redos = []
         this.tree = new Tree
         if (window.stash.get('varee',true))
@@ -135,11 +135,11 @@ Referee = (function ()
         var b, m, p, score, spl, w
 
         var list = _k_.list(moves)
-        for (var _118_14_ = 0; _118_14_ < list.length; _118_14_++)
+        for (var _117_14_ = 0; _117_14_ < list.length; _117_14_++)
         {
-            m = list[_118_14_]
+            m = list[_117_14_]
             spl = m.split(' ')
-            var _120_22_ = spl.slice(0, 3); p = _120_22_[0]; b = _120_22_[1]; w = _120_22_[2]
+            var _119_22_ = spl.slice(0, 3); p = _119_22_[0]; b = _119_22_[1]; w = _119_22_[2]
 
             this.game.play(p)
         }
@@ -160,7 +160,7 @@ Referee = (function ()
 
     Referee.prototype["playerMove"] = function (p, player)
     {
-        var color, next, _146_38_, _146_58_, _161_27_, _162_28_, _164_27_, _165_28_
+        var color, next, _145_38_, _145_58_, _160_27_, _161_28_, _162_27_, _163_28_
 
         if (this.game.paused)
         {
@@ -211,7 +211,7 @@ Referee = (function ()
 
     Referee.prototype["undo"] = function ()
     {
-        var m, _184_15_, _193_20_, _194_20_
+        var m, _181_15_, _190_20_, _191_20_
 
         if (this.game.start())
         {
@@ -223,7 +223,7 @@ Referee = (function ()
         }
         console.log('undo')
         this.game.paused = true
-        this.redos = ((_184_15_=this.redos) != null ? _184_15_ : [])
+        this.redos = ((_181_15_=this.redos) != null ? _181_15_ : [])
         m = this.game.moves.pop()
         this.redos.unshift(m)
         this.game.undoMove(m)
@@ -233,7 +233,7 @@ Referee = (function ()
 
     Referee.prototype["redo"] = function ()
     {
-        var move, _203_20_, _204_20_
+        var move, _200_20_, _201_20_
 
         if (_k_.empty(this.redos))
         {
@@ -257,16 +257,13 @@ Referee = (function ()
         this.game.paused = true
         this.board.game = this.game
         mh = this.tree.moveHistory()
-        console.log(mh)
         this.game.replay(mh)
-        console.log(this.game.nextColor())
-        console.log(this.game.moves)
         return _k_.profilend('navigate')
     }
 
     Referee.prototype["jumpToStart"] = function ()
     {
-        var _237_20_, _238_20_
+        var _231_20_, _232_20_
 
         if (this.game.start())
         {

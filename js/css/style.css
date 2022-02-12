@@ -98,11 +98,9 @@ body {
 }
 .hover.white {
   background-color: rgba(255,255,255,0.533);
-  border: 2px solid rgba(255,255,255,0.533);
 }
 .hover.black {
   background-color: rgba(0,0,0,0.533);
-  border: 2px solid rgba(0,0,0,0.533);
 }
 .last {
   position: absolute;

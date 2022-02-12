@@ -150,6 +150,7 @@ MainWin = (function ()
             case 'left':
             case 'right':
             case 'back':
+            case 'forward':
                 return this.referee.navigate(action)
 
             case 'undo':

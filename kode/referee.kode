@@ -40,7 +40,6 @@ function Referee
     
     newGame: (gi={}) =>
 
-        # log noon gi
         @varee?.remove()
         @parent.innerHTML = ''
         
@@ -160,11 +159,9 @@ function Referee
         if @game.end()
             if @compi.black?
                 @compi.black?.send 'final_score'
-            # else 
             if @compi.white?
                 @compi.white?.send 'final_score'
         else
-            # log "#{next} genmove" @compi[next]
             @compi[next]?.genmove()
                             
     # 000   000  000   000  0000000     0000000   
@@ -218,10 +215,7 @@ function Referee
         @game.paused = true
         @board.game = @game
         mh = @tree.moveHistory()
-        log mh
         @game.replay mh
-        log @game.nextColor()
-        log @game.moves
         ●▪ navigate
             
     #       000  000   000  00     00  00000000   

@@ -31,7 +31,7 @@ function Board
         @width  = @height
         s = @height
         d = s/(@size+1)
-        h = 90/(@size+1)
+        h = 97/(@size+1)
 
         @lines()
         @coordinates()
@@ -289,14 +289,13 @@ function Board
     annotate: ->
 
         @divRect = @div.getBoundingClientRect()
-        @parent.removeChild @div
-        # @div.remove()
+        # @parent.removeChild @div
         @showLastMove()
         @numbers()
         @liberties()
         @territory()
         @game.updateTitle()
-        @parent.appendChild @div
+        # @parent.appendChild @div
     
     # 000   000  000   000  00     00  0000000    00000000  00000000    0000000  
     # 0000  000  000   000  000   000  000   000  000       000   000  000       
