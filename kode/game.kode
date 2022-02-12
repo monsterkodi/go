@@ -89,6 +89,7 @@ function Game extends Score
     play: (p) ->
 
         color = @nextColor()
+        delete @lastCaptures
                     
         if p.toLowerCase() in ['pass' 'resign' 'illegal']
             @moves.add p.toLowerCase(), color
@@ -103,20 +104,42 @@ function Game extends Score
             return '? invalid move'
             
         if @valid c
-            # log color, p, @legal color, c
             @setStone c, stone[color]
-            @moves.add p, color, @capture color
+            @lastCaptures = @capture color
+            @moves.add p, color, @lastCaptures
             @calcScore()
             @board.annotate?()
             ''
         else
             '? invalid color or coordinate'
+            
+    # 00000000   00000000  00000000   000       0000000   000   000  
+    # 000   000  000       000   000  000      000   000   000 000   
+    # 0000000    0000000   00000000   000      000000000    00000    
+    # 000   000  000       000        000      000   000     000     
+    # 000   000  00000000  000        0000000  000   000     000     
+    
+    replay: (moves) ->
+        
+        for m in moves
+            p = m.pos
+            c = @coord p
+            color = m.color
+            @moves.add p, color, m.captures
+            @setStone c, stone[color]
+            @removeStones m.captures
+        @calcScore()
+        @board.annotate()
                         
     #  0000000   0000000   00000000   000000000  000   000  00000000   00000000
     # 000       000   000  000   000     000     000   000  000   000  000     
     # 000       000000000  00000000      000     000   000  0000000    0000000 
     # 000       000   000  000           000     000   000  000   000  000     
     #  0000000  000   000  000           000      0000000   000   000  00000000
+    
+    removeStones: (posl) ->
+        for pos in posl
+            @removePos pos
     
     capture: (color) ->
         
@@ -127,8 +150,7 @@ function Game extends Score
         for dead in @grps.filter (g) -> g.libs == 0 and g.stone == s
             # log 'game.capture' color, dead.posl.length
             pl = pl.concat dead.posl
-            for deadPos in dead.posl
-                @removePos deadPos
+            @removeStones pl
         pl
 
     addMove: (p) ->
@@ -142,11 +164,11 @@ function Game extends Score
 
         c = @coord p
         
-        if cpts = @legal color, c
-            for deadPos in cpts ? []
+        if captures = @legal color, c
+            for deadPos in captures ? []
                 @removePos deadPos
             @setStone c, stone[color]
-            @moves.add p, color, cpts ? []
+            @moves.add p, color, captures ? []
         else
             error 'illegal move:' color, @moves.num(), p
             @moves.add 'pass' color

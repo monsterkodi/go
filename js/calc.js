@@ -672,9 +672,9 @@ Calc = (function ()
 
     Calc.prototype["fastCapture"] = function (p, color)
     {
-        var cpts, g, n
+        var captures, g, n
 
-        cpts = []
+        captures = []
         var list = _k_.list(this.attachedGroups(p,opponent[color]))
         for (var _382_14_ = 0; _382_14_ < list.length; _382_14_++)
         {
@@ -682,10 +682,10 @@ Calc = (function ()
             n = this.poslNeighbors(g)
             if (this.poslEmpty(n).length < 2)
             {
-                cpts = cpts.concat(g)
+                captures = captures.concat(g)
             }
         }
-        return cpts
+        return captures
     }
 
     Calc.prototype["allPos"] = function ()

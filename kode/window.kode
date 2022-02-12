@@ -38,6 +38,7 @@ function MainWin extends win
         
         @referee = new Referee row
         
+        
     # 000       0000000    0000000   0000000    
     # 000      000   000  000   000  000   000  
     # 000      000   000  000000000  000   000  
@@ -55,6 +56,8 @@ function MainWin extends win
             handicap: window.stash.get 'handicap'  0
             moves:    window.stash.get 'moves'     []
             tree:     window.stash.get 'tree'
+            
+        @referee.board.preloadStones()
             
     onResize: =>
         

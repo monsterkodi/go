@@ -378,12 +378,12 @@ function Calc extends Print
                 
     fastCapture: (p, color) ->
 
-        cpts = []
+        captures = []
         for g in @attachedGroups p, opponent[color]
             n = @poslNeighbors g
             if @poslEmpty(n).length < 2
-                cpts = cpts.concat g
-        cpts        
+                captures = captures.concat g
+        captures        
         
     #  0000000   000      000      00000000    0000000    0000000  
     # 000   000  000      000      000   000  000   000  000       

@@ -11,6 +11,8 @@ kxk = require 'kxk'
 { elem, kpos, post, randIntRange, $ } = kxk
 { stone, stoneColor, alpha, opponent } = require './util/util'
 
+preload = true
+
 function Board
 
     @: (@parent, @size=19) ->
@@ -54,9 +56,19 @@ function Board
         @lst.style = "display:none;"
      
         post.on 'variation' @onVariation
-        post.on 'resize' @onResize
+        post.on 'resize'    @onResize
+        post.on 'tree'      @onTree
         @scaleFonts()
-                
+        
+    preloadStones: ->
+        # load stone images once to avoid flickering
+        if preload 
+            preload = false
+            prl = elem 'div' parent:@div
+            for ci in 1..15 
+                elem 'img' class:'stone' src:"../img/stone_white#{ci}.png" width:'auto' height:'1px' style:'left:0px; top:0px;' parent:prl
+            elem 'img' class:'stone' src:"../img/stone_black.png" width:'auto' height:'1px' style:'left:0px; top:0px;' parent:prl
+                        
     onResize: => @scaleFonts()        
         
     scaleFonts: ->
@@ -153,17 +165,18 @@ function Board
     # 000 0 000  000   000  000   000       000  000       
     # 000   000   0000000    0000000   0000000   00000000  
     
-    onMouseLeave: (event) =>
-        
+    hideHover: ->
+    
         @hvr.black.style.display = 'none'
         @hvr.white.style.display = 'none'
+        
+    onMouseLeave: (event) => @hideHover()
         
     onMouseMove: (event) =>
         
-        c = @posAtEvent event
+        @hideHover()
         
-        @hvr.white.style.display = 'none'
-        @hvr.black.style.display = 'none'
+        c = @posAtEvent event
         
         nextColor = @game.nextColor()
 
@@ -313,7 +326,23 @@ function Board
             if stone.empty == @game.stoneAt m.pos
                 l.style.backgroundColor = m.color == 'white' ? '#faeeea' : 'black'
                 l.classList.add 'empty'
-                    
+                 
+    # 000000000  00000000   00000000  00000000  
+    #    000     000   000  000       000       
+    #    000     0000000    0000000   0000000   
+    #    000     000   000  000       000       
+    #    000     000   000  00000000  00000000  
+    
+    onTree: =>
+        
+        @hideHover()
+                
+    # 000   000   0000000   00000000   000   0000000   000000000  000   0000000   000   000  
+    # 000   000  000   000  000   000  000  000   000     000     000  000   000  0000  000  
+    #  000 000   000000000  0000000    000  000000000     000     000  000   000  000 0 000  
+    #    000     000   000  000   000  000  000   000     000     000  000   000  000  0000  
+    #     0      000   000  000   000  000  000   000     000     000   0000000   000   000  
+    
     onVariation: (variation) =>
 
         return if not @game

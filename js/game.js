@@ -125,9 +125,10 @@ Game = (function ()
 
     Game.prototype["play"] = function (p)
     {
-        var c, color, _110_27_, _95_27_
+        var c, color, _111_27_, _96_27_
 
         color = this.nextColor()
+        delete this.lastCaptures
         if (_k_.in(p.toLowerCase(),['pass','resign','illegal']))
         {
             this.moves.add(p.toLowerCase(),color)
@@ -144,7 +145,8 @@ Game = (function ()
         if (this.valid(c))
         {
             this.setStone(c,stone[color])
-            this.moves.add(p,color,this.capture(color))
+            this.lastCaptures = this.capture(color)
+            this.moves.add(p,color,this.lastCaptures)
             this.calcScore()
             ;(typeof this.board.annotate === "function" ? this.board.annotate() : undefined)
             return ''
@@ -155,9 +157,40 @@ Game = (function ()
         }
     }
 
+    Game.prototype["replay"] = function (moves)
+    {
+        var c, color, m, p
+
+        var list = _k_.list(moves)
+        for (var _124_14_ = 0; _124_14_ < list.length; _124_14_++)
+        {
+            m = list[_124_14_]
+            p = m.pos
+            c = this.coord(p)
+            color = m.color
+            this.moves.add(p,color,m.captures)
+            this.setStone(c,stone[color])
+            this.removeStones(m.captures)
+        }
+        this.calcScore()
+        return this.board.annotate()
+    }
+
+    Game.prototype["removeStones"] = function (posl)
+    {
+        var pos
+
+        var list = _k_.list(posl)
+        for (var _141_16_ = 0; _141_16_ < list.length; _141_16_++)
+        {
+            pos = list[_141_16_]
+            this.removePos(pos)
+        }
+    }
+
     Game.prototype["capture"] = function (color)
     {
-        var dead, deadPos, pl, s
+        var dead, pl, s
 
         s = stone[opponent[color]]
         this.calcGroups()
@@ -166,23 +199,18 @@ Game = (function ()
         {
             return g.libs === 0 && g.stone === s
         }))
-        for (var _127_17_ = 0; _127_17_ < list.length; _127_17_++)
+        for (var _150_17_ = 0; _150_17_ < list.length; _150_17_++)
         {
-            dead = list[_127_17_]
+            dead = list[_150_17_]
             pl = pl.concat(dead.posl)
-            var list1 = _k_.list(dead.posl)
-            for (var _130_24_ = 0; _130_24_ < list1.length; _130_24_++)
-            {
-                deadPos = list1[_130_24_]
-                this.removePos(deadPos)
-            }
+            this.removeStones(pl)
         }
         return pl
     }
 
     Game.prototype["addMove"] = function (p)
     {
-        var c, color, cpts, deadPos
+        var c, captures, color, deadPos
 
         color = this.nextColor()
         if (_k_.in(p,['pass','resign']))
@@ -191,16 +219,16 @@ Game = (function ()
             return
         }
         c = this.coord(p)
-        if (cpts = this.legal(color,c))
+        if (captures = this.legal(color,c))
         {
-            var list = (cpts != null ? cpts : [])
-            for (var _146_24_ = 0; _146_24_ < list.length; _146_24_++)
+            var list = (captures != null ? captures : [])
+            for (var _168_24_ = 0; _168_24_ < list.length; _168_24_++)
             {
-                deadPos = list[_146_24_]
+                deadPos = list[_168_24_]
                 this.removePos(deadPos)
             }
             this.setStone(c,stone[color])
-            return this.moves.add(p,color,(cpts != null ? cpts : []))
+            return this.moves.add(p,color,(captures != null ? captures : []))
         }
         else
         {
@@ -211,7 +239,7 @@ Game = (function ()
 
     Game.prototype["setStone"] = function (c, s)
     {
-        var _164_27_, _166_27_
+        var _186_27_, _188_27_
 
         this.grid.set(c,s)
         if (s === stone.empty)
@@ -238,9 +266,9 @@ Game = (function ()
         {
             this.verb('undoMove captures',m)
             var list = _k_.list(m.captures)
-            for (var _184_18_ = 0; _184_18_ < list.length; _184_18_++)
+            for (var _206_18_ = 0; _206_18_ < list.length; _206_18_++)
             {
-                p = list[_184_18_]
+                p = list[_206_18_]
                 this.setStone(this.coord(p),stone[opponent[m.color]])
             }
         }
@@ -252,7 +280,7 @@ Game = (function ()
     {
         var i
 
-        for (var _192_17_ = i = 0, _192_21_ = num; (_192_17_ <= _192_21_ ? i < num : i > num); (_192_17_ <= _192_21_ ? ++i : --i))
+        for (var _214_17_ = i = 0, _214_21_ = num; (_214_17_ <= _214_21_ ? i < num : i > num); (_214_17_ <= _214_21_ ? ++i : --i))
         {
             this.genmove()
         }
@@ -287,7 +315,7 @@ Game = (function ()
 
     Game.prototype["clear_board"] = function ()
     {
-        var _216_20_
+        var _238_20_
 
         this.moves.clear()
         this.clear()
@@ -304,7 +332,7 @@ Game = (function ()
         s = ' '
         b = '  '
         b += (function (o) {
-            var r_230_34_ = _k_.each_r(o)
+            var r_252_34_ = _k_.each_r(o)
             for (var k in o)
             {   
                 var m = (function (v)
@@ -313,18 +341,18 @@ Game = (function ()
             })(o[k])
                 if (m != null)
                 {
-                    r_230_34_[k] = m
+                    r_252_34_[k] = m
                 }
             }
-            return typeof o == 'string' ? r_230_34_.join('') : r_230_34_
+            return typeof o == 'string' ? r_252_34_.join('') : r_252_34_
         })(alpha.slice(0,this.size))
         b += '\n'
         y = 0
-        for (var _233_17_ = i = this.size, _233_24_ = 1; (_233_17_ <= _233_24_ ? i <= 1 : i >= 1); (_233_17_ <= _233_24_ ? ++i : --i))
+        for (var _255_17_ = i = this.size, _255_24_ = 1; (_255_17_ <= _255_24_ ? i <= 1 : i >= 1); (_255_17_ <= _255_24_ ? ++i : --i))
         {
             b += _k_.lpad(2,i)
             b += s
-            for (var _236_21_ = x = 0, _236_25_ = this.size; (_236_21_ <= _236_25_ ? x < this.size : x > this.size); (_236_21_ <= _236_25_ ? ++x : --x))
+            for (var _258_21_ = x = 0, _258_25_ = this.size; (_258_21_ <= _258_25_ ? x < this.size : x > this.size); (_258_21_ <= _258_25_ ? ++x : --x))
             {
                 b += this.stoneAt(x,y) + s
             }
@@ -334,7 +362,7 @@ Game = (function ()
         }
         b += '  '
         b += (function (o) {
-            var r_243_34_ = _k_.each_r(o)
+            var r_265_34_ = _k_.each_r(o)
             for (var k in o)
             {   
                 var m = (function (v)
@@ -343,10 +371,10 @@ Game = (function ()
             })(o[k])
                 if (m != null)
                 {
-                    r_243_34_[k] = m
+                    r_265_34_[k] = m
                 }
             }
-            return typeof o == 'string' ? r_243_34_.join('') : r_243_34_
+            return typeof o == 'string' ? r_265_34_.join('') : r_265_34_
         })(alpha.slice(0,this.size))
         b += '\n'
         return b

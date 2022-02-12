@@ -51,7 +51,8 @@ MainWin = (function ()
     MainWin.prototype["onLoad"] = function ()
     {
         this.restore()
-        return this.referee.newGame({black:window.stash.get('black','human'),white:window.stash.get('white','gnu'),size:window.stash.get('size',9),handicap:window.stash.get('handicap',0),moves:window.stash.get('moves',[]),tree:window.stash.get('tree')})
+        this.referee.newGame({black:window.stash.get('black','human'),white:window.stash.get('white','gnu'),size:window.stash.get('size',9),handicap:window.stash.get('handicap',0),moves:window.stash.get('moves',[]),tree:window.stash.get('tree')})
+        return this.referee.board.preloadStones()
     }
 
     MainWin.prototype["onResize"] = function ()

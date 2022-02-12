@@ -1,6 +1,6 @@
 // monsterkodi/kode 0.237.0
 
-var _k_ = {empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}}
+var _k_ = {empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, profile: function (id) {_k_.hrtime ??= {}; _k_.hrtime[id] = process.hrtime.bigint()}, profilend: function (id) { var b = process.hrtime.bigint()-_k_.hrtime[id]; let f=1000n; for (let u of ['ns','μs','ms','s']) { if (u=='s' || b<f) { return console.log(id+' '+(1000n*b/f)+' '+u); } f*=1000n; }}}
 
 var Board, elem, Game, GNU, Hara, Katago, kxk, Leelaz, opponent, post, Referee, SGF, Tree, Varee
 
@@ -166,8 +166,8 @@ Referee = (function ()
         {
             if (player === 'human')
             {
-                this.tree.addMove(p)
                 this.game.play(p)
+                this.tree.addMove(p,this.game.lastCaptures)
             }
             return
         }
@@ -189,7 +189,7 @@ Referee = (function ()
             return console.error(`wrong player: ${player}`,color,this.game.players)
         }
         this.game.play(p)
-        this.tree.addMove(p)
+        this.tree.addMove(p,this.game.lastCaptures)
         next = opponent[color]
         ;(this.compi[next] != null ? this.compi[next].opponentMove(p) : undefined)
         if (this.game.end())
@@ -248,30 +248,25 @@ Referee = (function ()
 
     Referee.prototype["navigate"] = function (action)
     {
-        var moves
+        var mh
 
+        _k_.profile('navigate')
         this.game.paused = true
-        switch (action)
-        {
-            case 'left':
-            case 'right':
-            case 'up':
-            case 'down':
-            case 'back':
-                this.tree.navigate(action)
-                this.game = new Game(this.board,this.white,this.black,this.handicap)
-                this.game.paused = true
-                this.board.game = this.game
-                moves = this.tree.history()
-                return this.replay(moves)
-
-        }
-
+        this.tree.navigate(action)
+        this.game = new Game(this.board,this.white,this.black,this.handicap)
+        this.game.paused = true
+        this.board.game = this.game
+        mh = this.tree.moveHistory()
+        console.log(mh)
+        this.game.replay(mh)
+        console.log(this.game.nextColor())
+        console.log(this.game.moves)
+        return _k_.profilend('navigate')
     }
 
     Referee.prototype["jumpToStart"] = function ()
     {
-        var _239_20_, _240_20_
+        var _237_20_, _238_20_
 
         if (this.game.start())
         {

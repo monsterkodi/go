@@ -47,9 +47,10 @@ function Varee
                     '' 
                     '-' ➜
                         ➜
+                           text = (pos == 'pass' ? '●' : pos)
                            color = ['black''white'][y%2]
                            elem class:"varii #{color}" 
-                                text:pos, 
+                                text:text, 
                                 parent:@stn, 
                                 style:"left:#{25+x*50}px; top:#{25+y*50}px;"
         

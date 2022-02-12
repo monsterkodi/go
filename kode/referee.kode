@@ -137,8 +137,8 @@ function Referee
         
         if @game.paused
             if player == 'human'
-                @tree.addMove p
                 @game.play p
+                @tree.addMove p, @game.lastCaptures
             return
         
         return if @game.end()
@@ -152,7 +152,7 @@ function Referee
         return error("wrong player: #{player}", color, @game.players) if @game.players[color] != player
         
         @game.play p
-        @tree.addMove p
+        @tree.addMove p, @game.lastCaptures
         
         next = opponent[color]
         @compi[next]?.opponentMove p
@@ -211,20 +211,18 @@ function Referee
     
     navigate: (action) ->
         
+        ●▸ navigate
         @game.paused = true
-        
-        switch action
-            'left'
-            'right'
-            'up'
-            'down'
-            'back'  
-                    @tree.navigate action
-                    @game = new Game @board, @white, @black, @handicap
-                    @game.paused = true
-                    @board.game = @game
-                    moves = @tree.history()
-                    @replay moves
+        @tree.navigate action
+        @game = new Game @board, @white, @black, @handicap
+        @game.paused = true
+        @board.game = @game
+        mh = @tree.moveHistory()
+        log mh
+        @game.replay mh
+        log @game.nextColor()
+        log @game.moves
+        ●▪ navigate
             
     #       000  000   000  00     00  00000000   
     #       000  000   000  000   000  000   000  

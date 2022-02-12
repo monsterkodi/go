@@ -35,7 +35,7 @@ Varee = (function ()
 
     Varee.prototype["onTree"] = function ()
     {
-        var color, column, columns, cursor, lines, pos, x, y
+        var color, column, columns, cursor, lines, pos, text, x, y
 
         this.stn.innerHTML = ''
         columns = this.tree.toColumns().columns
@@ -56,8 +56,9 @@ Varee = (function ()
                     case '-':
                         break
                     default:
+                        text = ((pos === 'pass' ? '●' : pos))
                         color = ['black','white'][y % 2]
-                        elem({class:`varii ${color}`,text:pos,parent:this.stn,style:`left:${25 + x * 50}px; top:${25 + y * 50}px;`})
+                        elem({class:`varii ${color}`,text:text,parent:this.stn,style:`left:${25 + x * 50}px; top:${25 + y * 50}px;`})
                 }
 
             }
@@ -83,9 +84,9 @@ Varee = (function ()
         mw = this.width
         mh = this.height
         var list = _k_.list(vlines)
-        for (var _82_15_ = 0; _82_15_ < list.length; _82_15_++)
+        for (var _83_15_ = 0; _83_15_ < list.length; _83_15_++)
         {
-            vl = list[_82_15_]
+            vl = list[_83_15_]
             v00 = 100 + vl[0][0] * 100
             v01 = 100 + vl[0][1] * 100
             v10 = 100 + vl[1][0] * 100
@@ -103,9 +104,9 @@ Varee = (function ()
             this.ctx.stroke()
         }
         var list1 = _k_.list(hlines)
-        for (var _100_15_ = 0; _100_15_ < list1.length; _100_15_++)
+        for (var _101_15_ = 0; _101_15_ < list1.length; _101_15_++)
         {
-            hl = list1[_100_15_]
+            hl = list1[_101_15_]
             h00 = 100 + hl[0][0] * 100
             h01 = 100 + hl[0][1] * 100
             h10 = 100 + hl[1][0] * 100

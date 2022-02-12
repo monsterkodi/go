@@ -7,6 +7,7 @@
 ###
 
 { kstr, post } = require 'kxk'
+{ opponent } = require './util/util'
 { max } = Math
 
 function Tree
@@ -21,28 +22,30 @@ function Tree
     # 000   000  000   000  000   000  000 0 000  000   000     000     000       
     # 000   000  0000000    0000000    000   000   0000000       0      00000000  
         
-    addMove: (pos, cpt=[]) ->
+    addMove: (pos, captures=[], color) ->
 
         if tr = @cursorTree()
-            tr.addMove pos, cpt
+            tr.addMove pos, captures
         else
             log r3('add'), y4 pos if global.test
             if empty @moves
                 @cursor = mvi:-1, ali:0
             
+            color ?= @nextColor()
             if @cursor.mvi == @moves.length-1
-                @cursor.mvi = @moves.length
                 @cursor.ali = 0
-                @moves.push pos:pos, cpt:cpt, alt:[], color:@nextColor()
+                @cursor.mvi = @moves.length
+                @moves.push pos:pos, captures:captures, alt:[], color:color
                 post.emit? 'tree'
             else
                 @cursor.mvi++
                 @cursor.ali = @moves[@cursor.mvi].alt.length+1
                 tr = new Tree @
                 @moves[@cursor.mvi].alt.push tr
-                tr.addMove pos, cpt
+                tr.addMove pos, captures, color
         
-    nextColor: -> ['black''white'][@history().length%2]
+    # nextColor: -> ['black''white'][@history().length%2]
+    nextColor: -> (cm = @cursorMove()) ? opponent[cm.color] : 'black'
         
     # 000   000   0000000   000   000  000   0000000    0000000   000000000  00000000  
     # 0000  000  000   000  000   000  000  000        000   000     000     000       
@@ -68,7 +71,7 @@ function Tree
         if tr = @cursorTree()
             tr.navigateUp()
         else 
-            if @cursor.mvi > 0 
+            if @cursor.mvi > 0
                 @cursor.mvi--
                 @cursorChanged()
             
@@ -183,6 +186,23 @@ function Tree
             if not @parent and valid @moves and @cursor.ali > 0
                 log 'no cursor tree' @
                 
+    #  0000000  000   000  00000000    0000000   0000000   00000000   00     00   0000000   000   000  00000000  
+    # 000       000   000  000   000  000       000   000  000   000  000   000  000   000  000   000  000       
+    # 000       000   000  0000000    0000000   000   000  0000000    000000000  000   000   000 000   0000000   
+    # 000       000   000  000   000       000  000   000  000   000  000 0 000  000   000     000     000       
+    #  0000000   0000000   000   000  0000000    0000000   000   000  000   000   0000000       0      00000000  
+    
+    cursorMove: ->
+        
+        if tr = @cursorTree()
+            if cm = tr.cursorMove()
+                return cm
+
+        cm = @moves[@cursor.mvi]
+        if not cm
+            log @
+        cm
+                
     # 000000000  00000000   00000000  00000000         0000000   000000000  
     #    000     000   000  000       000             000   000     000     
     #    000     0000000    0000000   0000000         000000000     000     
@@ -222,6 +242,21 @@ function Tree
         else
             if @moves.length
                 h = [@moves[0].pos]
+            else
+                h = []
+        h
+        
+    moveHistory: ->
+        
+        if @cursor.mvi
+            if tr = @cursorTree()
+                h = @moves[...@cursor.mvi]
+                h = h.concat tr.moveHistory()
+            else
+                h = @moves[..@cursor.mvi]
+        else
+            if @moves.length
+                h = [@moves[0]]
             else
                 h = []
         h
@@ -360,8 +395,9 @@ function Tree
                 log 'toPOD no alt???? ----------------------- ' @
             o
         
-        cursor: @cursor
-        moves:  moves
+        pod = moves:moves
+        pod.cursor = @cursor if @cursor
+        pod
         
     fromPOD: (pod) ->
         
