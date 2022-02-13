@@ -2,7 +2,7 @@
 
 var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}}
 
-var $, args, Board, elem, kerror, keyinfo, klog, kxk, MainWin, post, Referee, stash, stone, win
+var $, args, Board, elem, kerror, keyinfo, klog, kxk, MainWin, post, Referee, SGF, stash, stone, win
 
 kxk = require('kxk')
 args = kxk.args
@@ -17,6 +17,7 @@ $ = kxk.$
 
 stone = require('./util/util').stone
 
+SGF = require('./util/sgf')
 Board = require('./board')
 Referee = require('./referee')
 

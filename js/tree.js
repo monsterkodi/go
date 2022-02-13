@@ -576,9 +576,9 @@ Tree = (function ()
 
         moves = this.moves.map((function (m)
         {
-            var o, _385_24_, _388_20_, _390_29_
+            var o, _385_24_, _386_20_, _388_29_
 
-            o = {pos:m.pos}
+            o = {pos:m.pos,color:m.color}
             if (!(m.alt != null))
             {
                 return o
@@ -611,7 +611,7 @@ Tree = (function ()
         {
             var o
 
-            o = {pos:m.pos,alt:[]}
+            o = {pos:m.pos,color:m.color,alt:[]}
             if (!_k_.empty(m.alt))
             {
                 o.alt = m.alt.map((function (a)

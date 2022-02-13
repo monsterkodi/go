@@ -95,7 +95,8 @@ function Score extends Calc
     weaklings: ->
         
         for g in @grps
-            if g.state not in ['alive' 'dead']
+            # if g.state not in ['alive' 'dead']
+            if g.state not in ['dead']
                 if g.libs == 1
                     @deadGroups [g], 'weakling 1 lib'
                     continue

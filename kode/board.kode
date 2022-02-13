@@ -7,7 +7,7 @@
 ###
 
 kxk = require 'kxk'
-{ max, min } = Math
+{ abs, max, min } = Math
 { elem, kpos, post, randIntRange, $ } = kxk
 { stone, stoneColor, alpha, opponent } = require './util/util'
 
@@ -26,6 +26,7 @@ function Board
         @div.addEventListener 'mousemove'  @onMouseMove
         @div.addEventListener 'mousedown'  @onMouseDown
         @div.addEventListener 'mouseleave' @onMouseLeave
+        @div.addEventListener 'mousewheel' @onMouseWheel
         
         @height = 1000
         @width  = @height
@@ -214,6 +215,26 @@ function Board
             else
                 post.emit 'playerMove' p, 'human'
         
+    onMouseWheel: (event) =>
+
+        @wheelAccum ?= x:0, y:0
+        @wheelAccum.x += event.deltaX
+        @wheelAccum.y += event.deltaY
+        
+        return if abs(@wheelAccum.x) < 40 > abs(@wheelAccum.y)
+        if abs(@wheelAccum.x) > abs(@wheelAccum.y)
+            if @wheelAccum.x > 0 
+                post.emit 'navigate' 'right'
+            else
+                post.emit 'navigate' 'left'
+            @wheelAccum = x:0, y:0
+        else
+            if @wheelAccum.y > 0
+                post.emit 'navigate' 'down'
+            else
+                post.emit 'navigate' 'up'
+            @wheelAccum = x:0, y:0
+                    
     # 000       0000000    0000000  000000000  
     # 000      000   000  000          000     
     # 000      000000000  0000000      000     

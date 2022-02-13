@@ -9,6 +9,7 @@
 kxk = require 'kxk'
 { args, kerror, keyinfo, klog, post, stash, win, elem, $ } = kxk
 { stone } = require './util/util'
+SGF     = require './util/sgf'
 Board     = require './board'
 Referee   = require './referee'
 

@@ -32,6 +32,7 @@ function Referee
         post.on 'newGame'    @newGame
         post.on 'playerMove' @playerMove
         post.on 'altMove'    @altMove
+        post.on 'navigate'   @navigate
 
     # 000   000  00000000  000   000         0000000    0000000   00     00  00000000  
     # 0000  000  000       000 0 000        000        000   000  000   000  000       
@@ -212,17 +213,18 @@ function Referee
     # 000  0000  000   000     000     000  000   000  000   000     000     000       
     # 000   000  000   000      0      000   0000000   000   000     000     00000000  
     
-    navigate: (action) ->
+    navigate: (action) =>
         
-        ●▸ navigate
+        # ●▸ navigate
         @game.paused = true
         @tree.navigate action
         @game = new Game @board, @white, @black, @handicap
         @game.paused = true
         @board.game = @game
         mh = @tree.moveHistory()
+        # log mh
         @game.replay mh
-        ●▪ navigate
+        # ●▪ navigate
             
     #       000  000   000  00     00  00000000   
     #       000  000   000  000   000  000   000  

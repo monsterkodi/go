@@ -381,10 +381,8 @@ function Tree
     toPOD: =>
 
         moves = @moves.map (m) => 
-            o = pos: m.pos
-            if not m.alt?
-                # log 'toPod' noon @
-                return o
+            o = pos:m.pos, color:m.color
+            if not m.alt? then return o
             if m.alt?.length
                 o.alt = m.alt.map (a) -> a.toPOD()
             else if not m.alt?
@@ -399,7 +397,7 @@ function Tree
         
         @cursor = pod.cursor
         @moves  = pod.moves.map (m) =>
-            o = pos:m.pos, alt:[]
+            o = pos:m.pos, color:m.color, alt:[]
             if valid m.alt
                 o.alt = m.alt.map (a) => new Tree(@).fromPOD(a)
             o
