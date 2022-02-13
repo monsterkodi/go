@@ -217,7 +217,10 @@ function Referee
         
         # ●▸ navigate
         @game.paused = true
-        @tree.navigate action
+        if action != 'select'
+            @tree.navigate action
+        else
+            post.emit 'tree'
         @game = new Game @board, @white, @black, @handicap
         @game.paused = true
         @board.game = @game

@@ -261,7 +261,14 @@ Referee = (function ()
         var mh
 
         this.game.paused = true
-        this.tree.navigate(action)
+        if (action !== 'select')
+        {
+            this.tree.navigate(action)
+        }
+        else
+        {
+            post.emit('tree')
+        }
         this.game = new Game(this.board,this.white,this.black,this.handicap)
         this.game.paused = true
         this.board.game = this.game
@@ -271,7 +278,7 @@ Referee = (function ()
 
     Referee.prototype["jumpToStart"] = function ()
     {
-        var _239_20_, _240_20_
+        var _242_20_, _243_20_
 
         if (this.game.start())
         {

@@ -14,6 +14,7 @@ function Varee
     @: (@parent, @tree, @boardsize) ->
         
         @div = elem 'div' class:'varee' parent:@parent        
+        @div.addEventListener 'mousedown'  @onMouseDown
         
         @width  = 110
         @height = 800
@@ -53,6 +54,8 @@ function Varee
                                 text:text, 
                                 parent:@stn, 
                                 style:"left:#{25+x*50}px; top:#{25+y*50}px;"
+                                col: x
+                                row: y
         
         @crs.classList.remove 'black'
         @crs.classList.remove 'white'
@@ -63,6 +66,18 @@ function Varee
         @crs.scrollIntoViewIfNeeded()
 
         @drawLines lines
+        
+    # 00     00   0000000   000   000   0000000  00000000  
+    # 000   000  000   000  000   000  000       000       
+    # 000000000  000   000  000   000  0000000   0000000   
+    # 000 0 000  000   000  000   000       000  000       
+    # 000   000   0000000    0000000   0000000   00000000  
+    
+    onMouseDown: (event) =>
+        
+        if event.target.classList.contains 'varii'
+            @tree.selectGrid int(event.target.getAttribute 'col'), int(event.target.getAttribute 'row')
+            post.emit 'navigate' 'select'
         
     # 000      000  000   000  00000000   0000000  
     # 000      000  0000  000  000       000       

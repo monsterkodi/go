@@ -19,8 +19,10 @@ Varee = (function ()
         this.boardsize = boardsize
     
         this["onResize"] = this["onResize"].bind(this)
+        this["onMouseDown"] = this["onMouseDown"].bind(this)
         this["onTree"] = this["onTree"].bind(this)
         this.div = elem('div',{class:'varee',parent:this.parent})
+        this.div.addEventListener('mousedown',this.onMouseDown)
         this.width = 110
         this.height = 800
         this.canvas = elem('canvas',{class:'treelines',parent:this.div})
@@ -58,7 +60,7 @@ Varee = (function ()
                     default:
                         text = ((pos === 'pass' ? '●' : pos))
                         color = ['black','white'][y % 2]
-                        elem({class:`varii ${color}`,text:text,parent:this.stn,style:`left:${25 + x * 50}px; top:${25 + y * 50}px;`})
+                        elem({class:`varii ${color}`,text:text,parent:this.stn,style:`left:${25 + x * 50}px; top:${25 + y * 50}px;`,col:x,row:y})
                 }
 
             }
@@ -70,6 +72,15 @@ Varee = (function ()
         this.crs.style.top = `${cursor.y * 50 + 50}px`
         this.crs.scrollIntoViewIfNeeded()
         return this.drawLines(lines)
+    }
+
+    Varee.prototype["onMouseDown"] = function (event)
+    {
+        if (event.target.classList.contains('varii'))
+        {
+            this.tree.selectGrid(parseInt(event.target.getAttribute('col')),parseInt(event.target.getAttribute('row')))
+            return post.emit('navigate','select')
+        }
     }
 
     Varee.prototype["drawLines"] = function (lines)
@@ -84,9 +95,9 @@ Varee = (function ()
         mw = this.width
         mh = this.height
         var list = _k_.list(vlines)
-        for (var _83_15_ = 0; _83_15_ < list.length; _83_15_++)
+        for (var _98_15_ = 0; _98_15_ < list.length; _98_15_++)
         {
-            vl = list[_83_15_]
+            vl = list[_98_15_]
             v00 = 100 + vl[0][0] * 100
             v01 = 100 + vl[0][1] * 100
             v10 = 100 + vl[1][0] * 100
@@ -104,9 +115,9 @@ Varee = (function ()
             this.ctx.stroke()
         }
         var list1 = _k_.list(hlines)
-        for (var _101_15_ = 0; _101_15_ < list1.length; _101_15_++)
+        for (var _116_15_ = 0; _116_15_ < list1.length; _116_15_++)
         {
-            hl = list1[_101_15_]
+            hl = list1[_116_15_]
             h00 = 100 + hl[0][0] * 100
             h01 = 100 + hl[0][1] * 100
             h10 = 100 + hl[1][0] * 100

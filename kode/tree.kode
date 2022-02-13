@@ -65,6 +65,7 @@ function Tree
         # log 'nav' dir if not global.test
         log g2('nav'), b7 dir if global.test
         log @toColors() if global.test
+        # log @toString()
         
     navigateUp: ->
         
@@ -151,9 +152,68 @@ function Tree
     #      000  000       000      000       000          000     
     # 0000000   00000000  0000000  00000000   0000000     000     
     
+    selectGrid: (col, row) ->
+        
+        if col == 0 
+            @select row
+            return
+        
+        ocol = col
+        orow = row
+            
+        columns = @toColumns()
+        
+        hasLeft = ->
+            for line in columns.lines.hlines
+                if line[0][1] == line[1][1] == row
+                    if line[0][0] < col and line[1][0] >= col
+                        return true
+
+        hasUp = ->
+            for line in columns.lines.vlines
+                if line[0][0] == line[1][0] == col
+                    if line[0][1] < row and line[1][1] >= row
+                        return true
+
+        path = []
+        while col > 0
+            if hasLeft()
+                col--
+                if col >= 0 and columns.columns[col][row] != '-'
+                    path.unshift 'right' col,row
+            else if hasUp()
+                path.unshift 'down' col,row
+                row--
+            else 
+                log 'dafuk?'
+
+        r = [path[2],0]
+        i = 0
+        dir = 'right'
+        while i <= path.length-3
+            if path[i] == 'right' 
+                if dir == 'right'
+                    r[r.length-1]++
+                else
+                    r.push (path[i+3] == 'down' or path[i-3] == 'down') ? 1 : 0
+                    dir = 'right'
+            else if path[i] == 'down'
+                if dir == 'down'
+                    r[r.length-1]++
+                else
+                    r.push 1
+                    dir = 'down'
+            i+=3
+
+        r.push 0 if r.length % 2 == 0
+        @select.apply @, r
+    
     select: ->
         
+        @deselect() if not @parent
+        
         miai = [].splice.call arguments, 0
+        
         [mvi, ali] = miai
 
         if ali
@@ -161,9 +221,8 @@ function Tree
                 @cursor = {mvi, ali}
                 tr.select.apply tr, miai[2..]
         else
-            @deselect()
             @cursor = {mvi, ali:0}
-                
+            
     deselect: ->
             
         if tr = @cursorTree()
