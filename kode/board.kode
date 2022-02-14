@@ -7,8 +7,8 @@
 ###
 
 kxk = require 'kxk'
-{ abs, max, min } = Math
-{ elem, kpos, post, randIntRange, $ } = kxk
+{ abs, max, min, sign } = Math
+{ elem, kpos, post, randIntRange, stopEvent, $ } = kxk
 { stone, stoneColor, alpha, opponent } = require './util/util'
 
 preload = true
@@ -26,7 +26,7 @@ function Board
         @div.addEventListener 'mousemove'  @onMouseMove
         @div.addEventListener 'mousedown'  @onMouseDown
         @div.addEventListener 'mouseleave' @onMouseLeave
-        @div.addEventListener 'mousewheel' @onMouseWheel
+        @parent.addEventListener 'mousewheel' @onMouseWheel
         
         @height = 1000
         @width  = @height
@@ -215,26 +215,49 @@ function Board
             else
                 post.emit 'playerMove' p, 'human'
         
+    # 000   000  000   000  00000000  00000000  000      
+    # 000 0 000  000   000  000       000       000      
+    # 000000000  000000000  0000000   0000000   000      
+    # 000   000  000   000  000       000       000      
+    # 00     00  000   000  00000000  00000000  0000000  
+    
     onMouseWheel: (event) =>
 
         @wheelAccum ?= x:0, y:0
-        @wheelAccum.x += event.deltaX
-        @wheelAccum.y += event.deltaY
         
-        return if abs(@wheelAccum.x) < 40 > abs(@wheelAccum.y)
+        ox = @wheelAccum.x
+        oy = @wheelAccum.y
+                
+        if not ox or sign(event.deltaX) == sign(@wheelAccum.x)
+            @wheelAccum.x += event.deltaX
+        else
+            @wheelAccum.x = 0
+            return
+            
+        if not oy or sign(event.deltaY) == sign(@wheelAccum.y)
+            @wheelAccum.y += event.deltaY
+        else
+            @wheelAccum.y = 0
+            return
+
+        if ox != 0 and abs(@wheelAccum.x) < 200 and abs(@wheelAccum.y) < 200
+            return
+        if oy != 0 and abs(@wheelAccum.y) < 200 and abs(@wheelAccum.x) < 200
+            return
+        
         if abs(@wheelAccum.x) > abs(@wheelAccum.y)
             if @wheelAccum.x > 0 
                 post.emit 'navigate' 'right'
-            else
+            else if @wheelAccum.x < 0 
                 post.emit 'navigate' 'left'
-            @wheelAccum = x:0, y:0
+            @wheelAccum = x:1, y:0
         else
             if @wheelAccum.y > 0
                 post.emit 'navigate' 'down'
-            else
+            else if @wheelAccum.y < 0
                 post.emit 'navigate' 'up'
-            @wheelAccum = x:0, y:0
-                    
+            @wheelAccum = x:0, y:1
+            
     # 000       0000000    0000000  000000000  
     # 000      000   000  000          000     
     # 000      000000000  0000000      000     
