@@ -9,9 +9,10 @@
 kxk = require 'kxk'
 { args, kerror, keyinfo, klog, post, stash, win, elem, $ } = kxk
 { stone } = require './util/util'
-SGF     = require './util/sgf'
+SGF       = require './util/sgf'
 Board     = require './board'
 Referee   = require './referee'
+Online    = require './online'
 
 function MainWin extends win
     
@@ -38,8 +39,8 @@ function MainWin extends win
         row = elem 'div' class:'row' parent:main, style:'height:100%'
         
         @referee = new Referee row
-        
-        
+        @online  = new Online  row
+                
     # 000       0000000    0000000   0000000    
     # 000      000   000  000   000  000   000  
     # 000      000   000  000000000  000   000  
@@ -161,6 +162,7 @@ function MainWin extends win
             'coordinates'                   ➜ @referee.board.toggleCoordinates()
             'liberties'                     ➜ @referee.board.toggleLiberties()
             'territory'                     ➜ @referee.board.toggleTerritory()
+            'variations'                    ➜ @referee.board.toggleVariations()
             'new game'                      ➜ @referee.newGame()
             'gnu human'                     ➜ @referee.newGame black:'gnu'    white:'human'
             'human gnu'                     ➜ @referee.newGame black:'human'  white:'gnu'

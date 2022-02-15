@@ -64,6 +64,7 @@ view
     tree                    alt+t
     numbers                 alt+n
     liberties               alt+l
+    variations              alt+v
     coordinates             cmdctrl+l
     territory               cmdctrl+t
         

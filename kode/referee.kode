@@ -66,6 +66,7 @@ function Referee
         @board = new Board @parent, @boardsize
         @game  = new Game  @board, @white, @black, @handicap
         @board.game = @game
+        @board.tree = @tree
         @game.info  = info
         
         @compi = {}
@@ -181,6 +182,7 @@ function Referee
         
         return if @game.start()
         return if @game.handicap > 1 and @game.moves.num() == 1
+        return if not @tree.canUndo()
         
         log 'undo'
         
@@ -191,6 +193,7 @@ function Referee
         @redos.unshift m
         
         @game.undoMove m
+        @tree.undoMove m
         
         # log 'undo' @game.moves, @redos
         
@@ -200,10 +203,13 @@ function Referee
     redo: ->
         
         return if empty @redos
+        while not @tree.canUndo()
+            @navigate 'down'
         
         move = @redos.shift()
         log 'redo' move
         @game.play move.pos
+        @tree.addMove move.pos, @game.lastCaptures
         @compi.black?.send "play #{move.color} #{move.pos}"
         @compi.white?.send "play #{move.color} #{move.pos}"
         
@@ -224,6 +230,7 @@ function Referee
         @game = new Game @board, @white, @black, @handicap
         @game.paused = true
         @board.game = @game
+        @board.tree = @tree
         mh = @tree.moveHistory()
         # log mh
         @game.replay mh

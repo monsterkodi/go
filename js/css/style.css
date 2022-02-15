@@ -84,6 +84,7 @@ body {
 .numbers,
 .liberties,
 .territory,
+.variations,
 .coordinates {
   position: absolute;
   bottom: 0;
@@ -117,6 +118,7 @@ body {
 }
 .eye,
 .number,
+.variation,
 .liberty,
 .coordinate {
   position: absolute;
@@ -127,21 +129,31 @@ body {
 .liberty {
   font-size: 13px;
 }
+.variation,
 .number {
   text-align: center;
   line-height: 1.56;
 }
+.variation.black,
 .number.black {
   color: #faeeea;
 }
+.variation.white,
 .number.white {
   color: #000;
 }
+.variation.empty,
 .number.empty {
   filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.533));
 }
 .liberty.black {
   color: #fff;
+}
+.variation.black {
+  background-color: #000;
+}
+.variation.white {
+  background-color: #faeeea;
 }
 .eye.b {
   filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.533));

@@ -101,6 +101,7 @@ body
 .numbers
 .liberties
 .territory
+.variations
 .coordinates
     fill-abs()
     
@@ -126,6 +127,7 @@ body
     
 .eye
 .number
+.variation
 .liberty
 .coordinate
     position            absolute
@@ -135,7 +137,8 @@ body
 
 .liberty
     font-size           13px
-    
+
+.variation
 .number
     text-align          center
     line-height         1.56
@@ -149,6 +152,12 @@ body
 .liberty.black
     color               white
 
+.variation
+    &.black
+        background-color    black
+    &.white
+        background-color    #faeeea
+        
 .eye.b
     filter              drop-shadow(2px 2px 2px #0008)
     background-color    black

@@ -40,6 +40,7 @@ function Board
         @stn = elem 'div' class:'stones'      parent:@div
         @lib = elem 'div' class:'liberties'   parent:@div
         @num = elem 'div' class:'numbers'     parent:@div
+        @var = elem 'div' class:'variations'  parent:@div
         @ter = elem 'div' class:'territory'   parent:@div
         @hlt = elem 'div' class:'highlts'     parent:@div
         @hvw = elem 'div' class:"hover white" parent:@hlt
@@ -49,7 +50,7 @@ function Board
         @hvr = white:@hvw, black:@hvb
        
         @show = {}
-        for key in ['numbers''liberties''territory''coordinates']
+        for key in ['numbers''liberties''territory''coordinates''variations']
             @show[key] = window.stash.get key
             @[key[...3]].style.display = @show[key] ? 'initial' : 'none'
         
@@ -154,6 +155,7 @@ function Board
     toggleLiberties:   -> @toggleShow 'liberties'
     toggleTerritory:   -> @toggleShow 'territory'
     toggleCoordinates: -> @toggleShow 'coordinates'
+    toggleVariations:  -> @toggleShow 'variations'
     toggleShow: (key)  ->
         
         @show[key] = not @show[key]
@@ -330,6 +332,7 @@ function Board
         @lib.innerHTML = ''
         @stn.innerHTML = ''
         @shd.innerHTML = ''
+        @var.innerHTML = ''
         
     ###
      0000000   000   000  000   000   0000000   000000000   0000000   000000000  00000000  
@@ -345,6 +348,7 @@ function Board
         # @parent.removeChild @div
         @showLastMove()
         @numbers()
+        @variations()
         @liberties()
         @territory()
         @game.updateTitle()
@@ -378,7 +382,33 @@ function Board
             if stone.empty == @game.stoneAt m.pos
                 l.style.backgroundColor = m.color == 'white' ? '#faeeea' : 'black'
                 l.classList.add 'empty'
-                 
+                
+    # 000   000   0000000   00000000   000   0000000   000000000  000   0000000   000   000   0000000  
+    # 000   000  000   000  000   000  000  000   000     000     000  000   000  0000  000  000       
+    #  000 000   000000000  0000000    000  000000000     000     000  000   000  000 0 000  0000000   
+    #    000     000   000  000   000  000  000   000     000     000  000   000  000  0000       000  
+    #     0      000   000  000   000  000  000   000     000     000   0000000   000   000  0000000   
+    
+    variations: ->
+        
+        @var.innerHTML = ''
+        return if not @game
+        return if not @tree
+            
+        s = @divRect.height/(@size+1)
+        s = max 16 int s/3
+             
+        if cm = @tree.cursorMove()
+            # log cm
+            # tr = @tree.cursorTree() ? @tree
+            # if tr.cursor.mvi == 0 and tr.parent?
+            
+            altmoves = cm.alt.map (a) -> a.moves[0]
+            for mv in altmoves
+                c = @game.coord mv.pos
+                p = @coordToPrcnt c
+                l = elem 'div' class:"variation #{mv.color}" parent:@var, text:mv.pos, style: "left:#{p.x}%;top:#{p.y}%; font-size:#{int(2*s/3)}px; border-radius:#{s}px; width:#{s}px; height:#{s}px;" 
+                
     # 000000000  00000000   00000000  00000000  
     #    000     000   000  000       000       
     #    000     0000000    0000000   0000000   

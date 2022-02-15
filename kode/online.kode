@@ -1,0 +1,93 @@
+###
+ 0000000   000   000  000      000  000   000  00000000
+000   000  0000  000  000      000  0000  000  000     
+000   000  000 0 000  000      000  000 0 000  0000000 
+000   000  000  0000  000      000  000  0000  000     
+ 0000000   000   000  0000000  000  000   000  00000000
+###
+
+{ noon, slash } = require 'kxk'
+{ request } = require 'https'
+WebSocket = require 'ws'
+
+function Online
+
+    @: (@parent) ->
+
+        # ws = new WebSocket 'wss://online-go.com/socket.io/' perMessageDeflate:false
+        # ws.on 'message' (msg) => log 'ws client' msg
+        # ws.on 'error' (err) => error err
+        
+        @activeGames = []
+        @postSecret()
+        
+    postSecret: ->
+        
+        secret = noon.load slash.resolve "#{__dirname}/../bin/.secret"
+        body   = "client_id=#{secret.client_id}&client_secret=#{secret.client_secret}&username=#{secret.username}&password=#{secret.password}&grant_type=password"
+
+        @post path:'/oauth2/token/' body:body, cb: (d) =>
+            if d.access_token
+                @token = d.access_token
+                @getGames()
+            else
+                log 'no token!'
+                
+    getGames: (page=1) ->
+
+        # log 'games...' page
+        
+        @get path:"/api/v1/ui/overview" cb: (d) =>
+            log 'active games (overview):' d.active_games.length
+            log 'overview' noon d
+        
+        @get path:"/api/v1/megames/?page=#{page}&ended__isnull=true" cb: (d) =>
+            @activeGames = @activeGames.concat d.results
+            if d.next
+                @getGames page+1
+            else
+                log 'active games:' @activeGames.length
+                log noon @activeGames
+        
+    post: (o) ->
+        
+        req = request {
+                host: 'online-go.com'
+                path: o.path
+                method: 'POST'
+                headers: 'Content-Type': 'application/x-www-form-urlencoded'
+            }, (response) =>
+                log 'status:' response.statusCode if response.statusCode != 200
+                response.setEncoding 'utf8'
+                response.on 'data' (s) =>
+                    d = JSON.parse s
+                    o.cb(d) if o.cb is func
+                      
+        req.on 'error' (e) -> log 'post error' e        
+        req.write o.body if o.body
+        req.end()
+          
+    get: (o) ->
+        
+        req = request {
+                host: 'online-go.com'
+                path: o.path
+                method: 'GET'
+                headers: 
+                    'Authorization': "Bearer #{@token}"
+                    'Content-Type': 'application/x-www-form-urlencoded'
+            }, (response) =>
+                log 'status:' response.statusCode if response.statusCode != 200
+                response.setEncoding 'utf8'
+                data = ""
+                response.on 'data' (chunk) => 
+                    data += chunk
+                response.on 'end' =>
+                    d = JSON.parse data
+                    # log 'get data' data
+                    o.cb(d) if o.cb is func
+                      
+        req.on 'error' (e) -> log 'get error' e
+        req.end()
+
+module.exports = Online

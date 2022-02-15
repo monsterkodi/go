@@ -39,12 +39,21 @@ function Tree
                 post.emit? 'tree'
             else
                 @cursor.mvi++
-                @cursor.ali = @moves[@cursor.mvi].alt.length+1
-                tr = new Tree @
-                @moves[@cursor.mvi].alt.push tr
-                tr.addMove pos, captures, color
+                if pos != @moves[@cursor.mvi].pos
+                    altmoves = @moves[@cursor.mvi].alt.map (alt) -> alt.moves[0].pos
+                    # log pos, altmoves
+                    if pos in altmoves
+                        @cursor.ali = altmoves.indexOf(pos)+1
+                        tr = @moves[@cursor.mvi].alt
+                        tr.cursor = ali:0, mvi:0
+                    else
+                        @cursor.ali = @moves[@cursor.mvi].alt.length+1
+                        tr = new Tree @
+                        @moves[@cursor.mvi].alt.push tr
+                        tr.addMove pos, captures, color
+                        return
+                post.emit? 'tree'
         
-    # nextColor: -> ['black''white'][@history().length%2]
     nextColor: -> (cm = @cursorMove()) ? opponent[cm.color] : 'black'
         
     # 000   000   0000000   000   000  000   0000000    0000000   000000000  00000000  
@@ -229,6 +238,18 @@ function Tree
             tr.deselect()
         delete @cursor
         
+    canUndo: ->
+        
+        @cursor.ali == 0 and
+        @cursor.mvi == @moves.length-1
+        
+    undoMove: (m) ->
+
+        @cursor.mvi--
+        u = @moves.pop()
+        if u.pos != m.pos then log 'dafuk!'
+        post?.emit 'tree'
+        
     #  0000000  000   000  00000000    0000000   0000000   00000000   000000000  00000000   00000000  00000000  
     # 000       000   000  000   000  000       000   000  000   000     000     000   000  000       000       
     # 000       000   000  0000000    0000000   000   000  0000000       000     0000000    0000000   0000000   
@@ -256,7 +277,10 @@ function Tree
         if tr = @cursorTree()
             if cm = tr.cursorMove()
                 return cm
-        @moves[@cursor.mvi]
+        if @cursor
+            return @moves[@cursor.mvi]
+            
+        error 'no cursor!' @
                 
     # 000000000  00000000   00000000  00000000         0000000   000000000  
     #    000     000   000  000       000             000   000     000     
