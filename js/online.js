@@ -60,7 +60,6 @@ Online = (function ()
             if (d.access_token)
             {
                 this.token = d.access_token
-                console.log('token!')
                 if (window.stash.get('games',true))
                 {
                     return this.showGames()
@@ -95,9 +94,9 @@ Online = (function ()
         var b, g, game, ib, iw, nb, nw, rb, rw
 
         var list = _k_.list(this.activeGames)
-        for (var _92_17_ = 0; _92_17_ < list.length; _92_17_++)
+        for (var _89_17_ = 0; _89_17_ < list.length; _89_17_++)
         {
-            game = list[_92_17_]
+            game = list[_89_17_]
             g = elem('div',{class:'game',parent:this.games})
             if (game.players.black.username !== 'monsterkodi')
             {
@@ -136,12 +135,20 @@ Online = (function ()
     {
         return this.get({path:`/api/v1/games/${game.id}`,cb:(function (g)
         {
-            var b
+            var b, t
 
             b = new Board(e,g.height)
             b.game = new Game(b,g.players.black.name,g.players.white.name,g.handicap)
             b.game.replay(ogsMoves(g.gamedata.moves,g.height))
-            return b.div.style.height = '400px'
+            b.div.style.height = '400px'
+            b.div.style.width = '400px'
+            if (g.gamedata.clock.current_player === 1110858)
+            {
+                b.div.style.border = '2px solid black'
+                t = e.previousElementSibling
+                e.parentElement.insertBefore(e,e.parentElement.firstChild)
+                return t.parentElement.insertBefore(t,t.parentElement.firstChild)
+            }
         }).bind(this)})
     }
 

@@ -17,16 +17,15 @@ function Board
 
     @: (@parent, @size=19) ->
         
-        @div = elem 'div' class:'board'     parent:@parent
-        @img = elem 'img' class:'wood'      src:'../img/spacer.png' parent:@div
-        # @blk = elem 'div' class:'blank'     parent:@div
+        @div = elem 'div' class:'board'       parent:@parent
+        @img = elem 'img' class:'wood'        src:'../img/spacer.png' parent:@div
         @shd = elem 'div' class:'shadows'     parent:@div
         @coo = elem 'div' class:'coordinates' parent:@div
         
         @div.addEventListener 'mousemove'     @onMouseMove
         @div.addEventListener 'mousedown'     @onMouseDown
         @div.addEventListener 'mouseleave'    @onMouseLeave
-        @parent.addEventListener 'mousewheel' @onMouseWheel#, true
+        @parent.addEventListener 'mousewheel' @onMouseWheel
         
         @height = 1000
         @width  = @height
@@ -200,6 +199,7 @@ function Board
         else
             return if not @game.legal nextColor, [c.x, c.y]
         
+        log 'onMouseMove' nextColor
         hvr = @hvr[nextColor]
         hvr.style.display = 'initial'
         
@@ -233,8 +233,6 @@ function Board
     
     onMouseWheel: (event) =>
 
-        # return if event.eventPhase < 2
-        
         @wheelAccum ?= x:0, y:0
         
         ox = @wheelAccum.x
@@ -283,7 +281,7 @@ function Board
             return
             
         r = @coordToPrcnt @game.lastCoord()
-        d = @divRect.height/(@size+1)
+        d = @divSize/(@size+1)
         @lst.style.left         = "#{r.x}%"
         @lst.style.top          = "#{r.y}%"
         @lst.style.width        = "#{0.5*d}px"
@@ -355,14 +353,13 @@ function Board
     annotate: ->
 
         @divRect = @div.getBoundingClientRect()
-        # @parent.removeChild @div
+        @divSize = max @divRect.width, @divSize
         @showLastMove()
         @numbers()
         @variations()
         @liberties()
         @territory()
         @game.updateTitle()
-        # @parent.appendChild @div
     
     # 000   000  000   000  00     00  0000000    00000000  00000000    0000000  
     # 0000  000  000   000  000   000  000   000  000       000   000  000       
@@ -375,7 +372,7 @@ function Board
         @num.innerHTML = ''
         return if not @game
             
-        s = @divRect.height/(@size+1)
+        s = @divSize/(@size+1)
         s = max 16 int s/3
         
         for m in @game.moves.m
@@ -405,7 +402,7 @@ function Board
         return if not @game
         return if not @tree
             
-        s = @divRect.height/(@size+1)
+        s = @divSize/(@size+1)
         s = max 16 int s/3
              
         if cm = @tree.cursorMove()
@@ -440,9 +437,11 @@ function Board
         return if not @game
         
         if not @divRect
+            log 'no rect?'
             @divRect = @div.getBoundingClientRect()
+            @divSize = max @divRect.width, @divSize
         
-        s = @divRect.height/(@size+1)
+        s = @divSize/(@size+1)
         s = max 16 s/3
         
         color = @game.nextColor()
@@ -471,7 +470,7 @@ function Board
         @lib.innerHTML = ''
         return if not @game or not @show.liberties
                 
-        s = @divRect.height/(@size+1)
+        s = @divSize/(@size+1)
         s = min 15 s/6
         
         for color in ['black' 'white']
@@ -496,7 +495,7 @@ function Board
         if @game
             if @game.moves.num() > 1
 
-                s = @divRect.height/(@size+1)
+                s = @divSize/(@size+1)
                 s /= 4
                 s = s.toFixed 2
                 

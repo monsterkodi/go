@@ -51,7 +51,6 @@ function Online
         @post path:'/oauth2/token/' body:body, cb: (d) =>
             if d.access_token
                 @token = d.access_token
-                log 'token!'
                 if window.stash.get 'games' true
                     @showGames()
             else
@@ -77,8 +76,6 @@ function Online
             if d.next
                 @getGames page+1
             else
-                # log 'active games:' @activeGames.length
-                # log noon @activeGames
                 @renderGames()
                 
     # 00000000   00000000  000   000  0000000    00000000  00000000   
@@ -110,10 +107,19 @@ function Online
     renderGame: (game, e) ->
         
         @get path:"/api/v1/games/#{game.id}" cb: (g) =>
+            
             b = new Board e, g.height
             b.game = new Game b, g.players.black.name, g.players.white.name, g.handicap
             b.game.replay ogsMoves g.gamedata.moves, g.height
             b.div.style.height = '400px'
+            b.div.style.width  = '400px'
+            
+            if g.gamedata.clock.current_player == 1110858
+                b.div.style.border = '2px solid black'
+                # ugly hack to show 'your move' games on top:
+                t = e.previousElementSibling
+                e.parentElement.insertBefore e, e.parentElement.firstChild
+                t.parentElement.insertBefore t, t.parentElement.firstChild
         
     # 00000000    0000000    0000000  000000000  
     # 000   000  000   000  000          000     
