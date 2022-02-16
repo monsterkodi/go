@@ -165,6 +165,7 @@ body {
   background-color: #faeeea;
   opacity: 0.9;
 }
+.games,
 .varee {
   background-color: rgba(80,30,0,0.05);
   box-shadow: inset 1px 1px 6px rgba(80,30,0,0.8);
@@ -177,10 +178,68 @@ body {
   border-right-color: rgba(255,255,0,0.267);
   overflow: hidden;
 }
+.games .stones,
 .varee .stones,
+.games .highlts,
 .varee .highlts {
   position: absolute;
   display: block;
+}
+.games {
+  line-height: 1;
+  padding: 12px;
+  box-sizing: border-box;
+  overflow: auto;
+}
+.games .stones {
+  display: contents;
+}
+.game {
+  margin-top: 20px;
+  display: inline-block;
+  white-space: nowrap;
+}
+.game .board {
+  position: relative;
+  width: 400px;
+  height: 400px;
+}
+.gameIcon {
+  width: 64px;
+  height: 64px;
+  border-radius: 6px;
+}
+.gameIcon.black {
+  margin-right: 2px;
+  margin-left: 20px;
+  border: 2px solid #000;
+}
+.gameIcon.white {
+  border: 2px solid #fff;
+}
+.gameRank {
+  padding-left: 12px;
+  vertical-align: top;
+}
+.gameLink {
+  color: #a00;
+}
+.gameLink:hover {
+  color: #fff;
+}
+.gameRank {
+  font-size: 16px;
+}
+.gameRank.black {
+  color: #000;
+}
+.gameRank.white {
+  color: #fff;
+}
+.gameName {
+  font-size: 24px;
+  color: #a00;
+  margin-left: -20px;
 }
 .varii {
   position: absolute;

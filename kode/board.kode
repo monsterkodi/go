@@ -23,10 +23,10 @@ function Board
         @shd = elem 'div' class:'shadows'     parent:@div
         @coo = elem 'div' class:'coordinates' parent:@div
         
-        @div.addEventListener 'mousemove'  @onMouseMove
-        @div.addEventListener 'mousedown'  @onMouseDown
-        @div.addEventListener 'mouseleave' @onMouseLeave
-        @parent.addEventListener 'mousewheel' @onMouseWheel
+        @div.addEventListener 'mousemove'     @onMouseMove
+        @div.addEventListener 'mousedown'     @onMouseDown
+        @div.addEventListener 'mouseleave'    @onMouseLeave
+        @parent.addEventListener 'mousewheel' @onMouseWheel#, true
         
         @height = 1000
         @width  = @height
@@ -60,7 +60,15 @@ function Board
         post.on 'variation' @onVariation
         post.on 'resize'    @onResize
         post.on 'tree'      @onTree
-        @scaleFonts()
+        
+    remove: ->
+        
+        return if not @div
+        post.off 'variation' @onVariation
+        post.off 'resize'    @onResize
+        post.off 'tree'      @onTree
+        @parent.removeChild @div
+        delete @div
         
     preloadStones: ->
         # load stone images once to avoid flickering
@@ -225,6 +233,8 @@ function Board
     
     onMouseWheel: (event) =>
 
+        # return if event.eventPhase < 2
+        
         @wheelAccum ?= x:0, y:0
         
         ox = @wheelAccum.x

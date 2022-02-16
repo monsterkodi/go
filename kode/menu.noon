@@ -61,6 +61,7 @@ game
         9                   9
     
 view
+    games                   alt+g
     tree                    alt+t
     numbers                 alt+n
     liberties               alt+l

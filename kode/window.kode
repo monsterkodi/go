@@ -39,7 +39,7 @@ function MainWin extends win
         row = elem 'div' class:'row' parent:main, style:'height:100%'
         
         @referee = new Referee row
-        @online  = new Online  row
+        @online  = new Online  row, @referee
                 
     # 000       0000000    0000000   0000000    
     # 000      000   000  000   000  000   000  
@@ -157,6 +157,7 @@ function MainWin extends win
             'resign'                        ➜ @referee.playerMove 'resign' 'human'
             'genmove'                       ➜ @referee.genMove()
             'calcscore'                     ➜ @referee.game.calcScore(); @referee.board.annotate()
+            'games'                         ➜ @online.toggleGames() 
             'tree'                          ➜ @referee.toggleTree() 
             'numbers'                       ➜ @referee.board.toggleNumbers()
             'coordinates'                   ➜ @referee.board.toggleCoordinates()

@@ -6,13 +6,16 @@
  0000000   000   000  0000000  000  000   000  00000000
 ###
 
-{ noon, slash } = require 'kxk'
+{ elem, noon, open, post, slash } = require 'kxk'
 { request } = require 'https'
+{ rank, ogsMoves, iconUrl } = require './util/util'
 WebSocket = require 'ws'
+Board = require './board'
+Game = require './game'
 
 function Online
 
-    @: (@parent) ->
+    @: (@parent, @referee) ->
 
         # ws = new WebSocket 'wss://online-go.com/socket.io/' perMessageDeflate:false
         # ws.on 'message' (msg) => log 'ws client' msg
@@ -20,7 +23,26 @@ function Online
         
         @activeGames = []
         @postSecret()
+                            
+        post.on 'resize' @onResize
+                
+    showGames: =>
+            
+        @games = elem 'div' class:'games' parent:@parent 
+        @games.addEventListener 'mousewheel' @onMouseWheel, true
+        @getGames()
+        @onResize()
         
+    onMouseWheel: (event) =>
+        
+        event.stopPropagation()
+        
+    #  0000000  00000000   0000000  00000000   00000000  000000000  
+    # 000       000       000       000   000  000          000     
+    # 0000000   0000000   000       0000000    0000000      000     
+    #      000  000       000       000   000  000          000     
+    # 0000000   00000000   0000000  000   000  00000000     000     
+    
     postSecret: ->
         
         secret = noon.load slash.resolve "#{__dirname}/../bin/.secret"
@@ -29,26 +51,74 @@ function Online
         @post path:'/oauth2/token/' body:body, cb: (d) =>
             if d.access_token
                 @token = d.access_token
-                @getGames()
+                log 'token!'
+                if window.stash.get 'games' true
+                    @showGames()
             else
                 log 'no token!'
                 
-    getGames: (page=1) ->
+    #  0000000   00000000  000000000         0000000    0000000   00     00  00000000   0000000  
+    # 000        000          000           000        000   000  000   000  000       000       
+    # 000  0000  0000000      000           000  0000  000000000  000000000  0000000   0000000   
+    # 000   000  000          000           000   000  000   000  000 0 000  000            000  
+    #  0000000   00000000     000            0000000   000   000  000   000  00000000  0000000   
+    
+    getGames: (page=1) =>
 
         # log 'games...' page
+        # @get path:"/api/v1/ui/overview" cb: (d) =>
+            # log 'active games (overview):' d.active_games.length
+            # log 'overview' noon d
         
-        @get path:"/api/v1/ui/overview" cb: (d) =>
-            log 'active games (overview):' d.active_games.length
-            log 'overview' noon d
-        
-        @get path:"/api/v1/megames/?page=#{page}&ended__isnull=true" cb: (d) =>
+        @get path:"/api/v1/megames/?page=#{page}&ended__isnull=true&page_size=100" cb: (d) =>
             @activeGames = @activeGames.concat d.results
             if d.next
                 @getGames page+1
             else
                 log 'active games:' @activeGames.length
                 log noon @activeGames
+                @renderGames()
+                
+    # 00000000   00000000  000   000  0000000    00000000  00000000   
+    # 000   000  000       0000  000  000   000  000       000   000  
+    # 0000000    0000000   000 0 000  000   000  0000000   0000000    
+    # 000   000  000       000  0000  000   000  000       000   000  
+    # 000   000  00000000  000   000  0000000    00000000  000   000  
+    
+    renderGames: ->
         
+        for game in @activeGames
+            g = elem 'div' class:'game' parent:@games
+            if game.players.black.username != 'monsterkodi'
+                ib = elem 'img'  parent:g, class:'gameIcon black' src:iconUrl game.players.black.icon, 128
+                rb = elem 'span' parent:g, class:'gameRank black' text:rank game.players.black
+                nb = elem 'span' parent:g, class:'gameName black' text:game.players.black.username
+                ib.addEventListener 'click' ((id) -> -> open 'https://online-go.com/game/'+id) game.id
+                ib.title = game.name
+            if game.players.white.username != 'monsterkodi'
+                iw  = elem 'img'  parent:g, class:'gameIcon white' parent:g, src:iconUrl game.players.white.icon, 128
+                rw = elem 'span' parent:g, class:'gameRank white' text:rank game.players.white
+                nw = elem 'span' parent:g, class:'gameName white' text:game.players.white.username
+                iw.addEventListener 'click' ((id) -> -> open 'https://online-go.com/game/'+id) game.id
+                iw.title = game.name
+
+            b = elem 'div' class:'game' parent:@games
+            @renderGame game, b
+            
+    renderGame: (game, e) ->
+        
+        @get path:"/api/v1/games/#{game.id}" cb: (g) =>
+            b = new Board e, g.height
+            b.game = new Game b, g.players.black.name, g.players.white.name, g.handicap
+            b.game.replay ogsMoves g.gamedata.moves, g.height
+            b.div.style.height = '400px'
+        
+    # 00000000    0000000    0000000  000000000  
+    # 000   000  000   000  000          000     
+    # 00000000   000   000  0000000      000     
+    # 000        000   000       000     000     
+    # 000         0000000   0000000      000     
+    
     post: (o) ->
         
         req = request {
@@ -89,5 +159,43 @@ function Online
                       
         req.on 'error' (e) -> log 'get error' e
         req.end()
+        
+    # 000000000   0000000    0000000    0000000   000      00000000         0000000    0000000   00     00  00000000   0000000  
+    #    000     000   000  000        000        000      000             000        000   000  000   000  000       000       
+    #    000     000   000  000  0000  000  0000  000      0000000         000  0000  000000000  000000000  0000000   0000000   
+    #    000     000   000  000   000  000   000  000      000             000   000  000   000  000 0 000  000            000  
+    #    000      0000000    0000000    0000000   0000000  00000000         0000000   000   000  000   000  00000000  0000000   
+    
+    toggleGames: ->
+
+        log 'toggleGames'
+        if @games
+            @games.remove()
+            delete @games
+            window.stash.set 'games' false
+        else
+            window.stash.set 'games' true
+            @showGames()
+            
+    # 00000000   00000000   0000000  000  0000000  00000000  
+    # 000   000  000       000       000     000   000       
+    # 0000000    0000000   0000000   000    000    0000000   
+    # 000   000  000            000  000   000     000       
+    # 000   000  00000000  0000000   000  0000000  00000000  
+    
+    onResize: =>
+        
+        return if not @games
+        
+        br = @parent.getBoundingClientRect()
+
+        tb = br.height / (@referee.boardsize+1) - 2
+        rb = tb
+        w  = max 0 (br.width - br.height)/2-tb
+        
+        @games.style.width  = "#{w}px"
+        @games.style.top    = "#{tb}px"
+        @games.style.bottom = "#{tb}px"
+        @games.style.left   = "#{rb}px"
 
 module.exports = Online

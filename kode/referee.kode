@@ -43,7 +43,7 @@ function Referee
     newGame: (gi={}) =>
 
         @varee?.remove()
-        @parent.innerHTML = ''
+        @board?.remove()
         
         @white     = gi.white    ? @white
         @black     = gi.black    ? @black
@@ -97,6 +97,8 @@ function Referee
                 
             if @compi.white and @handicap > 1
                 @compi.white.genmove()
+                
+        post.emit 'resize'
 
     #  0000000   0000000   000   000  00000000  
     # 000       000   000  000   000  000       
@@ -223,6 +225,7 @@ function Referee
         
         # ●▸ navigate
         @game.paused = true
+        return if @game.start()
         if action != 'select'
             @tree.navigate action
         else

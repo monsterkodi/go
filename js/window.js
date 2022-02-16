@@ -48,7 +48,7 @@ MainWin = (function ()
         main = $("#main")
         row = elem('div',{class:'row',parent:main,style:'height:100%'})
         this.referee = new Referee(row)
-        this.online = new Online(row)
+        this.online = new Online(row,this.referee)
     }
 
     MainWin.prototype["onLoad"] = function ()
@@ -180,6 +180,9 @@ MainWin = (function ()
             case 'calcscore':
                 this.referee.game.calcScore()
                 return this.referee.board.annotate()
+
+            case 'games':
+                return this.online.toggleGames()
 
             case 'tree':
                 return this.referee.toggleTree()

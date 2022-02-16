@@ -1,24 +1,52 @@
 // monsterkodi/kode 0.237.0
 
-var _k_ = {noon: function (obj) { var pad = function (s, l) { while (s.length < l) { s += ' ' }; return s }; var esc = function (k, arry) { var es, sp; if (0 <= k.indexOf('\n')) { sp = k.split('\n'); es = sp.map(function (s) { return esc(s,arry) }); es.unshift('...'); es.push('...'); return es.join('\n') } if (k === '' || k === '...' || _k_.in(k[0],[' ','#','|']) || _k_.in(k[k.length - 1],[' ','#','|'])) { k = '|' + k + '|' } else if (arry && /  /.test(k)) { k = '|' + k + '|' }; return k }; var pretty = function (o, ind, seen) { var k, kl, l, v, mk = 4; if (Object.keys(o).length > 1) { for (k in o) { if (Object.hasOwn(o,k)) { kl = parseInt(Math.ceil((k.length + 2) / 4) * 4); mk = Math.max(mk,kl); if (mk > 32) { mk = 32; break } } } }; l = []; var keyValue = function (k, v) { var i, ks, s, vs; s = ind; k = esc(k,true); if (k.indexOf('  ') > 0 && k[0] !== '|') { k = `|${k}|` } else if (k[0] !== '|' && k[k.length - 1] === '|') { k = '|' + k } else if (k[0] === '|' && k[k.length - 1] !== '|') { k += '|' }; ks = pad(k,Math.max(mk,k.length + 2)); i = pad(ind + '    ',mk); s += ks; vs = toStr(v,i,false,seen); if (vs[0] === '\n') { while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) } }; s += vs; while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) }; return s }; for (k in o) { if (Object.hasOwn(o,k)) { l.push(keyValue(k,o[k])) } }; return l.join('\n') }; var toStr = function (o, ind = '', arry = false, seen = []) { var s, t, v; if (!(o != null)) { if (o === null) { return 'null' }; if (o === undefined) { return 'undefined' }; return '<?>' }; switch (t = typeof(o)) { case 'string': {return esc(o,arry)}; case 'object': { if (_k_.in(o,seen)) { return '<v>' }; seen.push(o); if ((o.constructor != null ? o.constructor.name : undefined) === 'Array') { s = ind !== '' && arry && '.' || ''; if (o.length && ind !== '') { s += '\n' }; s += (function () { var result = []; var list = _k_.list(o); for (var li = 0; li < list.length; li++)  { v = list[li];result.push(ind + toStr(v,ind + '    ',true,seen))  } return result }).bind(this)().join('\n') } else if ((o.constructor != null ? o.constructor.name : undefined) === 'RegExp') { return o.source } else { s = (arry && '.\n') || ((ind !== '') && '\n' || ''); s += pretty(o,ind,seen) }; return s } default: return String(o) }; return '<???>' }; return toStr(obj) }, isFunc: function (o) {return typeof o === 'function'}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}}
+var _k_ = {noon: function (obj) { var pad = function (s, l) { while (s.length < l) { s += ' ' }; return s }; var esc = function (k, arry) { var es, sp; if (0 <= k.indexOf('\n')) { sp = k.split('\n'); es = sp.map(function (s) { return esc(s,arry) }); es.unshift('...'); es.push('...'); return es.join('\n') } if (k === '' || k === '...' || _k_.in(k[0],[' ','#','|']) || _k_.in(k[k.length - 1],[' ','#','|'])) { k = '|' + k + '|' } else if (arry && /  /.test(k)) { k = '|' + k + '|' }; return k }; var pretty = function (o, ind, seen) { var k, kl, l, v, mk = 4; if (Object.keys(o).length > 1) { for (k in o) { if (Object.hasOwn(o,k)) { kl = parseInt(Math.ceil((k.length + 2) / 4) * 4); mk = Math.max(mk,kl); if (mk > 32) { mk = 32; break } } } }; l = []; var keyValue = function (k, v) { var i, ks, s, vs; s = ind; k = esc(k,true); if (k.indexOf('  ') > 0 && k[0] !== '|') { k = `|${k}|` } else if (k[0] !== '|' && k[k.length - 1] === '|') { k = '|' + k } else if (k[0] === '|' && k[k.length - 1] !== '|') { k += '|' }; ks = pad(k,Math.max(mk,k.length + 2)); i = pad(ind + '    ',mk); s += ks; vs = toStr(v,i,false,seen); if (vs[0] === '\n') { while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) } }; s += vs; while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) }; return s }; for (k in o) { if (Object.hasOwn(o,k)) { l.push(keyValue(k,o[k])) } }; return l.join('\n') }; var toStr = function (o, ind = '', arry = false, seen = []) { var s, t, v; if (!(o != null)) { if (o === null) { return 'null' }; if (o === undefined) { return 'undefined' }; return '<?>' }; switch (t = typeof(o)) { case 'string': {return esc(o,arry)}; case 'object': { if (_k_.in(o,seen)) { return '<v>' }; seen.push(o); if ((o.constructor != null ? o.constructor.name : undefined) === 'Array') { s = ind !== '' && arry && '.' || ''; if (o.length && ind !== '') { s += '\n' }; s += (function () { var result = []; var list = _k_.list(o); for (var li = 0; li < list.length; li++)  { v = list[li];result.push(ind + toStr(v,ind + '    ',true,seen))  } return result }).bind(this)().join('\n') } else if ((o.constructor != null ? o.constructor.name : undefined) === 'RegExp') { return o.source } else { s = (arry && '.\n') || ((ind !== '') && '\n' || ''); s += pretty(o,ind,seen) }; return s } default: return String(o) }; return '<???>' }; return toStr(obj) }, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, isFunc: function (o) {return typeof o === 'function'}, max: function () { m = -Infinity; for (a of arguments) { if (a instanceof Array) {m = _k_.max.apply(_k_.max,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n > m ? n : m}}}; return m }, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}}
 
-var Online, request, slash, WebSocket
+var Board, elem, Game, iconUrl, ogsMoves, Online, open, post, rank, request, slash, WebSocket
 
+elem = require('kxk').elem
 noon = require('kxk').noon
+open = require('kxk').open
+post = require('kxk').post
 slash = require('kxk').slash
 
 request = require('https').request
 
+rank = require('./util/util').rank
+ogsMoves = require('./util/util').ogsMoves
+iconUrl = require('./util/util').iconUrl
+
 WebSocket = require('ws')
+Board = require('./board')
+Game = require('./game')
 
 Online = (function ()
 {
-    function Online (parent)
+    function Online (parent, referee)
     {
         this.parent = parent
+        this.referee = referee
     
+        this["onResize"] = this["onResize"].bind(this)
+        this["getGames"] = this["getGames"].bind(this)
+        this["onMouseWheel"] = this["onMouseWheel"].bind(this)
+        this["showGames"] = this["showGames"].bind(this)
         this.activeGames = []
         this.postSecret()
+        post.on('resize',this.onResize)
+    }
+
+    Online.prototype["showGames"] = function ()
+    {
+        this.games = elem('div',{class:'games',parent:this.parent})
+        this.games.addEventListener('mousewheel',this.onMouseWheel,true)
+        this.getGames()
+        return this.onResize()
+    }
+
+    Online.prototype["onMouseWheel"] = function (event)
+    {
+        return event.stopPropagation()
     }
 
     Online.prototype["postSecret"] = function ()
@@ -32,7 +60,11 @@ Online = (function ()
             if (d.access_token)
             {
                 this.token = d.access_token
-                return this.getGames()
+                console.log('token!')
+                if (window.stash.get('games',true))
+                {
+                    return this.showGames()
+                }
             }
             else
             {
@@ -43,12 +75,7 @@ Online = (function ()
 
     Online.prototype["getGames"] = function (page = 1)
     {
-        this.get({path:"/api/v1/ui/overview",cb:(function (d)
-        {
-            console.log('active games (overview):',d.active_games.length)
-            console.log('overview',_k_.noon(d))
-        }).bind(this)})
-        return this.get({path:`/api/v1/megames/?page=${page}&ended__isnull=true`,cb:(function (d)
+        return this.get({path:`/api/v1/megames/?page=${page}&ended__isnull=true&page_size=100`,cb:(function (d)
         {
             this.activeGames = this.activeGames.concat(d.results)
             if (d.next)
@@ -59,7 +86,63 @@ Online = (function ()
             {
                 console.log('active games:',this.activeGames.length)
                 console.log(_k_.noon(this.activeGames))
+                return this.renderGames()
             }
+        }).bind(this)})
+    }
+
+    Online.prototype["renderGames"] = function ()
+    {
+        var b, g, game, ib, iw, nb, nw, rb, rw
+
+        var list = _k_.list(this.activeGames)
+        for (var _90_17_ = 0; _90_17_ < list.length; _90_17_++)
+        {
+            game = list[_90_17_]
+            g = elem('div',{class:'game',parent:this.games})
+            if (game.players.black.username !== 'monsterkodi')
+            {
+                ib = elem('img',{parent:g,class:'gameIcon black',src:iconUrl(game.players.black.icon,128)})
+                rb = elem('span',{parent:g,class:'gameRank black',text:rank(game.players.black)})
+                nb = elem('span',{parent:g,class:'gameName black',text:game.players.black.username})
+                ib.addEventListener('click',(function (id)
+                {
+                    return function ()
+                    {
+                        return open('https://online-go.com/game/' + id)
+                    }
+                })(game.id))
+                ib.title = game.name
+            }
+            if (game.players.white.username !== 'monsterkodi')
+            {
+                iw = elem('img',{parent:g,class:'gameIcon white',parent:g,src:iconUrl(game.players.white.icon,128)})
+                rw = elem('span',{parent:g,class:'gameRank white',text:rank(game.players.white)})
+                nw = elem('span',{parent:g,class:'gameName white',text:game.players.white.username})
+                iw.addEventListener('click',(function (id)
+                {
+                    return function ()
+                    {
+                        return open('https://online-go.com/game/' + id)
+                    }
+                })(game.id))
+                iw.title = game.name
+            }
+            b = elem('div',{class:'game',parent:this.games})
+            this.renderGame(game,b)
+        }
+    }
+
+    Online.prototype["renderGame"] = function (game, e)
+    {
+        return this.get({path:`/api/v1/games/${game.id}`,cb:(function (g)
+        {
+            var b
+
+            b = new Board(e,g.height)
+            b.game = new Game(b,g.players.black.name,g.players.white.name,g.handicap)
+            b.game.replay(ogsMoves(g.gamedata.moves,g.height))
+            return b.div.style.height = '400px'
         }).bind(this)})
     }
 
@@ -130,6 +213,40 @@ Online = (function ()
             console.log('get error',e)
         })
         return req.end()
+    }
+
+    Online.prototype["toggleGames"] = function ()
+    {
+        console.log('toggleGames')
+        if (this.games)
+        {
+            this.games.remove()
+            delete this.games
+            return window.stash.set('games',false)
+        }
+        else
+        {
+            window.stash.set('games',true)
+            return this.showGames()
+        }
+    }
+
+    Online.prototype["onResize"] = function ()
+    {
+        var br, rb, tb, w
+
+        if (!this.games)
+        {
+            return
+        }
+        br = this.parent.getBoundingClientRect()
+        tb = br.height / (this.referee.boardsize + 1) - 2
+        rb = tb
+        w = _k_.max(0,(br.width - br.height) / 2 - tb)
+        this.games.style.width = `${w}px`
+        this.games.style.top = `${tb}px`
+        this.games.style.bottom = `${tb}px`
+        return this.games.style.left = `${rb}px`
     }
 
     return Online
