@@ -69,14 +69,16 @@ function Online
         # @get path:"/api/v1/ui/overview" cb: (d) =>
             # log 'active games (overview):' d.active_games.length
             # log 'overview' noon d
+            
+        @activeGames = []
         
         @get path:"/api/v1/megames/?page=#{page}&ended__isnull=true&page_size=100" cb: (d) =>
             @activeGames = @activeGames.concat d.results
             if d.next
                 @getGames page+1
             else
-                log 'active games:' @activeGames.length
-                log noon @activeGames
+                # log 'active games:' @activeGames.length
+                # log noon @activeGames
                 @renderGames()
                 
     # 00000000   00000000  000   000  0000000    00000000  00000000   
@@ -102,7 +104,7 @@ function Online
                 iw.addEventListener 'click' ((id) -> -> open 'https://online-go.com/game/'+id) game.id
                 iw.title = game.name
 
-            b = elem 'div' class:'game' parent:@games
+            b = elem 'div' class:'gameboard' parent:@games
             @renderGame game, b
             
     renderGame: (game, e) ->

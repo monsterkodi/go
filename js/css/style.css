@@ -196,10 +196,11 @@ body {
 }
 .game {
   margin-top: 20px;
+  margin-left: 20px;
   display: inline-block;
   white-space: nowrap;
 }
-.game .board {
+.gameboard {
   position: relative;
   width: 400px;
   height: 400px;
@@ -211,7 +212,6 @@ body {
 }
 .gameIcon.black {
   margin-right: 2px;
-  margin-left: 20px;
   border: 2px solid #000;
 }
 .gameIcon.white {
