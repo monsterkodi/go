@@ -7,4 +7,5 @@
 <p>&nbsp;</p>
 
 ![go](img/go.png)
-![varee](img/varee.png)
+![tree](img/go_tree.png)
+![online](img/go_online.png)

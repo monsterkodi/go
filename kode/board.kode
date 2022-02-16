@@ -199,15 +199,16 @@ function Board
         else
             return if not @game.legal nextColor, [c.x, c.y]
         
-        log 'onMouseMove' nextColor
-        hvr = @hvr[nextColor]
-        hvr.style.display = 'initial'
+        if nextColor in ['black''white']
+            
+            hvr = @hvr[nextColor]
+            hvr.style.display = 'initial'
         
-        p = @posToPrcnt c
-        
-        hvr.style.left = "#{p.x}%"
-        hvr.style.top  = "#{p.y}%"
-        hvr.style.borderRadius = "#{0.5*@div.getBoundingClientRect().height/(@size+1)}px"
+            p = @posToPrcnt c
+            
+            hvr.style.left = "#{p.x}%"
+            hvr.style.top  = "#{p.y}%"
+            hvr.style.borderRadius = "#{0.5*@div.getBoundingClientRect().height/(@size+1)}px"
         
     onMouseDown: (event) =>
 

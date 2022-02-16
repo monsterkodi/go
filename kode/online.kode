@@ -113,6 +113,7 @@ function Online
             b.game.replay ogsMoves g.gamedata.moves, g.height
             b.div.style.height = '400px'
             b.div.style.width  = '400px'
+            b.div.addEventListener 'click' ((g) => => @loadGame g) g
             
             if g.gamedata.clock.current_player == 1110858
                 b.div.style.border = '2px solid black'
@@ -120,6 +121,28 @@ function Online
                 t = e.previousElementSibling
                 e.parentElement.insertBefore e, e.parentElement.firstChild
                 t.parentElement.insertBefore t, t.parentElement.firstChild
+                
+    # 000       0000000    0000000   0000000           0000000    0000000   00     00  00000000  
+    # 000      000   000  000   000  000   000        000        000   000  000   000  000       
+    # 000      000   000  000000000  000   000        000  0000  000000000  000000000  0000000   
+    # 000      000   000  000   000  000   000        000   000  000   000  000 0 000  000       
+    # 0000000   0000000   000   000  0000000           0000000   000   000  000   000  00000000  
+    
+    loadGame: (g) =>
+        
+        # log noon g
+        
+        @referee.newGame
+            black:    g.gamedata.players.black.username
+            white:    g.gamedata.players.white.username
+            size:     g.gamedata.width
+            handicap: g.gamedata.handicap
+            
+        moves = ogsMoves g.gamedata.moves, g.gamedata.height
+        @referee.board.game.replay moves
+        log noon moves
+        for mv in moves
+            @referee.tree.addMove mv.pos, mv.captures ? [], mv.color
         
     # 00000000    0000000    0000000  000000000  
     # 000   000  000   000  000          000     
@@ -162,7 +185,6 @@ function Online
                     data += chunk
                 response.on 'end' =>
                     d = JSON.parse data
-                    # log 'get data' data
                     o.cb(d) if o.cb is func
                       
         req.on 'error' (e) -> log 'get error' e
