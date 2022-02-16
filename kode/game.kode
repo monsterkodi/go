@@ -119,14 +119,16 @@ function Game extends Score
     # 000   000  000       000        000      000   000     000     
     # 000   000  00000000  000        0000000  000   000     000     
     
-    replay: (moves) ->
+    replay: (moves, calcCaptures=false) ->
         
         for m in moves
             p = m.pos
             c = @coord p
             color = m.color
-            @moves.add p, color, m.captures
             @setStone c, stone[color]
+            if calcCaptures
+                m.captures = @capture color
+            @moves.add p, color, m.captures
             @removeStones m.captures
         @calcScore()
         @board.annotate()

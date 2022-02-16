@@ -141,7 +141,7 @@ Online = (function ()
             features = {coordinates:false,liberties:false,numbers:false,hover:false}
             b = new Board(e,g.height,features)
             b.game = new Game(b,g.players.black.name,g.players.white.name,g.handicap)
-            b.game.replay(ogsMoves(g.gamedata.moves,g.height))
+            b.game.replay(ogsMoves(g.gamedata.moves,g.height),true)
             b.div.style.height = '400px'
             b.div.style.width = '400px'
             b.div.addEventListener('click',((function (g)
@@ -168,7 +168,7 @@ Online = (function ()
         this.referee.newGame({black:g.gamedata.players.black.username,white:g.gamedata.players.white.username,size:g.gamedata.width,handicap:g.gamedata.handicap})
         console.log(_k_.noon(g))
         moves = ogsMoves(g.gamedata.moves,g.gamedata.height)
-        this.referee.board.game.replay(moves)
+        this.referee.board.game.replay(moves,true)
         var list = _k_.list(moves)
         for (var _152_15_ = 0; _152_15_ < list.length; _152_15_++)
         {

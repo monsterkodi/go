@@ -116,7 +116,7 @@ function Online
             
             b = new Board e, g.height, features
             b.game = new Game b, g.players.black.name, g.players.white.name, g.handicap
-            b.game.replay ogsMoves g.gamedata.moves, g.height
+            b.game.replay ogsMoves(g.gamedata.moves, g.height), true
             b.div.style.height = '400px'
             b.div.style.width  = '400px'
             b.div.addEventListener 'click' ((g) => => @loadGame g) g
@@ -147,7 +147,7 @@ function Online
         # log noon g.gamedata.moves
         log noon g
         moves = ogsMoves g.gamedata.moves, g.gamedata.height
-        @referee.board.game.replay moves
+        @referee.board.game.replay moves, true
         # log noon moves
         for mv in moves
             @referee.tree.addMove mv.pos, mv.captures ? [], mv.color
