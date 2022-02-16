@@ -140,7 +140,7 @@ function Referee
     playerMove: (p, player) =>
         
         if @game.paused
-            if player == 'human'
+            if player not in [@compi.black?.name, @compi.white?.name]
                 @game.play p
                 @tree.addMove p, @game.lastCaptures
             return
@@ -172,7 +172,12 @@ function Referee
     altMove: (p) =>
         
         @navigate 'back'
+        log 'altMove' p, @game.nextColor()
+        log @game.grid.toString()
+        log @tree.toString()
         @playerMove p, @game.players[@game.nextColor()]
+        log @game.grid.toString()
+        log @tree.toString()
                             
     # 000   000  000   000  0000000     0000000   
     # 000   000  0000  000  000   000  000   000  

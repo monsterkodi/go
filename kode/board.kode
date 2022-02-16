@@ -15,17 +15,27 @@ preload = true
 
 function Board
 
-    @: (@parent, @size=19) ->
+    @: (@parent, @size=19, @features) ->
+        
+        @features ?= {} 
+        @features.coordinates ?= true
+        @features.variations  ?= true
+        @features.territory   ?= true
+        @features.liberties   ?= true
+        @features.numbers     ?= true
+        @features.hover       ?= true
         
         @div = elem 'div' class:'board'       parent:@parent
         @img = elem 'img' class:'wood'        src:'../img/spacer.png' parent:@div
         @shd = elem 'div' class:'shadows'     parent:@div
-        @coo = elem 'div' class:'coordinates' parent:@div
+        if @features.coordinates
+            @coo = elem 'div' class:'coordinates' parent:@div
         
-        @div.addEventListener 'mousemove'     @onMouseMove
-        @div.addEventListener 'mousedown'     @onMouseDown
-        @div.addEventListener 'mouseleave'    @onMouseLeave
-        @parent.addEventListener 'mousewheel' @onMouseWheel
+        if @features.hover
+            @div.addEventListener 'mousemove'     @onMouseMove
+            @div.addEventListener 'mousedown'     @onMouseDown
+            @div.addEventListener 'mouseleave'    @onMouseLeave
+            @parent.addEventListener 'mousewheel' @onMouseWheel
         
         @height = 1000
         @width  = @height
@@ -37,21 +47,25 @@ function Board
         @coordinates()
         
         @stn = elem 'div' class:'stones'      parent:@div
-        @lib = elem 'div' class:'liberties'   parent:@div
-        @num = elem 'div' class:'numbers'     parent:@div
-        @var = elem 'div' class:'variations'  parent:@div
-        @ter = elem 'div' class:'territory'   parent:@div
+        
+        if @features.liberties  then @lib = elem 'div' class:'liberties'   parent:@div
+        if @features.numbers    then @num = elem 'div' class:'numbers'     parent:@div
+        if @features.variations then @var = elem 'div' class:'variations'  parent:@div
+        if @features.territory  then @ter = elem 'div' class:'territory'   parent:@div
+        
         @hlt = elem 'div' class:'highlts'     parent:@div
-        @hvw = elem 'div' class:"hover white" parent:@hlt
-        @hvb = elem 'div' class:"hover black" parent:@hlt
-        @hvw.style = "width:#{h}%; height:#{h}%; display:none;" 
-        @hvb.style = "width:#{h}%; height:#{h}%; display:none;" 
-        @hvr = white:@hvw, black:@hvb
+        
+        if @features.hover
+            @hvw = elem 'div' class:"hover white" parent:@hlt
+            @hvb = elem 'div' class:"hover black" parent:@hlt
+            @hvw.style = "width:#{h}%; height:#{h}%; display:none;" 
+            @hvb.style = "width:#{h}%; height:#{h}%; display:none;" 
+            @hvr = white:@hvw, black:@hvb
        
         @show = {}
         for key in ['numbers''liberties''territory''coordinates''variations']
-            @show[key] = window.stash.get key
-            @[key[...3]].style.display = @show[key] ? 'initial' : 'none'
+            if @features[key] then @show[key] = window.stash.get key
+            @[key[...3]]?.style.display = @show[key] ? 'initial' : 'none'
         
         @lst = elem 'div' class:'last' parent:@hlt
         @lst.style = "display:none;"
@@ -81,6 +95,8 @@ function Board
     onResize: => @scaleFonts()        
         
     scaleFonts: ->
+        
+        return if not @features.coordinates
         
         s = @div.getBoundingClientRect().height/(@size+1)
         s = max 10 s/6
@@ -130,6 +146,8 @@ function Board
     
     coordinates: ->
         
+        return if not @features.coordinates
+        
         d = 100/(@size+1)
                 
         for x in 0...@size
@@ -177,6 +195,8 @@ function Board
     
     hideHover: ->
     
+        return if not @features.hover
+        
         @hvr.black.style.display = 'none'
         @hvr.white.style.display = 'none'
         
@@ -336,12 +356,13 @@ function Board
     clear: ->
         
         @lst.style.display = 'none'
-        @ter.innerHTML = ''
-        @num.innerHTML = ''
-        @lib.innerHTML = ''
-        @stn.innerHTML = ''
-        @shd.innerHTML = ''
-        @var.innerHTML = ''
+        @stn.innerHTML  = ''
+        @shd.innerHTML  = ''
+        @ter?.innerHTML = ''
+        @num?.innerHTML = ''
+        @lib?.innerHTML = ''
+        @var?.innerHTML = ''
+        @
         
     ###
      0000000   000   000  000   000   0000000   000000000   0000000   000000000  00000000  
@@ -370,6 +391,8 @@ function Board
     
     numbers: ->
         
+        return if not @features.numbers
+        
         @num.innerHTML = ''
         return if not @game
             
@@ -390,6 +413,14 @@ function Board
             if stone.empty == @game.stoneAt m.pos
                 l.style.backgroundColor = m.color == 'white' ? '#faeeea' : 'black'
                 l.classList.add 'empty'
+
+    # 000000000  00000000   00000000  00000000  
+    #    000     000   000  000       000       
+    #    000     0000000    0000000   0000000   
+    #    000     000   000  000       000       
+    #    000     000   000  00000000  00000000  
+    
+    onTree: => @hideHover()
                 
     # 000   000   0000000   00000000   000   0000000   000000000  000   0000000   000   000   0000000  
     # 000   000  000   000  000   000  000  000   000     000     000  000   000  0000  000  000       
@@ -398,6 +429,8 @@ function Board
     #     0      000   000  000   000  000  000   000     000     000   0000000   000   000  0000000   
     
     variations: ->
+        
+        return if not @features.variations
         
         @var.innerHTML = ''
         return if not @game
@@ -415,25 +448,9 @@ function Board
             for mv in altmoves
                 c = @game.coord mv.pos
                 p = @coordToPrcnt c
-                l = elem 'div' class:"variation #{mv.color}" parent:@var, text:mv.pos, style: "left:#{p.x}%;top:#{p.y}%; font-size:#{int(2*s/3)}px; border-radius:#{s}px; width:#{s}px; height:#{s}px;" 
-                
-    # 000000000  00000000   00000000  00000000  
-    #    000     000   000  000       000       
-    #    000     0000000    0000000   0000000   
-    #    000     000   000  000       000       
-    #    000     000   000  00000000  00000000  
-    
-    onTree: =>
-        
-        @hideHover()
-                
-    # 000   000   0000000   00000000   000   0000000   000000000  000   0000000   000   000  
-    # 000   000  000   000  000   000  000  000   000     000     000  000   000  0000  000  
-    #  000 000   000000000  0000000    000  000000000     000     000  000   000  000 0 000  
-    #    000     000   000  000   000  000  000   000     000     000  000   000  000  0000  
-    #     0      000   000  000   000  000  000   000     000     000   0000000   000   000  
-    
-    onVariation: (variation) =>
+                l = elem 'div' class:"variation #{mv.color}" parent:@var, text:mv.pos, style: "left:#{p.x}%;top:#{p.y}%; font-size:#{int(1*s/2)}px; border-radius:#{s}px; width:#{s}px; height:#{s}px;" 
+                                
+    onVariation: (variation) => # only used by leelaz?
 
         return if not @game
         
@@ -452,12 +469,12 @@ function Board
             l = elem 'div' class:"number #{color}" parent:@num, text:1+n
             p = @coordToPrcnt c
             l.style = "left:#{p.x}%; top:#{p.y}%;" 
-            l.style.fontSize = "#{2*s/3}px"
+            l.style.fontSize = "#{1*s/2}px"
             l.style.width = "#{s}px"
             l.style.height = "#{s}px"
             l.style.borderRadius = "#{s}px"
-            if stone.empty == @game.stoneAt m
-                l.style.backgroundColor = color
+            # if stone.empty == @game.stoneAt m
+            l.style.backgroundColor = color
             color = opponent[color]
         
     # 000      000  0000000    00000000  00000000   000000000  000  00000000   0000000  
@@ -467,6 +484,8 @@ function Board
     # 0000000  000  0000000    00000000  000   000     000     000  00000000  0000000   
     
     liberties: ->
+        
+        return if not @features.liberties
         
         @lib.innerHTML = ''
         return if not @game or not @show.liberties
@@ -491,6 +510,8 @@ function Board
     #    000     00000000  000   000  000   000  000     000      0000000   000   000     000     
     
     territory: ->
+        
+        return if not @features.territory
         
         @ter.innerHTML = ''
         if @game

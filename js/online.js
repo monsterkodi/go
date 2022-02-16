@@ -136,9 +136,10 @@ Online = (function ()
     {
         return this.get({path:`/api/v1/games/${game.id}`,cb:(function (g)
         {
-            var b, t
+            var b, features, t
 
-            b = new Board(e,g.height)
+            features = {coordinates:false,liberties:false,numbers:false,hover:false}
+            b = new Board(e,g.height,features)
             b.game = new Game(b,g.players.black.name,g.players.white.name,g.handicap)
             b.game.replay(ogsMoves(g.gamedata.moves,g.height))
             b.div.style.height = '400px'
@@ -162,17 +163,17 @@ Online = (function ()
 
     Online.prototype["loadGame"] = function (g)
     {
-        var moves, mv, _145_54_
+        var moves, mv, _153_54_
 
         this.referee.newGame({black:g.gamedata.players.black.username,white:g.gamedata.players.white.username,size:g.gamedata.width,handicap:g.gamedata.handicap})
+        console.log(_k_.noon(g))
         moves = ogsMoves(g.gamedata.moves,g.gamedata.height)
         this.referee.board.game.replay(moves)
-        console.log(_k_.noon(moves))
         var list = _k_.list(moves)
-        for (var _144_15_ = 0; _144_15_ < list.length; _144_15_++)
+        for (var _152_15_ = 0; _152_15_ < list.length; _152_15_++)
         {
-            mv = list[_144_15_]
-            this.referee.tree.addMove(mv.pos,((_145_54_=mv.captures) != null ? _145_54_ : []),mv.color)
+            mv = list[_152_15_]
+            this.referee.tree.addMove(mv.pos,((_153_54_=mv.captures) != null ? _153_54_ : []),mv.color)
         }
     }
 

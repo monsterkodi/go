@@ -107,8 +107,14 @@ function Online
     renderGame: (game, e) ->
         
         @get path:"/api/v1/games/#{game.id}" cb: (g) =>
+
+            features = 
+                coordinates: false
+                liberties:   false
+                numbers:     false
+                hover:       false
             
-            b = new Board e, g.height
+            b = new Board e, g.height, features
             b.game = new Game b, g.players.black.name, g.players.white.name, g.handicap
             b.game.replay ogsMoves g.gamedata.moves, g.height
             b.div.style.height = '400px'
@@ -138,9 +144,11 @@ function Online
             size:     g.gamedata.width
             handicap: g.gamedata.handicap
             
+        # log noon g.gamedata.moves
+        log noon g
         moves = ogsMoves g.gamedata.moves, g.gamedata.height
         @referee.board.game.replay moves
-        log noon moves
+        # log noon moves
         for mv in moves
             @referee.tree.addMove mv.pos, mv.captures ? [], mv.color
         
