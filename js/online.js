@@ -247,7 +247,6 @@ Online = (function ()
 
     Online.prototype["toggleGames"] = function ()
     {
-        console.log('toggleGames')
         if (this.games)
         {
             this.games.remove()

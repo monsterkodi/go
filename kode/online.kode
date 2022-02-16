@@ -198,7 +198,6 @@ function Online
     
     toggleGames: ->
 
-        log 'toggleGames'
         if @games
             @games.remove()
             delete @games

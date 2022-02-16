@@ -354,7 +354,7 @@ function Board
     annotate: ->
 
         @divRect = @div.getBoundingClientRect()
-        @divSize = max @divRect.width, @divSize
+        @divSize = max @divRect.width, @divRect.height
         @showLastMove()
         @numbers()
         @variations()
@@ -440,7 +440,7 @@ function Board
         if not @divRect
             log 'no rect?'
             @divRect = @div.getBoundingClientRect()
-            @divSize = max @divRect.width, @divSize
+            @divSize = max @divRect.width, @divRect.height
         
         s = @divSize/(@size+1)
         s = max 16 s/3

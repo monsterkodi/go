@@ -441,7 +441,7 @@ Board = (function ()
     Board.prototype["annotate"] = function ()
     {
         this.divRect = this.div.getBoundingClientRect()
-        this.divSize = _k_.max(this.divRect.width,this.divSize)
+        this.divSize = _k_.max(this.divRect.width,this.divRect.height)
         this.showLastMove()
         this.numbers()
         this.variations()
@@ -535,7 +535,7 @@ Board = (function ()
         {
             console.log('no rect?')
             this.divRect = this.div.getBoundingClientRect()
-            this.divSize = _k_.max(this.divRect.width,this.divSize)
+            this.divSize = _k_.max(this.divRect.width,this.divRect.height)
         }
         s = this.divSize / (this.size + 1)
         s = _k_.max(16,s / 3)
