@@ -86,6 +86,7 @@ function Online
     
     renderGames: ->
         
+        @boards = []
         for game in @activeGames
             g = elem 'div' class:'game' parent:@games
             if game.players.black.username != 'monsterkodi'
@@ -117,9 +118,16 @@ function Online
             b = new Board e, g.height, features
             b.game = new Game b, g.players.black.name, g.players.white.name, g.handicap
             b.game.replay ogsMoves(g.gamedata.moves, g.height), true
-            b.div.style.height = '400px'
-            b.div.style.width  = '400px'
+            
+            br = @parent.getBoundingClientRect()
+            tb = br.height / (@referee.boardsize+1) - 2
+            rb = tb
+            w  = max 128 (br.width - br.height)/2-tb
+
+            b.div.style.height = "#{w-30}px"
+            b.div.style.width  = "#{w-30}px"
             b.div.addEventListener 'click' ((g) => => @loadGame g) g
+            @boards.push b
             
             if g.gamedata.clock.current_player == 1110858
                 b.div.style.border = '2px solid black'
@@ -225,14 +233,17 @@ function Online
         return if not @games
         
         br = @parent.getBoundingClientRect()
-
         tb = br.height / (@referee.boardsize+1) - 2
         rb = tb
-        w  = max 0 (br.width - br.height)/2-tb
+        w  = max 128 (br.width - br.height)/2-tb
         
         @games.style.width  = "#{w}px"
         @games.style.top    = "#{tb}px"
         @games.style.bottom = "#{tb}px"
         @games.style.left   = "#{rb}px"
+        
+        for b in @boards
+            b.div.style.width  = "#{w-30}px"
+            b.div.style.height = "#{w-30}px"
 
 module.exports = Online
