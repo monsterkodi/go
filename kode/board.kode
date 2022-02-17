@@ -438,18 +438,13 @@ function Board
             
         s = @divSize/(@size+1)
         s = max 16 int s/3
-             
-        if cm = @tree.cursorMove()
-            # log cm
-            # tr = @tree.cursorTree() ? @tree
-            # if tr.cursor.mvi == 0 and tr.parent?
-            
-            altmoves = cm.alt.map (a) -> a.moves[0]
-            for mv in altmoves
-                c = @game.coord mv.pos
-                p = @coordToPrcnt c
-                l = elem 'div' class:"variation #{mv.color}" parent:@var, text:mv.pos, style: "left:#{p.x}%;top:#{p.y}%; font-size:#{int(1*s/2)}px; border-radius:#{s}px; width:#{s}px; height:#{s}px;" 
-                                
+
+        for mv in @tree.cursorVariations()
+            log noon mv
+            c = @game.coord mv.pos
+            p = @coordToPrcnt c
+            l = elem 'div' class:"variation #{mv.color}" parent:@var, text:mv.pos, style: "left:#{p.x}%;top:#{p.y}%; font-size:#{int(1*s/2)}px; border-radius:#{s}px; width:#{s}px; height:#{s}px;" 
+        
     onVariation: (variation) => # only used by leelaz?
 
         return if not @game

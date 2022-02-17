@@ -1,5 +1,5 @@
 name            go
-version         0.33.0
+version         0.34.0
 main            js/main.js
 author          monsterkodi
 license         Unlicense

@@ -1,6 +1,6 @@
 // monsterkodi/kode 0.237.0
 
-var _k_ = {max: function () { m = -Infinity; for (a of arguments) { if (a instanceof Array) {m = _k_.max.apply(_k_.max,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n > m ? n : m}}}; return m }, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, min: function () { m = Infinity; for (a of arguments) { if (a instanceof Array) {m = _k_.min.apply(_k_.min,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n < m ? n : m}}}; return m }}
+var _k_ = {max: function () { m = -Infinity; for (a of arguments) { if (a instanceof Array) {m = _k_.max.apply(_k_.max,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n > m ? n : m}}}; return m }, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, noon: function (obj) { var pad = function (s, l) { while (s.length < l) { s += ' ' }; return s }; var esc = function (k, arry) { var es, sp; if (0 <= k.indexOf('\n')) { sp = k.split('\n'); es = sp.map(function (s) { return esc(s,arry) }); es.unshift('...'); es.push('...'); return es.join('\n') } if (k === '' || k === '...' || _k_.in(k[0],[' ','#','|']) || _k_.in(k[k.length - 1],[' ','#','|'])) { k = '|' + k + '|' } else if (arry && /  /.test(k)) { k = '|' + k + '|' }; return k }; var pretty = function (o, ind, seen) { var k, kl, l, v, mk = 4; if (Object.keys(o).length > 1) { for (k in o) { if (Object.hasOwn(o,k)) { kl = parseInt(Math.ceil((k.length + 2) / 4) * 4); mk = Math.max(mk,kl); if (mk > 32) { mk = 32; break } } } }; l = []; var keyValue = function (k, v) { var i, ks, s, vs; s = ind; k = esc(k,true); if (k.indexOf('  ') > 0 && k[0] !== '|') { k = `|${k}|` } else if (k[0] !== '|' && k[k.length - 1] === '|') { k = '|' + k } else if (k[0] === '|' && k[k.length - 1] !== '|') { k += '|' }; ks = pad(k,Math.max(mk,k.length + 2)); i = pad(ind + '    ',mk); s += ks; vs = toStr(v,i,false,seen); if (vs[0] === '\n') { while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) } }; s += vs; while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) }; return s }; for (k in o) { if (Object.hasOwn(o,k)) { l.push(keyValue(k,o[k])) } }; return l.join('\n') }; var toStr = function (o, ind = '', arry = false, seen = []) { var s, t, v; if (!(o != null)) { if (o === null) { return 'null' }; if (o === undefined) { return 'undefined' }; return '<?>' }; switch (t = typeof(o)) { case 'string': {return esc(o,arry)}; case 'object': { if (_k_.in(o,seen)) { return '<v>' }; seen.push(o); if ((o.constructor != null ? o.constructor.name : undefined) === 'Array') { s = ind !== '' && arry && '.' || ''; if (o.length && ind !== '') { s += '\n' }; s += (function () { var result = []; var list = _k_.list(o); for (var li = 0; li < list.length; li++)  { v = list[li];result.push(ind + toStr(v,ind + '    ',true,seen))  } return result }).bind(this)().join('\n') } else if ((o.constructor != null ? o.constructor.name : undefined) === 'RegExp') { return o.source } else { s = (arry && '.\n') || ((ind !== '') && '\n' || ''); s += pretty(o,ind,seen) }; return s } default: return String(o) }; return '<???>' }; return toStr(obj) }, min: function () { m = Infinity; for (a of arguments) { if (a instanceof Array) {m = _k_.min.apply(_k_.min,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n < m ? n : m}}}; return m }}
 
 var $, abs, alpha, Board, elem, kpos, kxk, opponent, post, preload, randIntRange, sign, stone, stoneColor, stopEvent
 
@@ -544,7 +544,7 @@ Board = (function ()
 
     Board.prototype["variations"] = function ()
     {
-        var altmoves, c, cm, l, mv, p, s
+        var c, l, mv, p, s
 
         if (!this.features.variations)
         {
@@ -561,20 +561,14 @@ Board = (function ()
         }
         s = this.divSize / (this.size + 1)
         s = _k_.max(16,parseInt(s / 3))
-        if (cm = this.tree.cursorMove())
+        var list = _k_.list(this.tree.cursorVariations())
+        for (var _442_15_ = 0; _442_15_ < list.length; _442_15_++)
         {
-            altmoves = cm.alt.map(function (a)
-            {
-                return a.moves[0]
-            })
-            var list = _k_.list(altmoves)
-            for (var _448_19_ = 0; _448_19_ < list.length; _448_19_++)
-            {
-                mv = list[_448_19_]
-                c = this.game.coord(mv.pos)
-                p = this.coordToPrcnt(c)
-                l = elem('div',{class:`variation ${mv.color}`,parent:this.var,text:mv.pos,style:`left:${p.x}%;top:${p.y}%; font-size:${parseInt(1 * s / 2)}px; border-radius:${s}px; width:${s}px; height:${s}px;`})
-            }
+            mv = list[_442_15_]
+            console.log(_k_.noon(mv))
+            c = this.game.coord(mv.pos)
+            p = this.coordToPrcnt(c)
+            l = elem('div',{class:`variation ${mv.color}`,parent:this.var,text:mv.pos,style:`left:${p.x}%;top:${p.y}%; font-size:${parseInt(1 * s / 2)}px; border-radius:${s}px; width:${s}px; height:${s}px;`})
         }
     }
 
@@ -596,9 +590,9 @@ Board = (function ()
         s = _k_.max(16,s / 3)
         color = this.game.nextColor()
         var list = _k_.list(variation)
-        for (var _466_14_ = 0; _466_14_ < list.length; _466_14_++)
+        for (var _461_14_ = 0; _461_14_ < list.length; _461_14_++)
         {
-            m = list[_466_14_]
+            m = list[_461_14_]
             n = variation.indexOf(m)
             c = this.game.coord(m)
             l = elem('div',{class:`number ${color}`,parent:this.num,text:1 + n})
@@ -629,13 +623,13 @@ Board = (function ()
         s = this.divSize / (this.size + 1)
         s = _k_.min(15,s / 6)
         var list = ['black','white']
-        for (var _496_18_ = 0; _496_18_ < list.length; _496_18_++)
+        for (var _491_18_ = 0; _491_18_ < list.length; _491_18_++)
         {
-            color = list[_496_18_]
+            color = list[_491_18_]
             var list1 = _k_.list(this.game.allStones(color))
-            for (var _497_19_ = 0; _497_19_ < list1.length; _497_19_++)
+            for (var _492_19_ = 0; _492_19_ < list1.length; _492_19_++)
             {
-                st = list1[_497_19_]
+                st = list1[_492_19_]
                 c = this.game.coord(st)
                 libs = this.game.liberties(c)
                 if (libs === 1 && this.show.territory)
@@ -667,15 +661,15 @@ Board = (function ()
                 s /= 4
                 s = s.toFixed(2)
                 var list = _k_.list(this.game.areas)
-                for (var _524_22_ = 0; _524_22_ < list.length; _524_22_++)
+                for (var _519_22_ = 0; _519_22_ < list.length; _519_22_++)
                 {
-                    a = list[_524_22_]
+                    a = list[_519_22_]
                     if (_k_.in(a.color,'wbWB'))
                     {
                         var list1 = _k_.list(a.posl)
-                        for (var _526_30_ = 0; _526_30_ < list1.length; _526_30_++)
+                        for (var _521_30_ = 0; _521_30_ < list1.length; _521_30_++)
                         {
-                            p = list1[_526_30_]
+                            p = list1[_521_30_]
                             e = elem('div',{class:`eye ${a.color}`,parent:this.ter})
                             r = this.coordToPrcnt(this.game.coord(p))
                             e.style = `left:${r.x}%; top:${r.y}%; width:${s}px; height:${s}px; border-radius:${s}px;`
@@ -683,15 +677,15 @@ Board = (function ()
                     }
                 }
                 var list2 = _k_.list(this.game.grps)
-                for (var _531_22_ = 0; _531_22_ < list2.length; _531_22_++)
+                for (var _526_22_ = 0; _526_22_ < list2.length; _526_22_++)
                 {
-                    g = list2[_531_22_]
+                    g = list2[_526_22_]
                     if (g.state === 'dead')
                     {
                         var list3 = _k_.list(g.posl)
-                        for (var _533_30_ = 0; _533_30_ < list3.length; _533_30_++)
+                        for (var _528_30_ = 0; _528_30_ < list3.length; _528_30_++)
                         {
-                            p = list3[_533_30_]
+                            p = list3[_528_30_]
                             e = elem('div',{class:`eye ${opponent[stoneColor[g.stone]][0]}`,parent:this.ter})
                             r = this.coordToPrcnt(this.game.coord(p))
                             e.style = `left:${r.x}%; top:${r.y}%; width:${s}px; height:${s}px; border-radius:${s}px;`

@@ -281,6 +281,33 @@ function Tree
             return @moves[@cursor.mvi]
             
         error 'no cursor!' @
+        
+    # 000   000   0000000   00000000   000   0000000   000000000  000   0000000   000   000   0000000  
+    # 000   000  000   000  000   000  000  000   000     000     000  000   000  0000  000  000       
+    #  000 000   000000000  0000000    000  000000000     000     000  000   000  000 0 000  0000000   
+    #    000     000   000  000   000  000  000   000     000     000  000   000  000  0000       000  
+    #     0      000   000  000   000  000  000   000     000     000   0000000   000   000  0000000   
+    
+    cursorVariations: ->
+        
+        if cm = @cursorMove()
+            if cm.alt.length
+                return cm.alt.map (a) -> a.moves[0]
+            else
+                if tr = @cursorTree()
+                    if not tr.cursor? or tr.cursor?.mvi == 0
+                        if tr.parent?
+                            alt = tr.parent.moves[tr.parent.cursor.mvi].alt.map (t) -> t.moves[0]
+                            alt.splice tr.parent.cursor.ali-1, 1
+                            alt.push tr.parent.moves[tr.parent.cursor.mvi]
+                            return alt
+                    else
+                        return tr.cursorVariations()
+                else
+                    log 'no cursor tree!'
+        else
+            log 'dafuk? no cursorMove!'
+        []
                 
     # 000000000  00000000   00000000  00000000         0000000   000000000  
     #    000     000   000  000       000             000   000     000     
