@@ -123,6 +123,7 @@ function Online
             
             b = new Board e, g.height, features
             b.game = new Game b, g.players.black.name, g.players.white.name, g.handicap
+            b.game.paused = true
             b.game.replay ogsMoves(g.gamedata.moves, g.height), true
             
             br = @parent.getBoundingClientRect()

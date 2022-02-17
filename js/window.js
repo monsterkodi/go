@@ -152,6 +152,8 @@ MainWin = (function ()
             case 'down':
             case 'left':
             case 'right':
+            case 'rightdown':
+            case 'leftup':
             case 'back':
             case 'forward':
                 return this.referee.navigate(action)

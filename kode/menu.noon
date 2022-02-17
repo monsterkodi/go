@@ -46,9 +46,9 @@ go
     
 game
     up                      up
-    down                    down
-    left                    left
-    right                   right
+    down                    down cmdctrl+down
+    leftup                  left
+    rightdown               right
     back                    cmdctrl+up
     forward                 cmdctrl+down
     ---

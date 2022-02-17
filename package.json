@@ -1,6 +1,6 @@
 {
   "name": "go",
-  "version": "0.36.0",
+  "version": "0.37.0",
   "main": "js/main.js",
   "author": "monsterkodi",
   "license": "Unlicense",

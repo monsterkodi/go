@@ -142,6 +142,7 @@ Online = (function ()
             features = {coordinates:false,liberties:false,numbers:false,hover:false}
             b = new Board(e,g.height,features)
             b.game = new Game(b,g.players.black.name,g.players.white.name,g.handicap)
+            b.game.paused = true
             b.game.replay(ogsMoves(g.gamedata.moves,g.height),true)
             br = this.parent.getBoundingClientRect()
             tb = br.height / (this.referee.boardsize + 1) - 2
@@ -278,9 +279,9 @@ Online = (function ()
         this.games.style.bottom = `${tb}px`
         this.games.style.left = `${rb}px`
         var list = _k_.list(this.boards)
-        for (var _250_14_ = 0; _250_14_ < list.length; _250_14_++)
+        for (var _251_14_ = 0; _251_14_ < list.length; _251_14_++)
         {
-            b = list[_250_14_]
+            b = list[_251_14_]
             b.div.style.width = `${w - 30}px`
             b.div.style.height = `${w - 30}px`
         }

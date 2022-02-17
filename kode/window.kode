@@ -148,6 +148,7 @@ function MainWin extends win
             'save as ...'                   ➜ SGF.saveAsDialog()
             'save'                          ➜ @referee.save(); @saveStash()
             'up''down''left''right'
+            'rightdown''leftup'
             'back''forward'                 ➜ @referee.navigate action
             'undo'                          ➜ @referee.undo()
             'redo'                          ➜ @referee.redo()

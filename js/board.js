@@ -292,7 +292,7 @@ Board = (function ()
         this.hideHover()
         c = this.posAtEvent(event)
         nextColor = this.game.nextColor()
-        if (!this.game.paused && this.game.players[nextColor] !== 'human')
+        if (!this.game.paused && _k_.in(this.game.players[nextColor],['gnu','leelaz','katago','hara']))
         {
             return
         }
@@ -327,7 +327,7 @@ Board = (function ()
         var c, meta, nextColor, p
 
         nextColor = this.game.nextColor()
-        if (!this.game.paused && this.game.players[nextColor] !== 'human')
+        if (!this.game.paused && _k_.in(this.game.players[nextColor],['gnu','leelaz','katago','hara']))
         {
             return
         }

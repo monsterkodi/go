@@ -84,16 +84,32 @@ function Tree
     navigate: (dir) ->
 
         switch dir
-            'up'    ➜ @navigateUp()
-            'down'  ➜ @navigateDown()
-            'right' ➜ @navigateRight()
-            'left'  ➜ @navigateLeft()
-            'back'  ➜ @navigateBack()
+            'up'        ➜ @navigateUp()
+            'down'      ➜ @navigateDown()
+            'right'     ➜ @navigateRight()
+            'left'      ➜ @navigateLeft()
+            'back'      ➜ @navigateBack()
+            'leftup'    ➜ @navigateLeftUp()
+            'rightdown' ➜ @navigateRightDown()
         
         # log 'nav' dir if not global.test
         log g2('nav'), b7 dir if global.test
         log @toColors() if global.test
         # log @toString()
+        
+    navigateLeftUp: ->
+        
+        ali = @cursor.ali
+        @navigateLeft()
+        if @cursor.ali == ali
+            @navigateUp()
+            
+    navigateRightDown: ->
+        
+        ali = @cursor.ali
+        @navigateRight()
+        if @cursor.ali == ali
+            @navigateDown()
         
     navigateUp: ->
         
