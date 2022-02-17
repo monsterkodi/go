@@ -1,14 +1,13 @@
 // monsterkodi/kode 0.237.0
 
-var _k_ = {max: function () { m = -Infinity; for (a of arguments) { if (a instanceof Array) {m = _k_.max.apply(_k_.max,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n > m ? n : m}}}; return m }, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, noon: function (obj) { var pad = function (s, l) { while (s.length < l) { s += ' ' }; return s }; var esc = function (k, arry) { var es, sp; if (0 <= k.indexOf('\n')) { sp = k.split('\n'); es = sp.map(function (s) { return esc(s,arry) }); es.unshift('...'); es.push('...'); return es.join('\n') } if (k === '' || k === '...' || _k_.in(k[0],[' ','#','|']) || _k_.in(k[k.length - 1],[' ','#','|'])) { k = '|' + k + '|' } else if (arry && /  /.test(k)) { k = '|' + k + '|' }; return k }; var pretty = function (o, ind, seen) { var k, kl, l, v, mk = 4; if (Object.keys(o).length > 1) { for (k in o) { if (Object.hasOwn(o,k)) { kl = parseInt(Math.ceil((k.length + 2) / 4) * 4); mk = Math.max(mk,kl); if (mk > 32) { mk = 32; break } } } }; l = []; var keyValue = function (k, v) { var i, ks, s, vs; s = ind; k = esc(k,true); if (k.indexOf('  ') > 0 && k[0] !== '|') { k = `|${k}|` } else if (k[0] !== '|' && k[k.length - 1] === '|') { k = '|' + k } else if (k[0] === '|' && k[k.length - 1] !== '|') { k += '|' }; ks = pad(k,Math.max(mk,k.length + 2)); i = pad(ind + '    ',mk); s += ks; vs = toStr(v,i,false,seen); if (vs[0] === '\n') { while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) } }; s += vs; while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) }; return s }; for (k in o) { if (Object.hasOwn(o,k)) { l.push(keyValue(k,o[k])) } }; return l.join('\n') }; var toStr = function (o, ind = '', arry = false, seen = []) { var s, t, v; if (!(o != null)) { if (o === null) { return 'null' }; if (o === undefined) { return 'undefined' }; return '<?>' }; switch (t = typeof(o)) { case 'string': {return esc(o,arry)}; case 'object': { if (_k_.in(o,seen)) { return '<v>' }; seen.push(o); if ((o.constructor != null ? o.constructor.name : undefined) === 'Array') { s = ind !== '' && arry && '.' || ''; if (o.length && ind !== '') { s += '\n' }; s += (function () { var result = []; var list = _k_.list(o); for (var li = 0; li < list.length; li++)  { v = list[li];result.push(ind + toStr(v,ind + '    ',true,seen))  } return result }).bind(this)().join('\n') } else if ((o.constructor != null ? o.constructor.name : undefined) === 'RegExp') { return o.source } else { s = (arry && '.\n') || ((ind !== '') && '\n' || ''); s += pretty(o,ind,seen) }; return s } default: return String(o) }; return '<???>' }; return toStr(obj) }, min: function () { m = Infinity; for (a of arguments) { if (a instanceof Array) {m = _k_.min.apply(_k_.min,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n < m ? n : m}}}; return m }}
+var _k_ = {max: function () { m = -Infinity; for (a of arguments) { if (a instanceof Array) {m = _k_.max.apply(_k_.max,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n > m ? n : m}}}; return m }, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, min: function () { m = Infinity; for (a of arguments) { if (a instanceof Array) {m = _k_.min.apply(_k_.min,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n < m ? n : m}}}; return m }}
 
-var $, abs, alpha, Board, elem, kpos, kxk, opponent, post, preload, randIntRange, sign, stone, stoneColor, stopEvent
+var $, abs, alpha, Board, elem, kpos, kxk, opponent, post, preload, randIntRange, stone, stoneColor, stopEvent
 
 kxk = require('kxk')
 abs = Math.abs
 max = Math.max
 min = Math.min
-sign = Math.sign
 
 elem = kxk.elem
 kpos = kxk.kpos
@@ -37,6 +36,7 @@ Board = (function ()
         this["onVariation"] = this["onVariation"].bind(this)
         this["onTree"] = this["onTree"].bind(this)
         this["onMouseWheel"] = this["onMouseWheel"].bind(this)
+        this["clearWheelAccum"] = this["clearWheelAccum"].bind(this)
         this["onMouseDown"] = this["onMouseDown"].bind(this)
         this["onMouseMove"] = this["onMouseMove"].bind(this)
         this["onMouseLeave"] = this["onMouseLeave"].bind(this)
@@ -57,6 +57,7 @@ Board = (function ()
         }
         if (this.features.hover)
         {
+            this.wheelAccum = {x:0,y:0}
             this.div.addEventListener('mousemove',this.onMouseMove)
             this.div.addEventListener('mousedown',this.onMouseDown)
             this.div.addEventListener('mouseleave',this.onMouseLeave)
@@ -97,9 +98,9 @@ Board = (function ()
         }
         this.show = {}
         var list = ['numbers','liberties','territory','coordinates','variations']
-        for (var _66_16_ = 0; _66_16_ < list.length; _66_16_++)
+        for (var _67_16_ = 0; _67_16_ < list.length; _67_16_++)
         {
-            key = list[_66_16_]
+            key = list[_67_16_]
             if (this.features[key])
             {
                 this.show[key] = window.stash.get(key)
@@ -122,6 +123,13 @@ Board = (function ()
         post.off('variation',this.onVariation)
         post.off('resize',this.onResize)
         post.off('tree',this.onTree)
+        if (this.features.hover)
+        {
+            this.div.removeEventListener('mousemove',this.onMouseMove)
+            this.div.removeEventListener('mousedown',this.onMouseDown)
+            this.div.removeEventListener('mouseleave',this.onMouseLeave)
+            this.parent.removeEventListener('mousewheel',this.onMouseWheel)
+        }
         this.parent.removeChild(this.div)
         return delete this.div
     }
@@ -172,7 +180,7 @@ Board = (function ()
         this.ctx.strokeStyle = 'black'
         this.ctx.lineWidth = 1.5
         this.ctx.fillStyle = 'black'
-        for (var _123_17_ = i = 0, _123_21_ = this.size; (_123_17_ <= _123_21_ ? i < this.size : i > this.size); (_123_17_ <= _123_21_ ? ++i : --i))
+        for (var _131_17_ = i = 0, _131_21_ = this.size; (_131_17_ <= _131_21_ ? i < this.size : i > this.size); (_131_17_ <= _131_21_ ? ++i : --i))
         {
             this.ctx.beginPath()
             this.ctx.moveTo(o + i * d,o)
@@ -211,7 +219,7 @@ Board = (function ()
             return
         }
         d = 100 / (this.size + 1)
-        for (var _153_17_ = x = 0, _153_21_ = this.size; (_153_17_ <= _153_21_ ? x < this.size : x > this.size); (_153_17_ <= _153_21_ ? ++x : --x))
+        for (var _161_17_ = x = 0, _161_21_ = this.size; (_161_17_ <= _161_21_ ? x < this.size : x > this.size); (_161_17_ <= _161_21_ ? ++x : --x))
         {
             n = elem('div',{class:'coordinate',text:alpha[x],parent:this.coo})
             n.style.left = `${d * (x + 1)}%`
@@ -340,62 +348,55 @@ Board = (function ()
         }
     }
 
+    Board.prototype["clearWheelAccum"] = function ()
+    {
+        return this.wheelAccum = {x:0,y:0}
+    }
+
     Board.prototype["onMouseWheel"] = function (event)
     {
-        var ox, oy, _257_20_
+        var md, ox, oy
 
-        this.wheelAccum = ((_257_20_=this.wheelAccum) != null ? _257_20_ : {x:0,y:0})
+        clearTimeout(this.wheelTimeout)
+        this.wheelTimeout = setTimeout(this.clearWheelAccum,200)
         ox = this.wheelAccum.x
         oy = this.wheelAccum.y
-        if (!ox || sign(event.deltaX) === sign(this.wheelAccum.x))
-        {
-            this.wheelAccum.x += event.deltaX
-        }
-        else
-        {
-            this.wheelAccum.x = 0
-            return
-        }
-        if (!oy || sign(event.deltaY) === sign(this.wheelAccum.y))
-        {
-            this.wheelAccum.y += event.deltaY
-        }
-        else
-        {
-            this.wheelAccum.y = 0
-            return
-        }
-        if (ox !== 0 && abs(this.wheelAccum.x) < 200 && abs(this.wheelAccum.y) < 200)
-        {
-            return
-        }
-        if (oy !== 0 && abs(this.wheelAccum.y) < 200 && abs(this.wheelAccum.x) < 200)
-        {
-            return
-        }
+        this.wheelAccum.x += event.deltaX
+        this.wheelAccum.y += event.deltaY
+        md = 200
         if (abs(this.wheelAccum.x) > abs(this.wheelAccum.y))
         {
-            if (this.wheelAccum.x > 0)
+            if (ox === 0)
             {
-                post.emit('navigate','right')
+                post.emit('navigate',(this.wheelAccum.x > 0 ? 'right' : 'left'))
             }
-            else if (this.wheelAccum.x < 0)
+            if (this.wheelAccum.x > md)
             {
-                post.emit('navigate','left')
+                this.wheelAccum = {x:0,y:0}
+                return post.emit('navigate','right')
             }
-            return this.wheelAccum = {x:1,y:0}
+            else if (this.wheelAccum.x < -md)
+            {
+                this.wheelAccum = {x:0,y:0}
+                return post.emit('navigate','left')
+            }
         }
         else
         {
-            if (this.wheelAccum.y > 0)
+            if (oy === 0)
             {
-                post.emit('navigate','down')
+                post.emit('navigate',(this.wheelAccum.y > 0 ? 'down' : 'up'))
             }
-            else if (this.wheelAccum.y < 0)
+            if (this.wheelAccum.y > md)
             {
-                post.emit('navigate','up')
+                this.wheelAccum = {x:0,y:0}
+                return post.emit('navigate','down')
             }
-            return this.wheelAccum = {x:0,y:1}
+            else if (this.wheelAccum.y < -md)
+            {
+                this.wheelAccum = {x:0,y:0}
+                return post.emit('navigate','up')
+            }
         }
     }
 
@@ -473,7 +474,7 @@ Board = (function ()
 
     Board.prototype["clear"] = function ()
     {
-        var _361_12_, _362_12_, _363_12_, _364_12_
+        var _366_12_, _367_12_, _368_12_, _369_12_
 
         this.lst.style.display = 'none'
         this.stn.innerHTML = ''
@@ -513,9 +514,9 @@ Board = (function ()
         s = this.divSize / (this.size + 1)
         s = _k_.max(16,parseInt(s / 3))
         var list = _k_.list(this.game.moves.m)
-        for (var _402_14_ = 0; _402_14_ < list.length; _402_14_++)
+        for (var _407_14_ = 0; _407_14_ < list.length; _407_14_++)
         {
-            m = list[_402_14_]
+            m = list[_407_14_]
             if (_k_.in(m.pos,['pass','resign']))
             {
                 continue
@@ -562,10 +563,9 @@ Board = (function ()
         s = this.divSize / (this.size + 1)
         s = _k_.max(16,parseInt(s / 3))
         var list = _k_.list(this.tree.cursorVariations())
-        for (var _442_15_ = 0; _442_15_ < list.length; _442_15_++)
+        for (var _447_15_ = 0; _447_15_ < list.length; _447_15_++)
         {
-            mv = list[_442_15_]
-            console.log(_k_.noon(mv))
+            mv = list[_447_15_]
             c = this.game.coord(mv.pos)
             p = this.coordToPrcnt(c)
             l = elem('div',{class:`variation ${mv.color}`,parent:this.var,text:mv.pos,style:`left:${p.x}%;top:${p.y}%; font-size:${parseInt(1 * s / 2)}px; border-radius:${s}px; width:${s}px; height:${s}px;`})
@@ -590,9 +590,9 @@ Board = (function ()
         s = _k_.max(16,s / 3)
         color = this.game.nextColor()
         var list = _k_.list(variation)
-        for (var _461_14_ = 0; _461_14_ < list.length; _461_14_++)
+        for (var _465_14_ = 0; _465_14_ < list.length; _465_14_++)
         {
-            m = list[_461_14_]
+            m = list[_465_14_]
             n = variation.indexOf(m)
             c = this.game.coord(m)
             l = elem('div',{class:`number ${color}`,parent:this.num,text:1 + n})
@@ -623,13 +623,13 @@ Board = (function ()
         s = this.divSize / (this.size + 1)
         s = _k_.min(15,s / 6)
         var list = ['black','white']
-        for (var _491_18_ = 0; _491_18_ < list.length; _491_18_++)
+        for (var _495_18_ = 0; _495_18_ < list.length; _495_18_++)
         {
-            color = list[_491_18_]
+            color = list[_495_18_]
             var list1 = _k_.list(this.game.allStones(color))
-            for (var _492_19_ = 0; _492_19_ < list1.length; _492_19_++)
+            for (var _496_19_ = 0; _496_19_ < list1.length; _496_19_++)
             {
-                st = list1[_492_19_]
+                st = list1[_496_19_]
                 c = this.game.coord(st)
                 libs = this.game.liberties(c)
                 if (libs === 1 && this.show.territory)
@@ -661,15 +661,15 @@ Board = (function ()
                 s /= 4
                 s = s.toFixed(2)
                 var list = _k_.list(this.game.areas)
-                for (var _519_22_ = 0; _519_22_ < list.length; _519_22_++)
+                for (var _523_22_ = 0; _523_22_ < list.length; _523_22_++)
                 {
-                    a = list[_519_22_]
+                    a = list[_523_22_]
                     if (_k_.in(a.color,'wbWB'))
                     {
                         var list1 = _k_.list(a.posl)
-                        for (var _521_30_ = 0; _521_30_ < list1.length; _521_30_++)
+                        for (var _525_30_ = 0; _525_30_ < list1.length; _525_30_++)
                         {
-                            p = list1[_521_30_]
+                            p = list1[_525_30_]
                             e = elem('div',{class:`eye ${a.color}`,parent:this.ter})
                             r = this.coordToPrcnt(this.game.coord(p))
                             e.style = `left:${r.x}%; top:${r.y}%; width:${s}px; height:${s}px; border-radius:${s}px;`
@@ -677,15 +677,15 @@ Board = (function ()
                     }
                 }
                 var list2 = _k_.list(this.game.grps)
-                for (var _526_22_ = 0; _526_22_ < list2.length; _526_22_++)
+                for (var _530_22_ = 0; _530_22_ < list2.length; _530_22_++)
                 {
-                    g = list2[_526_22_]
+                    g = list2[_530_22_]
                     if (g.state === 'dead')
                     {
                         var list3 = _k_.list(g.posl)
-                        for (var _528_30_ = 0; _528_30_ < list3.length; _528_30_++)
+                        for (var _532_30_ = 0; _532_30_ < list3.length; _532_30_++)
                         {
-                            p = list3[_528_30_]
+                            p = list3[_532_30_]
                             e = elem('div',{class:`eye ${opponent[stoneColor[g.stone]][0]}`,parent:this.ter})
                             r = this.coordToPrcnt(this.game.coord(p))
                             e.style = `left:${r.x}%; top:${r.y}%; width:${s}px; height:${s}px; border-radius:${s}px;`

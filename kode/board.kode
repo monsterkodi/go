@@ -7,7 +7,7 @@
 ###
 
 kxk = require 'kxk'
-{ abs, max, min, sign } = Math
+{ abs, max, min } = Math
 { elem, kpos, post, randIntRange, stopEvent, $ } = kxk
 { stone, stoneColor, alpha, opponent } = require './util/util'
 
@@ -32,6 +32,7 @@ function Board
             @coo = elem 'div' class:'coordinates' parent:@div
         
         if @features.hover
+            @wheelAccum = x:0 y:0
             @div.addEventListener 'mousemove'     @onMouseMove
             @div.addEventListener 'mousedown'     @onMouseDown
             @div.addEventListener 'mouseleave'    @onMouseLeave
@@ -80,6 +81,13 @@ function Board
         post.off 'variation' @onVariation
         post.off 'resize'    @onResize
         post.off 'tree'      @onTree
+        
+        if @features.hover
+            @div.removeEventListener 'mousemove'     @onMouseMove
+            @div.removeEventListener 'mousedown'     @onMouseDown
+            @div.removeEventListener 'mouseleave'    @onMouseLeave
+            @parent.removeEventListener 'mousewheel' @onMouseWheel
+        
         @parent.removeChild @div
         delete @div
         
@@ -252,42 +260,39 @@ function Board
     # 000   000  000   000  000       000       000      
     # 00     00  000   000  00000000  00000000  0000000  
     
-    onMouseWheel: (event) =>
+    clearWheelAccum: => @wheelAccum = x:0, y:0
+    
+    onMouseWheel: (event) => 
 
-        @wheelAccum ?= x:0, y:0
-        
+        clearTimeout @wheelTimeout
+        @wheelTimeout = setTimeout @clearWheelAccum, 200
+                
         ox = @wheelAccum.x
         oy = @wheelAccum.y
-                
-        if not ox or sign(event.deltaX) == sign(@wheelAccum.x)
-            @wheelAccum.x += event.deltaX
-        else
-            @wheelAccum.x = 0
-            return
-            
-        if not oy or sign(event.deltaY) == sign(@wheelAccum.y)
-            @wheelAccum.y += event.deltaY
-        else
-            @wheelAccum.y = 0
-            return
-
-        if ox != 0 and abs(@wheelAccum.x) < 200 and abs(@wheelAccum.y) < 200
-            return
-        if oy != 0 and abs(@wheelAccum.y) < 200 and abs(@wheelAccum.x) < 200
-            return
         
+        @wheelAccum.x += event.deltaX
+        @wheelAccum.y += event.deltaY
+                
+        md = 200
+                
         if abs(@wheelAccum.x) > abs(@wheelAccum.y)
-            if @wheelAccum.x > 0 
+            if ox == 0
+                post.emit 'navigate' @wheelAccum.x > 0 ? 'right' : 'left'
+            if @wheelAccum.x > md
+                @wheelAccum = x:0, y:0
                 post.emit 'navigate' 'right'
-            else if @wheelAccum.x < 0 
+            else if @wheelAccum.x < -md
+                @wheelAccum = x:0, y:0
                 post.emit 'navigate' 'left'
-            @wheelAccum = x:1, y:0
         else
-            if @wheelAccum.y > 0
+            if oy == 0
+                post.emit 'navigate' @wheelAccum.y > 0 ? 'down' : 'up'
+            if @wheelAccum.y > md
+                @wheelAccum = x:0, y:0
                 post.emit 'navigate' 'down'
-            else if @wheelAccum.y < 0
+            else if @wheelAccum.y < -md
+                @wheelAccum = x:0, y:0
                 post.emit 'navigate' 'up'
-            @wheelAccum = x:0, y:1
             
     # 000       0000000    0000000  000000000  
     # 000      000   000  000          000     
@@ -440,7 +445,6 @@ function Board
         s = max 16 int s/3
 
         for mv in @tree.cursorVariations()
-            log noon mv
             c = @game.coord mv.pos
             p = @coordToPrcnt c
             l = elem 'div' class:"variation #{mv.color}" parent:@var, text:mv.pos, style: "left:#{p.x}%;top:#{p.y}%; font-size:#{int(1*s/2)}px; border-radius:#{s}px; width:#{s}px; height:#{s}px;" 

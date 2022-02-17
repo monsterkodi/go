@@ -30,8 +30,12 @@ function Tree
             log r3('add'), y4 pos if global.test
             if empty @moves
                 @cursor = mvi:-1, ali:0
-            
+
+            if @cursor.mvi > 0 and @moves[@cursor.mvi].pos == 'next'
+                @cursor.mvi--
+                
             color ?= @nextColor()
+            
             if @cursor.mvi == @moves.length-1
                 @cursor.ali = 0
                 @cursor.mvi = @moves.length
@@ -55,6 +59,21 @@ function Tree
                 post.emit? 'tree'
         
     nextColor: -> (cm = @cursorMove()) ? opponent[cm.color] : 'black'
+
+    # 00000000   00000000  00000000   000       0000000   000   000  
+    # 000   000  000       000   000  000      000   000   000 000   
+    # 0000000    0000000   00000000   000      000000000    00000    
+    # 000   000  000       000        000      000   000     000     
+    # 000   000  00000000  000        0000000  000   000     000     
+    
+    replay: (moves) ->
+        
+        for mv in moves
+            @moves.push pos:mv.pos, captures:(mv.captures ? []), alt:[], color:mv.color
+            
+        mvi = @moves.length - (@moves[-1].pos == 'next' ? 2 : 1)
+        @cursor = ali:0 mvi:mvi
+        post.emit? 'tree'
         
     # 000   000   0000000   000   000  000   0000000    0000000   000000000  00000000  
     # 0000  000  000   000  000   000  000  000        000   000     000     000       
@@ -91,6 +110,7 @@ function Tree
             if tr.cursor.mvi < tr.moves.length-1
                 tr.navigateDown()
         else if @cursor.mvi < @moves.length-1
+            # if @moves[-1].pos != 'next' or @cursor.mvi < @moves.length-2
             @cursor.mvi++
             @cursorChanged()
 
@@ -299,14 +319,11 @@ function Tree
                         if tr.parent?
                             alt = tr.parent.moves[tr.parent.cursor.mvi].alt.map (t) -> t.moves[0]
                             alt.splice tr.parent.cursor.ali-1, 1
-                            alt.push tr.parent.moves[tr.parent.cursor.mvi]
+                            tm = tr.parent.moves[tr.parent.cursor.mvi]
+                            alt.push tm if tm.pos != 'next'
                             return alt
                     else
                         return tr.cursorVariations()
-                else
-                    log 'no cursor tree!'
-        else
-            log 'dafuk? no cursorMove!'
         []
                 
     # 000000000  00000000   00000000  00000000         0000000   000000000  

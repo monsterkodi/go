@@ -123,6 +123,7 @@ function Game extends Score
         
         for m in moves
             p = m.pos
+            break if p == 'next'
             c = @coord p
             color = m.color
             @setStone c, stone[color]

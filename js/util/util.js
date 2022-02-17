@@ -69,6 +69,7 @@ class Util
             o = list[_67_14_]
             moves.push({pos:Util.alpha[o[0]] + (size - o[1]),color:['black','white'][moves.length % 2]})
         }
+        moves.push({pos:'next',color:['black','white'][moves.length % 2]})
         return moves
     }
 

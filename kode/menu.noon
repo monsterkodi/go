@@ -11,25 +11,6 @@ go
     save                    cmdctrl+s
     save as ...             cmdctrl+shift+s
     --
-    up                      up
-    down                    down
-    left                    left
-    right                   right
-    back                    cmdctrl+up
-    forward                 cmdctrl+down
-    ---
-    undo                    cmdctrl+z
-    redo                    cmdctrl+shift+z
-    ----
-    pass                    p
-    resign                  r
-    genmove                 g
-    calcscore               c
-    -----
-    about                   alt+cmdctrl+/
-    quit                    cmdctrl+q
-    
-game
     player
         gnu human           b
         human gnu           w
@@ -59,7 +40,28 @@ game
         7                   7
         8                   8
         9                   9
+    ---
+    about                   alt+cmdctrl+/
+    quit                    cmdctrl+q
     
+game
+    up                      up
+    down                    down
+    left                    left
+    right                   right
+    back                    cmdctrl+up
+    forward                 cmdctrl+down
+    ---
+    undo                    cmdctrl+z
+    redo                    cmdctrl+shift+z
+    delete                  delete
+    ----
+    pass                    p
+    resign                  r
+    -----
+    genmove                 g
+    calcscore               c
+        
 view
     games                   alt+g
     tree                    alt+t

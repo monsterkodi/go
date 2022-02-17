@@ -66,6 +66,7 @@ class Util
         moves = []
         for o in ogs
             moves.push pos:Util.alpha[o[0]]+(size-o[1]), color:['black''white'][moves.length%2]
+        moves.push pos:'next' color:['black''white'][moves.length%2]
         moves
         
     @iconUrl: (icon, size) ->
