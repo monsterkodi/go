@@ -12,20 +12,84 @@
 WebSocket = require 'ws'
 Board = require './board'
 Game = require './game'
+{ io } = require 'socket.io-client'
 
 function Online
 
     @: (@parent, @referee) ->
 
-        # ws = new WebSocket 'wss://online-go.com/socket.io/' perMessageDeflate:false
-        # ws.on 'message' (msg) => log 'ws client' msg
-        # ws.on 'error' (err) => error err
-        
         @activeGames = []
         @postSecret()
                             
         post.on 'resize' @onResize
+        
+    #  0000000   0000000    0000000  000   000  00000000  000000000  
+    # 000       000   000  000       000  000   000          000     
+    # 0000000   000   000  000       0000000    0000000      000     
+    #      000  000   000  000       000  000   000          000     
+    # 0000000    0000000    0000000  000   000  00000000     000     
+    
+    initSocket: (config) ->
+
+        clockDrift = 0
+        latency = 0
+        
+        ping = =>
+            log 'ping'
+            if @socket.connected
+                @socket.send 'net/ping',
+                    client:  Date.now()
+                    drift:   clockDrift
+                    latency: latency
+                    
+        pong = (data) =>
+            now = Date.now()
+            latency = now - data.client
+            clockDrift = now - latency / 2 - data.server
+            log 'pong latency' latency, 'clockDrift' clockDrift
+
+        clientInfo = =>
+            log 'client'
+            @socket.send 'client/info',
+                language: 'en'
+                langauge_version: '3d08ed1124ae92611e0e0846d1d18b16'
+                version: '5.1-4064-gcd9ef085'
+
+        authenticate = =>
+            log 'authenticate' config
+            @socket.send "authenticate",
+                auth:             config.chat_auth #'a7ce36546b454474564f148b45b39c5e'
+                player_id:        1110858
+                username:         'monsterkodi'
+                jwt:              config.user_jwt #'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhbm9ueW1vdXMiOmZhbHNlLCJpZCI6MTExMDg1OCwidXNlcm5hbWUiOiJtb25zdGVya29kaSIsInJlZ2lzdHJhdGlvbl9kYXRlIjoiMjAyMi0wMS0yMSAwOTo1NDo0NS4wNDE2NTQrMDA6MDAiLCJyYXRpbmdzIjp7Ijl4OSI6eyJyYXRpbmciOjEyNDIuMDM3NiwiZGV2aWF0aW9uIjo2OC4zOTI4LCJ2b2xhdGlsaXR5IjowLjA2fSwibGl2ZSI6eyJyYXRpbmciOjEyMDEuMjcxMSwiZGV2aWF0aW9uIjo2OC45NjcyLCJ2b2xhdGlsaXR5IjowLjA2fSwiMTN4MTMiOnsicmF0aW5nIjoxMjM5LjQ4MDQsImRldmlhdGlvbiI6NzMuNzQzOCwidm9sYXRpbGl0eSI6MC4wNn0sIjE5eDE5Ijp7InJhdGluZyI6MTE3NS4yMjU1LCJkZXZpYXRpb24iOjgyLjkxODEsInZvbGF0aWxpdHkiOjAuMDZ9LCJvdmVyYWxsIjp7InJhdGluZyI6MTI1NS4yMTY3LCJkZXZpYXRpb24iOjY3LjE0Mywidm9sYXRpbGl0eSI6MC4wNn0sInZlcnNpb24iOjUsImxpdmUtOXg5Ijp7InJhdGluZyI6MTEyMy43MzUsImRldmlhdGlvbiI6NzkuOTcsInZvbGF0aWxpdHkiOjAuMDZ9LCJsaXZlLTEzeDEzIjp7InJhdGluZyI6MTIyNy4zMjg4LCJkZXZpYXRpb24iOjc0LjkxMjMsInZvbGF0aWxpdHkiOjAuMDZ9LCJsaXZlLTE5eDE5Ijp7InJhdGluZyI6MTE5Mi44MjU0LCJkZXZpYXRpb24iOjEwMS4zOTc4LCJ2b2xhdGlsaXR5IjowLjA2fSwiY29ycmVzcG9uZGVuY2UiOnsicmF0aW5nIjoxMjg3LjA2MTQsImRldmlhdGlvbiI6NzYuODE1LCJ2b2xhdGlsaXR5IjowLjA2fSwiY29ycmVzcG9uZGVuY2UtOXg5Ijp7InJhdGluZyI6MTMyMy44MTgzLCJkZXZpYXRpb24iOjg0LjQyNjQsInZvbGF0aWxpdHkiOjAuMDZ9LCJjb3JyZXNwb25kZW5jZS0xM3gxMyI6eyJyYXRpbmciOjE1NzcuMjYzNiwiZGV2aWF0aW9uIjoyNzkuODAzOCwidm9sYXRpbGl0eSI6MC4wNn0sImNvcnJlc3BvbmRlbmNlLTE5eDE5Ijp7InJhdGluZyI6MTEyMC44MDg2LCJkZXZpYXRpb24iOjE0Ny4wNDI5LCJ2b2xhdGlsaXR5IjowLjA2fX0sImNvdW50cnkiOiIxNTAiLCJwcm9mZXNzaW9uYWwiOmZhbHNlLCJyYW5raW5nIjoyMCwicHJvdmlzaW9uYWwiOjAsImNhbl9jcmVhdGVfdG91cm5hbWVudHMiOnRydWUsImlzX21vZGVyYXRvciI6ZmFsc2UsImlzX3N1cGVydXNlciI6ZmFsc2UsImlzX3RvdXJuYW1lbnRfbW9kZXJhdG9yIjpmYWxzZSwic3VwcG9ydGVyIjpmYWxzZSwic3VwcG9ydGVyX2xldmVsIjowLCJ0b3VybmFtZW50X2FkbWluIjpmYWxzZSwidWlfY2xhc3MiOiIiLCJpY29uIjoiaHR0cHM6Ly9zZWN1cmUuZ3JhdmF0YXIuY29tL2F2YXRhci8zNTBmNDA0NjUyMzY1ZjU0MzVlYWRiZGRiYmNjYTBhNT9zPTMyJmQ9cmV0cm8iLCJlbWFpbCI6Im1vbnN0ZXJrb2RpQGdteC5uZXQiLCJlbWFpbF92YWxpZGF0ZWQiOnRydWUsImlzX2Fubm91bmNlciI6ZmFsc2V9.ulXNTBsmpaHRz0AHxuvbhAnu0mWY0PYkCuxQJeaK0O34soya5HZ2CK93wLci9GELmjE5xLYHkeU7tMlNToJWHtAJMhQQiOrN-P-GzyS7_FYw8GP6KUZ1C2xHIKnuoHlUYDyD1fCTQ1U6qL5QO0LJA7pr0kedbZALQFA7D0sZTlCm4eztIPb17j3MsIJSkCiKdCQBx61pX97WXHOwu2uf6iUMefd46SOKF5fVd0DuNB9wAaT1mun_cdByMwor1GBRiVZ8KciJKvH7HdpCNjy--Dz5QwmnBRbKMS5XaYc1tqAPX4XwXRByq6Czu1JKUy1fEELjQHGgfEkvOjeGLd85I7wA1SPc-qCaMn2Qhgn6p7whU_hGTnUf8ATZ9D-v34Vj08W6dNZuQbLg_ZICfHWP_5VyxjVLO3ECAmBIjZYiME3qkSp79ycnea0oOEIuoWOd7DNP2FRwDBdCETXIi1M8_cVLL81zDl4_cJpDD8WjhrkydZMjm-Lfr31aFB67Y45HqZvlbn9VewumlXnBU2_fmlP2ktmdSgBOL2MNQSe_zn6gu0NXoEAl7eBx7tcSqI3b6bHGBfbpxmyTjA8xZ0e9ocGB5H_VWO3qJG_WmZtUTQwzR57BYik3yNQiRdukYX0-ovaPgNHG1OdpGKlUgQZvak8Z6q7X3J2CbWgqXdoEEf4'
+                # bid:              '282755638916139'
+                # useragent:        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:97.0) Gecko/20100101 Firefox/97.0'
+                # language:         'en'
+                # language_version: '3d08ed1124ae92611e0e0846d1d18b16'
+                # client_version:   '5.1-4064-gcd9ef085'
                 
+        config =
+            reconnection: true
+            reconnectionDelay: 750
+            reconnectionDelayMax: 10000
+            transports: ["websocket"]
+            upgrade: false
+            
+        @socket = io 'https://online-go.com' config
+        @socket.send = @socket.emit
+        
+        @socket.on 'connect' => @socket.emit 'hostinfo'
+        @socket.on 'HUP'     => log 'HUP'
+        @socket.on 'hostinfo' (hostinfo) => log 'hostinfo' hostinfo
+        
+        @socket.on 'net/pong' pong
+        @socket.on 'connect'  ping
+        @socket.on 'connect'  clientInfo
+        @socket.on 'connect'  authenticate
+        @socket.on 'error'    (err) -> log err
+        @socket.on 'active_game' (d) -> log 'active_game!' d
+        # @socket.send 'ui-pushes/subscribe', { channel: channel }
+                        
     showGames: =>
             
         @games = elem 'div' class:'games' parent:@parent 
@@ -53,9 +117,12 @@ function Online
                 @token = d.access_token
                 if window.stash.get 'games' true
                     @showGames()
+                @get path:'/api/v1/ui/config' cb: (d) =>
+                    log 'ui/config' noon d
+                    @initSocket d
             else
                 log 'no token!'
-                
+                                
     #  0000000   00000000  000000000         0000000    0000000   00     00  00000000   0000000  
     # 000        000          000           000        000   000  000   000  000       000       
     # 000  0000  0000000      000           000  0000  000000000  000000000  0000000   0000000   
