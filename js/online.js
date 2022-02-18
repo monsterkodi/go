@@ -65,16 +65,14 @@ Online = (function ()
         clientInfo = (function ()
         {
             console.log('client')
-            return this.socket.send('client/info',{language:'en',langauge_version:'3d08ed1124ae92611e0e0846d1d18b16',version:'5.1-4064-gcd9ef085'})
+            return this.socket.emit('client/info',{language:'en',langauge_version:'3d08ed1124ae92611e0e0846d1d18b16',version:'5.1-4064-gcd9ef085'})
         }).bind(this)
         authenticate = (function ()
         {
             console.log('authenticate',config)
-            return this.socket.send("authenticate",{auth:config.chat_auth,player_id:1110858,username:'monsterkodi',jwt:config.user_jwt})
+            return this.socket.emit("authenticate",{auth:config.chat_auth,player_id:1110858,username:'monsterkodi',jwt:config.user_jwt})
         }).bind(this)
-        config = {reconnection:true,reconnectionDelay:750,reconnectionDelayMax:10000,transports:["websocket"],upgrade:false}
-        this.socket = io('https://online-go.com',config)
-        this.socket.send = this.socket.emit
+        this.socket = io('https://online-go.com',{reconnection:true,reconnectionDelay:750,reconnectionDelayMax:10000,transports:["websocket"],upgrade:false})
         this.socket.on('connect',(function ()
         {
             return this.socket.emit('hostinfo')
@@ -165,9 +163,9 @@ Online = (function ()
 
         this.boards = []
         var list = _k_.list(this.activeGames)
-        for (var _157_17_ = 0; _157_17_ < list.length; _157_17_++)
+        for (var _155_17_ = 0; _155_17_ < list.length; _155_17_++)
         {
-            game = list[_157_17_]
+            game = list[_155_17_]
             g = elem('div',{class:'game',parent:this.games})
             if (game.players.black.username !== 'monsterkodi')
             {
@@ -243,7 +241,8 @@ Online = (function ()
 
         this.referee.newGame({black:g.gamedata.players.black.username,white:g.gamedata.players.white.username,size:g.gamedata.width,handicap:g.gamedata.handicap})
         moves = ogsMoves(g.gamedata.moves,g.gamedata.height)
-        this.referee.board.game.replay(moves,true)
+        this.referee.game.paused = true
+        this.referee.game.replay(moves,true)
         return this.referee.tree.replay(moves)
     }
 
@@ -348,9 +347,9 @@ Online = (function ()
         this.games.style.bottom = `${tb}px`
         this.games.style.left = `${rb}px`
         var list = _k_.list(this.boards)
-        for (var _318_14_ = 0; _318_14_ < list.length; _318_14_++)
+        for (var _317_14_ = 0; _317_14_ < list.length; _317_14_++)
         {
-            b = list[_318_14_]
+            b = list[_317_14_]
             b.div.style.width = `${w - 30}px`
             b.div.style.height = `${w - 30}px`
         }

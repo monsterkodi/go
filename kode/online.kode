@@ -50,14 +50,14 @@ function Online
 
         clientInfo = =>
             log 'client'
-            @socket.send 'client/info',
+            @socket.emit 'client/info',
                 language: 'en'
                 langauge_version: '3d08ed1124ae92611e0e0846d1d18b16'
                 version: '5.1-4064-gcd9ef085'
 
         authenticate = =>
             log 'authenticate' config
-            @socket.send "authenticate",
+            @socket.emit "authenticate",
                 auth:             config.chat_auth #'a7ce36546b454474564f148b45b39c5e'
                 player_id:        1110858
                 username:         'monsterkodi'
@@ -68,16 +68,14 @@ function Online
                 # language_version: '3d08ed1124ae92611e0e0846d1d18b16'
                 # client_version:   '5.1-4064-gcd9ef085'
                 
-        config =
+            
+        @socket = io 'https://online-go.com', 
             reconnection: true
             reconnectionDelay: 750
             reconnectionDelayMax: 10000
             transports: ["websocket"]
             upgrade: false
             
-        @socket = io 'https://online-go.com' config
-        @socket.send = @socket.emit
-        
         @socket.on 'connect' => @socket.emit 'hostinfo'
         @socket.on 'HUP'     => log 'HUP'
         @socket.on 'hostinfo' (hostinfo) => log 'hostinfo' hostinfo
@@ -88,7 +86,7 @@ function Online
         @socket.on 'connect'  authenticate
         @socket.on 'error'    (err) -> log err
         @socket.on 'active_game' (d) -> log 'active_game!' d
-        # @socket.send 'ui-pushes/subscribe', { channel: channel }
+        # @socket.emit 'ui-pushes/subscribe', { channel: channel }
                         
     showGames: =>
             
@@ -229,7 +227,8 @@ function Online
         # log noon g.gamedata.moves
         # log noon g
         moves = ogsMoves g.gamedata.moves, g.gamedata.height
-        @referee.board.game.replay moves, true
+        @referee.game.paused = true
+        @referee.game.replay moves, true
         @referee.tree.replay moves
         # log noon moves
         
