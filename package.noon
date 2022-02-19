@@ -1,5 +1,5 @@
 name            go
-version         0.37.0
+version         0.38.0
 main            js/main.js
 author          monsterkodi
 license         Unlicense
@@ -18,6 +18,6 @@ dependencies
                 socket.io-client  ^4.4.1
                 ws              ^8.5.0
 devDependencies
-                electron        ^17.0.0
+                electron        ^17.0.1
                 electron-builder  ^22.14.13
                 kode            monsterkodi/kode

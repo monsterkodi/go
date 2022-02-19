@@ -1,6 +1,6 @@
 // monsterkodi/kode 0.237.0
 
-var _k_ = {noon: function (obj) { var pad = function (s, l) { while (s.length < l) { s += ' ' }; return s }; var esc = function (k, arry) { var es, sp; if (0 <= k.indexOf('\n')) { sp = k.split('\n'); es = sp.map(function (s) { return esc(s,arry) }); es.unshift('...'); es.push('...'); return es.join('\n') } if (k === '' || k === '...' || _k_.in(k[0],[' ','#','|']) || _k_.in(k[k.length - 1],[' ','#','|'])) { k = '|' + k + '|' } else if (arry && /  /.test(k)) { k = '|' + k + '|' }; return k }; var pretty = function (o, ind, seen) { var k, kl, l, v, mk = 4; if (Object.keys(o).length > 1) { for (k in o) { if (Object.hasOwn(o,k)) { kl = parseInt(Math.ceil((k.length + 2) / 4) * 4); mk = Math.max(mk,kl); if (mk > 32) { mk = 32; break } } } }; l = []; var keyValue = function (k, v) { var i, ks, s, vs; s = ind; k = esc(k,true); if (k.indexOf('  ') > 0 && k[0] !== '|') { k = `|${k}|` } else if (k[0] !== '|' && k[k.length - 1] === '|') { k = '|' + k } else if (k[0] === '|' && k[k.length - 1] !== '|') { k += '|' }; ks = pad(k,Math.max(mk,k.length + 2)); i = pad(ind + '    ',mk); s += ks; vs = toStr(v,i,false,seen); if (vs[0] === '\n') { while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) } }; s += vs; while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) }; return s }; for (k in o) { if (Object.hasOwn(o,k)) { l.push(keyValue(k,o[k])) } }; return l.join('\n') }; var toStr = function (o, ind = '', arry = false, seen = []) { var s, t, v; if (!(o != null)) { if (o === null) { return 'null' }; if (o === undefined) { return 'undefined' }; return '<?>' }; switch (t = typeof(o)) { case 'string': {return esc(o,arry)}; case 'object': { if (_k_.in(o,seen)) { return '<v>' }; seen.push(o); if ((o.constructor != null ? o.constructor.name : undefined) === 'Array') { s = ind !== '' && arry && '.' || ''; if (o.length && ind !== '') { s += '\n' }; s += (function () { var result = []; var list = _k_.list(o); for (var li = 0; li < list.length; li++)  { v = list[li];result.push(ind + toStr(v,ind + '    ',true,seen))  } return result }).bind(this)().join('\n') } else if ((o.constructor != null ? o.constructor.name : undefined) === 'RegExp') { return o.source } else { s = (arry && '.\n') || ((ind !== '') && '\n' || ''); s += pretty(o,ind,seen) }; return s } default: return String(o) }; return '<???>' }; return toStr(obj) }, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, max: function () { m = -Infinity; for (a of arguments) { if (a instanceof Array) {m = _k_.max.apply(_k_.max,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n > m ? n : m}}}; return m }, isFunc: function (o) {return typeof o === 'function'}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}}
+var _k_ = {empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, max: function () { m = -Infinity; for (a of arguments) { if (a instanceof Array) {m = _k_.max.apply(_k_.max,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n > m ? n : m}}}; return m }, isFunc: function (o) {return typeof o === 'function'}}
 
 var Board, elem, Game, iconUrl, io, ogsMoves, Online, open, post, rank, request, slash, WebSocket
 
@@ -34,6 +34,7 @@ Online = (function ()
         this["getGames"] = this["getGames"].bind(this)
         this["onMouseWheel"] = this["onMouseWheel"].bind(this)
         this["showGames"] = this["showGames"].bind(this)
+        this["connectGames"] = this["connectGames"].bind(this)
         this.activeGames = []
         this.postSecret()
         post.on('resize',this.onResize)
@@ -47,11 +48,11 @@ Online = (function ()
         latency = 0
         ping = (function ()
         {
-            console.log('ping')
-            if (this.socket.connected)
+            if (!this.socket.connected)
             {
-                return this.socket.send('net/ping',{client:Date.now(),drift:clockDrift,latency:latency})
+                return
             }
+            return this.socket.emit('net/ping',{client:Date.now(),drift:clockDrift,latency:latency})
         }).bind(this)
         pong = (function (data)
         {
@@ -60,43 +61,77 @@ Online = (function ()
             now = Date.now()
             latency = now - data.client
             clockDrift = now - latency / 2 - data.server
-            console.log('pong latency',latency,'clockDrift',clockDrift)
+            return setTimeout(ping,10000)
         }).bind(this)
         clientInfo = (function ()
         {
-            console.log('client')
             return this.socket.emit('client/info',{language:'en',langauge_version:'3d08ed1124ae92611e0e0846d1d18b16',version:'5.1-4064-gcd9ef085'})
         }).bind(this)
         authenticate = (function ()
         {
-            console.log('authenticate',config)
-            return this.socket.emit("authenticate",{auth:config.chat_auth,player_id:1110858,username:'monsterkodi',jwt:config.user_jwt})
+            console.log('▸ authenticate')
+            return this.socket.emit('authenticate',{auth:config.chat_auth,player_id:config.user.id,username:config.user.username,jwt:config.user_jwt,client_version:config.version})
         }).bind(this)
         this.socket = io('https://online-go.com',{reconnection:true,reconnectionDelay:750,reconnectionDelayMax:10000,transports:["websocket"],upgrade:false})
-        this.socket.on('connect',(function ()
+        this.socket.on('net/pong',pong)
+        this.socket.on('connect_error',(function ()
         {
-            return this.socket.emit('hostinfo')
+            console.log('on connect_error')
         }).bind(this))
-        this.socket.on('HUP',(function ()
+        this.socket.on('disconnect',(function (reason)
         {
-            console.log('HUP')
+            console.log('on disconnect',reason)
         }).bind(this))
         this.socket.on('hostinfo',(function (hostinfo)
         {
-            console.log('hostinfo',hostinfo)
+            console.log('on hostinfo',hostinfo)
         }).bind(this))
-        this.socket.on('net/pong',pong)
         this.socket.on('connect',ping)
         this.socket.on('connect',clientInfo)
         this.socket.on('connect',authenticate)
-        this.socket.on('error',function (err)
+        this.socket.on('connect',(function ()
         {
-            console.log(err)
-        })
-        return this.socket.on('active_game',function (d)
+            return this.connectGames()
+        }).bind(this))
+        this.socket.on('active_game',function (d)
         {
             console.log('active_game!',d)
         })
+        this.socket.on('game/connect',function (d)
+        {
+            console.log('game_connect!',d)
+        })
+        this.socket.on('game',function (d)
+        {
+            console.log('game!',d)
+        })
+        return this.socket.onAny(function (d)
+        {
+            console.log('on any',d)
+        })
+    }
+
+    Online.prototype["connectGames"] = function ()
+    {
+        var game
+
+        if (_k_.empty(this.activeGames))
+        {
+            console.log('no activeGames')
+            setTimeout(this.connectGames,10000)
+            return
+        }
+        console.log(`connect to ${this.activeGames.length} active games`)
+        var list = _k_.list(this.activeGames)
+        for (var _99_17_ = 0; _99_17_ < list.length; _99_17_++)
+        {
+            game = list[_99_17_]
+            console.log('emit game/connect',game.id)
+            this.socket.emit('game/connect',{game_id:game.id,player_id:1110858,chat:0},function (ack)
+            {
+                console.log('ack game',ack)
+            })
+        }
     }
 
     Online.prototype["showGames"] = function ()
@@ -129,7 +164,6 @@ Online = (function ()
                 }
                 return this.get({path:'/api/v1/ui/config',cb:(function (d)
                 {
-                    console.log('ui/config',_k_.noon(d))
                     return this.initSocket(d)
                 }).bind(this)})
             }
@@ -163,9 +197,9 @@ Online = (function ()
 
         this.boards = []
         var list = _k_.list(this.activeGames)
-        for (var _155_17_ = 0; _155_17_ < list.length; _155_17_++)
+        for (var _171_17_ = 0; _171_17_ < list.length; _171_17_++)
         {
-            game = list[_155_17_]
+            game = list[_171_17_]
             g = elem('div',{class:'game',parent:this.games})
             if (game.players.black.username !== 'monsterkodi')
             {
@@ -347,9 +381,9 @@ Online = (function ()
         this.games.style.bottom = `${tb}px`
         this.games.style.left = `${rb}px`
         var list = _k_.list(this.boards)
-        for (var _317_14_ = 0; _317_14_ < list.length; _317_14_++)
+        for (var _333_14_ = 0; _333_14_ < list.length; _333_14_++)
         {
-            b = list[_317_14_]
+            b = list[_333_14_]
             b.div.style.width = `${w - 30}px`
             b.div.style.height = `${w - 30}px`
         }
