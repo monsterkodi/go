@@ -69,6 +69,8 @@ class Util
         moves.push pos:'next' color:['black''white'][moves.length%2]
         moves
         
+    @ogsMove: (ogs, size) -> Util.alpha[ogs[0]]+(size-ogs[1])
+        
     @iconUrl: (icon, size) ->
         
         icon.replace(/-[0-9]+.png$/, "-#{size}.png").replace(/s=[0-9]+/, "s=#{size}")

@@ -1,8 +1,8 @@
 // monsterkodi/kode 0.237.0
 
-var _k_ = {in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, max: function () { m = -Infinity; for (a of arguments) { if (a instanceof Array) {m = _k_.max.apply(_k_.max,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n > m ? n : m}}}; return m }, isFunc: function (o) {return typeof o === 'function'}}
+var _k_ = {in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, noon: function (obj) { var pad = function (s, l) { while (s.length < l) { s += ' ' }; return s }; var esc = function (k, arry) { var es, sp; if (0 <= k.indexOf('\n')) { sp = k.split('\n'); es = sp.map(function (s) { return esc(s,arry) }); es.unshift('...'); es.push('...'); return es.join('\n') } if (k === '' || k === '...' || _k_.in(k[0],[' ','#','|']) || _k_.in(k[k.length - 1],[' ','#','|'])) { k = '|' + k + '|' } else if (arry && /  /.test(k)) { k = '|' + k + '|' }; return k }; var pretty = function (o, ind, seen) { var k, kl, l, v, mk = 4; if (Object.keys(o).length > 1) { for (k in o) { if (Object.hasOwn(o,k)) { kl = parseInt(Math.ceil((k.length + 2) / 4) * 4); mk = Math.max(mk,kl); if (mk > 32) { mk = 32; break } } } }; l = []; var keyValue = function (k, v) { var i, ks, s, vs; s = ind; k = esc(k,true); if (k.indexOf('  ') > 0 && k[0] !== '|') { k = `|${k}|` } else if (k[0] !== '|' && k[k.length - 1] === '|') { k = '|' + k } else if (k[0] === '|' && k[k.length - 1] !== '|') { k += '|' }; ks = pad(k,Math.max(mk,k.length + 2)); i = pad(ind + '    ',mk); s += ks; vs = toStr(v,i,false,seen); if (vs[0] === '\n') { while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) } }; s += vs; while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) }; return s }; for (k in o) { if (Object.hasOwn(o,k)) { l.push(keyValue(k,o[k])) } }; return l.join('\n') }; var toStr = function (o, ind = '', arry = false, seen = []) { var s, t, v; if (!(o != null)) { if (o === null) { return 'null' }; if (o === undefined) { return 'undefined' }; return '<?>' }; switch (t = typeof(o)) { case 'string': {return esc(o,arry)}; case 'object': { if (_k_.in(o,seen)) { return '<v>' }; seen.push(o); if ((o.constructor != null ? o.constructor.name : undefined) === 'Array') { s = ind !== '' && arry && '.' || ''; if (o.length && ind !== '') { s += '\n' }; s += (function () { var result = []; var list = _k_.list(o); for (var li = 0; li < list.length; li++)  { v = list[li];result.push(ind + toStr(v,ind + '    ',true,seen))  } return result }).bind(this)().join('\n') } else if ((o.constructor != null ? o.constructor.name : undefined) === 'RegExp') { return o.source } else { s = (arry && '.\n') || ((ind !== '') && '\n' || ''); s += pretty(o,ind,seen) }; return s } default: return String(o) }; return '<???>' }; return toStr(obj) }, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, max: function () { m = -Infinity; for (a of arguments) { if (a instanceof Array) {m = _k_.max.apply(_k_.max,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n > m ? n : m}}}; return m }, isFunc: function (o) {return typeof o === 'function'}}
 
-var Board, elem, Game, iconUrl, io, ogsMoves, Online, open, post, rank, request, slash, WebSocket
+var Board, elem, Game, iconUrl, io, ogsMove, ogsMoves, Online, open, post, rank, request, slash, WebSocket
 
 elem = require('kxk').elem
 noon = require('kxk').noon
@@ -14,6 +14,7 @@ request = require('https').request
 
 rank = require('./util/util').rank
 ogsMoves = require('./util/util').ogsMoves
+ogsMove = require('./util/util').ogsMove
 iconUrl = require('./util/util').iconUrl
 
 WebSocket = require('ws')
@@ -35,6 +36,7 @@ Online = (function ()
         this["onMouseWheel"] = this["onMouseWheel"].bind(this)
         this["showGames"] = this["showGames"].bind(this)
         this["connectGames"] = this["connectGames"].bind(this)
+        this.boards = {}
         this.activeGames = []
         this.postSecret()
         post.on('resize',this.onResize)
@@ -42,17 +44,17 @@ Online = (function ()
 
     Online.prototype["initSocket"] = function (config)
     {
-        var authenticate, clientInfo, clockDrift, latency, ping, pong
+        var authenticate, clockDrift, latency, ping, pong
 
         clockDrift = 0
         latency = 0
+        this.myUserId = config.user.id
         ping = (function ()
         {
-            if (!this.socket.connected)
+            if (this.socket.connected)
             {
-                return
+                return this.socket.emit('net/ping',{client:Date.now(),drift:clockDrift,latency:latency})
             }
-            return this.socket.emit('net/ping',{client:Date.now(),drift:clockDrift,latency:latency})
         }).bind(this)
         pong = (function (data)
         {
@@ -62,10 +64,6 @@ Online = (function ()
             latency = now - data.client
             clockDrift = now - latency / 2 - data.server
             return setTimeout(ping,10000)
-        }).bind(this)
-        clientInfo = (function ()
-        {
-            return this.socket.emit('client/info',{language:'en',langauge_version:'3d08ed1124ae92611e0e0846d1d18b16',version:'5.1-4064-gcd9ef085'})
         }).bind(this)
         authenticate = (function ()
         {
@@ -88,34 +86,30 @@ Online = (function ()
         {
             return this.connectGames()
         }).bind(this))
-        this.socket.on('active_game',function (d)
+        return this.socket.onAny((function (msg, arg)
         {
-            console.log('active_game!',d)
-        })
-        this.socket.on('game/connect',function (d)
-        {
-            console.log('game_connect!',d)
-        })
-        this.socket.on('game',function (d)
-        {
-            console.log('game!',d)
-        })
-        return this.socket.onAny((function ()
-        {
-            if (arguments[0].startsWith('game'))
+            if (msg.startsWith('game'))
             {
-                return this.onGameData.apply(this,arguments)
+                return this.onGameData(msg,arg)
             }
-            else if (!(_k_.in(arguments[0],['active-bots','net/pong'])))
+            else if (!(_k_.in(msg,['active-bots','net/pong','score-estimator-enabled-state'])))
             {
-                console.log('on any',arguments)
+                console.log('on any',msg,_k_.noon(arg))
             }
         }).bind(this))
     }
 
-    Online.prototype["onGameData"] = function (channel, arg1, arg2)
+    Online.prototype["onGameData"] = function (msg, arg)
     {
-        console.log(`game data [${channel}]`,arg1,arg2)
+        var pos
+
+        if (msg.endsWith('/move'))
+        {
+            console.log('new move',msg,arg.game_id,_k_.noon(arg))
+            pos = ogsMove(arg.move)
+            console.log('pos',pos)
+            return this.boards[arg.game_id].game.play(pos)
+        }
     }
 
     Online.prototype["connectGames"] = function ()
@@ -128,13 +122,12 @@ Online = (function ()
             setTimeout(this.connectGames,10000)
             return
         }
-        console.log(`connect to ${this.activeGames.length} active games`)
+        console.log(`▸ connect to ${this.activeGames.length} active games`)
         var list = _k_.list(this.activeGames)
-        for (var _112_17_ = 0; _112_17_ < list.length; _112_17_++)
+        for (var _103_17_ = 0; _103_17_ < list.length; _103_17_++)
         {
-            game = list[_112_17_]
-            console.log('emit game/connect',game.id)
-            this.socket.emit('game/connect',{game_id:game.id,player_id:1110858,chat:0})
+            game = list[_103_17_]
+            this.socket.emit('game/connect',{game_id:game.id,player_id:this.myUserId,chat:0})
         }
     }
 
@@ -199,11 +192,11 @@ Online = (function ()
     {
         var b, g, game, ib, iw, nb, nw, rb, rw
 
-        this.boards = []
+        this.boards = {}
         var list = _k_.list(this.activeGames)
-        for (var _182_17_ = 0; _182_17_ < list.length; _182_17_++)
+        for (var _173_17_ = 0; _173_17_ < list.length; _173_17_++)
         {
-            game = list[_182_17_]
+            game = list[_173_17_]
             g = elem('div',{class:'game',parent:this.games})
             if (game.players.black.username !== 'monsterkodi')
             {
@@ -262,7 +255,7 @@ Online = (function ()
                     return this.loadGame(g)
                 }).bind(this)
             }).bind(this))(g))
-            this.boards.push(b)
+            this.boards[g.id] = b
             if (g.gamedata.clock.current_player === 1110858)
             {
                 b.div.style.border = '2px solid black'
@@ -370,7 +363,7 @@ Online = (function ()
 
     Online.prototype["onResize"] = function ()
     {
-        var b, br, rb, tb, w
+        var b, br, i, rb, tb, w
 
         if (!this.games)
         {
@@ -384,10 +377,9 @@ Online = (function ()
         this.games.style.top = `${tb}px`
         this.games.style.bottom = `${tb}px`
         this.games.style.left = `${rb}px`
-        var list = _k_.list(this.boards)
-        for (var _344_14_ = 0; _344_14_ < list.length; _344_14_++)
+        for (i in this.boards)
         {
-            b = list[_344_14_]
+            b = this.boards[i]
             b.div.style.width = `${w - 30}px`
             b.div.style.height = `${w - 30}px`
         }

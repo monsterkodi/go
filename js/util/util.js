@@ -73,6 +73,11 @@ class Util
         return moves
     }
 
+    static ogsMove (ogs, size)
+    {
+        return Util.alpha[ogs[0]] + (size - ogs[1])
+    }
+
     static iconUrl (icon, size)
     {
         return icon.replace(/-[0-9]+.png$/,`-${size}.png`).replace(/s=[0-9]+/,`s=${size}`)

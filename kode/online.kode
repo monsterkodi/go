@@ -8,7 +8,7 @@
 
 { elem, noon, open, post, slash } = require 'kxk'
 { request } = require 'https'
-{ rank, ogsMoves, iconUrl } = require './util/util'
+{ rank, ogsMoves, ogsMove, iconUrl } = require './util/util'
 WebSocket = require 'ws'
 Board = require './board'
 Game = require './game'
@@ -18,6 +18,7 @@ function Online
 
     @: (@parent, @referee) ->
 
+        @boards = {}
         @activeGames = []
         @postSecret()
                             
@@ -34,13 +35,10 @@ function Online
         clockDrift = 0
         latency = 0
         
+        @myUserId = config.user.id
+        
         ping = =>
-            return if not @socket.connected
-            # log '▸ ping'
-            @socket.emit 'net/ping',
-                client:  Date.now()
-                drift:   clockDrift
-                latency: latency
+            if @socket.connected then @socket.emit 'net/ping' client:Date.now(), drift:clockDrift, latency:latency
                     
         pong = (data) =>
             now = Date.now()
@@ -48,18 +46,11 @@ function Online
             clockDrift = now - latency / 2 - data.server
             setTimeout ping, 10000
 
-        clientInfo = =>
-            # log '▸ client'
-            @socket.emit 'client/info',
-                language: 'en'
-                langauge_version: '3d08ed1124ae92611e0e0846d1d18b16'
-                version: '5.1-4064-gcd9ef085'
-                    
         authenticate = =>
             log '▸ authenticate'
             @socket.emit 'authenticate',
                 auth:             config.chat_auth     
-                player_id:        config.user.id       
+                player_id:        config.user.id
                 username:         config.user.username 
                 jwt:              config.user_jwt      
                 client_version:   config.version 
@@ -74,26 +65,26 @@ function Online
         @socket.on 'net/pong' pong
         @socket.on 'connect_error'       => log 'on connect_error'
         @socket.on 'disconnect' (reason) => log 'on disconnect' reason
-        # @socket.on 'hostinfo' (hostinfo) => log 'on hostinfo' hostinfo
         
         @socket.on 'connect'  ping
-        # @socket.on 'connect'  clientInfo
         @socket.on 'connect'  authenticate
         @socket.on 'connect' => @connectGames()
-        
-        @socket.on 'active_game' (d) -> log 'active_game!' d
-        @socket.on 'game/connect' (d) -> log 'game_connect!' d
-        @socket.on 'game' (d) -> log 'game!' d
-        
-        @socket.onAny => 
-            if arguments[0].startsWith 'game'
-                @onGameData.apply @, arguments
-            else if arguments[0] not in ['active-bots' 'net/pong']
-                log 'on any' arguments
                 
-    onGameData: (channel, arg1, arg2)->
+        @socket.onAny (msg, arg) => 
+            if msg.startsWith 'game'
+                @onGameData msg, arg
+            else if msg not in ['active-bots' 'net/pong' 'score-estimator-enabled-state']
+                log 'on any' msg, noon arg
+                
+    onGameData: (msg, arg)->
         
-        log "game data [#{channel}]" arg1, arg2
+        if msg.endsWith '/move'
+            log 'new move' msg, arg.game_id, noon arg
+            pos = ogsMove arg.move
+            log 'pos' pos
+            @boards[arg.game_id].game.play pos
+        # else
+            # log 'game data' msg, noon arg
         
     #  0000000   0000000   000   000  000   000  00000000   0000000  000000000         0000000    0000000   00     00  00000000   0000000  
     # 000       000   000  0000  000  0000  000  000       000          000           000        000   000  000   000  000       000       
@@ -108,12 +99,12 @@ function Online
             setTimeout @connectGames, 10000
             return
             
-        log "connect to #{@activeGames.length} active games"
+        log "▸ connect to #{@activeGames.length} active games"
         for game in @activeGames
-            log 'emit game/connect' game.id
+            # log 'emit game/connect' game.id
             @socket.emit 'game/connect',
                 game_id:    game.id
-                player_id:  1110858
+                player_id:  @myUserId
                 chat:       0
                         
     showGames: =>
@@ -178,7 +169,7 @@ function Online
     
     renderGames: ->
         
-        @boards = []
+        @boards = {}
         for game in @activeGames
             g = elem 'div' class:'game' parent:@games
             if game.players.black.username != 'monsterkodi'
@@ -207,6 +198,8 @@ function Online
                 
         @get path:"/api/v1/games/#{game.id}" cb: (g) =>
 
+            # log 'renderGame' noon g
+            
             features = 
                 coordinates: false
                 liberties:   false
@@ -226,7 +219,7 @@ function Online
             b.div.style.height = "#{w-30}px"
             b.div.style.width  = "#{w-30}px"
             b.div.addEventListener 'click' ((g) => => @loadGame g) g
-            @boards.push b
+            @boards[g.id] = b
             
             if g.gamedata.clock.current_player == 1110858
                 b.div.style.border = '2px solid black'
@@ -341,7 +334,7 @@ function Online
         @games.style.bottom = "#{tb}px"
         @games.style.left   = "#{rb}px"
         
-        for b in @boards
+        for i,b of @boards
             b.div.style.width  = "#{w-30}px"
             b.div.style.height = "#{w-30}px"
 
