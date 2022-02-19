@@ -85,10 +85,23 @@ function Online
     onGameData: (msg, arg)->
         
         if msg.endsWith '/move'
-            log 'new move' msg, arg.game_id, noon arg
+            # log 'new move' msg, arg.game_id, noon arg
             pos = ogsMove arg.move, @boards[arg.game_id].game.size
-            log 'pos' pos
-            @boards[arg.game_id].game.play pos
+            b = @boards[arg.game_id]
+            b.game.play pos
+            # log 'game' b.game
+            # log 'nextColor' b.game.nextColor()
+            if b.game.players[b.game.nextColor()] == 'monsterkodi'
+                b.div.style.border = '2px solid black'
+                b.div.style.borderRadius = '6px'
+                # ugly hack to show 'your move' games on top:
+                e = b.parent
+                t = e.previousElementSibling
+                e.parentElement.insertBefore e, e.parentElement.firstChild
+                t.parentElement.insertBefore t, t.parentElement.firstChild
+            else
+                # log 'clearFrame' b.game.players[b.game.nextColor()]
+                b.div.style.border = 'none'
         
     #  0000000   0000000   000   000  000   000  00000000   0000000  000000000         0000000    0000000   00     00  00000000   0000000  
     # 000       000   000  0000  000  0000  000  000       000          000           000        000   000  000   000  000       000       
@@ -197,9 +210,12 @@ function Online
                 numbers:     false
                 hover:       false
             
+            # log noon g
+                
             b = new Board e, g.height, features
-            b.game = new Game b, g.players.black.name, g.players.white.name, g.handicap
+            b.game = new Game b, g.players.black.username, g.players.white.username, g.handicap
             b.game.paused = true
+            b.game.info.id = g.id
             b.game.replay ogsMoves(g.gamedata.moves, g.height), true
             
             br = @parent.getBoundingClientRect()

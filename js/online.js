@@ -99,14 +99,26 @@ Online = (function ()
 
     Online.prototype["onGameData"] = function (msg, arg)
     {
-        var pos
+        var b, e, pos, t
 
         if (msg.endsWith('/move'))
         {
-            console.log('new move',msg,arg.game_id,_k_.noon(arg))
             pos = ogsMove(arg.move,this.boards[arg.game_id].game.size)
-            console.log('pos',pos)
-            return this.boards[arg.game_id].game.play(pos)
+            b = this.boards[arg.game_id]
+            b.game.play(pos)
+            if (b.game.players[b.game.nextColor()] === 'monsterkodi')
+            {
+                b.div.style.border = '2px solid black'
+                b.div.style.borderRadius = '6px'
+                e = b.parent
+                t = e.previousElementSibling
+                e.parentElement.insertBefore(e,e.parentElement.firstChild)
+                return t.parentElement.insertBefore(t,t.parentElement.firstChild)
+            }
+            else
+            {
+                return b.div.style.border = 'none'
+            }
         }
     }
 
@@ -121,9 +133,9 @@ Online = (function ()
         }
         console.log(`▸ connect to ${this.activeGames.length} active games`)
         var list = _k_.list(this.activeGames)
-        for (var _106_17_ = 0; _106_17_ < list.length; _106_17_++)
+        for (var _119_17_ = 0; _119_17_ < list.length; _119_17_++)
         {
-            game = list[_106_17_]
+            game = list[_119_17_]
             this.socket.emit('game/connect',{game_id:game.id,player_id:this.myUserId,chat:0})
         }
     }
@@ -186,9 +198,9 @@ Online = (function ()
 
         this.boards = {}
         var list = _k_.list(this.activeGames)
-        for (var _166_17_ = 0; _166_17_ < list.length; _166_17_++)
+        for (var _179_17_ = 0; _179_17_ < list.length; _179_17_++)
         {
-            game = list[_166_17_]
+            game = list[_179_17_]
             g = elem('div',{class:'game',parent:this.games})
             if (game.players.black.username !== 'monsterkodi')
             {
@@ -231,8 +243,9 @@ Online = (function ()
 
             features = {coordinates:false,liberties:false,numbers:false,hover:false}
             b = new Board(e,g.height,features)
-            b.game = new Game(b,g.players.black.name,g.players.white.name,g.handicap)
+            b.game = new Game(b,g.players.black.username,g.players.white.username,g.handicap)
             b.game.paused = true
+            b.game.info.id = g.id
             b.game.replay(ogsMoves(g.gamedata.moves,g.height),true)
             br = this.parent.getBoundingClientRect()
             tb = br.height / (this.referee.boardsize + 1) - 2

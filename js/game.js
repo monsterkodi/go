@@ -20,7 +20,7 @@ Grid = require('./util/grid')
 Game = (function ()
 {
     _k_.extend(Game, Score)
-    function Game (board, white, black, handicap)
+    function Game (board, black, white, handicap)
     {
         this.handicap = handicap
     

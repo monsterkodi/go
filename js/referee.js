@@ -68,7 +68,7 @@ Referee = (function ()
         window.stash.set('handicap',this.handicap)
         window.stash.set('moves',moves)
         this.board = new Board(this.parent,this.boardsize)
-        this.game = new Game(this.board,this.white,this.black,this.handicap)
+        this.game = new Game(this.board,this.black,this.white,this.handicap)
         this.board.game = this.game
         this.board.tree = this.tree
         this.game.info = info
@@ -295,7 +295,7 @@ Referee = (function ()
         {
             post.emit('tree')
         }
-        this.game = new Game(this.board,this.white,this.black,this.handicap)
+        this.game = new Game(this.board,this.black,this.white,this.handicap)
         this.game.paused = true
         this.board.game = this.game
         this.board.tree = this.tree

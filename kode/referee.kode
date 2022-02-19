@@ -64,7 +64,7 @@ function Referee
         window.stash.set 'moves'     moves
                 
         @board = new Board @parent, @boardsize
-        @game  = new Game  @board, @white, @black, @handicap
+        @game  = new Game  @board, @black, @white, @handicap
         @board.game = @game
         @board.tree = @tree
         @game.info  = info
@@ -242,7 +242,7 @@ function Referee
             @tree.navigate action
         else
             post.emit 'tree'
-        @game = new Game @board, @white, @black, @handicap
+        @game = new Game @board, @black, @white, @handicap
         @game.paused = true
         @board.game = @game
         @board.tree = @tree

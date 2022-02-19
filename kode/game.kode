@@ -17,7 +17,7 @@ Grid  = require './util/grid'
 
 function Game extends Score
 
-    @: (board, white, black, @handicap) ->
+    @: (board, black, white, @handicap) ->
         
         @info = {}
         @players = {black, white}
