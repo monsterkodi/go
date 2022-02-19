@@ -41,6 +41,7 @@ Online = (function ()
         this.activeGames = []
         this.postSecret()
         post.on('submitMove',this.submitMove)
+        post.on('loadGame',this.loadGame)
         post.on('resize',this.onResize)
     }
 
@@ -151,9 +152,9 @@ Online = (function ()
         }
         console.log(`▸ connect to ${this.activeGames.length} active games`)
         var list = _k_.list(this.activeGames)
-        for (var _133_17_ = 0; _133_17_ < list.length; _133_17_++)
+        for (var _134_17_ = 0; _134_17_ < list.length; _134_17_++)
         {
-            game = list[_133_17_]
+            game = list[_134_17_]
             this.socket.emit('game/connect',{game_id:game.id,player_id:this.myUserId,chat:0})
         }
     }
@@ -216,9 +217,9 @@ Online = (function ()
 
         this.boards = {}
         var list = _k_.list(this.activeGames)
-        for (var _193_17_ = 0; _193_17_ < list.length; _193_17_++)
+        for (var _194_17_ = 0; _194_17_ < list.length; _194_17_++)
         {
-            game = list[_193_17_]
+            game = list[_194_17_]
             g = elem('div',{class:'game',parent:this.games})
             if (game.players.black.username !== 'monsterkodi')
             {

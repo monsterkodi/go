@@ -65,11 +65,18 @@ class Util
     @ogsMoves: (ogs, size) ->
         moves = []
         for o in ogs
-            moves.push pos:Util.alpha[o[0]]+(size-o[1]), color:['black''white'][moves.length%2]
+            pos = Util.ogsMove o, size
+            moves.push pos:pos, color:['black''white'][moves.length%2]
         moves.push pos:'next' color:['black''white'][moves.length%2]
         moves
         
-    @ogsMove: (ogs, size) -> Util.alpha[ogs[0]]+(size-ogs[1])
+    @ogsMove: (o, size) -> 
+        
+        if o[0] == -1 == o[1]
+            'pass'
+        else
+            Util.alpha[o[0]]+(size-o[1])
+            
     @toOGS: (pos, size) -> [Util.alpha.indexOf(pos[0]), size-int(pos[1..])]
         
     @iconUrl: (icon, size) ->

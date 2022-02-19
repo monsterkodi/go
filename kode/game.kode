@@ -87,6 +87,8 @@ function Game extends Score
     
     play: (p) ->
 
+        log 'game.play' p
+        
         color = @nextColor()
         delete @lastCaptures
                     

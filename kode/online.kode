@@ -23,7 +23,8 @@ function Online
         @postSecret()
                      
         post.on 'submitMove' @submitMove
-        post.on 'resize' @onResize
+        post.on 'loadGame'   @loadGame
+        post.on 'resize'     @onResize
         
     submitMove: (gameId, pos) =>
         move = toOGS pos, @boards[gameId].game.size

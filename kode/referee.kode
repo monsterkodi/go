@@ -140,7 +140,7 @@ function Referee
     playerMove: (p, player) =>
         
         if @game.info.id and @game.players[stoneColor[@game.stoneAt(p)]] == player
-            log 'already moved!' p, player
+            post.emit 'loadGame' @game.info.id
             return
         
         if @game.paused
@@ -246,12 +246,13 @@ function Referee
             @tree.navigate action
         else
             post.emit 'tree'
+        info = @game.info
         @game = new Game @board, @black, @white, @handicap
+        @game.info = info
         @game.paused = true
         @board.game = @game
         @board.tree = @tree
-        mh = @tree.moveHistory()
-        @game.replay mh
+        @game.replay @tree.moveHistory()
             
     #       000  000   000  00     00  00000000   
     #       000  000   000  000   000  000   000  

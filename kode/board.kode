@@ -247,6 +247,8 @@ function Board
             hvr.style.borderRadius = "#{0.5*@div.getBoundingClientRect().height/(@size+1)}px"
         
     onMouseDown: (event) =>
+        
+        return if event.button != 0
 
         nextColor = @game.nextColor()
         return if not @game.paused and @game.players[nextColor] in ['gnu''leelaz''katago''hara']

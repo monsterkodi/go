@@ -171,7 +171,7 @@ Referee = (function ()
 
         if (this.game.info.id && this.game.players[stoneColor[this.game.stoneAt(p)]] === player)
         {
-            console.log('already moved!',p,player)
+            post.emit('loadGame',this.game.info.id)
             return
         }
         if (this.game.paused)
@@ -286,7 +286,7 @@ Referee = (function ()
 
     Referee.prototype["navigate"] = function (action)
     {
-        var mh
+        var info
 
         this.game.paused = true
         if (this.game.start())
@@ -301,17 +301,18 @@ Referee = (function ()
         {
             post.emit('tree')
         }
+        info = this.game.info
         this.game = new Game(this.board,this.black,this.white,this.handicap)
+        this.game.info = info
         this.game.paused = true
         this.board.game = this.game
         this.board.tree = this.tree
-        mh = this.tree.moveHistory()
-        return this.game.replay(mh)
+        return this.game.replay(this.tree.moveHistory())
     }
 
     Referee.prototype["jumpToStart"] = function ()
     {
-        var _266_20_, _267_20_
+        var _267_20_, _268_20_
 
         if (this.game.start())
         {

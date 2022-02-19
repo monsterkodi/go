@@ -60,22 +60,30 @@ class Util
 
     static ogsMoves (ogs, size)
     {
-        var moves, o
+        var moves, o, pos
 
         moves = []
         var list = _k_.list(ogs)
         for (var _67_14_ = 0; _67_14_ < list.length; _67_14_++)
         {
             o = list[_67_14_]
-            moves.push({pos:Util.alpha[o[0]] + (size - o[1]),color:['black','white'][moves.length % 2]})
+            pos = Util.ogsMove(o,size)
+            moves.push({pos:pos,color:['black','white'][moves.length % 2]})
         }
         moves.push({pos:'next',color:['black','white'][moves.length % 2]})
         return moves
     }
 
-    static ogsMove (ogs, size)
+    static ogsMove (o, size)
     {
-        return Util.alpha[ogs[0]] + (size - ogs[1])
+        if ((o[0] === -1 && -1 === o[1]))
+        {
+            return 'pass'
+        }
+        else
+        {
+            return Util.alpha[o[0]] + (size - o[1])
+        }
     }
 
     static toOGS (pos, size)
