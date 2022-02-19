@@ -92,10 +92,8 @@ function Tree
             'leftup'    ➜ @navigateLeftUp()
             'rightdown' ➜ @navigateRightDown()
         
-        # log 'nav' dir if not global.test
         log g2('nav'), b7 dir if global.test
         log @toColors() if global.test
-        # log @toString()
         
     navigateLeftUp: ->
         
@@ -126,7 +124,6 @@ function Tree
             if tr.cursor.mvi < tr.moves.length-1
                 tr.navigateDown()
         else if @cursor.mvi < @moves.length-1
-            # if @moves[-1].pos != 'next' or @cursor.mvi < @moves.length-2
             @cursor.mvi++
             @cursorChanged()
 
@@ -566,9 +563,7 @@ function Tree
     
     save: -> window.stash.set 'tree' @toPOD()
     load: (pod) -> 
-        # log pod
         @fromPOD pod
-        # log @toString()
         post.emit 'tree'
             
 module.exports = Tree

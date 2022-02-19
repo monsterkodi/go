@@ -91,7 +91,7 @@ Grid = (function ()
     {
         var c, r
 
-        var _78_14_ = this.rowCol(x,y); r = _78_14_[0]; c = _78_14_[1]
+        var _77_14_ = this.rowCol(x,y); r = _77_14_[0]; c = _77_14_[1]
 
         if ((r != null))
         {
@@ -105,10 +105,10 @@ Grid = (function ()
 
         if (!(s != null))
         {
-            var _89_29_ = [y,undefined]; s = _89_29_[0]; y = _89_29_[1]
+            var _88_29_ = [y,undefined]; s = _88_29_[0]; y = _88_29_[1]
 
         }
-        var _91_14_ = this.rowCol(x,y); r = _91_14_[0]; c = _91_14_[1]
+        var _90_14_ = this.rowCol(x,y); r = _90_14_[0]; c = _90_14_[1]
 
         if ((r != null))
         {
@@ -154,11 +154,11 @@ Grid = (function ()
         }
         this.size = spl.length
         this.clear()
-        for (var _124_17_ = y = 0, _124_21_ = this.size; (_124_17_ <= _124_21_ ? y < this.size : y > this.size); (_124_17_ <= _124_21_ ? ++y : --y))
+        for (var _123_17_ = y = 0, _123_21_ = this.size; (_123_17_ <= _123_21_ ? y < this.size : y > this.size); (_123_17_ <= _123_21_ ? ++y : --y))
         {
             if (y < spl.length)
             {
-                for (var _126_25_ = x = 0, _126_29_ = this.size; (_126_25_ <= _126_29_ ? x < this.size : x > this.size); (_126_25_ <= _126_29_ ? ++x : --x))
+                for (var _125_25_ = x = 0, _125_29_ = this.size; (_125_25_ <= _125_29_ ? x < this.size : x > this.size); (_125_25_ <= _125_29_ ? ++x : --x))
                 {
                     if (x * 2 < spl[y].length)
                     {
@@ -185,7 +185,7 @@ Grid = (function ()
             row = list[ri]
             s += '\n│ '
             s += (            (function (o) {
-                var r_143_22_ = _k_.each_r(o)
+                var r_142_22_ = _k_.each_r(o)
                 for (var k in o)
                 {   
                     var m = ((function (v)
@@ -194,10 +194,10 @@ Grid = (function ()
                 }).bind(this))(o[k])
                     if (m != null)
                     {
-                        r_143_22_[k] = m
+                        r_142_22_[k] = m
                     }
                 }
-                return typeof o == 'string' ? r_143_22_.join('') : r_143_22_
+                return typeof o == 'string' ? r_142_22_.join('') : r_142_22_
             })(row)).join('')
             s += '│'
             if (legend)
@@ -210,7 +210,7 @@ Grid = (function ()
         if (legend)
         {
             s += '\n ' + (function (o) {
-                var r_149_42_ = _k_.each_r(o)
+                var r_148_42_ = _k_.each_r(o)
                 for (var k in o)
                 {   
                     var m = ((function (v)
@@ -219,10 +219,10 @@ Grid = (function ()
                 }).bind(this))(o[k])
                     if (m != null)
                     {
-                        r_149_42_[k] = m
+                        r_148_42_[k] = m
                     }
                 }
-                return typeof o == 'string' ? r_149_42_.join('') : r_149_42_
+                return typeof o == 'string' ? r_148_42_.join('') : r_148_42_
             })(alpha.slice(0, typeof this.size === 'number' ? this.size : -1))
         }
         return s
@@ -239,7 +239,7 @@ Grid = (function ()
             row = list[ri]
             s += '\n' + _k_.w2('│ ')
             s += (            (function (o) {
-                var r_157_22_ = _k_.each_r(o)
+                var r_156_22_ = _k_.each_r(o)
                 for (var k in o)
                 {   
                     var m = ((function (v)
@@ -248,10 +248,10 @@ Grid = (function ()
                 }).bind(this))(o[k])
                     if (m != null)
                     {
-                        r_157_22_[k] = m
+                        r_156_22_[k] = m
                     }
                 }
-                return typeof o == 'string' ? r_157_22_.join('') : r_157_22_
+                return typeof o == 'string' ? r_156_22_.join('') : r_156_22_
             })(row)).join('')
             s += _k_.w2('│')
             if (legend)
@@ -264,7 +264,7 @@ Grid = (function ()
         if (legend)
         {
             s += '\n ' + _k_.w3(            (function (o) {
-                var r_163_45_ = _k_.each_r(o)
+                var r_162_45_ = _k_.each_r(o)
                 for (var k in o)
                 {   
                     var m = ((function (v)
@@ -273,10 +273,10 @@ Grid = (function ()
                 }).bind(this))(o[k])
                     if (m != null)
                     {
-                        r_163_45_[k] = m
+                        r_162_45_[k] = m
                     }
                 }
-                return typeof o == 'string' ? r_163_45_.join('') : r_163_45_
+                return typeof o == 'string' ? r_162_45_.join('') : r_162_45_
             })(alpha.slice(0, typeof this.size === 'number' ? this.size : -1)))
         }
         return s

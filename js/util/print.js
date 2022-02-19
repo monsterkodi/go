@@ -236,7 +236,7 @@ Print = (function ()
         s3 = this.grpsString.apply(this,this.grps).split('\n')
         pl = this.size * 2 + 6
         fs = [_k_.w2(_k_.rpad(pl,' areas') + _k_.rpad(pl,' chains') + _k_.rpad(pl,' groups'))]
-        for (var _137_17_ = i = 0, _137_21_ = s1.length; (_137_17_ <= _137_21_ ? i < s1.length : i > s1.length); (_137_17_ <= _137_21_ ? ++i : --i))
+        for (var _136_17_ = i = 0, _136_21_ = s1.length; (_136_17_ <= _136_21_ ? i < s1.length : i > s1.length); (_136_17_ <= _136_21_ ? ++i : --i))
         {
             spc = _k_.lpad(ml - bd[i].length,'')
             fs.push(s1[i] + spc + s2[i] + spc + s3[i])
@@ -259,7 +259,7 @@ Print = (function ()
         })).split('\n')
         pl = this.size * 2 + 6
         fs = [_k_.w2(_k_.rpad(pl,' color') + _k_.rpad(pl,' dead') + _k_.rpad(pl,' alive'))]
-        for (var _159_17_ = i = 0, _159_21_ = as.length; (_159_17_ <= _159_21_ ? i < as.length : i > as.length); (_159_17_ <= _159_21_ ? ++i : --i))
+        for (var _158_17_ = i = 0, _158_21_ = as.length; (_158_17_ <= _158_21_ ? i < as.length : i > as.length); (_158_17_ <= _158_21_ ? ++i : --i))
         {
             spc = _k_.lpad(ml - bd[i].length,'')
             fs.push(as[i] + spc + gs[i] + spc + cs[i])

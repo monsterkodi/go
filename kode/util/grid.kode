@@ -64,7 +64,6 @@ function Grid
         if 0 <= c < @size and 0 <= r < @size
             [r,c]
         else
-            # log 'empty' x, y, r, c
             []
 
     #  0000000   000000000  
@@ -76,7 +75,7 @@ function Grid
     at: (x,y) ->
         
         [r,c] = @rowCol x,y
-        if r? then @rows[r][c] #else stone.empty 
+        if r? then @rows[r][c]
         
     #  0000000  00000000  000000000  
     # 000       000          000     

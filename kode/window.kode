@@ -108,8 +108,6 @@ function MainWin extends win
         tm = elem 'div' class:'gameInfoCenter'      parent:td
         tr = elem 'div' class:'gameInfoRight white' parent:td
                 
-        # log 'captures' game.captures, game.info.score
-        
         mov = black:'' white:''
         if game.moves.singlePass()
             mov[game.lastColor()] = 'pass'

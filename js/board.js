@@ -623,13 +623,13 @@ Board = (function ()
         s = this.divSize / (this.size + 1)
         s = _k_.min(15,s / 6)
         var list = ['black','white']
-        for (var _495_18_ = 0; _495_18_ < list.length; _495_18_++)
+        for (var _494_18_ = 0; _494_18_ < list.length; _494_18_++)
         {
-            color = list[_495_18_]
+            color = list[_494_18_]
             var list1 = _k_.list(this.game.allStones(color))
-            for (var _496_19_ = 0; _496_19_ < list1.length; _496_19_++)
+            for (var _495_19_ = 0; _495_19_ < list1.length; _495_19_++)
             {
-                st = list1[_496_19_]
+                st = list1[_495_19_]
                 c = this.game.coord(st)
                 libs = this.game.liberties(c)
                 if (libs === 1 && this.show.territory)
@@ -661,15 +661,15 @@ Board = (function ()
                 s /= 4
                 s = s.toFixed(2)
                 var list = _k_.list(this.game.areas)
-                for (var _523_22_ = 0; _523_22_ < list.length; _523_22_++)
+                for (var _522_22_ = 0; _522_22_ < list.length; _522_22_++)
                 {
-                    a = list[_523_22_]
+                    a = list[_522_22_]
                     if (_k_.in(a.color,'wbWB'))
                     {
                         var list1 = _k_.list(a.posl)
-                        for (var _525_30_ = 0; _525_30_ < list1.length; _525_30_++)
+                        for (var _524_30_ = 0; _524_30_ < list1.length; _524_30_++)
                         {
-                            p = list1[_525_30_]
+                            p = list1[_524_30_]
                             e = elem('div',{class:`eye ${a.color}`,parent:this.ter})
                             r = this.coordToPrcnt(this.game.coord(p))
                             e.style = `left:${r.x}%; top:${r.y}%; width:${s}px; height:${s}px; border-radius:${s}px;`
@@ -677,15 +677,15 @@ Board = (function ()
                     }
                 }
                 var list2 = _k_.list(this.game.grps)
-                for (var _530_22_ = 0; _530_22_ < list2.length; _530_22_++)
+                for (var _529_22_ = 0; _529_22_ < list2.length; _529_22_++)
                 {
-                    g = list2[_530_22_]
+                    g = list2[_529_22_]
                     if (g.state === 'dead')
                     {
                         var list3 = _k_.list(g.posl)
-                        for (var _532_30_ = 0; _532_30_ < list3.length; _532_30_++)
+                        for (var _531_30_ = 0; _531_30_ < list3.length; _531_30_++)
                         {
-                            p = list3[_532_30_]
+                            p = list3[_531_30_]
                             e = elem('div',{class:`eye ${opponent[stoneColor[g.stone]][0]}`,parent:this.ter})
                             r = this.coordToPrcnt(this.game.coord(p))
                             e.style = `left:${r.x}%; top:${r.y}%; width:${s}px; height:${s}px; border-radius:${s}px;`

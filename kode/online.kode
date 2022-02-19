@@ -187,8 +187,6 @@ function Online
                 
         @get path:"/api/v1/games/#{game.id}" cb: (g) =>
 
-            # log 'renderGame' noon g
-            
             features = 
                 coordinates: false
                 liberties:   false
@@ -225,21 +223,16 @@ function Online
     
     loadGame: (g) =>
         
-        # log noon g
-        
         @referee.newGame
             black:    g.gamedata.players.black.username
             white:    g.gamedata.players.white.username
             size:     g.gamedata.width
             handicap: g.gamedata.handicap
             
-        # log noon g.gamedata.moves
-        # log noon g
         moves = ogsMoves g.gamedata.moves, g.gamedata.height
         @referee.game.paused = true
         @referee.game.replay moves, true
         @referee.tree.replay moves
-        # log noon moves
         
     # 00000000    0000000    0000000  000000000  
     # 000   000  000   000  000          000     

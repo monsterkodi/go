@@ -228,7 +228,7 @@ Referee = (function ()
 
     Referee.prototype["undo"] = function ()
     {
-        var m, _197_15_, _207_20_, _208_20_
+        var m, _197_15_, _205_20_, _206_20_
 
         if (this.game.start())
         {
@@ -255,7 +255,7 @@ Referee = (function ()
 
     Referee.prototype["redo"] = function ()
     {
-        var move, _220_20_, _221_20_
+        var move, _217_20_, _218_20_
 
         if (_k_.empty(this.redos))
         {
@@ -266,7 +266,6 @@ Referee = (function ()
             this.navigate('down')
         }
         move = this.redos.shift()
-        console.log('redo',move)
         this.game.play(move.pos)
         this.tree.addMove(move.pos,this.game.lastCaptures)
         ;(this.compi.black != null ? this.compi.black.send(`play ${move.color} ${move.pos}`) : undefined)
@@ -305,7 +304,7 @@ Referee = (function ()
 
     Referee.prototype["jumpToStart"] = function ()
     {
-        var _261_20_, _262_20_
+        var _255_20_, _256_20_
 
         if (this.game.start())
         {

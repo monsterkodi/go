@@ -95,7 +95,6 @@ function Score extends Calc
     weaklings: ->
         
         for g in @grps
-            # if g.state not in ['alive' 'dead']
             if g.state not in ['dead']
                 if g.libs == 1
                     @deadGroups [g], 'weakling 1 lib'
@@ -345,8 +344,6 @@ function Score extends Calc
                     if not @looseChainConnection ch
                         @deadChains [ch], 'only 2 libs!'
                         return
-                    # else
-                        # log '2 libs but looseChainConnection' @chains.indexOf(ch), ch
                     
                 if ch.libs < 5 and ch.areas.length == 1
                     if @deadShape @areas[ch.areas[0]]

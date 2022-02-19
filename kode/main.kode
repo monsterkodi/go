@@ -21,7 +21,7 @@ class Main extends app
         super
             dir:            __dirname
             pkg:            require '../package.json'
-            dirs:           ['../pug' '../styl'] # watch pug and styl
+            dirs:           ['../pug' '../styl' 'bot' 'util'] # watch pug and styl
             index:          'index.html'
             icon:           '../img/app.ico'
             about:          '../img/about.png'

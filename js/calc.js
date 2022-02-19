@@ -657,9 +657,9 @@ Calc = (function ()
 
         color = (color != null ? color : this.nextColor())
         l = []
-        for (var _373_17_ = y = 0, _373_21_ = this.size; (_373_17_ <= _373_21_ ? y < this.size : y > this.size); (_373_17_ <= _373_21_ ? ++y : --y))
+        for (var _371_17_ = y = 0, _371_21_ = this.size; (_371_17_ <= _371_21_ ? y < this.size : y > this.size); (_371_17_ <= _371_21_ ? ++y : --y))
         {
-            for (var _374_21_ = x = 0, _374_25_ = this.size; (_374_21_ <= _374_25_ ? x < this.size : x > this.size); (_374_21_ <= _374_25_ ? ++x : --x))
+            for (var _372_21_ = x = 0, _372_25_ = this.size; (_372_21_ <= _372_25_ ? x < this.size : x > this.size); (_372_21_ <= _372_25_ ? ++x : --x))
             {
                 if (this.legal(color,[x,y]))
                 {
@@ -676,9 +676,9 @@ Calc = (function ()
 
         captures = []
         var list = _k_.list(this.attachedGroups(p,opponent[color]))
-        for (var _382_14_ = 0; _382_14_ < list.length; _382_14_++)
+        for (var _380_14_ = 0; _380_14_ < list.length; _380_14_++)
         {
-            g = list[_382_14_]
+            g = list[_380_14_]
             n = this.poslNeighbors(g)
             if (this.poslEmpty(n).length < 2)
             {
@@ -693,9 +693,9 @@ Calc = (function ()
         var p, x, y
 
         p = []
-        for (var _397_17_ = y = 0, _397_21_ = this.size; (_397_17_ <= _397_21_ ? y < this.size : y > this.size); (_397_17_ <= _397_21_ ? ++y : --y))
+        for (var _395_17_ = y = 0, _395_21_ = this.size; (_395_17_ <= _395_21_ ? y < this.size : y > this.size); (_395_17_ <= _395_21_ ? ++y : --y))
         {
-            for (var _398_21_ = x = 0, _398_25_ = this.size; (_398_21_ <= _398_25_ ? x < this.size : x > this.size); (_398_21_ <= _398_25_ ? ++x : --x))
+            for (var _396_21_ = x = 0, _396_25_ = this.size; (_396_21_ <= _396_25_ ? x < this.size : x > this.size); (_396_21_ <= _396_25_ ? ++x : --x))
             {
                 p.push(alpha[x] + (this.size - y))
             }
@@ -734,19 +734,19 @@ Calc = (function ()
         var cn, oc, on
 
         var list = _k_.list(this.chains)
-        for (var _426_15_ = 0; _426_15_ < list.length; _426_15_++)
+        for (var _424_15_ = 0; _424_15_ < list.length; _424_15_++)
         {
-            oc = list[_426_15_]
+            oc = list[_424_15_]
             if (oc !== ch && oc.stone === ch.stone)
             {
                 var list1 = _k_.list(ch.neighbors)
-                for (var _428_23_ = 0; _428_23_ < list1.length; _428_23_++)
+                for (var _426_23_ = 0; _426_23_ < list1.length; _426_23_++)
                 {
-                    cn = list1[_428_23_]
+                    cn = list1[_426_23_]
                     var list2 = _k_.list(oc.neighbors)
-                    for (var _429_27_ = 0; _429_27_ < list2.length; _429_27_++)
+                    for (var _427_27_ = 0; _427_27_ < list2.length; _427_27_++)
                     {
-                        on = list2[_429_27_]
+                        on = list2[_427_27_]
                         if (cn === on && stone.empty === this.stoneAt(on))
                         {
                             return true
@@ -754,23 +754,23 @@ Calc = (function ()
                     }
                 }
                 var list3 = _k_.list(ch.diagonals)
-                for (var _433_23_ = 0; _433_23_ < list3.length; _433_23_++)
+                for (var _431_23_ = 0; _431_23_ < list3.length; _431_23_++)
                 {
-                    cn = list3[_433_23_]
+                    cn = list3[_431_23_]
                     var list4 = _k_.list(oc.neighbors)
-                    for (var _434_27_ = 0; _434_27_ < list4.length; _434_27_++)
+                    for (var _432_27_ = 0; _432_27_ < list4.length; _432_27_++)
                     {
-                        on = list4[_434_27_]
+                        on = list4[_432_27_]
                         if (cn === on && stone.empty === this.stoneAt(on))
                         {
                             var list5 = _k_.list(ch.neighbors)
-                            for (var _436_35_ = 0; _436_35_ < list5.length; _436_35_++)
+                            for (var _434_35_ = 0; _434_35_ < list5.length; _434_35_++)
                             {
-                                cn = list5[_436_35_]
+                                cn = list5[_434_35_]
                                 var list6 = _k_.list(oc.diagonals)
-                                for (var _437_39_ = 0; _437_39_ < list6.length; _437_39_++)
+                                for (var _435_39_ = 0; _435_39_ < list6.length; _435_39_++)
                                 {
-                                    on = list6[_437_39_]
+                                    on = list6[_435_39_]
                                     if (cn === on && stone.empty === this.stoneAt(on))
                                     {
                                         return true
@@ -790,9 +790,9 @@ Calc = (function ()
 
         s = stone[color]
         l = []
-        for (var _451_17_ = y = 0, _451_21_ = this.size; (_451_17_ <= _451_21_ ? y < this.size : y > this.size); (_451_17_ <= _451_21_ ? ++y : --y))
+        for (var _449_17_ = y = 0, _449_21_ = this.size; (_449_17_ <= _449_21_ ? y < this.size : y > this.size); (_449_17_ <= _449_21_ ? ++y : --y))
         {
-            for (var _452_21_ = x = 0, _452_25_ = this.size; (_452_21_ <= _452_25_ ? x < this.size : x > this.size); (_452_21_ <= _452_25_ ? ++x : --x))
+            for (var _450_21_ = x = 0, _450_25_ = this.size; (_450_21_ <= _450_25_ ? x < this.size : x > this.size); (_450_21_ <= _450_25_ ? ++x : --x))
             {
                 if (s === this.stoneAt(x,y))
                 {

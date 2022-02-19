@@ -362,8 +362,6 @@ function Calc extends Print
         fr = @freedoms color, c
         mc = @fastCapture @pos(c), color
         lg = (fr or mc.length) and @stoneAt(c) == stone.empty
-        # if not lg
-            # log color, c, fr, mc, @stoneAt c
         mc.length ? mc : lg
         
     all_legal: (color) ->

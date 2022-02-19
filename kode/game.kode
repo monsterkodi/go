@@ -38,7 +38,6 @@ function Game extends Score
         moves = moves.split ' '
         
         g = new Game size:19 'sgf' 'sgf' 0
-
         g.addMove m for m in moves
         g
                 
@@ -151,14 +150,12 @@ function Game extends Score
         @calcGroups()
         pl = []
         for dead in @grps.filter (g) -> g.libs == 0 and g.stone == s
-            # log 'game.capture' color, dead.posl.length
             pl = pl.concat dead.posl
             @removeStones pl
         pl
 
     addMove: (p) ->
 
-        # ● addMove
         color = @nextColor()
                     
         if p in ['pass' 'resign']

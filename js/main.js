@@ -23,7 +23,7 @@ class Main extends app
 {
     constructor ()
     {
-        super({dir:__dirname,pkg:require('../package.json'),dirs:['../pug','../styl'],index:'index.html',icon:'../img/app.ico',about:'../img/about.png',prefsSeperator:'▸',width:1024,height:768,minWidth:800,minHeight:600})
+        super({dir:__dirname,pkg:require('../package.json'),dirs:['../pug','../styl','bot','util'],index:'index.html',icon:'../img/app.ico',about:'../img/about.png',prefsSeperator:'▸',width:1024,height:768,minWidth:800,minHeight:600})
     
         this.onWinReady = this.onWinReady.bind(this)
         this.onWinResize = this.onWinResize.bind(this)

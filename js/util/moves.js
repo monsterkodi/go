@@ -111,28 +111,28 @@ Moves = (function ()
 
     Moves.prototype["lastIsPass"] = function ()
     {
-        var _53_26_
+        var _52_26_
 
         return (this.last() != null ? this.last().pos : undefined) === 'pass'
     }
 
     Moves.prototype["singlePass"] = function ()
     {
-        var _54_26_
+        var _53_26_
 
         return (this.last() != null ? this.last().pos : undefined) === 'pass' && (this.m.slice(-2,-1)[0] != null ? this.m.slice(-2,-1)[0].pos : undefined) !== 'pass'
     }
 
     Moves.prototype["doublePass"] = function ()
     {
-        var _55_26_
+        var _54_26_
 
         return ((this.last() != null ? this.last().pos : undefined) === 'pass' && 'pass' === (this.m.slice(-2,-1)[0] != null ? this.m.slice(-2,-1)[0].pos : undefined))
     }
 
     Moves.prototype["resigned"] = function ()
     {
-        var _56_26_
+        var _55_26_
 
         return (this.last() != null ? this.last().pos : undefined) === 'resign'
     }
@@ -144,9 +144,9 @@ Moves = (function ()
 
     Moves.prototype["end"] = function ()
     {
-        var _58_26_
+        var _57_26_
 
-        return ((_58_26_=this.ended) != null ? _58_26_ : false)
+        return ((_57_26_=this.ended) != null ? _57_26_ : false)
     }
 
     return Moves

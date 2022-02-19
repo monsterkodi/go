@@ -472,7 +472,6 @@ function Board
             l.style.width = "#{s}px"
             l.style.height = "#{s}px"
             l.style.borderRadius = "#{s}px"
-            # if stone.empty == @game.stoneAt m
             l.style.backgroundColor = color
             color = opponent[color]
         

@@ -202,8 +202,6 @@ function Referee
         @game.undoMove m
         @tree.undoMove m
         
-        # log 'undo' @game.moves, @redos
-        
         @compi.black?.undo()
         @compi.white?.undo()
             
@@ -214,7 +212,6 @@ function Referee
             @navigate 'down'
         
         move = @redos.shift()
-        log 'redo' move
         @game.play move.pos
         @tree.addMove move.pos, @game.lastCaptures
         @compi.black?.send "play #{move.color} #{move.pos}"
@@ -232,7 +229,6 @@ function Referee
     
     navigate: (action) =>
         
-        # ●▸ navigate
         @game.paused = true
         return if @game.start()
         if action != 'select'
@@ -244,9 +240,7 @@ function Referee
         @board.game = @game
         @board.tree = @tree
         mh = @tree.moveHistory()
-        # log mh
         @game.replay mh
-        # ●▪ navigate
             
     #       000  000   000  00     00  00000000   
     #       000  000   000  000   000  000   000  

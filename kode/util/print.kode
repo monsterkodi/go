@@ -113,7 +113,6 @@ function Print
         for ch in @chains
             if 0 <= (idx = [].slice.call(arguments, 0).indexOf(ch))
                 for cp in ch.posl
-                    # c = arguments[idx].stone == '○' ? '◻' : '◼'
                     c = @chains.indexOf ch
                     grid.set cp, @rainbow idx, short[c]
         grid.toAnsi 1
