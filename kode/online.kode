@@ -71,14 +71,13 @@ function Online
             transports: ["websocket"]
             upgrade: false
             
-        # @socket.on 'HUP' => log 'HUP'
         @socket.on 'net/pong' pong
         @socket.on 'connect_error'       => log 'on connect_error'
         @socket.on 'disconnect' (reason) => log 'on disconnect' reason
-        @socket.on 'hostinfo' (hostinfo) => log 'on hostinfo' hostinfo
+        # @socket.on 'hostinfo' (hostinfo) => log 'on hostinfo' hostinfo
         
         @socket.on 'connect'  ping
-        @socket.on 'connect'  clientInfo
+        # @socket.on 'connect'  clientInfo
         @socket.on 'connect'  authenticate
         @socket.on 'connect' => @connectGames()
         
@@ -86,8 +85,22 @@ function Online
         @socket.on 'game/connect' (d) -> log 'game_connect!' d
         @socket.on 'game' (d) -> log 'game!' d
         
-        @socket.onAny (d) -> log 'on any' d
+        @socket.onAny => 
+            if arguments[0].startsWith 'game'
+                @onGameData.apply @, arguments
+            else if arguments[0] not in ['active-bots' 'net/pong']
+                log 'on any' arguments
+                
+    onGameData: (channel, arg1, arg2)->
         
+        log "game data [#{channel}]" arg1, arg2
+        
+    #  0000000   0000000   000   000  000   000  00000000   0000000  000000000         0000000    0000000   00     00  00000000   0000000  
+    # 000       000   000  0000  000  0000  000  000       000          000           000        000   000  000   000  000       000       
+    # 000       000   000  000 0 000  000 0 000  0000000   000          000           000  0000  000000000  000000000  0000000   0000000   
+    # 000       000   000  000  0000  000  0000  000       000          000           000   000  000   000  000 0 000  000            000  
+    #  0000000   0000000   000   000  000   000  00000000   0000000     000            0000000   000   000  000   000  00000000  0000000   
+    
     connectGames: =>
         
         if empty @activeGames
@@ -98,11 +111,10 @@ function Online
         log "connect to #{@activeGames.length} active games"
         for game in @activeGames
             log 'emit game/connect' game.id
-            @socket.emit 'game/connect', {
+            @socket.emit 'game/connect',
                 game_id:    game.id
                 player_id:  1110858
                 chat:       0
-                }, (ack) -> log 'ack game' ack
                         
     showGames: =>
             
@@ -132,7 +144,6 @@ function Online
                 if window.stash.get 'games' true
                     @showGames()
                 @get path:'/api/v1/ui/config' cb: (d) =>
-                    # log 'ui/config' noon d
                     @initSocket d
             else
                 log 'no token!'

@@ -1,6 +1,6 @@
 // monsterkodi/kode 0.237.0
 
-var _k_ = {empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, max: function () { m = -Infinity; for (a of arguments) { if (a instanceof Array) {m = _k_.max.apply(_k_.max,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n > m ? n : m}}}; return m }, isFunc: function (o) {return typeof o === 'function'}}
+var _k_ = {in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, max: function () { m = -Infinity; for (a of arguments) { if (a instanceof Array) {m = _k_.max.apply(_k_.max,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n > m ? n : m}}}; return m }, isFunc: function (o) {return typeof o === 'function'}}
 
 var Board, elem, Game, iconUrl, io, ogsMoves, Online, open, post, rank, request, slash, WebSocket
 
@@ -82,12 +82,7 @@ Online = (function ()
         {
             console.log('on disconnect',reason)
         }).bind(this))
-        this.socket.on('hostinfo',(function (hostinfo)
-        {
-            console.log('on hostinfo',hostinfo)
-        }).bind(this))
         this.socket.on('connect',ping)
-        this.socket.on('connect',clientInfo)
         this.socket.on('connect',authenticate)
         this.socket.on('connect',(function ()
         {
@@ -105,10 +100,22 @@ Online = (function ()
         {
             console.log('game!',d)
         })
-        return this.socket.onAny(function (d)
+        return this.socket.onAny((function ()
         {
-            console.log('on any',d)
-        })
+            if (arguments[0].startsWith('game'))
+            {
+                return this.onGameData.apply(this,arguments)
+            }
+            else if (!(_k_.in(arguments[0],['active-bots','net/pong'])))
+            {
+                console.log('on any',arguments)
+            }
+        }).bind(this))
+    }
+
+    Online.prototype["onGameData"] = function (channel, arg1, arg2)
+    {
+        console.log(`game data [${channel}]`,arg1,arg2)
     }
 
     Online.prototype["connectGames"] = function ()
@@ -123,14 +130,11 @@ Online = (function ()
         }
         console.log(`connect to ${this.activeGames.length} active games`)
         var list = _k_.list(this.activeGames)
-        for (var _99_17_ = 0; _99_17_ < list.length; _99_17_++)
+        for (var _112_17_ = 0; _112_17_ < list.length; _112_17_++)
         {
-            game = list[_99_17_]
+            game = list[_112_17_]
             console.log('emit game/connect',game.id)
-            this.socket.emit('game/connect',{game_id:game.id,player_id:1110858,chat:0},function (ack)
-            {
-                console.log('ack game',ack)
-            })
+            this.socket.emit('game/connect',{game_id:game.id,player_id:1110858,chat:0})
         }
     }
 
@@ -197,9 +201,9 @@ Online = (function ()
 
         this.boards = []
         var list = _k_.list(this.activeGames)
-        for (var _171_17_ = 0; _171_17_ < list.length; _171_17_++)
+        for (var _182_17_ = 0; _182_17_ < list.length; _182_17_++)
         {
-            game = list[_171_17_]
+            game = list[_182_17_]
             g = elem('div',{class:'game',parent:this.games})
             if (game.players.black.username !== 'monsterkodi')
             {
@@ -381,9 +385,9 @@ Online = (function ()
         this.games.style.bottom = `${tb}px`
         this.games.style.left = `${rb}px`
         var list = _k_.list(this.boards)
-        for (var _333_14_ = 0; _333_14_ < list.length; _333_14_++)
+        for (var _344_14_ = 0; _344_14_ < list.length; _344_14_++)
         {
-            b = list[_333_14_]
+            b = list[_344_14_]
             b.div.style.width = `${w - 30}px`
             b.div.style.height = `${w - 30}px`
         }
