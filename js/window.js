@@ -158,6 +158,9 @@ MainWin = (function ()
             case 'forward':
                 return this.referee.navigate(action)
 
+            case 'delete':
+                return this.referee.delete()
+
             case 'undo':
                 return this.referee.undo()
 

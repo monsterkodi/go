@@ -273,6 +273,11 @@ Referee = (function ()
         return (this.compi.white != null ? this.compi.white.send(`play ${move.color} ${move.pos}`) : undefined)
     }
 
+    Referee.prototype["delete"] = function ()
+    {
+        return this.tree.deleteCursorMove()
+    }
+
     Referee.prototype["navigate"] = function (action)
     {
         var mh
@@ -300,7 +305,7 @@ Referee = (function ()
 
     Referee.prototype["jumpToStart"] = function ()
     {
-        var _257_20_, _258_20_
+        var _261_20_, _262_20_
 
         if (this.game.start())
         {

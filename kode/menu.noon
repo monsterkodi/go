@@ -54,7 +54,7 @@ game
     ---
     undo                    cmdctrl+z
     redo                    cmdctrl+shift+z
-    delete                  delete
+    delete                  backspace
     ----
     pass                    p
     resign                  r

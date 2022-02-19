@@ -315,6 +315,20 @@ function Tree
                 return cm
         if @cursor
             return @moves[@cursor.mvi]
+            
+    deleteCursorMove: ->
+        
+        if tr = @cursorTree()
+            tr.deleteCursorMove()
+        else if @cursor and @cursor.ali
+            if @cursor.mvi == 0
+                if @parent and @parent.cursor.ali
+                    @parent.moves[@parent.cursor.mvi].alt.splice @parent.cursor.ali-1, 1
+                    @parent.cursor.ali--
+            else
+                @moves = @moves.slice 0 @cursor.mvi
+                @cursor.mvi--
+            post?.emit 'tree'
         
     # 000   000   0000000   00000000   000   0000000   000000000  000   0000000   000   000   0000000  
     # 000   000  000   000  000   000  000  000   000     000     000  000   000  0000  000  000       

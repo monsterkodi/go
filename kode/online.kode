@@ -7,12 +7,12 @@
 ###
 
 { elem, noon, open, post, slash } = require 'kxk'
-{ request } = require 'https'
 { rank, ogsMoves, ogsMove, iconUrl } = require './util/util'
-WebSocket = require 'ws'
+{ request } = require 'https'
+{ io } = require 'socket.io-client'
+
 Board = require './board'
 Game = require './game'
-{ io } = require 'socket.io-client'
 
 function Online
 
@@ -47,7 +47,7 @@ function Online
             setTimeout ping, 10000
 
         authenticate = =>
-            log '▸ authenticate'
+            # log '▸ authenticate'
             @socket.emit 'authenticate',
                 auth:             config.chat_auth     
                 player_id:        config.user.id
@@ -83,8 +83,6 @@ function Online
             pos = ogsMove arg.move
             log 'pos' pos
             @boards[arg.game_id].game.play pos
-        # else
-            # log 'game data' msg, noon arg
         
     #  0000000   0000000   000   000  000   000  00000000   0000000  000000000         0000000    0000000   00     00  00000000   0000000  
     # 000       000   000  0000  000  0000  000  000       000          000           000        000   000  000   000  000       000       
@@ -95,13 +93,11 @@ function Online
     connectGames: =>
         
         if empty @activeGames
-            log 'no activeGames'
-            setTimeout @connectGames, 10000
+            setTimeout @connectGames, 5000
             return
             
         log "▸ connect to #{@activeGames.length} active games"
         for game in @activeGames
-            # log 'emit game/connect' game.id
             @socket.emit 'game/connect',
                 game_id:    game.id
                 player_id:  @myUserId
@@ -113,11 +109,7 @@ function Online
         @games.addEventListener 'mousewheel' @onMouseWheel, true
         @getGames()
         @onResize()
-        
-    onMouseWheel: (event) =>
-        
-        event.stopPropagation()
-        
+                
     #  0000000  00000000   0000000  00000000   00000000  000000000  
     # 000       000       000       000   000  000          000     
     # 0000000   0000000   000       0000000    0000000      000     
@@ -147,10 +139,7 @@ function Online
     
     getGames: (page=1) =>
 
-        # log 'games...' page
         # @get path:"/api/v1/ui/overview" cb: (d) =>
-            # log 'active games (overview):' d.active_games.length
-            # log 'overview' noon d
             
         @activeGames = []
         
@@ -338,4 +327,8 @@ function Online
             b.div.style.width  = "#{w-30}px"
             b.div.style.height = "#{w-30}px"
 
+    onMouseWheel: (event) => 
+        # prevent tree navigation when mouse wheeling over games list
+        event.stopPropagation()
+            
 module.exports = Online
