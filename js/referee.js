@@ -274,7 +274,8 @@ Referee = (function ()
 
     Referee.prototype["delete"] = function ()
     {
-        return this.tree.deleteCursorMove()
+        this.tree.deleteCursorMove()
+        return this.navigate('select')
     }
 
     Referee.prototype["navigate"] = function (action)
@@ -304,7 +305,7 @@ Referee = (function ()
 
     Referee.prototype["jumpToStart"] = function ()
     {
-        var _255_20_, _256_20_
+        var _262_20_, _263_20_
 
         if (this.game.start())
         {

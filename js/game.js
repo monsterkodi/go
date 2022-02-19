@@ -247,16 +247,14 @@ Game = (function ()
 
     Game.prototype["setStone"] = function (c, s)
     {
-        var _186_27_, _188_27_
-
         this.grid.set(c,s)
         if (s === stone.empty)
         {
-            return (typeof this.board.delStone === "function" ? this.board.delStone(c) : undefined)
+            return this.board.delStone(c)
         }
         else
         {
-            return (typeof this.board.addStone === "function" ? this.board.addStone(c,s) : undefined)
+            return this.board.addStone(c,s)
         }
     }
 

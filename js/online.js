@@ -104,7 +104,7 @@ Online = (function ()
         if (msg.endsWith('/move'))
         {
             console.log('new move',msg,arg.game_id,_k_.noon(arg))
-            pos = ogsMove(arg.move)
+            pos = ogsMove(arg.move,this.boards[arg.game_id].game.size)
             console.log('pos',pos)
             return this.boards[arg.game_id].game.play(pos)
         }
@@ -121,9 +121,9 @@ Online = (function ()
         }
         console.log(`▸ connect to ${this.activeGames.length} active games`)
         var list = _k_.list(this.activeGames)
-        for (var _100_17_ = 0; _100_17_ < list.length; _100_17_++)
+        for (var _106_17_ = 0; _106_17_ < list.length; _106_17_++)
         {
-            game = list[_100_17_]
+            game = list[_106_17_]
             this.socket.emit('game/connect',{game_id:game.id,player_id:this.myUserId,chat:0})
         }
     }
@@ -186,9 +186,9 @@ Online = (function ()
 
         this.boards = {}
         var list = _k_.list(this.activeGames)
-        for (var _162_17_ = 0; _162_17_ < list.length; _162_17_++)
+        for (var _166_17_ = 0; _166_17_ < list.length; _166_17_++)
         {
-            game = list[_162_17_]
+            game = list[_166_17_]
             g = elem('div',{class:'game',parent:this.games})
             if (game.players.black.username !== 'monsterkodi')
             {
@@ -248,9 +248,11 @@ Online = (function ()
                 }).bind(this)
             }).bind(this))(g))
             this.boards[g.id] = b
+            b.onResize()
             if (g.gamedata.clock.current_player === 1110858)
             {
                 b.div.style.border = '2px solid black'
+                b.div.style.borderRadius = '6px'
                 t = e.previousElementSibling
                 e.parentElement.insertBefore(e,e.parentElement.firstChild)
                 return t.parentElement.insertBefore(t,t.parentElement.firstChild)
@@ -355,7 +357,7 @@ Online = (function ()
 
     Online.prototype["onResize"] = function ()
     {
-        var b, br, i, rb, tb, w
+        var b, br, i, lb, tb, w
 
         if (!this.games)
         {
@@ -363,12 +365,20 @@ Online = (function ()
         }
         br = this.parent.getBoundingClientRect()
         tb = br.height / (this.referee.boardsize + 1) - 2
-        rb = tb
         w = _k_.max(128,(br.width - br.height) / 2 - tb)
+        lb = (br.width - br.height) / 2 - w
+        if ((br.width - br.height) / 2 < 128)
+        {
+            this.games.style.display = 'none'
+        }
+        else
+        {
+            this.games.style.display = 'initial'
+        }
         this.games.style.width = `${w}px`
         this.games.style.top = `${tb}px`
         this.games.style.bottom = `${tb}px`
-        this.games.style.left = `${rb}px`
+        this.games.style.left = `${lb}px`
         for (i in this.boards)
         {
             b = this.boards[i]

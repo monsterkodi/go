@@ -454,7 +454,7 @@ Tree = (function ()
 
     Tree.prototype["undoMove"] = function (m)
     {
-        var u
+        var u, _284_17_
 
         this.cursor.mvi--
         u = this.moves.pop()
@@ -462,7 +462,7 @@ Tree = (function ()
         {
             console.log('dafuk!')
         }
-        return (post != null ? post.emit('tree') : undefined)
+        return (typeof post.emit === "function" ? post.emit('tree') : undefined)
     }
 
     Tree.prototype["cursorTree"] = function ()
@@ -506,13 +506,13 @@ Tree = (function ()
 
     Tree.prototype["deleteCursorMove"] = function ()
     {
-        var tr
+        var tr, _328_21_
 
         if (tr = this.cursorTree())
         {
             return tr.deleteCursorMove()
         }
-        else if (this.cursor && this.cursor.ali)
+        else if (this.cursor && (this.parent || this.cursor.ali))
         {
             if (this.cursor.mvi === 0)
             {
@@ -527,7 +527,7 @@ Tree = (function ()
                 this.moves = this.moves.slice(0,this.cursor.mvi)
                 this.cursor.mvi--
             }
-            return (post != null ? post.emit('tree') : undefined)
+            return (typeof post.emit === "function" ? post.emit('tree') : undefined)
         }
     }
 

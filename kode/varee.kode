@@ -149,8 +149,13 @@ function Varee
         br = @parent.getBoundingClientRect()
 
         tb = br.height / (@boardsize+1) - 2
-        rb = tb
-        w  = max 0 (br.width - br.height)/2-tb
+        w  = max 128 (br.width - br.height)/2-tb
+        rb = (br.width - br.height)/2 - w
+        
+        if (br.width - br.height)/2 < 128
+            @div.style.display = 'none'
+        else
+            @div.style.display = 'initial'
         
         @div.style.width  = "#{w}px"
         @div.style.top    = "#{tb}px"

@@ -76,11 +76,17 @@ function Online
             else if msg not in ['active-bots' 'net/pong' 'score-estimator-enabled-state']
                 log 'on any' msg, noon arg
                 
+    #  0000000   000   000         0000000    0000000   00     00  00000000  
+    # 000   000  0000  000        000        000   000  000   000  000       
+    # 000   000  000 0 000        000  0000  000000000  000000000  0000000   
+    # 000   000  000  0000        000   000  000   000  000 0 000  000       
+    #  0000000   000   000         0000000   000   000  000   000  00000000  
+    
     onGameData: (msg, arg)->
         
         if msg.endsWith '/move'
             log 'new move' msg, arg.game_id, noon arg
-            pos = ogsMove arg.move
+            pos = ogsMove arg.move, @boards[arg.game_id].game.size
             log 'pos' pos
             @boards[arg.game_id].game.play pos
         
@@ -139,8 +145,6 @@ function Online
     
     getGames: (page=1) =>
 
-        # @get path:"/api/v1/ui/overview" cb: (d) =>
-            
         @activeGames = []
         
         @get path:"/api/v1/megames/?page=#{page}&ended__isnull=true&page_size=100" cb: (d) =>
@@ -207,9 +211,13 @@ function Online
             b.div.style.width  = "#{w-30}px"
             b.div.addEventListener 'click' ((g) => => @loadGame g) g
             @boards[g.id] = b
+            b.onResize()
+            
+    # sortGames: ->
             
             if g.gamedata.clock.current_player == 1110858
                 b.div.style.border = '2px solid black'
+                b.div.style.borderRadius = '6px'
                 # ugly hack to show 'your move' games on top:
                 t = e.previousElementSibling
                 e.parentElement.insertBefore e, e.parentElement.firstChild
@@ -308,13 +316,18 @@ function Online
         
         br = @parent.getBoundingClientRect()
         tb = br.height / (@referee.boardsize+1) - 2
-        rb = tb
         w  = max 128 (br.width - br.height)/2-tb
+        lb = (br.width - br.height)/2 - w
+
+        if (br.width - br.height)/2 < 128
+            @games.style.display = 'none'
+        else
+            @games.style.display = 'initial'
         
         @games.style.width  = "#{w}px"
         @games.style.top    = "#{tb}px"
         @games.style.bottom = "#{tb}px"
-        @games.style.left   = "#{rb}px"
+        @games.style.left   = "#{lb}px"
         
         for i,b of @boards
             b.div.style.width  = "#{w-30}px"

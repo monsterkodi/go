@@ -38,16 +38,12 @@ function Board
             @div.addEventListener 'mouseleave'    @onMouseLeave
             @parent.addEventListener 'mousewheel' @onMouseWheel
         
-        @height = 1000
-        @width  = @height
-        s = @height
-        d = s/(@size+1)
-        h = 97/(@size+1)
-
+        @canvas = elem 'canvas' class:'lines' parent:@div
+        
         @lines()
         @coordinates()
         
-        @stn = elem 'div' class:'stones'      parent:@div
+        @stn = elem 'div' class:'stones' parent:@div
         
         if @features.liberties  then @lib = elem 'div' class:'liberties'   parent:@div
         if @features.numbers    then @num = elem 'div' class:'numbers'     parent:@div
@@ -57,6 +53,7 @@ function Board
         @hlt = elem 'div' class:'highlts'     parent:@div
         
         if @features.hover
+            h = 97/(@size+1)
             @hvw = elem 'div' class:"hover white" parent:@hlt
             @hvb = elem 'div' class:"hover black" parent:@hlt
             @hvw.style = "width:#{h}%; height:#{h}%; display:none;" 
@@ -100,7 +97,14 @@ function Board
                 elem 'img' class:'stone' src:"../img/stone_white#{ci}.png" width:'auto' height:'1px' style:'left:0px; top:0px;' parent:prl
             elem 'img' class:'stone' src:"../img/stone_black.png" width:'auto' height:'1px' style:'left:0px; top:0px;' parent:prl
                         
-    onResize: => @scaleFonts()        
+    onResize: => 
+         
+        @divRect = @div.getBoundingClientRect()
+        @divSize = max @divRect.width, @divRect.height
+        
+        @lines()
+        @scaleFonts() 
+        @showLastMove()
         
     scaleFonts: ->
         
@@ -118,14 +122,16 @@ function Board
     
     lines: ->
         
-        s = @height*2
+        h = @div.getBoundingClientRect().height
+        s = h*2
         d = s/(@size+1)
         o = d
         
-        @canvas = elem 'canvas' class:'lines' height:s, width:s, parent:@div
+        @canvas.width = @canvas.height = s
+            
         @ctx = @canvas.getContext '2d'
         @ctx.strokeStyle = 'black'
-        @ctx.lineWidth   = 1.5
+        @ctx.lineWidth   = 1 #.5
         @ctx.fillStyle   = 'black'
                 
         for i in 0...@size
@@ -345,7 +351,7 @@ function Board
         
     delStone: (c) ->
 
-        while s = $ ".pos#{c[0]}_#{c[1]}"
+        while s = $ ".pos#{c[0]}_#{c[1]}" @div
             s.remove()
             
     addStone: (c, s=stone.black) ->

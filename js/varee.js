@@ -149,8 +149,16 @@ Varee = (function ()
 
         br = this.parent.getBoundingClientRect()
         tb = br.height / (this.boardsize + 1) - 2
-        rb = tb
-        w = _k_.max(0,(br.width - br.height) / 2 - tb)
+        w = _k_.max(128,(br.width - br.height) / 2 - tb)
+        rb = (br.width - br.height) / 2 - w
+        if ((br.width - br.height) / 2 < 128)
+        {
+            this.div.style.display = 'none'
+        }
+        else
+        {
+            this.div.style.display = 'initial'
+        }
         this.div.style.width = `${w}px`
         this.div.style.top = `${tb}px`
         this.div.style.bottom = `${tb}px`
