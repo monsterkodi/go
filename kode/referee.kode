@@ -8,7 +8,7 @@
 
 kxk = require 'kxk'
 { elem, post } = kxk
-{ opponent }   = require './util/util'
+{ opponent, stoneColor }   = require './util/util'
 
 SGF     = require './util/sgf'
 Leelaz  = require './bot/leelaz'
@@ -129,15 +129,19 @@ function Referee
         else if not @game.paused
             @compi[@game.nextColor()]?.genmove()
 
-    # 00     00   0000000   000   000  00000000  
-    # 000   000  000   000  000   000  000       
-    # 000000000  000   000   000 000   0000000   
-    # 000 0 000  000   000     000     000       
-    # 000   000   0000000       0      00000000  
-    
     genMove: -> @game.genmove @game.nextColor()
     
+    # 00000000   000       0000000   000   000  00000000  00000000   00     00   0000000   000   000  00000000  
+    # 000   000  000      000   000   000 000   000       000   000  000   000  000   000  000   000  000       
+    # 00000000   000      000000000    00000    0000000   0000000    000000000  000   000   000 000   0000000   
+    # 000        000      000   000     000     000       000   000  000 0 000  000   000     000     000       
+    # 000        0000000  000   000     000     00000000  000   000  000   000   0000000       0      00000000  
+    
     playerMove: (p, player) =>
+        
+        if @game.info.id and @game.players[stoneColor[@game.stoneAt(p)]] == player
+            log 'already moved!' p, player
+            return
         
         if @game.paused
             if player not in [@compi.black?.name, @compi.white?.name]

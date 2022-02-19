@@ -70,6 +70,7 @@ class Util
         moves
         
     @ogsMove: (ogs, size) -> Util.alpha[ogs[0]]+(size-ogs[1])
+    @toOGS: (pos, size) -> [Util.alpha.indexOf(pos[0]), size-int(pos[1..])]
         
     @iconUrl: (icon, size) ->
         

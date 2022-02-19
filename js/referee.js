@@ -2,13 +2,14 @@
 
 var _k_ = {empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}}
 
-var Board, elem, Game, GNU, Hara, Katago, kxk, Leelaz, opponent, post, Referee, SGF, Tree, Varee
+var Board, elem, Game, GNU, Hara, Katago, kxk, Leelaz, opponent, post, Referee, SGF, stoneColor, Tree, Varee
 
 kxk = require('kxk')
 elem = kxk.elem
 post = kxk.post
 
 opponent = require('./util/util').opponent
+stoneColor = require('./util/util').stoneColor
 
 SGF = require('./util/sgf')
 Leelaz = require('./bot/leelaz')
@@ -166,8 +167,13 @@ Referee = (function ()
 
     Referee.prototype["playerMove"] = function (p, player)
     {
-        var color, next, _143_42_, _143_62_, _150_38_, _150_58_, _165_27_, _166_28_, _167_27_, _168_28_
+        var color, next, _147_42_, _147_62_, _154_38_, _154_58_, _169_27_, _170_28_, _171_27_, _172_28_
 
+        if (this.game.info.id && this.game.players[stoneColor[this.game.stoneAt(p)]] === player)
+        {
+            console.log('already moved!',p,player)
+            return
+        }
         if (this.game.paused)
         {
             if (!(_k_.in(player,[(this.compi.black != null ? this.compi.black.name : undefined),(this.compi.white != null ? this.compi.white.name : undefined)])))
@@ -228,7 +234,7 @@ Referee = (function ()
 
     Referee.prototype["undo"] = function ()
     {
-        var m, _197_15_, _205_20_, _206_20_
+        var m, _201_15_, _209_20_, _210_20_
 
         if (this.game.start())
         {
@@ -244,7 +250,7 @@ Referee = (function ()
         }
         console.log('undo')
         this.game.paused = true
-        this.redos = ((_197_15_=this.redos) != null ? _197_15_ : [])
+        this.redos = ((_201_15_=this.redos) != null ? _201_15_ : [])
         m = this.game.moves.pop()
         this.redos.unshift(m)
         this.game.undoMove(m)
@@ -255,7 +261,7 @@ Referee = (function ()
 
     Referee.prototype["redo"] = function ()
     {
-        var move, _217_20_, _218_20_
+        var move, _221_20_, _222_20_
 
         if (_k_.empty(this.redos))
         {
@@ -305,7 +311,7 @@ Referee = (function ()
 
     Referee.prototype["jumpToStart"] = function ()
     {
-        var _262_20_, _263_20_
+        var _266_20_, _267_20_
 
         if (this.game.start())
         {

@@ -33,6 +33,7 @@ function Board
         
         if @features.hover
             @wheelAccum = x:0 y:0
+            @div.addEventListener 'dblclick'      @onDoubleClick
             @div.addEventListener 'mousemove'     @onMouseMove
             @div.addEventListener 'mousedown'     @onMouseDown
             @div.addEventListener 'mouseleave'    @onMouseLeave
@@ -71,7 +72,7 @@ function Board
         post.on 'variation' @onVariation
         post.on 'resize'    @onResize
         post.on 'tree'      @onTree
-        
+                
     remove: ->
         
         return if not @div
@@ -80,6 +81,7 @@ function Board
         post.off 'tree'      @onTree
         
         if @features.hover
+            @div.removeEventListener 'dblclick'      @onDoubleClick
             @div.removeEventListener 'mousemove'     @onMouseMove
             @div.removeEventListener 'mousedown'     @onMouseDown
             @div.removeEventListener 'mouseleave'    @onMouseLeave
@@ -259,7 +261,20 @@ function Board
                 post.emit 'altMove' p
             else
                 post.emit 'playerMove' p, 'human'
-        
+
+    onDoubleClick: (event) =>
+
+        lastColor = @game.lastColor()
+        if @game.info.id and @game.players[lastColor] == global.myUserName
+            c = @posAtEvent event
+            p = @game.pos [c.x, c.y]
+            if stoneColor[@game.stoneAt p] == lastColor
+                post.emit 'submitMove' @game.info.id, p
+            else
+                log 'not your stone at pos' p, c, @game.stoneAt p
+        else
+            log 'no id or wrong player' @game.info.id, lastColor, @game.players[lastColor]
+                        
     # 000   000  000   000  00000000  00000000  000      
     # 000 0 000  000   000  000       000       000      
     # 000000000  000000000  0000000   0000000   000      

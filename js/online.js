@@ -2,7 +2,7 @@
 
 var _k_ = {in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, noon: function (obj) { var pad = function (s, l) { while (s.length < l) { s += ' ' }; return s }; var esc = function (k, arry) { var es, sp; if (0 <= k.indexOf('\n')) { sp = k.split('\n'); es = sp.map(function (s) { return esc(s,arry) }); es.unshift('...'); es.push('...'); return es.join('\n') } if (k === '' || k === '...' || _k_.in(k[0],[' ','#','|']) || _k_.in(k[k.length - 1],[' ','#','|'])) { k = '|' + k + '|' } else if (arry && /  /.test(k)) { k = '|' + k + '|' }; return k }; var pretty = function (o, ind, seen) { var k, kl, l, v, mk = 4; if (Object.keys(o).length > 1) { for (k in o) { if (Object.hasOwn(o,k)) { kl = parseInt(Math.ceil((k.length + 2) / 4) * 4); mk = Math.max(mk,kl); if (mk > 32) { mk = 32; break } } } }; l = []; var keyValue = function (k, v) { var i, ks, s, vs; s = ind; k = esc(k,true); if (k.indexOf('  ') > 0 && k[0] !== '|') { k = `|${k}|` } else if (k[0] !== '|' && k[k.length - 1] === '|') { k = '|' + k } else if (k[0] === '|' && k[k.length - 1] !== '|') { k += '|' }; ks = pad(k,Math.max(mk,k.length + 2)); i = pad(ind + '    ',mk); s += ks; vs = toStr(v,i,false,seen); if (vs[0] === '\n') { while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) } }; s += vs; while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) }; return s }; for (k in o) { if (Object.hasOwn(o,k)) { l.push(keyValue(k,o[k])) } }; return l.join('\n') }; var toStr = function (o, ind = '', arry = false, seen = []) { var s, t, v; if (!(o != null)) { if (o === null) { return 'null' }; if (o === undefined) { return 'undefined' }; return '<?>' }; switch (t = typeof(o)) { case 'string': {return esc(o,arry)}; case 'object': { if (_k_.in(o,seen)) { return '<v>' }; seen.push(o); if ((o.constructor != null ? o.constructor.name : undefined) === 'Array') { s = ind !== '' && arry && '.' || ''; if (o.length && ind !== '') { s += '\n' }; s += (function () { var result = []; var list = _k_.list(o); for (var li = 0; li < list.length; li++)  { v = list[li];result.push(ind + toStr(v,ind + '    ',true,seen))  } return result }).bind(this)().join('\n') } else if ((o.constructor != null ? o.constructor.name : undefined) === 'RegExp') { return o.source } else { s = (arry && '.\n') || ((ind !== '') && '\n' || ''); s += pretty(o,ind,seen) }; return s } default: return String(o) }; return '<???>' }; return toStr(obj) }, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, max: function () { m = -Infinity; for (a of arguments) { if (a instanceof Array) {m = _k_.max.apply(_k_.max,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n > m ? n : m}}}; return m }, isFunc: function (o) {return typeof o === 'function'}}
 
-var Board, elem, Game, iconUrl, io, ogsMove, ogsMoves, Online, open, post, rank, request, slash
+var Board, elem, Game, iconUrl, io, ogsMove, ogsMoves, Online, open, post, rank, request, slash, toOGS
 
 elem = require('kxk').elem
 noon = require('kxk').noon
@@ -13,6 +13,7 @@ slash = require('kxk').slash
 rank = require('./util/util').rank
 ogsMoves = require('./util/util').ogsMoves
 ogsMove = require('./util/util').ogsMove
+toOGS = require('./util/util').toOGS
 iconUrl = require('./util/util').iconUrl
 
 request = require('https').request
@@ -35,10 +36,20 @@ Online = (function ()
         this["getGames"] = this["getGames"].bind(this)
         this["showGames"] = this["showGames"].bind(this)
         this["connectGames"] = this["connectGames"].bind(this)
+        this["submitMove"] = this["submitMove"].bind(this)
         this.boards = {}
         this.activeGames = []
         this.postSecret()
+        post.on('submitMove',this.submitMove)
         post.on('resize',this.onResize)
+    }
+
+    Online.prototype["submitMove"] = function (gameId, pos)
+    {
+        var move
+
+        move = toOGS(pos,this.boards[gameId].game.size)
+        return this.socket.emit('game/move',{auth:this.myAuth,player_id:this.myUserId,game_id:gameId,move:move})
     }
 
     Online.prototype["initSocket"] = function (config)
@@ -47,7 +58,9 @@ Online = (function ()
 
         clockDrift = 0
         latency = 0
-        this.myUserId = config.user.id
+        global.myUserId = this.myUserId = config.user.id
+        global.myUserName = config.user.username
+        this.myAuth = config.chat_auth
         ping = (function ()
         {
             if (this.socket.connected)
@@ -62,7 +75,7 @@ Online = (function ()
             now = Date.now()
             latency = now - data.client
             clockDrift = now - latency / 2 - data.server
-            return setTimeout(ping,10000)
+            return setTimeout(ping,4000)
         }).bind(this)
         authenticate = (function ()
         {
@@ -113,11 +126,16 @@ Online = (function ()
                 e = b.parent
                 t = e.previousElementSibling
                 e.parentElement.insertBefore(e,e.parentElement.firstChild)
-                return t.parentElement.insertBefore(t,t.parentElement.firstChild)
+                t.parentElement.insertBefore(t,t.parentElement.firstChild)
             }
             else
             {
-                return b.div.style.border = 'none'
+                b.div.style.border = 'none'
+            }
+            if (this.referee.game.info.id === arg.game_id)
+            {
+                console.log('emit playerMove',pos,b.game.lastColor(),b.game.players[b.game.lastColor()])
+                return post.emit('playerMove',pos,b.game.players[b.game.lastColor()])
             }
         }
     }
@@ -133,9 +151,9 @@ Online = (function ()
         }
         console.log(`▸ connect to ${this.activeGames.length} active games`)
         var list = _k_.list(this.activeGames)
-        for (var _119_17_ = 0; _119_17_ < list.length; _119_17_++)
+        for (var _133_17_ = 0; _133_17_ < list.length; _133_17_++)
         {
-            game = list[_119_17_]
+            game = list[_133_17_]
             this.socket.emit('game/connect',{game_id:game.id,player_id:this.myUserId,chat:0})
         }
     }
@@ -198,9 +216,9 @@ Online = (function ()
 
         this.boards = {}
         var list = _k_.list(this.activeGames)
-        for (var _179_17_ = 0; _179_17_ < list.length; _179_17_++)
+        for (var _193_17_ = 0; _193_17_ < list.length; _193_17_++)
         {
-            game = list[_179_17_]
+            game = list[_193_17_]
             g = elem('div',{class:'game',parent:this.games})
             if (game.players.black.username !== 'monsterkodi')
             {
@@ -253,13 +271,13 @@ Online = (function ()
             w = _k_.max(128,(br.width - br.height) / 2 - tb)
             b.div.style.height = `${w - 30}px`
             b.div.style.width = `${w - 30}px`
-            b.div.addEventListener('click',((function (g)
+            b.div.addEventListener('click',((function (id)
             {
                 return (function ()
                 {
-                    return this.loadGame(g)
+                    return this.loadGame(id)
                 }).bind(this)
-            }).bind(this))(g))
+            }).bind(this))(g.id))
             this.boards[g.id] = b
             b.onResize()
             if (g.gamedata.clock.current_player === 1110858)
@@ -273,15 +291,19 @@ Online = (function ()
         }).bind(this)})
     }
 
-    Online.prototype["loadGame"] = function (g)
+    Online.prototype["loadGame"] = function (id)
     {
-        var moves
+        return this.get({path:`/api/v1/games/${id}`,cb:(function (g)
+        {
+            var moves
 
-        this.referee.newGame({black:g.gamedata.players.black.username,white:g.gamedata.players.white.username,size:g.gamedata.width,handicap:g.gamedata.handicap})
-        moves = ogsMoves(g.gamedata.moves,g.gamedata.height)
-        this.referee.game.paused = true
-        this.referee.game.replay(moves,true)
-        return this.referee.tree.replay(moves)
+            this.referee.newGame({black:g.gamedata.players.black.username,white:g.gamedata.players.white.username,size:g.gamedata.width,handicap:g.gamedata.handicap})
+            moves = ogsMoves(g.gamedata.moves,g.gamedata.height)
+            this.referee.game.paused = true
+            this.referee.game.info.id = g.id
+            this.referee.game.replay(moves,true)
+            return this.referee.tree.replay(moves)
+        }).bind(this)})
     }
 
     Online.prototype["post"] = function (o)
