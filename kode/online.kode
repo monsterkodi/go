@@ -59,7 +59,6 @@ function Online
             setTimeout ping, 4000
 
         authenticate = =>
-            # log '▸ authenticate'
             @socket.emit 'authenticate',
                 auth:             config.chat_auth
                 player_id:        config.user.id
@@ -88,16 +87,16 @@ function Online
             else if msg not in ['active-bots' 'net/pong' 'score-estimator-enabled-state']
                 log 'on any' msg, noon arg
                 
-    #  0000000   000   000         0000000    0000000   00     00  00000000  
-    # 000   000  0000  000        000        000   000  000   000  000       
-    # 000   000  000 0 000        000  0000  000000000  000000000  0000000   
-    # 000   000  000  0000        000   000  000   000  000 0 000  000       
-    #  0000000   000   000         0000000   000   000  000   000  00000000  
+    #  0000000   000   000         0000000    0000000   00     00  00000000        0000000     0000000   000000000   0000000   
+    # 000   000  0000  000        000        000   000  000   000  000             000   000  000   000     000     000   000  
+    # 000   000  000 0 000        000  0000  000000000  000000000  0000000         000   000  000000000     000     000000000  
+    # 000   000  000  0000        000   000  000   000  000 0 000  000             000   000  000   000     000     000   000  
+    #  0000000   000   000         0000000   000   000  000   000  00000000        0000000    000   000     000     000   000  
     
     onGameData: (msg, arg)->
         
         if msg.endsWith '/move'
-            # log 'new move' msg, arg.game_id, noon arg
+
             pos = ogsMove arg.move, @boards[arg.game_id].game.size
             
             b = @boards[arg.game_id]
@@ -106,16 +105,15 @@ function Online
             if b.game.players[b.game.nextColor()] == 'monsterkodi'
                 b.div.style.border = '2px solid black'
                 b.div.style.borderRadius = '6px'
-                # ugly hack to show 'your move' games on top:
-                e = b.parent
+                e = b.parent # move 'your move' games to top
                 t = e.previousElementSibling
                 e.parentElement.insertBefore e, e.parentElement.firstChild
                 t.parentElement.insertBefore t, t.parentElement.firstChild
+                t.scrollIntoViewIfNeeded()
             else
                 b.div.style.border = 'none'
                     
             if @referee.game.info.id == arg.game_id
-                log 'emit playerMove' pos, b.game.lastColor(), b.game.players[b.game.lastColor()]
                 post.emit 'playerMove' pos, b.game.players[b.game.lastColor()]
         
     #  0000000   0000000   000   000  000   000  00000000   0000000  000000000         0000000    0000000   00     00  00000000   0000000  
@@ -130,7 +128,7 @@ function Online
             setTimeout @connectGames, 5000
             return
             
-        log "▸ connect to #{@activeGames.length} active games"
+        # log "▸ connect to #{@activeGames.length} active games"
         for game in @activeGames
             @socket.emit 'game/connect',
                 game_id:    game.id
@@ -247,8 +245,7 @@ function Online
             if g.gamedata.clock.current_player == 1110858
                 b.div.style.border = '2px solid black'
                 b.div.style.borderRadius = '6px'
-                # ugly hack to show 'your move' games on top:
-                t = e.previousElementSibling
+                t = e.previousElementSibling # move 'your move' games to top
                 e.parentElement.insertBefore e, e.parentElement.firstChild
                 t.parentElement.insertBefore t, t.parentElement.firstChild
                 

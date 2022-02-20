@@ -128,6 +128,7 @@ Online = (function ()
                 t = e.previousElementSibling
                 e.parentElement.insertBefore(e,e.parentElement.firstChild)
                 t.parentElement.insertBefore(t,t.parentElement.firstChild)
+                t.scrollIntoViewIfNeeded()
             }
             else
             {
@@ -135,7 +136,6 @@ Online = (function ()
             }
             if (this.referee.game.info.id === arg.game_id)
             {
-                console.log('emit playerMove',pos,b.game.lastColor(),b.game.players[b.game.lastColor()])
                 return post.emit('playerMove',pos,b.game.players[b.game.lastColor()])
             }
         }
@@ -150,11 +150,10 @@ Online = (function ()
             setTimeout(this.connectGames,5000)
             return
         }
-        console.log(`▸ connect to ${this.activeGames.length} active games`)
         var list = _k_.list(this.activeGames)
-        for (var _134_17_ = 0; _134_17_ < list.length; _134_17_++)
+        for (var _132_17_ = 0; _132_17_ < list.length; _132_17_++)
         {
-            game = list[_134_17_]
+            game = list[_132_17_]
             this.socket.emit('game/connect',{game_id:game.id,player_id:this.myUserId,chat:0})
         }
     }
@@ -217,9 +216,9 @@ Online = (function ()
 
         this.boards = {}
         var list = _k_.list(this.activeGames)
-        for (var _194_17_ = 0; _194_17_ < list.length; _194_17_++)
+        for (var _192_17_ = 0; _192_17_ < list.length; _192_17_++)
         {
-            game = list[_194_17_]
+            game = list[_192_17_]
             g = elem('div',{class:'game',parent:this.games})
             if (game.players.black.username !== 'monsterkodi')
             {
