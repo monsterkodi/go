@@ -32,7 +32,7 @@ function Tree
         
         mvi = @cursor[-1]
 
-        if mvi > 0 and tr.moves[mvi].pos == 'next' 
+        if mvi > 0 and tr.moves[mvi].pos == '?' 
             @cursor[@cursor.length-1]--
             mvi--
             
@@ -50,7 +50,9 @@ function Tree
             if pos != tr.moves[mvi].pos
                 altmoves = tr.moves[mvi].alt.map (alt) -> alt.moves[0].pos
                 if pos in altmoves
-                    @cursor[@cursor.length-2] = altmoves.indexOf(pos)+1
+                    # log 'pos in altmoves!' @cursor, altmoves.indexOf(pos)+1
+                    @cursor.push altmoves.indexOf(pos)+1
+                    @cursor.push 0
                 else
                     @cursor.push tr.moves[mvi].alt.length+1
                     @cursor.push 0
@@ -73,7 +75,7 @@ function Tree
         for mv in moves
             @moves.push pos:mv.pos, captures:(mv.captures ? []), alt:[], color:mv.color
             
-        mvi = @moves.length - (@moves[-1].pos == 'next' ? 2 : 1)
+        mvi = @moves.length - (@hasNext() ? 2 : 1)
         
         if pod = window.stash.get "tree▸#{@id}"
             for mi,alt of pod
@@ -102,6 +104,7 @@ function Tree
             'down'      ➜ @navigateDown()
             'right'     ➜ @navigateRight()
             'left'      ➜ @navigateLeft()
+            'leftmost'  ➜ @navigateLeftmost()
             'back'      ➜ @navigateBack()
             'leftup'    ➜ @navigateLeftUp()
             'rightdown' ➜ @navigateRightDown()
@@ -316,7 +319,7 @@ function Tree
                     @cursor.pop()
                     @cursor.pop()
         else
-            if tr.parent or @noNextMove()
+            if tr.parent or @noNext()
                 if valid tr.moves[mvi].alt
                     log @toColors()
                     alts = tr.moves[mvi].alt
@@ -327,15 +330,20 @@ function Tree
                     tr.moves = tr.moves.slice 0 mvi
                     @cursor[@cursor.length-1]--
                 
-    noNextMove: ->
-        
-        @moves[-1].pos != 'next'
+    noNext:  -> @moves[-1].pos != '?'
+    hasNext: -> @moves[-1].pos == '?'
         
     # 000   000   0000000   00000000   000   0000000   000000000  000   0000000   000   000   0000000  
     # 000   000  000   000  000   000  000  000   000     000     000  000   000  0000  000  000       
     #  000 000   000000000  0000000    000  000000000     000     000  000   000  000 0 000  0000000   
     #    000     000   000  000   000  000  000   000     000     000  000   000  000  0000       000  
     #     0      000   000  000   000  000  000   000     000     000   0000000   000   000  0000000   
+    
+    clearVariations: ->
+        
+        for mv in @moves
+            mv.alt = []
+        post.emit? 'tree'
     
     cursorVariations: ->
         

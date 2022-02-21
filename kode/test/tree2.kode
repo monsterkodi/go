@@ -12,7 +12,7 @@ global.test = true
 
 ▸ tree2
 
-    pod = 
+    pod =
         cursor: [1 1 0]
         moves:  [
                     pos:  'A1'
@@ -36,9 +36,9 @@ global.test = true
                 ,
                     pos:  'A4'
                 ,
-                    pos:  'next'
+                    pos:  '?'
                 ]
-                
+
     t = new Tree().fromPOD pod
 
     t.toString() ▸
@@ -47,7 +47,7 @@ global.test = true
         A2──B1◂─C1
         A3  B2
         A4  B3
-        next
+        ?
         """
 
     ▸ delete
@@ -60,7 +60,7 @@ global.test = true
             A2◂─C1
             A3
             A4
-            next
+            ?
             """
 
         t.deleteCursorMove()
@@ -71,45 +71,45 @@ global.test = true
             A2◂─C1
             A3
             A4
-            next
+            ?
             """
-            
+
         t = new Tree().fromPOD pod
-    
+
         t.toString() ▸
             """
             A1
             A2──B1◂─C1
             A3  B2
             A4  B3
-            next
+            ?
             """
-            
+
         t.addMove 'D1'
-        
+
         t.toString() ▸
             """
             A1
             A2──B1──────C1
             A3  B2──D1◂
             A4  B3
-            next
+            ?
             """
-        
+
         t.addMove 'D2'
-        
+
         t.navigate 'up'
         t.navigate 'up'
-        
+
         t.toString() ▸
             """
             A1
             A2──B1──────C1
             A3  B2──D1◂
             A4  B3  D2
-            next
+            ?
             """
-            
+
         t.navigate 'back'
 
         t.toString() ▸
@@ -118,9 +118,9 @@ global.test = true
             A2──B1◂─────C1
             A3  B2──D1
             A4  B3  D2
-            next
+            ?
             """
-            
+
         t.addMove 'E1'
 
         t.toString() ▸
@@ -129,31 +129,31 @@ global.test = true
             A2──B1──────────C1
             A3  B2──D1──E1◂
             A4  B3  D2
-            next
+            ?
             """
 
         t.navigate 'left'
-        
+
         t.toString() ▸
             """
             A1
             A2──B1──────────C1
             A3  B2──D1◂─E1
             A4  B3  D2
-            next
+            ?
             """
-        
+
         t.navigate 'left'
-        
+
         t.toString() ▸
             """
             A1
             A2──B1──────────C1
             A3  B2◂─D1──E1
             A4  B3  D2
-            next
+            ?
             """
-        
+
         t.deleteCursorMove()
         t.toString() ▸
             """
@@ -161,6 +161,51 @@ global.test = true
             A2──B1──────C1
             A3  D1◂─E1
             A4  D2
-            next
+            ?
+            """
+
+        t.select 4
+        t.toString() ▸
+            """
+            A1
+            A2──B1──────C1
+            A3  D1──E1
+            A4  D2
+            ?◂
+            """
+
+        t.addMove 'F1'
+
+        t.toString() ▸
+            """
+            A1
+            A2──────B1──────C1
+            A3      D1──E1
+            A4      D2
+            ?───F1◂
+            """
+
+        t.navigate 'left'
+        t.addMove 'F2'
+
+        t.toString() ▸
+            """
+            A1
+            A2──────────B1──────C1
+            A3          D1──E1
+            A4          D2
+            ?───F1──F2◂
+            """
+
+        t.navigate 'leftmost'
+        t.addMove 'F2'
+
+        t.toString() ▸
+            """
+            A1
+            A2──────────B1──────C1
+            A3          D1──E1
+            A4          D2
+            ?───F1──F2◂
             """
             

@@ -177,7 +177,7 @@ Game = (function ()
         {
             m = list[_130_14_]
             p = m.pos
-            if (p === 'next')
+            if (p === '?')
             {
                 break
             }

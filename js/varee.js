@@ -59,7 +59,7 @@ Varee = (function ()
                     case '-':
                         break
                     default:
-                        text = ((pos === 'pass' ? '●' : (pos === 'next' ? '?' : pos)))
+                        text = ((pos === 'pass' ? '●' : pos))
                         color = ['black','white'][y % 2]
                         elem({class:`varii ${color}`,text:text,parent:this.stn,style:`left:${25 + x * 50}px; top:${25 + y * 50}px;`,col:x,row:y})
                 }

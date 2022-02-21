@@ -129,7 +129,7 @@ function Game extends Score
         
         for m in moves
             p = m.pos
-            break if p == 'next'
+            break if p == '?'
             color = m.color
             if p not in ['pass''resign']
                 c = @coord p

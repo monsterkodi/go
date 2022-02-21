@@ -142,6 +142,7 @@ function MainWin extends win
     onMenuAction: (action, args) =>
                
         switch action.toLowerCase()
+            'clear'                         ➜ @referee.tree.clearVariations()
             'open'                          ➜ SGF.openDialog()
             'save as ...'                   ➜ SGF.saveAsDialog()
             'save'                          ➜ @referee.save(); @saveStash()
