@@ -41,6 +41,6 @@ Game = require '../game'
                 └───────────────────────────────────────┘
                 """
 
-        g = Game.fromMoves moves
-        g.grid.toString() ▸ board
+        # g = Game.fromMoves moves
+        # g.grid.toString() ▸ board
         

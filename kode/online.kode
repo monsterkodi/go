@@ -223,8 +223,6 @@ function Online
                 numbers:     false
                 hover:       false
             
-            # log noon g
-                
             b = new Board e, g.height, features
             b.game = new Game b, g.players.black.username, g.players.white.username, g.handicap
             b.game.paused = true
@@ -269,7 +267,7 @@ function Online
             @referee.game.paused = true
             @referee.game.info.id = g.id
             @referee.game.replay moves, true
-            @referee.tree.replay moves
+            @referee.tree.replay moves, g.id
         
     # 00000000    0000000    0000000  000000000  
     # 000   000  000   000  000          000     

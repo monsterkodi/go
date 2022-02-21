@@ -455,7 +455,10 @@ function Calc extends Print
     stoneAtPos: (p)  => @grid.at p
     stoneAt:    (x,y) => @grid.at x,y
     valid:      (c)   => 0 <= c[0] < @size and 0 <= c[1] < @size
-    coord:      (p)   => [alpha.indexOf(p[0].toUpperCase()), @size-int(p[1..])]
+    coord:      (p)   => 
+        c = [alpha.indexOf(p[0].toUpperCase()), @size-int(p[1..])]
+        log @size, p, c if isNaN c[1]
+        c
     pos:        (c)   => alpha[c[0]] + (@size-c[1])
 
 module.exports = Calc

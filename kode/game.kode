@@ -97,6 +97,11 @@ function Game extends Score
             @board.annotate?()
             return ''
 
+        if @start() and p.split(' ').length > 1
+            for h in p.split ' '
+                @setStone @coord(h), stone.black
+            return ''
+            
         c = @coord p
         
         if not @legal color, c
@@ -125,11 +130,12 @@ function Game extends Score
         for m in moves
             p = m.pos
             break if p == 'next'
-            c = @coord p
             color = m.color
-            @setStone c, stone[color]
-            if calcCaptures
-                m.captures = @capture color
+            if p not in ['pass''resign']
+                c = @coord p
+                @setStone c, stone[color]
+                if calcCaptures
+                    m.captures = @capture color
             @moves.add p, color, m.captures
             @removeStones m.captures
         @calcScore()

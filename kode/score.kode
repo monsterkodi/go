@@ -84,7 +84,6 @@ function Score extends Calc
             finalScore = 'B+'+(points.black-points.white)
           
         @verb 'score.calcScore' finalScore
-        log finalScore if finalScore != 'B+0'
         
         finalScore
         

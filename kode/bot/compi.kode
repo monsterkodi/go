@@ -97,9 +97,10 @@ function Compi
             'fixed_handicap'
                 
                 if @color == 'black'
-                    for p in data.split ' '
-                        @game.setStone @game.coord(p), stone.black
-                    @game.moves.push "black #{data}"
+                    post.emit 'playerMove' data, @name
+                    # for p in data.split ' '
+                        # @game.setStone @game.coord(p), stone.black
+                    # @game.moves.add data, 'black' []
                     
             'estimate_score'
                 

@@ -150,6 +150,7 @@ function Referee
             return
         
         return if @game.end()
+        
         if valid @redos
             if player in [@compi.black?.name, @compi.white?.name]
                 return

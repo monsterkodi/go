@@ -38,6 +38,8 @@ function Varee
     
     onTree: =>
         
+        @tree.save()
+        
         @stn.innerHTML = ''
         
         {columns,cursor,lines} = @tree.toColumns()

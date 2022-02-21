@@ -1,4 +1,4 @@
-// monsterkodi/kode 0.237.0
+// monsterkodi/kode 0.239.0
 
 var _k_ = {empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}}
 
@@ -167,7 +167,7 @@ Referee = (function ()
 
     Referee.prototype["playerMove"] = function (p, player)
     {
-        var color, next, _147_42_, _147_62_, _154_38_, _154_58_, _169_27_, _170_28_, _171_27_, _172_28_
+        var color, next, _147_42_, _147_62_, _155_38_, _155_58_, _170_27_, _171_28_, _172_27_, _173_28_
 
         if (this.game.info.id && this.game.players[stoneColor[this.game.stoneAt(p)]] === player)
         {
@@ -234,7 +234,7 @@ Referee = (function ()
 
     Referee.prototype["undo"] = function ()
     {
-        var m, _201_15_, _209_20_, _210_20_
+        var m, _202_15_, _210_20_, _211_20_
 
         if (this.game.start())
         {
@@ -250,7 +250,7 @@ Referee = (function ()
         }
         console.log('undo')
         this.game.paused = true
-        this.redos = ((_201_15_=this.redos) != null ? _201_15_ : [])
+        this.redos = ((_202_15_=this.redos) != null ? _202_15_ : [])
         m = this.game.moves.pop()
         this.redos.unshift(m)
         this.game.undoMove(m)
@@ -261,7 +261,7 @@ Referee = (function ()
 
     Referee.prototype["redo"] = function ()
     {
-        var move, _221_20_, _222_20_
+        var move, _222_20_, _223_20_
 
         if (_k_.empty(this.redos))
         {
@@ -312,7 +312,7 @@ Referee = (function ()
 
     Referee.prototype["jumpToStart"] = function ()
     {
-        var _267_20_, _268_20_
+        var _268_20_, _269_20_
 
         if (this.game.start())
         {

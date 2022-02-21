@@ -57,7 +57,7 @@ function MainWin extends win
             size:     window.stash.get 'size'      9
             handicap: window.stash.get 'handicap'  0
             moves:    window.stash.get 'moves'     []
-            tree:     window.stash.get 'tree'
+            # tree:     window.stash.get 'tree'
             
         @referee.board.preloadStones()
             
@@ -156,7 +156,7 @@ function MainWin extends win
             'pass'                          ➜ @referee.playerMove 'pass'   'human'
             'resign'                        ➜ @referee.playerMove 'resign' 'human'
             'genmove'                       ➜ @referee.genMove()
-            'calcscore'                     ➜ @referee.game.calcScore(); @referee.board.annotate()
+            'calcscore'                     ➜ log @referee.game.calcScore(); @referee.board.annotate()
             'games'                         ➜ @online.toggleGames() 
             'tree'                          ➜ @referee.toggleTree() 
             'numbers'                       ➜ @referee.board.toggleNumbers()

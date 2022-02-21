@@ -8,7 +8,7 @@
 
 Tree = require '../tree'
 
-# global.test = true
+global.test = true
 
 ▸ tree
     
@@ -70,6 +70,14 @@ Tree = require '../tree'
         C3
         B2──B3◂
         """
+        t.navigate 'up'
+        
+        t.toString() ▸ 
+        """
+        C3
+        B2──B3◂
+        """
+                
         
         t.navigate 'up'
         
@@ -78,24 +86,32 @@ Tree = require '../tree'
         C3
         B2──B3◂
         """
-
-        for d in ['up''down''right']
-            t.navigate d
-            
-            t.toString() ▸ 
-            """
-            C3
-            B2──B3◂
-            """
-
-        t.navigate 'left'
         
+        t.navigate 'down'
+        
+        t.toString() ▸ 
+        """
+        C3
+        B2──B3◂
+        """
+        
+        t.navigate 'right'
+        
+        t.toString() ▸ 
+        """
+        C3
+        B2──B3◂
+        """
+        
+        t.navigate 'left'
+                
         t.toString() ▸ 
         """
         C3
         B2◂─B3
         """
-
+                
+        
         for d in ['left''down']
             t.navigate 'left'
             
@@ -120,7 +136,7 @@ Tree = require '../tree'
     # 000   000  0000000    0000000    000   000   0000000       0      00000000  
     
     ▸ addmove1
-    
+
         t.addMove 'A1'
         
         t.toString() ▸ 
@@ -130,6 +146,7 @@ Tree = require '../tree'
             A1◂
         """
 
+        
         t.addMove 'A2'
         
         t.toString() ▸ 
@@ -158,7 +175,6 @@ Tree = require '../tree'
     # 0000000   00000000  0000000  00000000   0000000     000     
     
     ▸ select1
-    
         t.select 1 1 0
 
         t.toString() ▸ 
@@ -221,7 +237,7 @@ Tree = require '../tree'
             A2──A3◂
             A3
         """
-        
+
         t.addMove 'A2'
         
         t.toString() ▸ 
@@ -271,7 +287,7 @@ Tree = require '../tree'
         """
         
         t.addMove 'A6'
-
+        
         t.toString() ▸ 
         """
         C3
@@ -289,7 +305,6 @@ Tree = require '../tree'
     # 0000000    000   000   0000000  000   000  
 
     ▸ back
-        
         t.navigate 'back'
         
         t.toString() ▸ 
@@ -369,7 +384,7 @@ Tree = require '../tree'
     # 000   000  000  0000000      000      0000000   000   000     000     
     
     ▸ history
-        
+
         t.select 1 1 2 1 2
         
         t.toString() ▸ 
@@ -381,7 +396,6 @@ Tree = require '../tree'
             A3  A2
                 A4◂─A5──A6
         """
-        
         t.history() ▸ ['C3''B3''A1''A3''A2''A4']
         
         t.select 1 1 2 1 2 1 0
@@ -395,7 +409,6 @@ Tree = require '../tree'
             A3  A2
                 A4──A5◂─A6
         """
-        
         t.history() ▸ ['C3''B3''A1''A3''A2''A5']
 
         t.navigate 'right'
@@ -433,7 +446,7 @@ Tree = require '../tree'
     # 000   000  0000000    0000000    000   000   0000000       0      00000000  000000  
     
     ▸ addmove2
-    
+        
         t.addMove 'A7'
         
         t.toString() ▸
@@ -495,7 +508,6 @@ Tree = require '../tree'
             A3  A2──────────A7  B13◂
                 A4──A5──A6  A8
         """
-        
         t.history() ▸ ['C3''B3''A1''B12''B13']
         
         t.select 1
@@ -610,7 +622,7 @@ Tree = require '../tree'
     #  0000000   0000000   0000000   0000000   000   000  000   000  0000000   
     
     ▸ columns
-    
+
         c = t.toColumns()
         c.cursor ▸ x:2 y:4
         c.columns ▸    [[
@@ -680,7 +692,7 @@ Tree = require '../tree'
     # 000         0000000   0000000    
     
     ▸ pod
-    
+        
         p = t.toPOD()
 
         t2 = new Tree().fromPOD p
@@ -688,13 +700,12 @@ Tree = require '../tree'
         t.toString() ▸ t2.toString()
         
         t = new Tree().fromPOD
-            cursor: mvi:1 ali:1
+            cursor: [1 1 2]
             moves:  [
                         pos:  'E5'
                     ,
                         pos:  'E6'
                         alt:    [
-                                    cursor: mvi:2 ali:0 
                                     moves:  [
                                                 pos:  'D6'
                                             ,
@@ -725,7 +736,7 @@ Tree = require '../tree'
             F7
             F8
             """
-        
+
         t.navigate 'left'
         
         t.toString() ▸ 

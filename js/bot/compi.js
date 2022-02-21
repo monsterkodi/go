@@ -1,4 +1,4 @@
-// monsterkodi/kode 0.237.0
+// monsterkodi/kode 0.239.0
 
 var _k_ = {list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}}
 
@@ -136,13 +136,7 @@ Compi = (function ()
             case 'fixed_handicap':
                 if (this.color === 'black')
                 {
-                    var list = _k_.list(data.split(' '))
-                    for (var _100_26_ = 0; _100_26_ < list.length; _100_26_++)
-                    {
-                        p = list[_100_26_]
-                        this.game.setStone(this.game.coord(p),stone.black)
-                    }
-                    return this.game.moves.push(`black ${data}`)
+                    return post.emit('playerMove',data,this.name)
                 }
                 break
             case 'estimate_score':

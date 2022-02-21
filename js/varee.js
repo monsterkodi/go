@@ -1,6 +1,6 @@
-// monsterkodi/kode 0.237.0
+// monsterkodi/kode 0.239.0
 
-var _k_ = {list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, max: function () { m = -Infinity; for (a of arguments) { if (a instanceof Array) {m = _k_.max.apply(_k_.max,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n > m ? n : m}}}; return m }}
+var _k_ = {list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, max: function () { m = -Infinity; for (a of arguments) { if (Array.isArray(a)) {m = _k_.max.apply(_k_.max,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n > m ? n : m}}}; return m }}
 
 var elem, post, Varee
 
@@ -39,6 +39,7 @@ Varee = (function ()
     {
         var color, column, columns, cursor, lines, pos, text, x, y
 
+        this.tree.save()
         this.stn.innerHTML = ''
         columns = this.tree.toColumns().columns
         cursor = this.tree.toColumns().cursor
@@ -95,9 +96,9 @@ Varee = (function ()
         mw = this.width
         mh = this.height
         var list = _k_.list(vlines)
-        for (var _98_15_ = 0; _98_15_ < list.length; _98_15_++)
+        for (var _100_15_ = 0; _100_15_ < list.length; _100_15_++)
         {
-            vl = list[_98_15_]
+            vl = list[_100_15_]
             v00 = 100 + vl[0][0] * 100
             v01 = 100 + vl[0][1] * 100
             v10 = 100 + vl[1][0] * 100
@@ -115,9 +116,9 @@ Varee = (function ()
             this.ctx.stroke()
         }
         var list1 = _k_.list(hlines)
-        for (var _116_15_ = 0; _116_15_ < list1.length; _116_15_++)
+        for (var _118_15_ = 0; _118_15_ < list1.length; _118_15_++)
         {
-            hl = list1[_116_15_]
+            hl = list1[_118_15_]
             h00 = 100 + hl[0][0] * 100
             h01 = 100 + hl[0][1] * 100
             h10 = 100 + hl[1][0] * 100
