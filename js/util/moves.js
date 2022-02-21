@@ -1,6 +1,6 @@
-// monsterkodi/kode 0.237.0
+// monsterkodi/kode 0.239.0
 
-var _k_ = {copy: function (o) { return o instanceof Array ? o.slice() : typeof o == 'object' && o.constructor.name == 'Object' ? Object.assign({}, o) : typeof o == 'string' ? ''+o : o }, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}}
+var _k_ = {copy: function (o) { return Array.isArray(o) ? o.slice() : typeof o == 'object' && o.constructor.name == 'Object' ? Object.assign({}, o) : typeof o == 'string' ? ''+o : o }, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}}
 
 var Move, Moves, stoneColor
 
@@ -111,28 +111,28 @@ Moves = (function ()
 
     Moves.prototype["lastIsPass"] = function ()
     {
-        var _52_26_
+        var _55_26_
 
         return (this.last() != null ? this.last().pos : undefined) === 'pass'
     }
 
     Moves.prototype["singlePass"] = function ()
     {
-        var _53_26_
+        var _56_26_
 
         return (this.last() != null ? this.last().pos : undefined) === 'pass' && (this.m.slice(-2,-1)[0] != null ? this.m.slice(-2,-1)[0].pos : undefined) !== 'pass'
     }
 
     Moves.prototype["doublePass"] = function ()
     {
-        var _54_26_
+        var _57_26_
 
         return ((this.last() != null ? this.last().pos : undefined) === 'pass' && 'pass' === (this.m.slice(-2,-1)[0] != null ? this.m.slice(-2,-1)[0].pos : undefined))
     }
 
     Moves.prototype["resigned"] = function ()
     {
-        var _55_26_
+        var _58_26_
 
         return (this.last() != null ? this.last().pos : undefined) === 'resign'
     }
@@ -144,9 +144,9 @@ Moves = (function ()
 
     Moves.prototype["end"] = function ()
     {
-        var _57_26_
+        var _60_26_
 
-        return ((_57_26_=this.ended) != null ? _57_26_ : false)
+        return ((_60_26_=this.ended) != null ? _60_26_ : false)
     }
 
     return Moves

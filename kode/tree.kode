@@ -32,11 +32,13 @@ function Tree
         
         mvi = @cursor[-1]
 
-        if mvi > 0 and tr.moves[mvi].pos == 'next' then mvi--
+        if mvi > 0 and tr.moves[mvi].pos == 'next' 
+            @cursor[@cursor.length-1]--
+            mvi--
             
         color ?= @nextColor()
-        
-        if pos.split(' ').length > 1
+
+        if pos.split(' ').length > 1 # handicap move
             pos = "#{pos.split(' ').length}H"
         
         if mvi == tr.moves.length-1
@@ -53,8 +55,8 @@ function Tree
                     @cursor.push tr.moves[mvi].alt.length+1
                     @cursor.push 0
                     nt = new Tree tr
-                    tr.moves[mvi].alt.push nt
                     nt.moves.push pos:pos, captures:captures, alt:[], color:color
+                    tr.moves[mvi].alt.push nt
                     
         post.emit? 'tree'
         
@@ -249,15 +251,6 @@ function Tree
     select: ->
         
         miai = [].splice.call arguments, 0
-        
-        # [mvi, ali] = miai
-#         
-        # log 'select' miai, mvi, ali
-#         
-        # if ali
-            # if tr = @treeAt mvi, ali
-                # tr.select.apply tr, miai[2..]
-        
         @cursor = miai if not @parent
             
     canUndo: ->
@@ -304,8 +297,14 @@ function Tree
         
         @cursorTree().moves[@cursor[-1]]
             
+    # 0000000    00000000  000      00000000  000000000  00000000   0000000  000   000  00000000    0000000   0000000   00000000   
+    # 000   000  000       000      000          000     000       000       000   000  000   000  000       000   000  000   000  
+    # 000   000  0000000   000      0000000      000     0000000   000       000   000  0000000    0000000   000   000  0000000    
+    # 000   000  000       000      000          000     000       000       000   000  000   000       000  000   000  000   000  
+    # 0000000    00000000  0000000  00000000     000     00000000   0000000   0000000   000   000  0000000    0000000   000   000  
+    
     deleteCursorMove: ->
-        
+
         tr = @cursorTree()
         mvi = @cursor[-1]
         if mvi == 0 
@@ -317,9 +316,20 @@ function Tree
                     @cursor.pop()
                     @cursor.pop()
         else
-            if not @id or tr.parent
-                tr.moves = tr.moves.slice 0 mvi
-                @cursor[@cursor.length-1]--
+            if tr.parent or @noNextMove()
+                if valid tr.moves[mvi].alt
+                    log @toColors()
+                    alts = tr.moves[mvi].alt
+                    tr.moves.splice.apply tr.moves, [mvi, tr.moves.length-mvi].concat alts.shift().moves
+                    tr.moves[mvi].alt = alts
+                    log @toColors()
+                else
+                    tr.moves = tr.moves.slice 0 mvi
+                    @cursor[@cursor.length-1]--
+                
+    noNextMove: ->
+        
+        @moves[-1].pos != 'next'
         
     # 000   000   0000000   00000000   000   0000000   000000000  000   0000000   000   000   0000000  
     # 000   000  000   000  000   000  000  000   000     000     000  000   000  0000  000  000       
@@ -491,13 +501,9 @@ function Tree
                 mv = tree.moves[mi]
                 column[row+mi] = mv.pos
                 if tree == ct and mi == cs[-1]
-                    cursor.x = col#+tree.cursor.ali
+                    cursor.x = col
                     cursor.y = row+mi
                     
-                # if tree.cursor?.mvi == mi 
-                    # cursor.x = col+tree.cursor.ali
-                    # cursor.y = row+mi
-
                 lastTreeColumn = col
                     
                 for ai in 0...mv.alt.length
@@ -543,7 +549,7 @@ function Tree
         
     fromPOD: (pod) ->
         
-        @cursor = pod.cursor if not @parent
+        @cursor = copy pod.cursor if not @parent
         @moves  = pod.moves.map (m) =>
             o = pos:m.pos, color:m.color, alt:[]
             if valid m.alt

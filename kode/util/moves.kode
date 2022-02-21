@@ -25,6 +25,9 @@ function Moves
         @p = @num() ? copy(@last().p) : [0 0]
         m
         
+    # shift: @m.shift()
+    # append: (om) -> @m = @m.concat om.moves.m
+        
     clear: ->
         
         @m = [] 

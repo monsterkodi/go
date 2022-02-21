@@ -1,6 +1,6 @@
 // monsterkodi/kode 0.239.0
 
-var _k_ = {k: { f:(r,g,b)=>'\x1b[38;5;'+(16+36*r+6*g+b)+'m', F:(r,g,b)=>'\x1b[48;5;'+(16+36*r+6*g+b)+'m', r:(i)=>(i<6)&&_k_.k.f(i,0,0)||_k_.k.f(5,i-5,i-5), R:(i)=>(i<6)&&_k_.k.F(i,0,0)||_k_.k.F(5,i-5,i-5), g:(i)=>(i<6)&&_k_.k.f(0,i,0)||_k_.k.f(i-5,5,i-5), G:(i)=>(i<6)&&_k_.k.F(0,i,0)||_k_.k.F(i-5,5,i-5), b:(i)=>(i<6)&&_k_.k.f(0,0,i)||_k_.k.f(i-5,i-5,5), B:(i)=>(i<6)&&_k_.k.F(0,0,i)||_k_.k.F(i-5,i-5,5), y:(i)=>(i<6)&&_k_.k.f(i,i,0)||_k_.k.f(5,5,i-5), Y:(i)=>(i<6)&&_k_.k.F(i,i,0)||_k_.k.F(5,5,i-5), m:(i)=>(i<6)&&_k_.k.f(i,0,i)||_k_.k.f(5,i-5,5), M:(i)=>(i<6)&&_k_.k.F(i,0,i)||_k_.k.F(5,i-5,5), c:(i)=>(i<6)&&_k_.k.f(0,i,i)||_k_.k.f(i-5,5,5), C:(i)=>(i<6)&&_k_.k.F(0,i,i)||_k_.k.F(i-5,5,5), w:(i)=>'\x1b[38;5;'+(232+(i-1)*3)+'m', W:(i)=>'\x1b[48;5;'+(232+(i-1)*3+2)+'m', wrap:(open,close,reg)=>(s)=>open+(~(s+='').indexOf(close,4)&&s.replace(reg,open)||s)+close, F256:(open)=>_k_.k.wrap(open,'\x1b[39m',new RegExp('\\x1b\\[39m','g')), B256:(open)=>_k_.k.wrap(open,'\x1b[49m',new RegExp('\\x1b\\[49m','g'))}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, noon: function (obj) { var pad = function (s, l) { while (s.length < l) { s += ' ' }; return s }; var esc = function (k, arry) { var es, sp; if (0 <= k.indexOf('\n')) { sp = k.split('\n'); es = sp.map(function (s) { return esc(s,arry) }); es.unshift('...'); es.push('...'); return es.join('\n') } if (k === '' || k === '...' || _k_.in(k[0],[' ','#','|']) || _k_.in(k[k.length - 1],[' ','#','|'])) { k = '|' + k + '|' } else if (arry && /  /.test(k)) { k = '|' + k + '|' }; return k }; var pretty = function (o, ind, seen) { var k, kl, l, v, mk = 4; if (Object.keys(o).length > 1) { for (k in o) { if (Object.hasOwn(o,k)) { kl = parseInt(Math.ceil((k.length + 2) / 4) * 4); mk = Math.max(mk,kl); if (mk > 32) { mk = 32; break } } } }; l = []; var keyValue = function (k, v) { var i, ks, s, vs; s = ind; k = esc(k,true); if (k.indexOf('  ') > 0 && k[0] !== '|') { k = `|${k}|` } else if (k[0] !== '|' && k[k.length - 1] === '|') { k = '|' + k } else if (k[0] === '|' && k[k.length - 1] !== '|') { k += '|' }; ks = pad(k,Math.max(mk,k.length + 2)); i = pad(ind + '    ',mk); s += ks; vs = toStr(v,i,false,seen); if (vs[0] === '\n') { while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) } }; s += vs; while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) }; return s }; for (k in o) { if (Object.hasOwn(o,k)) { l.push(keyValue(k,o[k])) } }; return l.join('\n') }; var toStr = function (o, ind = '', arry = false, seen = []) { var s, t, v; if (!(o != null)) { if (o === null) { return 'null' }; if (o === undefined) { return 'undefined' }; return '<?>' }; switch (t = typeof(o)) { case 'string': {return esc(o,arry)}; case 'object': { if (_k_.in(o,seen)) { return '<v>' }; seen.push(o); if ((o.constructor != null ? o.constructor.name : undefined) === 'Array') { s = ind !== '' && arry && '.' || ''; if (o.length && ind !== '') { s += '\n' }; s += (function () { var result = []; var list = _k_.list(o); for (var li = 0; li < list.length; li++)  { v = list[li];result.push(ind + toStr(v,ind + '    ',true,seen))  } return result }).bind(this)().join('\n') } else if ((o.constructor != null ? o.constructor.name : undefined) === 'RegExp') { return o.source } else { s = (arry && '.\n') || ((ind !== '') && '\n' || ''); s += pretty(o,ind,seen) }; return s } default: return String(o) }; return '<???>' }; return toStr(obj) }, clone: function (o,v) { v ??= new Map(); if (Array.isArray(o)) { if (!v.has(o)) {var r = []; v.set(o,r); for (var i=0; i < o.length; i++) {if (!v.has(o[i])) { v.set(o[i],_k_.clone(o[i],v)) }; r.push(v.get(o[i]))}}; return v.get(o) } else if (typeof o == 'string') { if (!v.has(o)) {v.set(o,''+o)}; return v.get(o) } else if (o != null && typeof o == 'object' && o.constructor.name == 'Object') { if (!v.has(o)) { var k, r = {}; v.set(o,r); for (k in o) { if (!v.has(o[k])) { v.set(o[k],_k_.clone(o[k],v)) }; r[k] = v.get(o[k]) }; }; return v.get(o) } else {return o} }, rpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s+=c} return s}, rtrim: function (s,c=' ') {while (_k_.in(s.slice(-1)[0],c)) { s = s.slice(0, s.length - 1) } return s}, max: function () { m = -Infinity; for (a of arguments) { if (Array.isArray(a)) {m = _k_.max.apply(_k_.max,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n > m ? n : m}}}; return m }, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}};_k_.r3=_k_.k.F256(_k_.k.r(3));_k_.g2=_k_.k.F256(_k_.k.g(2));_k_.B3=_k_.k.B256(_k_.k.B(3));_k_.b7=_k_.k.F256(_k_.k.b(7));_k_.y4=_k_.k.F256(_k_.k.y(4));_k_.y5=_k_.k.F256(_k_.k.y(5));_k_.w2=_k_.k.F256(_k_.k.w(2))
+var _k_ = {k: { f:(r,g,b)=>'\x1b[38;5;'+(16+36*r+6*g+b)+'m', F:(r,g,b)=>'\x1b[48;5;'+(16+36*r+6*g+b)+'m', r:(i)=>(i<6)&&_k_.k.f(i,0,0)||_k_.k.f(5,i-5,i-5), R:(i)=>(i<6)&&_k_.k.F(i,0,0)||_k_.k.F(5,i-5,i-5), g:(i)=>(i<6)&&_k_.k.f(0,i,0)||_k_.k.f(i-5,5,i-5), G:(i)=>(i<6)&&_k_.k.F(0,i,0)||_k_.k.F(i-5,5,i-5), b:(i)=>(i<6)&&_k_.k.f(0,0,i)||_k_.k.f(i-5,i-5,5), B:(i)=>(i<6)&&_k_.k.F(0,0,i)||_k_.k.F(i-5,i-5,5), y:(i)=>(i<6)&&_k_.k.f(i,i,0)||_k_.k.f(5,5,i-5), Y:(i)=>(i<6)&&_k_.k.F(i,i,0)||_k_.k.F(5,5,i-5), m:(i)=>(i<6)&&_k_.k.f(i,0,i)||_k_.k.f(5,i-5,5), M:(i)=>(i<6)&&_k_.k.F(i,0,i)||_k_.k.F(5,i-5,5), c:(i)=>(i<6)&&_k_.k.f(0,i,i)||_k_.k.f(i-5,5,5), C:(i)=>(i<6)&&_k_.k.F(0,i,i)||_k_.k.F(i-5,5,5), w:(i)=>'\x1b[38;5;'+(232+(i-1)*3)+'m', W:(i)=>'\x1b[48;5;'+(232+(i-1)*3+2)+'m', wrap:(open,close,reg)=>(s)=>open+(~(s+='').indexOf(close,4)&&s.replace(reg,open)||s)+close, F256:(open)=>_k_.k.wrap(open,'\x1b[39m',new RegExp('\\x1b\\[39m','g')), B256:(open)=>_k_.k.wrap(open,'\x1b[49m',new RegExp('\\x1b\\[49m','g'))}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, noon: function (obj) { var pad = function (s, l) { while (s.length < l) { s += ' ' }; return s }; var esc = function (k, arry) { var es, sp; if (0 <= k.indexOf('\n')) { sp = k.split('\n'); es = sp.map(function (s) { return esc(s,arry) }); es.unshift('...'); es.push('...'); return es.join('\n') } if (k === '' || k === '...' || _k_.in(k[0],[' ','#','|']) || _k_.in(k[k.length - 1],[' ','#','|'])) { k = '|' + k + '|' } else if (arry && /  /.test(k)) { k = '|' + k + '|' }; return k }; var pretty = function (o, ind, seen) { var k, kl, l, v, mk = 4; if (Object.keys(o).length > 1) { for (k in o) { if (Object.hasOwn(o,k)) { kl = parseInt(Math.ceil((k.length + 2) / 4) * 4); mk = Math.max(mk,kl); if (mk > 32) { mk = 32; break } } } }; l = []; var keyValue = function (k, v) { var i, ks, s, vs; s = ind; k = esc(k,true); if (k.indexOf('  ') > 0 && k[0] !== '|') { k = `|${k}|` } else if (k[0] !== '|' && k[k.length - 1] === '|') { k = '|' + k } else if (k[0] === '|' && k[k.length - 1] !== '|') { k += '|' }; ks = pad(k,Math.max(mk,k.length + 2)); i = pad(ind + '    ',mk); s += ks; vs = toStr(v,i,false,seen); if (vs[0] === '\n') { while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) } }; s += vs; while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) }; return s }; for (k in o) { if (Object.hasOwn(o,k)) { l.push(keyValue(k,o[k])) } }; return l.join('\n') }; var toStr = function (o, ind = '', arry = false, seen = []) { var s, t, v; if (!(o != null)) { if (o === null) { return 'null' }; if (o === undefined) { return 'undefined' }; return '<?>' }; switch (t = typeof(o)) { case 'string': {return esc(o,arry)}; case 'object': { if (_k_.in(o,seen)) { return '<v>' }; seen.push(o); if ((o.constructor != null ? o.constructor.name : undefined) === 'Array') { s = ind !== '' && arry && '.' || ''; if (o.length && ind !== '') { s += '\n' }; s += (function () { var result = []; var list = _k_.list(o); for (var li = 0; li < list.length; li++)  { v = list[li];result.push(ind + toStr(v,ind + '    ',true,seen))  } return result }).bind(this)().join('\n') } else if ((o.constructor != null ? o.constructor.name : undefined) === 'RegExp') { return o.source } else { s = (arry && '.\n') || ((ind !== '') && '\n' || ''); s += pretty(o,ind,seen) }; return s } default: return String(o) }; return '<???>' }; return toStr(obj) }, clone: function (o,v) { v ??= new Map(); if (Array.isArray(o)) { if (!v.has(o)) {var r = []; v.set(o,r); for (var i=0; i < o.length; i++) {if (!v.has(o[i])) { v.set(o[i],_k_.clone(o[i],v)) }; r.push(v.get(o[i]))}}; return v.get(o) } else if (typeof o == 'string') { if (!v.has(o)) {v.set(o,''+o)}; return v.get(o) } else if (o != null && typeof o == 'object' && o.constructor.name == 'Object') { if (!v.has(o)) { var k, r = {}; v.set(o,r); for (k in o) { if (!v.has(o[k])) { v.set(o[k],_k_.clone(o[k],v)) }; r[k] = v.get(o[k]) }; }; return v.get(o) } else {return o} }, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, rpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s+=c} return s}, rtrim: function (s,c=' ') {while (_k_.in(s.slice(-1)[0],c)) { s = s.slice(0, s.length - 1) } return s}, max: function () { m = -Infinity; for (a of arguments) { if (Array.isArray(a)) {m = _k_.max.apply(_k_.max,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n > m ? n : m}}}; return m }, copy: function (o) { return Array.isArray(o) ? o.slice() : typeof o == 'object' && o.constructor.name == 'Object' ? Object.assign({}, o) : typeof o == 'string' ? ''+o : o }};_k_.r3=_k_.k.F256(_k_.k.r(3));_k_.g2=_k_.k.F256(_k_.k.g(2));_k_.B3=_k_.k.B256(_k_.k.B(3));_k_.b7=_k_.k.F256(_k_.k.b(7));_k_.y4=_k_.k.F256(_k_.k.y(4));_k_.y5=_k_.k.F256(_k_.k.y(5));_k_.w2=_k_.k.F256(_k_.k.w(2))
 
 var kstr, opponent, post, Tree
 
@@ -30,7 +30,7 @@ Tree = (function ()
 
     Tree.prototype["addMove"] = function (pos, captures = [], color)
     {
-        var altmoves, mvi, nt, tr, _59_17_
+        var altmoves, mvi, nt, tr, _61_17_
 
         if (global.test)
         {
@@ -40,6 +40,7 @@ Tree = (function ()
         mvi = this.cursor.slice(-1)[0]
         if (mvi > 0 && tr.moves[mvi].pos === 'next')
         {
+            this.cursor[this.cursor.length - 1]--
             mvi--
         }
         color = (color != null ? color : this.nextColor())
@@ -71,8 +72,8 @@ Tree = (function ()
                     this.cursor.push(tr.moves[mvi].alt.length + 1)
                     this.cursor.push(0)
                     nt = new Tree(tr)
-                    tr.moves[mvi].alt.push(nt)
                     nt.moves.push({pos:pos,captures:captures,alt:[],color:color})
+                    tr.moves[mvi].alt.push(nt)
                 }
             }
         }
@@ -88,15 +89,15 @@ Tree = (function ()
 
     Tree.prototype["replay"] = function (moves, id)
     {
-        var alt, mi, mv, mvi, pod, td, _72_58_, _85_17_
+        var alt, mi, mv, mvi, pod, td, _74_58_, _87_17_
 
         this.id = id
     
         var list = _k_.list(moves)
-        for (var _71_15_ = 0; _71_15_ < list.length; _71_15_++)
+        for (var _73_15_ = 0; _73_15_ < list.length; _73_15_++)
         {
-            mv = list[_71_15_]
-            this.moves.push({pos:mv.pos,captures:(((_72_58_=mv.captures) != null ? _72_58_ : [])),alt:[],color:mv.color})
+            mv = list[_73_15_]
+            this.moves.push({pos:mv.pos,captures:(((_74_58_=mv.captures) != null ? _74_58_ : [])),alt:[],color:mv.color})
         }
         mvi = this.moves.length - ((this.moves.slice(-1)[0].pos === 'next' ? 2 : 1))
         if (pod = window.stash.get(`tree▸${this.id}`))
@@ -105,9 +106,9 @@ Tree = (function ()
             {
                 alt = pod[mi]
                 var list1 = _k_.list(alt)
-                for (var _78_23_ = 0; _78_23_ < list1.length; _78_23_++)
+                for (var _80_23_ = 0; _80_23_ < list1.length; _80_23_++)
                 {
-                    td = list1[_78_23_]
+                    td = list1[_80_23_]
                     if (this.moves[mi].pos !== td.moves[0].pos)
                     {
                         this.moves[mi].alt.push(new Tree(this).fromPOD(td))
@@ -286,7 +287,7 @@ Tree = (function ()
 
     Tree.prototype["cursorChanged"] = function ()
     {
-        var _183_31_
+        var _185_31_
 
         return (typeof post.emit === "function" ? post.emit('tree') : undefined)
     }
@@ -309,9 +310,9 @@ Tree = (function ()
             var line
 
             var list = _k_.list(columns.lines.hlines)
-            for (var _205_21_ = 0; _205_21_ < list.length; _205_21_++)
+            for (var _207_21_ = 0; _207_21_ < list.length; _207_21_++)
             {
-                line = list[_205_21_]
+                line = list[_207_21_]
                 if ((line[0][1] === line[1][1] && line[1][1] === row))
                 {
                     if (line[0][0] < col && line[1][0] >= col)
@@ -326,9 +327,9 @@ Tree = (function ()
             var line
 
             var list = _k_.list(columns.lines.vlines)
-            for (var _211_21_ = 0; _211_21_ < list.length; _211_21_++)
+            for (var _213_21_ = 0; _213_21_ < list.length; _213_21_++)
             {
-                line = list[_211_21_]
+                line = list[_213_21_]
                 if ((line[0][0] === line[1][0] && line[1][0] === col))
                 {
                     if (line[0][1] < row && line[1][1] >= row)
@@ -415,7 +416,7 @@ Tree = (function ()
 
     Tree.prototype["undoMove"] = function (m)
     {
-        var u, _274_17_
+        var u, _267_17_
 
         this.cursor = [this.cursor[0] - 1]
         u = this.moves.pop()
@@ -460,7 +461,7 @@ Tree = (function ()
 
     Tree.prototype["deleteCursorMove"] = function ()
     {
-        var mvi, tr
+        var alts, mvi, tr
 
         tr = this.cursorTree()
         mvi = this.cursor.slice(-1)[0]
@@ -482,12 +483,28 @@ Tree = (function ()
         }
         else
         {
-            if (!this.id || tr.parent)
+            if (tr.parent || this.noNextMove())
             {
-                tr.moves = tr.moves.slice(0,mvi)
-                return this.cursor[this.cursor.length - 1]--
+                if (!_k_.empty(tr.moves[mvi].alt))
+                {
+                    console.log(this.toColors())
+                    alts = tr.moves[mvi].alt
+                    tr.moves.splice.apply(tr.moves,[mvi,tr.moves.length - mvi].concat(alts.shift().moves))
+                    tr.moves[mvi].alt = alts
+                    console.log(this.toColors())
+                }
+                else
+                {
+                    tr.moves = tr.moves.slice(0,mvi)
+                    return this.cursor[this.cursor.length - 1]--
+                }
             }
         }
+    }
+
+    Tree.prototype["noNextMove"] = function ()
+    {
+        return this.moves.slice(-1)[0].pos !== 'next'
     }
 
     Tree.prototype["cursorVariations"] = function ()
@@ -525,13 +542,13 @@ Tree = (function ()
 
         w = 1
         var list = _k_.list(this.moves)
-        for (var _367_14_ = 0; _367_14_ < list.length; _367_14_++)
+        for (var _377_14_ = 0; _377_14_ < list.length; _377_14_++)
         {
-            m = list[_367_14_]
+            m = list[_377_14_]
             var list1 = _k_.list(m.alt)
-            for (var _368_18_ = 0; _368_18_ < list1.length; _368_18_++)
+            for (var _378_18_ = 0; _378_18_ < list1.length; _378_18_++)
             {
-                t = list1[_368_18_]
+                t = list1[_378_18_]
                 w += t.width()
             }
         }
@@ -572,12 +589,12 @@ Tree = (function ()
 
     Tree.prototype["rowStrings"] = function (miai)
     {
-        var a, i, li, lo, m, mi, mia, ps, rc, s, t, tl, tls, to, tw, _428_28_
+        var a, i, li, lo, m, mi, mia, ps, rc, s, t, tl, tls, to, tw, _438_28_
 
         miai = (miai != null ? miai : this.cursor)
         s = []
         a = []
-        for (var _409_18_ = mi = 0, _409_22_ = this.moves.length; (_409_18_ <= _409_22_ ? mi < this.moves.length : mi > this.moves.length); (_409_18_ <= _409_22_ ? ++mi : --mi))
+        for (var _419_18_ = mi = 0, _419_22_ = this.moves.length; (_419_18_ <= _419_22_ ? mi < this.moves.length : mi > this.moves.length); (_419_18_ <= _419_22_ ? ++mi : --mi))
         {
             m = this.moves[mi]
             ps = (m.alt.length ? '─' : ' ')
@@ -593,21 +610,21 @@ Tree = (function ()
         }
         to = 0
         lo = 0
-        for (var _420_17_ = i = a.length - 1, _420_29_ = 0; (_420_17_ <= _420_29_ ? i <= 0 : i >= 0); (_420_17_ <= _420_29_ ? ++i : --i))
+        for (var _430_17_ = i = a.length - 1, _430_29_ = 0; (_430_17_ <= _430_29_ ? i <= 0 : i >= 0); (_430_17_ <= _430_29_ ? ++i : --i))
         {
             var list = _k_.list(a[i])
-            for (var _421_18_ = 0; _421_18_ < list.length; _421_18_++)
+            for (var _431_18_ = 0; _431_18_ < list.length; _431_18_++)
             {
-                t = list[_421_18_]
+                t = list[_431_18_]
                 tw = 4
                 li = 0
                 mia = a[i].indexOf(t) + 1 === miai[1] && i === miai[0] ? miai.slice(2) : []
                 tls = t.rowStrings(mia)
                 var list1 = _k_.list(tls)
-                for (var _427_23_ = 0; _427_23_ < list1.length; _427_23_++)
+                for (var _437_23_ = 0; _437_23_ < list1.length; _437_23_++)
                 {
-                    tl = list1[_427_23_]
-                    s[i + li] = ((_428_28_=s[i + li]) != null ? _428_28_ : _k_.rpad(4))
+                    tl = list1[_437_23_]
+                    s[i + li] = ((_438_28_=s[i + li]) != null ? _438_28_ : _k_.rpad(4))
                     s[i + li] = _k_.rpad(lo,s[i + li],(li === 0 ? '─' : ' '))
                     s[i + li] += tl
                     if (li === 0 && a[i].indexOf(t) < a[i].length - 1)
@@ -673,7 +690,7 @@ Tree = (function ()
             while (!column)
             {
                 column = columns[col]
-                for (var _478_26_ = mi = tree.moves.length - 1, _478_47_ = 0; (_478_26_ <= _478_47_ ? mi <= 0 : mi >= 0); (_478_26_ <= _478_47_ ? ++mi : --mi))
+                for (var _488_26_ = mi = tree.moves.length - 1, _488_47_ = 0; (_488_26_ <= _488_47_ ? mi <= 0 : mi >= 0); (_488_26_ <= _488_47_ ? ++mi : --mi))
                 {
                     if (column[mi + row])
                     {
@@ -690,7 +707,7 @@ Tree = (function ()
             }
             treeCol = col
             vlines.push([[col,row],[col,row + tree.moves.length - 1]])
-            for (var _490_22_ = mi = tree.moves.length - 1, _490_43_ = 0; (_490_22_ <= _490_43_ ? mi <= 0 : mi >= 0); (_490_22_ <= _490_43_ ? ++mi : --mi))
+            for (var _500_22_ = mi = tree.moves.length - 1, _500_43_ = 0; (_500_22_ <= _500_43_ ? mi <= 0 : mi >= 0); (_500_22_ <= _500_43_ ? ++mi : --mi))
             {
                 mv = tree.moves[mi]
                 column[row + mi] = mv.pos
@@ -700,7 +717,7 @@ Tree = (function ()
                     cursor.y = row + mi
                 }
                 lastTreeColumn = col
-                for (var _503_26_ = ai = 0, _503_30_ = mv.alt.length; (_503_26_ <= _503_30_ ? ai < mv.alt.length : ai > mv.alt.length); (_503_26_ <= _503_30_ ? ++ai : --ai))
+                for (var _509_26_ = ai = 0, _509_30_ = mv.alt.length; (_509_26_ <= _509_30_ ? ai < mv.alt.length : ai > mv.alt.length); (_509_26_ <= _509_30_ ? ++ai : --ai))
                 {
                     alt = mv.alt[ai]
                     lastTreeColumn = treeToColumn(alt,col + ai + 1,row + mi)
@@ -714,10 +731,10 @@ Tree = (function ()
         }
         treeToColumn(this,0,0)
         var list = _k_.list(columns)
-        for (var _513_19_ = 0; _513_19_ < list.length; _513_19_++)
+        for (var _519_19_ = 0; _519_19_ < list.length; _519_19_++)
         {
-            column = list[_513_19_]
-            for (var _514_22_ = mi = 0, _514_26_ = column.length; (_514_22_ <= _514_26_ ? mi < column.length : mi > column.length); (_514_22_ <= _514_26_ ? ++mi : --mi))
+            column = list[_519_19_]
+            for (var _520_22_ = mi = 0, _520_26_ = column.length; (_520_22_ <= _520_26_ ? mi < column.length : mi > column.length); (_520_22_ <= _520_26_ ? ++mi : --mi))
             {
                 if (!column[mi])
                 {
@@ -734,7 +751,7 @@ Tree = (function ()
 
         moves = this.moves.map((function (m)
         {
-            var o, _533_24_, _534_20_, _536_29_
+            var o, _539_24_, _540_20_, _542_29_
 
             o = {pos:m.pos,color:m.color}
             if (!(m.alt != null))
@@ -766,7 +783,7 @@ Tree = (function ()
     {
         if (!this.parent)
         {
-            this.cursor = pod.cursor
+            this.cursor = _k_.copy(pod.cursor)
         }
         this.moves = pod.moves.map((function (m)
         {
