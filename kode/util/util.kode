@@ -67,7 +67,7 @@ class Util
         for o in ogs
             pos = Util.ogsMove o, size
             moves.push pos:pos, color:['black''white'][moves.length%2]
-        moves.push pos:'next' color:['black''white'][moves.length%2]
+        moves.push pos:'?' color:['black''white'][moves.length%2]
         moves
         
     @ogsMove: (o, size) -> 

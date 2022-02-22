@@ -1,6 +1,6 @@
-// monsterkodi/kode 0.237.0
+// monsterkodi/kode 0.239.0
 
-var _k_ = {min: function () { m = Infinity; for (a of arguments) { if (a instanceof Array) {m = _k_.min.apply(_k_.min,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n < m ? n : m}}}; return m }, max: function () { m = -Infinity; for (a of arguments) { if (a instanceof Array) {m = _k_.max.apply(_k_.max,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n > m ? n : m}}}; return m }, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}}
+var _k_ = {min: function () { m = Infinity; for (a of arguments) { if (Array.isArray(a)) {m = _k_.min.apply(_k_.min,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n < m ? n : m}}}; return m }, max: function () { m = -Infinity; for (a of arguments) { if (Array.isArray(a)) {m = _k_.max.apply(_k_.max,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n > m ? n : m}}}; return m }, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}}
 
 class Util
 {
@@ -70,7 +70,7 @@ class Util
             pos = Util.ogsMove(o,size)
             moves.push({pos:pos,color:['black','white'][moves.length % 2]})
         }
-        moves.push({pos:'next',color:['black','white'][moves.length % 2]})
+        moves.push({pos:'?',color:['black','white'][moves.length % 2]})
         return moves
     }
 

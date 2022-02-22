@@ -7,6 +7,7 @@
 ###
 
 Tree = require '../tree'
+{ noon } = require 'kxk'
 
 global.test = true
 
@@ -209,3 +210,461 @@ global.test = true
             ?───F1──F2◂
             """
             
+    ▸ navigate
+    
+        t.addMove  'F3'
+        t.navigate 'up'
+        t.addMove  'F4'
+        t.addMove  'F5'
+            
+        t.toString() ▸
+            """
+            A1
+            A2──────────────B1──────C1
+            A3              D1──E1
+            A4              D2
+            ?───F1──F2
+                    F3──F4
+                        F5◂
+            """
+
+        t.navigate 'leftup'
+        t.toString() ▸
+            """
+            A1
+            A2──────────────B1──────C1
+            A3              D1──E1
+            A4              D2
+            ?───F1──F2
+                    F3──F4◂
+                        F5
+            """
+
+        t.navigate 'leftup'
+        t.toString() ▸
+            """
+            A1
+            A2──────────────B1──────C1
+            A3              D1──E1
+            A4              D2
+            ?───F1──F2
+                    F3◂─F4
+                        F5
+            """
+
+        t.navigate 'leftup'
+        t.toString() ▸
+            """
+            A1
+            A2──────────────B1──────C1
+            A3              D1──E1
+            A4              D2
+            ?───F1──F2◂
+                    F3──F4
+                        F5
+            """
+
+        t.navigate 'leftup'
+        t.toString() ▸
+            """
+            A1
+            A2──────────────B1──────C1
+            A3              D1──E1
+            A4              D2
+            ?───F1◂─F2
+                    F3──F4
+                        F5
+            """
+
+        t.navigate 'leftup'
+        t.toString() ▸
+            """
+            A1
+            A2──────────────B1──────C1
+            A3              D1──E1
+            A4              D2
+            ?◂──F1──F2
+                    F3──F4
+                        F5
+            """
+
+        t.navigate 'leftup'
+        t.toString() ▸
+            """
+            A1
+            A2──────────────B1──────C1
+            A3              D1──E1
+            A4◂             D2
+            ?───F1──F2
+                    F3──F4
+                        F5
+            """
+
+        t.navigate 'rightdown'
+        t.toString() ▸
+            """
+            A1
+            A2──────────────B1──────C1
+            A3              D1──E1
+            A4              D2
+            ?◂──F1──F2
+                    F3──F4
+                        F5
+            """
+            
+        t.navigate 'rightdown'
+        t.toString() ▸
+            """
+            A1
+            A2──────────────B1──────C1
+            A3              D1──E1
+            A4              D2
+            ?───F1◂─F2
+                    F3──F4
+                        F5
+            """
+            
+        t.navigate 'rightdown'
+        t.toString() ▸
+            """
+            A1
+            A2──────────────B1──────C1
+            A3              D1──E1
+            A4              D2
+            ?───F1──F2◂
+                    F3──F4
+                        F5
+            """
+        
+        t.navigate 'rightdown'
+        t.navigate 'rightdown'
+        t.navigate 'rightdown'
+        t.toString() ▸
+            """
+            A1
+            A2──────────────B1──────C1
+            A3              D1──E1
+            A4              D2
+            ?───F1──F2
+                    F3──F4
+                        F5◂
+            """
+            
+        t.addMove 'F6'
+        t.navigate 'leftup'
+        t.toString() ▸
+            """
+            A1
+            A2──────────────B1──────C1
+            A3              D1──E1
+            A4              D2
+            ?───F1──F2
+                    F3──F4
+                        F5◂
+                        F6
+            """
+            
+        t.navigate 'leftup'            
+        t.toString() ▸
+            """
+            A1
+            A2──────────────B1──────C1
+            A3              D1──E1
+            A4              D2
+            ?───F1──F2
+                    F3──F4◂
+                        F5
+                        F6
+            """
+
+        t.navigate 'leftup'            
+        t.toString() ▸
+            """
+            A1
+            A2──────────────B1──────C1
+            A3              D1──E1
+            A4              D2
+            ?───F1──F2
+                    F3◂─F4
+                        F5
+                        F6
+            """
+        
+        pod = noon.parse """
+            cursor 
+                8
+            moves
+                .
+                    pos     O17
+                    color   black
+                .
+                    pos     O18
+                    color   white
+                .
+                    pos     P15
+                    color   black
+                .
+                    pos     Q16
+                    color   white
+                .
+                    pos     Q18
+                    color   black
+                .
+                    pos     P18
+                    color   white
+                .
+                    pos     R17
+                    color   black
+                .
+                    pos     Q15
+                    color   white
+                .
+                    pos     Q14
+                    color   black
+                .
+                    pos     O15
+                    color   white
+                    alt
+                        .
+                            moves
+                                .
+                                    pos     P14
+                                    color   white
+                                .
+                                    pos     O15
+                                    color   black
+                                .
+                                    pos     P13
+                                    color   white
+                                .
+                                    pos     Q13
+                                    color   black
+                                .
+                                    pos     Q12
+                                    color   white
+                                .
+                                    pos     R12
+                                    color   black
+                                .
+                                    pos     Q11
+                                    color   white
+                                .
+                                    pos     R11
+                                    color   black
+                                .
+                                    pos     R10
+                                    color   white
+                                .
+                                    pos     S10
+                                    color   black
+                                .
+                                    pos     R9
+                                    color   white
+                                .
+                                    pos     S9
+                                    color   black
+                                .
+                                    pos     S8
+                                    color   white
+                                .
+                                    pos     P12
+                                    color   black
+                                .
+                                    pos     P11
+                                    color   white
+                                .
+                                    pos     O12
+                                    color   black
+                                .
+                                    pos     O11
+                                    color   white
+                                .
+                                    pos     Q10
+                                    color   black
+                                .
+                                    pos     Q9
+                                    color   white
+                                .
+                                    pos     P10
+                                    color   black
+                                .
+                                    pos     O10
+                                    color   white
+                                .
+                                    pos     P9
+                                    color   black
+                                .
+                                    pos     P8
+                                    color   white
+                                .
+                                    pos     O9
+                                    color   black
+                                .
+                                    pos     N9
+                                    color   white
+                                    alt
+                                        .
+                                            moves
+                                                .
+                                                    pos     N12
+                                                    color   white
+                                                .
+                                                    pos     O13
+                                                    color   black
+                                                .
+                                                    pos     N9
+                                                    color   white
+                                                .
+                                                    pos     O8
+                                                    color   black
+                                .
+                                    pos     O8
+                                    color   black
+                                .
+                                    pos     O7
+                                    color   white
+                                .
+                                    pos     N8
+                                    color   black
+                                .
+                                    pos     M8
+                                    color   white
+                                .
+                                    pos     N7
+                                    color   black
+                                .
+                                    pos     N6
+                                    color   white
+                                .
+                                    pos     M7
+                                    color   black
+                                .
+                                    pos     N12
+                                    color   white
+                                .
+                                    pos     O13
+                                    color   black
+                                .
+                                    pos     N13
+                                    color   white
+                                .
+                                    pos     O14
+                                    color   black
+                                .
+                                    pos     L13
+                                    color   white
+                                .
+                                    pos     P7
+                                    color   black
+                                .
+                                    pos     Q8
+                                    color   white
+                                .
+                                    pos     O6
+                                    color   black
+                                .
+                                    pos     O5
+                                    color   white
+                                    alt
+                                        .
+                                            moves
+                                                .
+                                                    pos     Q7
+                                                    color   white
+                                                .
+                                                    pos     Q6
+                                                    color   black
+                                                .
+                                                    pos     R6
+                                                    color   white
+                                                .
+                                                    pos     P6
+                                                    color   black
+                                                .
+                                                    pos     P5
+                                                    color   white
+                                                .
+                                                    pos     O5
+                                                    color   black
+                                                .
+                                                    pos     N5
+                                                    color   white
+                                                .
+                                                    pos     M6
+                                                    color   black
+                                .
+                                    pos     Q7
+                                    color   black
+                                .
+                                    pos     P6
+                                    color   white
+                                .
+                                    pos     O7
+                                    color   black
+
+            """
+            
+        t = new Tree().fromPOD pod
+        for i in 0..25 ➜ t.navigate 'rightdown'
+        t.navigate 'rightdown'
+        t.toString() ▸
+        """
+            O17
+            O18
+            P15
+            Q16
+            Q18
+            P18
+            R17
+            Q15
+            Q14
+            O15─P14
+                O15
+                P13
+                Q13
+                Q12
+                R12
+                Q11
+                R11
+                R10
+                S10
+                R9
+                S9
+                S8
+                P12
+                P11
+                O12
+                O11
+                Q10
+                Q9
+                P10
+                O10
+                P9
+                P8
+                O9
+                N9──────N12◂
+                O8      O13
+                O7      N9
+                N8      O8
+                M8
+                N7
+                N6
+                M7
+                N12
+                O13
+                N13
+                O14
+                L13
+                P7
+                Q8
+                O6
+                O5──Q7
+                Q7  Q6
+                P6  R6
+                O7  P6
+                    P5
+                    O5
+                    N5
+                    M6
+            """
+        

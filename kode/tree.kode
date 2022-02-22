@@ -113,16 +113,18 @@ function Tree
         
     navigateLeftUp: ->
         
+        mvi = @cursor[-1]
         ali = @cursor[-2]
         @navigateLeft()
-        if @cursor[-2] == ali
+        if @cursor[-2] == ali and mvi == @cursor[-1]
             @navigateUp()
             
     navigateRightDown: ->
-        
+
+        mvi = @cursor[-1]
         ali = @cursor[-2]
         @navigateRight()
-        if @cursor[-2] == ali
+        if @cursor[-2] == ali and mvi == @cursor[-1]
             @navigateDown()
         
     navigateUp: ->
