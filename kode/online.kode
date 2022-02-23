@@ -56,7 +56,7 @@ function Online
             now = Date.now()
             latency = now - data.client
             clockDrift = now - latency / 2 - data.server
-            setTimeout ping, 4000
+            setTimeout ping, 2000
 
         authenticate = =>
             @socket.emit 'authenticate',

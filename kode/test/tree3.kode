@@ -43,10 +43,159 @@ global.test = true
     t = new Tree().fromPOD pod
 
     t.toCursorColumns() ▸
-        """
-        A1
-        A2──B1◂─C1
-        A3  B2
-        A4  B3
-        ?
-        """
+        cursor:     x:1 y:1 
+        columns: [[
+                    [0]
+                    [1]
+                    [2]
+                    [3]
+                    [4]
+                  ],[
+                    []
+                    [1 1 0]
+                    [1 1 1]
+                    [1 1 2]
+                  ],[
+                    []
+                    [1 2 0]
+                  ]]
+       
+    ▸ jump
+        pod = noon.parse """
+            cursor 
+                0
+            moves
+                .
+                    pos     A1
+                    color   white
+                .
+                    pos     A2
+                    color   black
+                    alt
+                        .
+                            moves
+                                .
+                                    pos     M11
+                                    color   white
+                                .
+                                    pos     M10
+                                    color   black
+                                    alt
+                                        .
+                                            moves
+                                                .
+                                                    pos     M9
+                                                    color   black
+                                                .
+                                                    pos     M10
+                                                    color   white
+                                                .
+                                                    pos     O8
+                                                    color   black
+                                                .
+                                                    pos     N8
+                                                    color   white
+                                                .
+                                                    pos     N7
+                                                    color   black
+                                                .
+                                                    pos     M8
+                                                    color   white
+                                                .
+                                                    pos     L9
+                                                    color   black
+                                                .
+                                                    pos     L8
+                                                    color   white
+                                                .
+                                                    pos     L10
+                                                    color   black
+                                                .
+                                                    pos     K9
+                                                    color   white
+                                                .
+                                                    pos     L11
+                                                    color   black
+                                                .
+                                                    pos     K7
+                                                    color   white
+                                .
+                                    pos     M9
+                                    color   white
+                                .
+                                    pos     L10
+                                    color   black
+                                .
+                                    pos     L11
+                                    color   white
+                                    alt
+                                        .
+                                            moves
+                                                .
+                                                    pos     L9
+                                                    color   white
+                                .
+                                    pos     L9
+                                    color   black
+                                .
+                                    pos     L8
+                                    color   white
+                                .
+                                    pos     K9
+                                    color   black
+                                .
+                                    pos     J9
+                                    color   white
+                                .
+                                    pos     K8
+                                    color   black
+                                .
+                                    pos     K7
+                                    color   white
+            """
+            
+        t = new Tree().fromPOD pod
+        t.navigate 'down'
+        t.navigate 'jumpright'
+        t.navigate 'down'
+        t.navigate 'jumpright'
+        t.toString() ▸ 
+            """
+            A1
+            A2──M11
+                M10─────M9◂
+                M9      M10
+                L10     O8
+                L11─L9  N8
+                L9      N7
+                L8      M8
+                K9      L9
+                J9      L8
+                K8      L10
+                K7      K9
+                        L11
+                        K7
+            """
+        
+        t.navigate 'down'    
+        t.navigate 'down'    
+        t.navigate 'down'    
+        t.navigate 'jumpleft'
+        t.toString() ▸ 
+            """
+            A1
+            A2──M11
+                M10─────M9
+                M9      M10
+                L10     O8
+                L11─L9◂ N8
+                L9      N7
+                L8      M8
+                K9      L9
+                J9      L8
+                K8      L10
+                K7      K9
+                        L11
+                        K7
+            """
+        

@@ -115,20 +115,25 @@ function Tree
         
     navigateJumpLeft: ->
         
-        {cursor, columns} = @toColumns()
-        log noon cursor
+        {cursor, columns} = @toCursorColumns()
         x = cursor.x-1
         y = cursor.y
         while x >= 0
-            log x,y
-            if columns[x][y] != ''
-                log 'left' x, y, columns[x][y]
-                break
+            if valid columns[x][y]
+                @select columns[x][y]
+                return
             x--
         
     navigateJumpRight: ->
         
-        
+        {cursor, columns} = @toCursorColumns()
+        x = cursor.x+1
+        y = cursor.y
+        while x < columns.length
+            if valid columns[x][y]
+                @select columns[x][y]
+                return
+            x++
         
     navigateLeftUp: ->
         
@@ -274,8 +279,14 @@ function Tree
     
     select: ->
         
-        miai = [].splice.call arguments, 0
-        @cursor = miai if not @parent
+        return if @parent
+        if arguments[0] is arr
+            miai = arguments[0]
+        else
+            miai = [].splice.call arguments, 0
+        log 'select' miai
+        @cursor = miai 
+        @cursorChanged()
             
     canUndo: ->
         
@@ -555,23 +566,22 @@ function Tree
             hlines:hlines
             vlines:vlines
             
-    #  0000000   0000000   000      000   000  00     00  000   000   0000000  
-    # 000       000   000  000      000   000  000   000  0000  000  000       
-    # 000       000   000  000      000   000  000000000  000 0 000  0000000   
-    # 000       000   000  000      000   000  000 0 000  000  0000       000  
-    #  0000000   0000000   0000000   0000000   000   000  000   000  0000000   
+    #  0000000  000   000  00000000    0000000   0000000   0000000   000      000   000  00     00  000   000   0000000  
+    # 000       000   000  000   000  000       000       000   000  000      000   000  000   000  0000  000  000       
+    # 000       000   000  0000000    0000000   000       000   000  000      000   000  000000000  000 0 000  0000000   
+    # 000       000   000  000   000       000  000       000   000  000      000   000  000 0 000  000  0000       000  
+    #  0000000   0000000   000   000  0000000    0000000   0000000   0000000   0000000   000   000  000   000  0000000   
     
     toCursorColumns: ->
         
         columns = []
+        cursor = x:0 y:0
         
         ct = @cursorTree()
         cs = @cursor
         
         treeToColumn = (tree, col, row, cur) ->
         
-            log 'treetocol' col, row, cur
-            
             fillCol = -> while col >= columns.length ➜ columns.push []
             fillCol()
             
@@ -592,13 +602,16 @@ function Tree
                 if tree == ct and mi == cs[-1] then cursor = x:col, y:row+mi
                     
                 for ai in 0...mv.alt.length
-                    treeToColumn mv.alt[ai], col+ai+1, row+mi, copy cur
+                    nc = copy cur
+                    nc.push ai+1
+                    nc.push 0
+                    treeToColumn mv.alt[ai], col+ai+1, row+mi, nc
                     
         treeToColumn @, 0 0 [0]
         
         for column in columns
             for mi in 0...column.length
-                column[mi] = '' if not column[mi]
+                column[mi] = [] if not column[mi]
         
         cursor:  cursor
         columns: columns
