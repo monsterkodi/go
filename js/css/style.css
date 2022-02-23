@@ -118,6 +118,7 @@ body {
 }
 .eye,
 .number,
+.varpos,
 .variation,
 .liberty,
 .coordinate {
@@ -130,19 +131,23 @@ body {
   font-size: 13px;
 }
 .variation,
+.varpos,
 .number {
   text-align: center;
   line-height: 1.56;
 }
 .variation.black,
+.varpos.black,
 .number.black {
   color: #faeeea;
 }
 .variation.white,
+.varpos.white,
 .number.white {
   color: #000;
 }
 .variation.empty,
+.varpos.empty,
 .number.empty {
   filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.533));
 }

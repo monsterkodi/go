@@ -466,13 +466,17 @@ function Board
         return if not @tree
             
         s = @divSize/(@size+1)
-        s = max 16 int s/3
+        d = 60/(@size+1)
 
         for mv in @tree.cursorVariations()
+            continue if mv.pos == '?'
             c = @game.coord mv.pos
             p = @coordToPrcnt c
-            l = elem 'div' class:"variation #{mv.color}" parent:@var, text:mv.pos, style: "left:#{p.x}%;top:#{p.y}%; font-size:#{int(1*s/2)}px; border-radius:#{s}px; width:#{s}px; height:#{s}px;" 
-        
+            x = (c[0]+0.73)*100/(@size+1)
+            y = (c[1]+0.73)*100/(@size+1)
+            s = elem 'img' class:"stone pos#{c[0]}_#{c[1]}" src:"../img/varii_#{mv.color}.png" width:'auto' height:"#{d}%" style:"left:#{x}%; top:#{y}%;" parent:@var
+            l = elem 'div' class:"varpos #{mv.color}" parent:@var, text:mv.pos, style: "left:#{p.x}%;top:#{p.y}%; font-size:#{s/8}px; width:#{s}px; height:#{s}px;" 
+                    
     onVariation: (variation) => # only used by leelaz?
 
         return if not @game

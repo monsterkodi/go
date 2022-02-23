@@ -284,9 +284,8 @@ function Tree
             miai = arguments[0]
         else
             miai = [].splice.call arguments, 0
-        log 'select' miai
         @cursor = miai 
-        @cursorChanged()
+        @cursorChanged()        
             
     canUndo: ->
         
@@ -373,26 +372,24 @@ function Tree
     
     clearVariations: ->
         
-        for mv in @moves
-            mv.alt = []
-        post.emit? 'tree'
+        for mv in @moves ➜ mv.alt = []
+        @cursor = [@moves.length-1]
+        post.emit 'navigate' 'select'
     
     cursorVariations: ->
         
-        # if cm = @cursorMove()
-            # if cm.alt.length
-                # return cm.alt.map (a) -> a.moves[0]
-            # else
-                # if tr = @cursorTree()
-                    # if not tr.cursor? or tr.cursor?.mvi == 0
-                        # if tr.parent?
-                            # alt = tr.parent.moves[tr.parent.cursor.mvi].alt.map (t) -> t.moves[0]
-                            # alt.splice tr.parent.cursor.ali-1, 1
-                            # tm = tr.parent.moves[tr.parent.cursor.mvi]
-                            # alt.push tm if tm.pos != 'next'
-                            # return alt
-                    # else
-                        # return tr.cursorVariations()
+        if cm = @cursorMove()
+            if cm.alt.length
+                return cm.alt.map (a) -> a.moves[0]
+            else
+                if tr = @cursorTree()
+                    if @cursor[-1] == 0
+                        if tr.parent and @cursor.length > 2
+                            alt = tr.parent.moves[@cursor[-3]].alt.map (t) -> t.moves[0]
+                            alt.splice @cursor[-2]-1, 1
+                            tm = tr.parent.moves[@cursor[-3]]
+                            alt.push tm if tm.pos != 'next'
+                            return alt
         []
                 
     # 000000000  00000000   00000000  00000000         0000000   000000000  
