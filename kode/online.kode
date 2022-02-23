@@ -190,6 +190,9 @@ function Online
         
         @boards = {}
         for game in @activeGames
+            if not game?
+                log 'no game?' @activeGames
+                continue
             g = elem 'div' class:'game' parent:@games
             if game.players.black.username != 'monsterkodi'
                 ib = elem 'img'  parent:g, class:'gameIcon black' src:iconUrl game.players.black.icon, 128

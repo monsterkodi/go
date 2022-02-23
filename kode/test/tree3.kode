@@ -1,0 +1,52 @@
+###
+000000000  00000000   00000000  00000000  000000   
+   000     000   000  000       000           000  
+   000     0000000    0000000   0000000     0000   
+   000     000   000  000       000           000  
+   000     000   000  00000000  00000000  000000   
+###
+
+Tree = require '../tree'
+{ noon } = require 'kxk'
+
+global.test = true
+
+▸ tree3
+
+    pod =
+        cursor: [1 1 0]
+        moves:  [
+                    pos:  'A1'
+                ,
+                    pos:  'A2'
+                    alt:    [
+                                moves:  [
+                                            pos:  'B1'
+                                        ,
+                                            pos:  'B2'
+                                        ,
+                                            pos:  'B3'
+                                        ]
+                            ,
+                                moves:  [
+                                            pos:  'C1'
+                                        ]
+                            ]
+                ,
+                    pos:  'A3'
+                ,
+                    pos:  'A4'
+                ,
+                    pos:  '?'
+                ]
+
+    t = new Tree().fromPOD pod
+
+    t.toCursorColumns() ▸
+        """
+        A1
+        A2──B1◂─C1
+        A3  B2
+        A4  B3
+        ?
+        """

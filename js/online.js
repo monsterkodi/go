@@ -219,6 +219,11 @@ Online = (function ()
         for (var _192_17_ = 0; _192_17_ < list.length; _192_17_++)
         {
             game = list[_192_17_]
+            if (!(game != null))
+            {
+                console.log('no game?',this.activeGames)
+                continue
+            }
             g = elem('div',{class:'game',parent:this.games})
             if (game.players.black.username !== 'monsterkodi')
             {

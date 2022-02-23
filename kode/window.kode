@@ -148,6 +148,7 @@ function MainWin extends win
             'save'                          ➜ @referee.save(); @saveStash()
             'up''down''left''right'
             'rightdown''leftup'
+            'jumpleft' 'jumpright'
             'back''forward'                 ➜ @referee.navigate action
             'delete'                        ➜ @referee.delete()
             'undo'                          ➜ @referee.undo()

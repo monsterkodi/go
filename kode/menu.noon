@@ -51,6 +51,8 @@ game
     rightdown               right
     back                    cmdctrl+up
     forward                 cmdctrl+down
+    jumpleft                cmdctrl+left
+    jumpright               cmdctrl+right
     ---
     undo                    cmdctrl+z
     redo                    cmdctrl+shift+z

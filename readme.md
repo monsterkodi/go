@@ -7,6 +7,4 @@
 <p>&nbsp;</p>
 
 ![go](img/go.png)
-![online](img/go_online.png)
-![tree](img/go_tree.png)
 ![wacky](img/wacky.png)

@@ -108,8 +108,27 @@ function Tree
             'back'      ➜ @navigateBack()
             'leftup'    ➜ @navigateLeftUp()
             'rightdown' ➜ @navigateRightDown()
+            'jumpleft'  ➜ @navigateJumpLeft()
+            'jumpright' ➜ @navigateJumpRight()
         
         log @toColors() if global.test
+        
+    navigateJumpLeft: ->
+        
+        {cursor, columns} = @toColumns()
+        log noon cursor
+        x = cursor.x-1
+        y = cursor.y
+        while x >= 0
+            log x,y
+            if columns[x][y] != ''
+                log 'left' x, y, columns[x][y]
+                break
+            x--
+        
+    navigateJumpRight: ->
+        
+        
         
     navigateLeftUp: ->
         
@@ -535,6 +554,54 @@ function Tree
         lines:  
             hlines:hlines
             vlines:vlines
+            
+    #  0000000   0000000   000      000   000  00     00  000   000   0000000  
+    # 000       000   000  000      000   000  000   000  0000  000  000       
+    # 000       000   000  000      000   000  000000000  000 0 000  0000000   
+    # 000       000   000  000      000   000  000 0 000  000  0000       000  
+    #  0000000   0000000   0000000   0000000   000   000  000   000  0000000   
+    
+    toCursorColumns: ->
+        
+        columns = []
+        
+        ct = @cursorTree()
+        cs = @cursor
+        
+        treeToColumn = (tree, col, row, cur) ->
+        
+            log 'treetocol' col, row, cur
+            
+            fillCol = -> while col >= columns.length ➜ columns.push []
+            fillCol()
+            
+            column = null
+            while not column
+                column = columns[col]
+                for mi in tree.moves.length-1..0
+                    if column[mi+row]
+                        col++
+                        fillCol()
+                        column = null
+                        break
+
+            for mi in tree.moves.length-1..0
+                mv = tree.moves[mi]
+                cur[cur.length-1] = mi
+                column[row+mi] = copy cur
+                if tree == ct and mi == cs[-1] then cursor = x:col, y:row+mi
+                    
+                for ai in 0...mv.alt.length
+                    treeToColumn mv.alt[ai], col+ai+1, row+mi, copy cur
+                    
+        treeToColumn @, 0 0 [0]
+        
+        for column in columns
+            for mi in 0...column.length
+                column[mi] = '' if not column[mi]
+        
+        cursor:  cursor
+        columns: columns
             
     # 00000000    0000000   0000000    
     # 000   000  000   000  000   000  
