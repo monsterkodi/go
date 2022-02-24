@@ -14,7 +14,7 @@ function Tree
 
     @: (@parent) ->
         
-        post.on 'treeReset' @resetCursor
+        post.on? 'treeReset' @resetCursor
         
         @cursor = [-1] if not @parent
         @id     = 0
@@ -82,10 +82,13 @@ function Tree
         if pod = window.stash.get "tree▸#{@id}"
             for mi,alt of pod
                 for td in alt
-                    if @moves[mi].pos != td.moves[0].pos
-                        @moves[mi].alt.push new Tree(@).fromPOD td
+                    if @moves[mi]
+                        if @moves[mi].pos != td.moves[0].pos
+                            @moves[mi].alt.push new Tree(@).fromPOD td
+                        else
+                            log 'skip alt with same move' mi, @moves[mi].pos, noon td
                     else
-                        log 'skip alt with same move' mi, @moves[mi].pos, noon td
+                        warn "no move at index #{mi}, but in pod from stash!" @moves.length, pod
         
         @cursor = [mvi]
         post.emit? 'tree'

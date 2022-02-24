@@ -167,6 +167,8 @@ function MainWin extends win
             'territory'                     ➜ @referee.board.toggleTerritory()
             'variations'                    ➜ @referee.board.toggleVariations()
             'new game'                      ➜ @referee.newGame()
+            'next game'                     ➜ @online.nextGame()
+            'prev game'                     ➜ @online.prevGame()
             'gnu human'                     ➜ @referee.newGame black:'gnu'    white:'human'
             'human gnu'                     ➜ @referee.newGame black:'human'  white:'gnu'
             'human human'                   ➜ @referee.newGame black:'human'  white:'human'               

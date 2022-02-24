@@ -204,6 +204,8 @@ body {
   margin-left: 20px;
   display: inline-block;
   white-space: nowrap;
+  border-radius: 6px;
+  padding: 12px;
 }
 .gameboard {
   position: relative;

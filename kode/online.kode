@@ -261,22 +261,85 @@ function Online
     # 0000000   0000000   000   000  0000000           0000000   000   000  000   000  00000000  
     
     loadGame: (id) =>
-        
-        @get path:"/api/v1/games/#{id}" cb: (g) =>
-            
+
+        if b = @boards[id]
+            g = b.game
             @referee.newGame
-                black:    g.gamedata.players.black.username
-                white:    g.gamedata.players.white.username
-                size:     g.gamedata.width
-                handicap: g.gamedata.handicap
+                black:    g.players.black
+                white:    g.players.white
+                size:     g.size
+                handicap: g.handicap
                 
-            moves = ogsMoves g.gamedata.moves, g.gamedata.height
+            moves = g.moves.m
+            
             @referee.game.paused = true
-            @referee.game.info.id = g.id
+            @referee.game.info.id = id
             @referee.game.replay moves, true
-            @referee.tree.replay moves, g.id
+            @referee.tree.replay moves, id
             @referee.game.calcScore()
             @referee.board.annotate()
+            
+            @pendingGameId = id
+            
+            for k,b of @boards
+                t = b.parent.previousElementSibling
+                t.style.backgroundColor = 'transparent'
+                t.style.boxShadow = 'unset'
+            if e = @boards[id]?.parent
+                t = e.previousElementSibling
+                t.style.backgroundColor = 'rgba(80,30,0,0.03)'
+                t.style.boxShadow       = 'inset 1px 1px 6px rgba(80,30,0,0.6)'
+                
+                t.scrollIntoViewIfNeeded()
+                e.scrollIntoViewIfNeeded()
+            
+            @get path:"/api/v1/games/#{id}" cb: (g) =>
+                
+                if g.id != @pendingGameId
+                    log 'ignoring non-pending game data' g.id
+                    return
+                    
+                delete @pendingGameId
+                @referee.newGame
+                    black:    g.gamedata.players.black.username
+                    white:    g.gamedata.players.white.username
+                    size:     g.gamedata.width
+                    handicap: g.gamedata.handicap
+                    
+                moves = ogsMoves g.gamedata.moves, g.gamedata.height
+                @referee.game.paused = true
+                @referee.game.info.id = g.id
+                @referee.game.replay moves, true
+                @referee.tree.replay moves, g.id
+                @referee.game.calcScore()
+                @referee.board.annotate()
+                
+                @boards[id]?.div.scrollIntoViewIfNeeded()
+            
+    nextGame: ->
+
+        if @referee.game.info.id
+            for game,i in @activeGames
+                if game.id == @referee.game.info.id
+                    # id = @activeGames[(i+1)%@activeGames.length].id
+                    id = @activeGames[clamp 0, @activeGames.length-1, i+1].id
+                    break
+
+        id ?= @activeGames[0].id        
+        @loadGame id
+        
+    prevGame: ->
+
+        if @referee.game.info.id
+            for game,i in @activeGames
+                if game.id == @referee.game.info.id
+                    # id = @activeGames[(@activeGames.length+i-1)%@activeGames.length].id
+                    id = @activeGames[clamp 0, @activeGames.length-1, i-1].id
+                    break
+
+        id ?= @activeGames[-1].id
+        
+        @loadGame id
         
     # 00000000    0000000    0000000  000000000  
     # 000   000  000   000  000          000     

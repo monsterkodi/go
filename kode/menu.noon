@@ -7,6 +7,8 @@
 
 go
     new game                n
+    next game               .
+    prev game               ,
     open                    cmdctrl+o
     save                    cmdctrl+s
     save as ...             cmdctrl+shift+s

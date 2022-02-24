@@ -1,4 +1,4 @@
-// monsterkodi/kode 0.242.0
+// monsterkodi/kode 0.243.0
 
 var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}}
 
@@ -214,6 +214,12 @@ MainWin = (function ()
 
             case 'new game':
                 return this.referee.newGame()
+
+            case 'next game':
+                return this.online.nextGame()
+
+            case 'prev game':
+                return this.online.prevGame()
 
             case 'gnu human':
                 return this.referee.newGame({black:'gnu',white:'human'})
