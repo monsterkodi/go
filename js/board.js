@@ -686,51 +686,51 @@ Board = (function ()
 
     Board.prototype["territory"] = function ()
     {
-        var a, e, g, p, r, s
+        var a, d, e, g, p, r
 
         if (!this.features.territory)
         {
             return
         }
         this.ter.innerHTML = ''
-        if (this.game)
+        if (!this.game)
         {
-            if (this.game.moves.num() > 1)
+            return
+        }
+        if (this.game.moves.num() < 1)
+        {
+            return
+        }
+        d = 25 / (this.size + 1)
+        var list = _k_.list(this.game.areas)
+        for (var _549_14_ = 0; _549_14_ < list.length; _549_14_++)
+        {
+            a = list[_549_14_]
+            if (_k_.in(a.color,'wbWB'))
             {
-                s = this.divSize / (this.size + 1)
-                s /= 4
-                s = s.toFixed(2)
-                var list = _k_.list(this.game.areas)
-                for (var _550_22_ = 0; _550_22_ < list.length; _550_22_++)
+                var list1 = _k_.list(a.posl)
+                for (var _551_22_ = 0; _551_22_ < list1.length; _551_22_++)
                 {
-                    a = list[_550_22_]
-                    if (_k_.in(a.color,'wbWB'))
-                    {
-                        var list1 = _k_.list(a.posl)
-                        for (var _552_30_ = 0; _552_30_ < list1.length; _552_30_++)
-                        {
-                            p = list1[_552_30_]
-                            e = elem('div',{class:`eye ${a.color}`,parent:this.ter})
-                            r = this.coordToPrcnt(this.game.coord(p))
-                            e.style = `left:${r.x}%; top:${r.y}%; width:${s}px; height:${s}px; border-radius:${s}px;`
-                        }
-                    }
+                    p = list1[_551_22_]
+                    e = elem('div',{class:`eye ${a.color}`,parent:this.ter})
+                    r = this.coordToPrcnt(this.game.coord(p))
+                    e.style = `left:${r.x}%; top:${r.y}%; width:${d}%; height:${d}%; border-radius:100%;`
                 }
-                var list2 = _k_.list(this.game.grps)
-                for (var _557_22_ = 0; _557_22_ < list2.length; _557_22_++)
+            }
+        }
+        var list2 = _k_.list(this.game.grps)
+        for (var _556_14_ = 0; _556_14_ < list2.length; _556_14_++)
+        {
+            g = list2[_556_14_]
+            if (g.state === 'dead')
+            {
+                var list3 = _k_.list(g.posl)
+                for (var _558_22_ = 0; _558_22_ < list3.length; _558_22_++)
                 {
-                    g = list2[_557_22_]
-                    if (g.state === 'dead')
-                    {
-                        var list3 = _k_.list(g.posl)
-                        for (var _559_30_ = 0; _559_30_ < list3.length; _559_30_++)
-                        {
-                            p = list3[_559_30_]
-                            e = elem('div',{class:`eye ${opponent[stoneColor[g.stone]][0]}`,parent:this.ter})
-                            r = this.coordToPrcnt(this.game.coord(p))
-                            e.style = `left:${r.x}%; top:${r.y}%; width:${s}px; height:${s}px; border-radius:${s}px;`
-                        }
-                    }
+                    p = list3[_558_22_]
+                    e = elem('div',{class:`eye ${opponent[stoneColor[g.stone]][0]}`,parent:this.ter})
+                    r = this.coordToPrcnt(this.game.coord(p))
+                    e.style = `left:${r.x}%; top:${r.y}%; width:${d}%; height:${d}%; border-radius:100%;`
                 }
             }
         }

@@ -1,6 +1,7 @@
 
 Game = require '../game'
 { scr, ded, ars } = require './util'
+Bord = require '../util/bord'
 
 ▸ game
 
@@ -44,3 +45,38 @@ Game = require '../game'
         # g = Game.fromMoves moves
         # g.grid.toString() ▸ board
         
+    ▸ legal
+    
+        m = "E5 E6 F6 D6 F5 D5 D4 C5 F7 F3 E3 H3 F2 G2 F4 C3 C4 B4 D3 C2 G3 G4 F3 H2 H4 E8 F8 E7 E9 D9 F9 C8 D2 D1 E1 C1 A1"
+        m = m.split(' ') each (i,m) -> [i, pos:m, color:['black''white'][i%2]]
+              
+        b = new Bord 9
+        g = new Game b, 'a' 'b' 0
+        g.replay m, true
+        
+        g.grid.toString(true) ▸ 
+            """
+            ┌───────────────────┐
+            │       ● ○ ○       │ 9
+            │     ●   ● ○       │ 8
+            │         ● ○       │ 7
+            │       ● ● ○       │ 6
+            │     ● ● ○ ○       │ 5
+            │   ● ○ ○   ○ ● ○   │ 4
+            │     ● ○ ○ ○ ○ ●   │ 3
+            │     ● ○   ○ ● ●   │ 2
+            │ ○   ● ● ○         │ 1
+            └───────────────────┘
+              A B C D E F G H J
+            """
+        
+        g.coord 'H1' ▸ [7 8]
+        g.coord 'H4' ▸ [7 5]
+        g.pos [7 5] ▸ 'H4'
+        g.freedoms 'black' [7 5] ▸ 2
+        g.legal 'black' g.coord 'H4' ▸ false
+        g.legal 'black' g.coord 'G5' ▸ true
+        g.legal 'white' g.coord 'E4' ▸ false
+        g.legal 'white' g.coord 'E2' ▸ false
+        g.legal 'white' g.coord 'F1' ▸ true
+    

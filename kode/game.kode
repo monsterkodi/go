@@ -94,7 +94,7 @@ function Game extends Score
                     
         if p.toLowerCase() in ['pass' 'resign' 'illegal']
             @moves.add p.toLowerCase(), color
-            @board.annotate?()
+            @board.annotate()
             return ''
 
         if @start() and p.split(' ').length > 1
@@ -114,7 +114,7 @@ function Game extends Score
             @lastCaptures = @capture color
             @moves.add p, color, @lastCaptures
             @calcScore()
-            @board.annotate?()
+            @board.annotate()
             ''
         else
             '? invalid color or coordinate'
@@ -138,8 +138,8 @@ function Game extends Score
                     m.captures = @capture color
             @moves.add p, color, m.captures
             @removeStones m.captures
-        @calcScore()
-        @board.annotate()
+        # @calcScore()
+        # @board.annotate()
                         
     #  0000000   0000000   00000000   000000000  000   000  00000000   00000000
     # 000       000   000  000   000     000     000   000  000   000  000     
@@ -190,11 +190,12 @@ function Game extends Score
     setStone: (c, s) ->
         
         @grid.set c, s
+
         if s == stone.empty
             @board.delStone c
         else
             @board.addStone c, s
-            
+        
     removePos: (p) ->
 
         @setStone @coord(p), stone.empty
@@ -243,7 +244,7 @@ function Game extends Score
         @moves.clear()
         @clear()
         @grid.clear()
-        @board.clear?()
+        @board.clear()
         @updateTitle()
         ''
             

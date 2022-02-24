@@ -1,4 +1,4 @@
-// monsterkodi/kode 0.242.0
+// monsterkodi/kode 0.243.0
 
 var _k_ = {empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}}
 
@@ -167,10 +167,11 @@ Referee = (function ()
 
     Referee.prototype["playerMove"] = function (p, player)
     {
-        var color, next, _147_42_, _147_62_, _155_38_, _155_58_, _170_27_, _171_28_, _172_27_, _173_28_
+        var color, next, _148_42_, _148_62_, _157_38_, _157_58_, _172_27_, _173_28_, _174_27_, _175_28_
 
         if (this.game.info.id && this.game.players[stoneColor[this.game.stoneAt(p)]] === player)
         {
+            console.log('playerMove ▸ loadGame',player,p)
             post.emit('loadGame',this.game.info.id)
             return
         }
@@ -234,7 +235,7 @@ Referee = (function ()
 
     Referee.prototype["undo"] = function ()
     {
-        var m, _202_15_, _210_20_, _211_20_
+        var m, _204_15_, _212_20_, _213_20_
 
         if (this.game.start())
         {
@@ -250,7 +251,7 @@ Referee = (function ()
         }
         console.log('undo')
         this.game.paused = true
-        this.redos = ((_202_15_=this.redos) != null ? _202_15_ : [])
+        this.redos = ((_204_15_=this.redos) != null ? _204_15_ : [])
         m = this.game.moves.pop()
         this.redos.unshift(m)
         this.game.undoMove(m)
@@ -261,7 +262,7 @@ Referee = (function ()
 
     Referee.prototype["redo"] = function ()
     {
-        var move, _222_20_, _223_20_
+        var move, _224_20_, _225_20_
 
         if (_k_.empty(this.redos))
         {
@@ -307,12 +308,14 @@ Referee = (function ()
         this.game.paused = true
         this.board.game = this.game
         this.board.tree = this.tree
-        return this.game.replay(this.tree.moveHistory())
+        this.game.replay(this.tree.moveHistory())
+        this.game.calcScore()
+        return this.board.annotate()
     }
 
     Referee.prototype["jumpToStart"] = function ()
     {
-        var _268_20_, _269_20_
+        var _272_20_, _273_20_
 
         if (this.game.start())
         {

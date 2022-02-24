@@ -120,7 +120,7 @@ Online = (function ()
             pos = ogsMove(arg.move,this.boards[arg.game_id].game.size)
             b = this.boards[arg.game_id]
             b.game.play(pos)
-            if (b.game.players[b.game.nextColor()] === 'monsterkodi')
+            if (b.game.players[b.game.nextColor()] === global.myUserName)
             {
                 b.div.style.border = '2px solid black'
                 b.div.style.borderRadius = '6px'
@@ -134,9 +134,10 @@ Online = (function ()
             {
                 b.div.style.border = 'none'
             }
+            console.log('load game?',this.referee.game.info.id,arg.game_id,this.referee.game.info.id === arg.game_id)
             if (this.referee.game.info.id === arg.game_id)
             {
-                return post.emit('playerMove',pos,b.game.players[b.game.lastColor()])
+                return this.loadGame(arg.game_id)
             }
         }
     }
@@ -151,9 +152,9 @@ Online = (function ()
             return
         }
         var list = _k_.list(this.activeGames)
-        for (var _132_17_ = 0; _132_17_ < list.length; _132_17_++)
+        for (var _136_17_ = 0; _136_17_ < list.length; _136_17_++)
         {
-            game = list[_132_17_]
+            game = list[_136_17_]
             this.socket.emit('game/connect',{game_id:game.id,player_id:this.myUserId,chat:0})
         }
     }
@@ -216,9 +217,9 @@ Online = (function ()
 
         this.boards = {}
         var list = _k_.list(this.activeGames)
-        for (var _192_17_ = 0; _192_17_ < list.length; _192_17_++)
+        for (var _196_17_ = 0; _196_17_ < list.length; _196_17_++)
         {
-            game = list[_192_17_]
+            game = list[_196_17_]
             if (!(game != null))
             {
                 console.log('no game?',this.activeGames)
@@ -307,7 +308,9 @@ Online = (function ()
             this.referee.game.paused = true
             this.referee.game.info.id = g.id
             this.referee.game.replay(moves,true)
-            return this.referee.tree.replay(moves,g.id)
+            this.referee.tree.replay(moves,g.id)
+            this.referee.game.calcScore()
+            return this.referee.board.annotate()
         }).bind(this)})
     }
 

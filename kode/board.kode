@@ -540,25 +540,24 @@ function Board
         return if not @features.territory
         
         @ter.innerHTML = ''
-        if @game
-            if @game.moves.num() > 1
+        
+        return if not @game
+        return if @game.moves.num() < 1
 
-                s = @divSize/(@size+1)
-                s /= 4
-                s = s.toFixed 2
-                
-                for a in @game.areas
-                    if a.color in 'wbWB'
-                        for p in a.posl
-                            e = elem 'div' class:"eye #{a.color}" parent:@ter
-                            r = @coordToPrcnt @game.coord p
-                            e.style = "left:#{r.x}%; top:#{r.y}%; width:#{s}px; height:#{s}px; border-radius:#{s}px;" 
-                    
-                for g in @game.grps
-                    if g.state == 'dead'
-                        for p in g.posl
-                            e = elem 'div' class:"eye #{opponent[stoneColor[g.stone]][0]}" parent:@ter
-                            r = @coordToPrcnt @game.coord p
-                            e.style = "left:#{r.x}%; top:#{r.y}%; width:#{s}px; height:#{s}px; border-radius:#{s}px;" 
+        d = 25/(@size+1)
+        
+        for a in @game.areas
+            if a.color in 'wbWB'
+                for p in a.posl
+                    e = elem 'div' class:"eye #{a.color}" parent:@ter
+                    r = @coordToPrcnt @game.coord p
+                    e.style = "left:#{r.x}%; top:#{r.y}%; width:#{d}%; height:#{d}%; border-radius:100%;" 
+            
+        for g in @game.grps
+            if g.state == 'dead'
+                for p in g.posl
+                    e = elem 'div' class:"eye #{opponent[stoneColor[g.stone]][0]}" parent:@ter
+                    r = @coordToPrcnt @game.coord p
+                    e.style = "left:#{r.x}%; top:#{r.y}%; width:#{d}%; height:#{d}%; border-radius:100%;" 
 
 module.exports = Board

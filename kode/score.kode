@@ -34,7 +34,7 @@ function Score extends Calc
         
     calcScore: (@verbose) ->
         
-        # ● calcScore
+        ● calcScore
             
         @calcGroups()
         @linkAreas()

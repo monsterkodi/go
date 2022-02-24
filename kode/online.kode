@@ -102,7 +102,7 @@ function Online
             b = @boards[arg.game_id]
             b.game.play pos
             
-            if b.game.players[b.game.nextColor()] == 'monsterkodi'
+            if b.game.players[b.game.nextColor()] == global.myUserName
                 b.div.style.border = '2px solid black'
                 b.div.style.borderRadius = '6px'
                 e = b.parent # move 'your move' games to top
@@ -113,8 +113,12 @@ function Online
             else
                 b.div.style.border = 'none'
                     
+            log 'load game?' @referee.game.info.id, arg.game_id, @referee.game.info.id == arg.game_id
             if @referee.game.info.id == arg.game_id
-                post.emit 'playerMove' pos, b.game.players[b.game.lastColor()]
+                # post.emit 'loadGame' arg.game_id
+                @loadGame arg.game_id
+                # post.emit 'treeReset'
+                # post.emit 'playerMove' pos, b.game.players[b.game.lastColor()]
         
     #  0000000   0000000   000   000  000   000  00000000   0000000  000000000         0000000    0000000   00     00  00000000   0000000  
     # 000       000   000  0000  000  0000  000  000       000          000           000        000   000  000   000  000       000       
@@ -271,6 +275,8 @@ function Online
             @referee.game.info.id = g.id
             @referee.game.replay moves, true
             @referee.tree.replay moves, g.id
+            @referee.game.calcScore()
+            @referee.board.annotate()
         
     # 00000000    0000000    0000000  000000000  
     # 000   000  000   000  000          000     
