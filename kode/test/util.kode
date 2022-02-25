@@ -1,8 +1,14 @@
 
 Score = require '../score'
+Estimate = require '../estimate'
 
-global.test = true
+global.test = false
 verbose = global.test
+
+est = (b) -> 
+    e = new Estimate b
+    r = e.estimate verbose
+    r
 
 scr = (b) ->
     s = new Score b
@@ -19,7 +25,7 @@ ded = (b) ->
     r = s.calcScore verbose
     s.deadString()
 
-module.exports = { scr, ded, ars }
+module.exports = { scr, ded, ars, est }
 
 { sgfToAlphaNum } = require '../util/util'
 

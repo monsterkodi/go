@@ -65,7 +65,7 @@ MainWin = (function ()
     MainWin.prototype["onLoad"] = function ()
     {
         this.restore()
-        this.referee.newGame({black:window.stash.get('black','human'),white:window.stash.get('white','gnu'),size:window.stash.get('size',9),handicap:window.stash.get('handicap',0),moves:window.stash.get('moves',[])})
+        this.referee.newGame({black:'human',white:'human',size:19,handicap:0,moves:[]})
         return this.referee.board.preloadStones()
     }
 
@@ -199,7 +199,7 @@ MainWin = (function ()
                 return this.referee.genMove()
 
             case 'calcscore':
-                console.log(this.referee.game.calcScore())
+                console.log(this.referee.game.estimate())
                 return this.referee.board.annotate()
 
             case 'games':

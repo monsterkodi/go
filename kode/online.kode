@@ -221,6 +221,9 @@ function Online
             b = elem 'div' class:'gameboard' parent:@games
             @renderGame game, b
             
+        if not @referee.game.info.id and @activeGames.length
+            @loadGame @activeGames[0].id
+            
     # 00000000   00000000  000   000  0000000    00000000  00000000          0000000    0000000   00     00  00000000  
     # 000   000  000       0000  000  000   000  000       000   000        000        000   000  000   000  000       
     # 0000000    0000000   000 0 000  000   000  0000000   0000000          000  0000  000000000  000000000  0000000   
@@ -283,7 +286,7 @@ function Online
             @referee.game.info.id = id
             @referee.game.replay moves, true
             @referee.tree.replay moves, id
-            @referee.game.calcScore()
+            @referee.game.estimate()
             @referee.board.annotate()
             
             for k,b of @boards
@@ -320,7 +323,7 @@ function Online
             @referee.game.info.id = g.id
             @referee.game.replay moves, true
             @referee.tree.replay moves, g.id
-            @referee.game.calcScore()
+            @referee.game.estimate()
             @referee.board.annotate()
             
             @boards[id]?.div.scrollIntoViewIfNeeded()

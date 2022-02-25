@@ -17,9 +17,9 @@ SORT = true
 
 function Score extends Calc
 
-    @: (a) ->
+    @: (s) ->
         
-        @grid = new Grid a
+        @grid = new Grid s
         @size = @grid.size
         
     clear: ->

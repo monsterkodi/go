@@ -22,9 +22,9 @@ SORT = true
 Score = (function ()
 {
     _k_.extend(Score, Calc)
-    function Score (a)
+    function Score (s)
     {
-        this.grid = new Grid(a)
+        this.grid = new Grid(s)
         this.size = this.grid.size
         return Score.__super__.constructor.apply(this, arguments)
     }

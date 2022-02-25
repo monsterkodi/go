@@ -263,6 +263,10 @@ Online = (function ()
             b = elem('div',{class:'gameboard',parent:this.games})
             this.renderGame(game,b)
         }
+        if (!this.referee.game.info.id && this.activeGames.length)
+        {
+            return this.loadGame(this.activeGames[0].id)
+        }
     }
 
     Online.prototype["renderGame"] = function (game, e)
@@ -316,7 +320,7 @@ Online = (function ()
             this.referee.game.info.id = id
             this.referee.game.replay(moves,true)
             this.referee.tree.replay(moves,id)
-            this.referee.game.calcScore()
+            this.referee.game.estimate()
             this.referee.board.annotate()
             for (k in this.boards)
             {
@@ -358,7 +362,7 @@ Online = (function ()
             this.referee.game.info.id = g.id
             this.referee.game.replay(moves,true)
             this.referee.tree.replay(moves,g.id)
-            this.referee.game.calcScore()
+            this.referee.game.estimate()
             this.referee.board.annotate()
             return (this.boards[id] != null ? this.boards[id].div.scrollIntoViewIfNeeded() : undefined)
         }).bind(this)})

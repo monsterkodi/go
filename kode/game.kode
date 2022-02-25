@@ -11,11 +11,11 @@ kxk = require 'kxk'
 { randInt, elem, $ } = kxk
 { opponent, alpha, stone } = require './util/util'
 
-Score = require './score'
+Estimate = require './estimate'
 Moves = require './util/moves'
 Grid  = require './util/grid'
 
-function Game extends Score
+function Game extends Estimate
 
     @: (board, black, white, @handicap) ->
         
@@ -113,7 +113,7 @@ function Game extends Score
             @setStone c, stone[color]
             @lastCaptures = @capture color
             @moves.add p, color, @lastCaptures
-            @calcScore()
+            @estimate()
             @board.annotate()
             ''
         else
@@ -138,8 +138,6 @@ function Game extends Score
                     m.captures = @capture color
             @moves.add p, color, m.captures
             @removeStones m.captures
-        # @calcScore()
-        # @board.annotate()
                         
     #  0000000   0000000   00000000   000000000  000   000  00000000   00000000
     # 000       000   000  000   000     000     000   000  000   000  000     
@@ -215,7 +213,7 @@ function Game extends Score
             for p in m.captures
                 @setStone @coord(p), stone[opponent[m.color]]
         
-        @calcScore()
+        @estimate()
         @board.annotate()
             
     next: (num=1) ->

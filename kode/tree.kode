@@ -361,11 +361,9 @@ function Tree
         else
             if tr.parent or @noNext()
                 if valid tr.moves[mvi].alt
-                    log @toColors()
                     alts = tr.moves[mvi].alt
                     tr.moves.splice.apply tr.moves, [mvi, tr.moves.length-mvi].concat alts.shift().moves
                     tr.moves[mvi].alt = alts
-                    log @toColors()
                 else
                     tr.moves = tr.moves.slice 0 mvi
                     @cursor[@cursor.length-1]--

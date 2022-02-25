@@ -24,11 +24,6 @@ function Referee
 
     @: (@parent)->
         
-        @boardsize = window.stash.get 'boardsize'   19
-        @handicap  = window.stash.get 'handicap'    0
-        @white     = window.stash.get 'white'       'human'
-        @black     = window.stash.get 'black'       'human'
-                
         post.on 'newGame'    @newGame
         post.on 'playerMove' @playerMove
         post.on 'altMove'    @altMove
@@ -57,12 +52,6 @@ function Referee
         
         if @white == 'leelaz' or @black == 'leelaz' then @boardsize = 19
         
-        window.stash.set 'size'      @boardsize
-        window.stash.set 'white'     @white
-        window.stash.set 'black'     @black
-        window.stash.set 'handicap'  @handicap
-        window.stash.set 'moves'     moves
-                
         @board = new Board @parent, @boardsize
         @game  = new Game  @board, @black, @white, @handicap
         @board.game = @game
@@ -179,12 +168,7 @@ function Referee
     altMove: (p) =>
         
         @navigate 'back'
-        log 'altMove' p, @game.nextColor()
-        log @game.grid.toString()
-        log @tree.toString()
         @playerMove p, @game.players[@game.nextColor()]
-        log @game.grid.toString()
-        log @tree.toString()
                             
     # 000   000  000   000  0000000     0000000   
     # 000   000  0000  000  000   000  000   000  
@@ -197,8 +181,6 @@ function Referee
         return if @game.start()
         return if @game.handicap > 1 and @game.moves.num() == 1
         return if not @tree.canUndo()
-        
-        log 'undo'
         
         @game.paused = true
         @redos ?= []
@@ -256,7 +238,7 @@ function Referee
         @board.game = @game
         @board.tree = @tree
         @game.replay @tree.moveHistory()
-        @game.calcScore()
+        @game.estimate()
         @board.annotate()
             
     #       000  000   000  00     00  00000000   

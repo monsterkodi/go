@@ -9,7 +9,7 @@
 Tree = require '../tree'
 { noon } = require 'kxk'
 
-global.test = true
+global.test = false
 
 ▸ tree3
 

@@ -8,7 +8,7 @@
 
 Tree = require '../tree'
 
-global.test = true
+global.test = false
 
 ▸ tree
     
