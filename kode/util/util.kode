@@ -77,7 +77,11 @@ class Util
         else
             Util.alpha[o[0]]+(size-o[1])
             
-    @toOGS: (pos, size) -> [Util.alpha.indexOf(pos[0]), size-int(pos[1..])]
+    @toOGS: (pos, size) -> 
+    
+        if pos == 'pass' ➜ [-1,-1]
+        else
+            [Util.alpha.indexOf(pos[0]), size-int(pos[1..])]
         
     @iconUrl: (icon, size) ->
         

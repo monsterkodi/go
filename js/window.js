@@ -34,6 +34,7 @@ MainWin = (function ()
         this["restore"] = this["restore"].bind(this)
         this["onResize"] = this["onResize"].bind(this)
         this["onLoad"] = this["onLoad"].bind(this)
+        this["onPaste"] = this["onPaste"].bind(this)
         MainWin.__super__.constructor.call(this,{dir:__dirname,pkg:require('../package.json'),menu:'../kode/menu.noon',icon:'../img/mini.png',prefsSeperator:'▸',onLoad:this.onLoad})
         post.on('alert',function (msg)
         {
@@ -49,6 +50,16 @@ MainWin = (function ()
         row = elem('div',{class:'row',parent:main,style:'height:100%'})
         this.referee = new Referee(row)
         this.online = new Online(row,this.referee)
+        window.addEventListener('paste',this.onPaste)
+        row.focus()
+    }
+
+    MainWin.prototype["onPaste"] = function (event)
+    {
+        var electron
+
+        electron = require('electron')
+        return post.emit('loadGame',electron.clipboard.readText())
     }
 
     MainWin.prototype["onLoad"] = function ()

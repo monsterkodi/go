@@ -1,4 +1,4 @@
-// monsterkodi/kode 0.242.0
+// monsterkodi/kode 0.243.0
 
 var _k_ = {min: function () { m = Infinity; for (a of arguments) { if (Array.isArray(a)) {m = _k_.min.apply(_k_.min,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n < m ? n : m}}}; return m }, max: function () { m = -Infinity; for (a of arguments) { if (Array.isArray(a)) {m = _k_.max.apply(_k_.max,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n > m ? n : m}}}; return m }, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}}
 
@@ -88,7 +88,14 @@ class Util
 
     static toOGS (pos, size)
     {
-        return [Util.alpha.indexOf(pos[0]),size - parseInt(pos.slice(1))]
+        if (pos === 'pass')
+        {
+            return [-1,-1]
+        }
+        else
+        {
+            return [Util.alpha.indexOf(pos[0]),size - parseInt(pos.slice(1))]
+        }
     }
 
     static iconUrl (icon, size)

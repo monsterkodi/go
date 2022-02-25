@@ -1,13 +1,14 @@
-// monsterkodi/kode 0.242.0
+// monsterkodi/kode 0.243.0
 
 var _k_
 
-var abs, app, BrowserWindow, post, wins
+var abs, app, BrowserWindow, Menu, post, wins
 
 app = require('kxk').app
 post = require('kxk').post
 
 BrowserWindow = require('electron').BrowserWindow
+Menu = require('electron').Menu
 
 abs = Math.abs
 
@@ -25,6 +26,8 @@ class Main extends app
     {
         super({dir:__dirname,pkg:require('../package.json'),dirs:['../pug','../styl','bot','util'],index:'index.html',icon:'../img/app.ico',about:'../img/about.png',prefsSeperator:'▸',width:1024,height:768,minWidth:800,minHeight:600})
     
+        var template
+
         this.onWinReady = this.onWinReady.bind(this)
         this.onWinResize = this.onWinResize.bind(this)
         this.quit = this.quit.bind(this)
@@ -34,6 +37,11 @@ class Main extends app
         {
             return this.exitApp()
         }).bind(this))
+        template = [{label:'go',submenu:[{type:'separator'},{label:'Quit',accelerator:'Command+Q',click:(function ()
+        {
+            return this.app.quit()
+        }).bind(this)},{label:'Paste',accelerator:'CmdOrCtrl+V',selector:'paste:'}]}]
+        Menu.setApplicationMenu(Menu.buildFromTemplate(template))
         post.on('menuAction',this.onMenuAction)
     }
 

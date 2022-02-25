@@ -51,12 +51,12 @@ function Online
         
         ping = =>
             if @socket.connected then @socket.emit 'net/ping' client:Date.now(), drift:clockDrift, latency:latency
-                    
+        
         pong = (data) =>
             now = Date.now()
             latency = now - data.client
             clockDrift = now - latency / 2 - data.server
-            setTimeout ping, 2000
+            # setTimeout ping, 10000
 
         authenticate = =>
             @socket.emit 'authenticate',
@@ -65,6 +65,10 @@ function Online
                 username:         config.user.username 
                 jwt:              config.user_jwt      
                 client_version:   config.version 
+
+        notification = =>
+            @socket.emit 'notification/connect'
+            @socket.emit 'chat/connect'
                 
         @socket = io 'https://online-go.com', 
             reconnection: true
@@ -79,8 +83,11 @@ function Online
         
         @socket.on 'connect'  ping
         @socket.on 'connect'  authenticate
+        @socket.on 'connect'  notification
         @socket.on 'connect' => @connectGames()
-                
+            
+        setInterval ping, 10000
+        
         @socket.onAny (msg, arg) => 
             if msg.startsWith 'game'
                 @onGameData msg, arg
@@ -261,7 +268,7 @@ function Online
     # 0000000   0000000   000   000  0000000           0000000   000   000  000   000  00000000  
     
     loadGame: (id) =>
-
+        
         if b = @boards[id]
             g = b.game
             @referee.newGame
@@ -279,8 +286,6 @@ function Online
             @referee.game.calcScore()
             @referee.board.annotate()
             
-            @pendingGameId = id
-            
             for k,b of @boards
                 t = b.parent.previousElementSibling
                 t.style.backgroundColor = 'transparent'
@@ -292,36 +297,39 @@ function Online
                 
                 t.scrollIntoViewIfNeeded()
                 e.scrollIntoViewIfNeeded()
+
+        clearPending = => delete @pendingGameId
+        delete @pendingGameId
+        @pendingGameId = int id if id is num             
+        @get path:"/api/v1/games/#{id}" cb: (g) =>
             
-            @get path:"/api/v1/games/#{id}" cb: (g) =>
+            if g.id != @pendingGameId and @pendingGameId
+                setTimeout clearPending, 4000        
+                log 'ignoring non-pending game data' @pendingGameId, g.id
+                return
                 
-                if g.id != @pendingGameId
-                    log 'ignoring non-pending game data' g.id
-                    return
-                    
-                delete @pendingGameId
-                @referee.newGame
-                    black:    g.gamedata.players.black.username
-                    white:    g.gamedata.players.white.username
-                    size:     g.gamedata.width
-                    handicap: g.gamedata.handicap
-                    
-                moves = ogsMoves g.gamedata.moves, g.gamedata.height
-                @referee.game.paused = true
-                @referee.game.info.id = g.id
-                @referee.game.replay moves, true
-                @referee.tree.replay moves, g.id
-                @referee.game.calcScore()
-                @referee.board.annotate()
+            delete @pendingGameId
+            @referee.newGame
+                black:    g.gamedata.players.black.username
+                white:    g.gamedata.players.white.username
+                size:     g.gamedata.width
+                handicap: g.gamedata.handicap
                 
-                @boards[id]?.div.scrollIntoViewIfNeeded()
+            moves = ogsMoves g.gamedata.moves, g.gamedata.height
+            @referee.game.paused = true
+            @referee.game.info.id = g.id
+            @referee.game.replay moves, true
+            @referee.tree.replay moves, g.id
+            @referee.game.calcScore()
+            @referee.board.annotate()
+            
+            @boards[id]?.div.scrollIntoViewIfNeeded()
             
     nextGame: ->
 
         if @referee.game.info.id
             for game,i in @activeGames
                 if game.id == @referee.game.info.id
-                    # id = @activeGames[(i+1)%@activeGames.length].id
                     id = @activeGames[clamp 0, @activeGames.length-1, i+1].id
                     break
 
@@ -333,7 +341,6 @@ function Online
         if @referee.game.info.id
             for game,i in @activeGames
                 if game.id == @referee.game.info.id
-                    # id = @activeGames[(@activeGames.length+i-1)%@activeGames.length].id
                     id = @activeGames[clamp 0, @activeGames.length-1, i-1].id
                     break
 

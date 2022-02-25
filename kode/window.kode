@@ -40,7 +40,24 @@ function MainWin extends win
         
         @referee = new Referee row
         @online  = new Online  row, @referee
-                
+        
+        window.addEventListener 'paste' @onPaste
+        # main.addEventListener 'paste' @onPaste
+        # row.addEventListener 'paste' @onPaste
+        row.focus()
+        # @referee.board.div.addEventListener 'paste' @onPaste
+        
+    # 00000000    0000000    0000000  000000000  00000000  
+    # 000   000  000   000  000          000     000       
+    # 00000000   000000000  0000000      000     0000000   
+    # 000        000   000       000     000     000       
+    # 000        000   000  0000000      000     00000000  
+
+    onPaste: (event) => 
+        
+        electron = require 'electron'
+        post.emit 'loadGame' electron.clipboard.readText()
+                        
     # 000       0000000    0000000   0000000    
     # 000      000   000  000   000  000   000  
     # 000      000   000  000000000  000   000  

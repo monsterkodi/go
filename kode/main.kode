@@ -8,7 +8,7 @@
 
 { app, post } = require 'kxk'
 
-{ BrowserWindow } = require 'electron'
+{ BrowserWindow, Menu } = require 'electron'
     
 { abs } = Math
 
@@ -36,6 +36,18 @@ class Main extends app
 
         @app.on 'window-all-closed' (event) => @exitApp()
         
+        template = [
+            label: 'go'
+            submenu: [
+                    type: 'separator'
+                ,
+                    label: 'Quit' accelerator: 'Command+Q', click: => @app.quit() 
+                ,
+                    label: 'Paste' accelerator: 'CmdOrCtrl+V', selector: 'paste:'
+                ]
+            ]
+        
+        Menu.setApplicationMenu Menu.buildFromTemplate template
         post.on 'menuAction' @onMenuAction
         
     hideDock: -> 

@@ -9,6 +9,7 @@
 bgColor             = #181818
 frameColor          = #111111
 frameWidth          = 6px
+scrollWidth         = 4px
 titlebarHeight      = 30px
 titlebarFontSize    = 15px
 
@@ -461,12 +462,13 @@ body
 // 0000000    0000000  000   000   0000000   0000000  0000000  
 
 ::-webkit-scrollbar
-    width                   frameWidth
+    width                   scrollWidth
 ::-webkit-scrollbar
-    height                  frameWidth  
+    height                  scrollWidth
     background-color        transparent
-    border-radius           frameWidth
+::-webkit-scrollbar-thumb
+    border-radius           scrollWidth
 ::-webkit-scrollbar-track
     background-color        transparent
-    
+
     
