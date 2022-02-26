@@ -368,8 +368,8 @@ function Tree
                     tr.moves = tr.moves.slice 0 mvi
                     @cursor[@cursor.length-1]--
                 
-    noNext:  -> @moves[-1].pos != '?'
-    hasNext: -> @moves[-1].pos == '?'
+    noNext:  -> @moves[-1]?.pos != '?'
+    hasNext: -> @moves[-1]?.pos == '?'
         
     # 000   000   0000000   00000000   000   0000000   000000000  000   0000000   000   000   0000000  
     # 000   000  000   000  000   000  000  000   000     000     000  000   000  0000  000  000       

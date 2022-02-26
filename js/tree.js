@@ -579,12 +579,12 @@ Tree = (function ()
 
     Tree.prototype["noNext"] = function ()
     {
-        return this.moves.slice(-1)[0].pos !== '?'
+        return (this.moves.slice(-1)[0] != null ? this.moves.slice(-1)[0].pos : undefined) !== '?'
     }
 
     Tree.prototype["hasNext"] = function ()
     {
-        return this.moves.slice(-1)[0].pos === '?'
+        return (this.moves.slice(-1)[0] != null ? this.moves.slice(-1)[0].pos : undefined) === '?'
     }
 
     Tree.prototype["clearVariations"] = function ()

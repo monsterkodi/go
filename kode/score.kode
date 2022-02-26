@@ -21,20 +21,10 @@ function Score extends Calc
         
         @grid = new Grid s
         @size = @grid.size
+                
+    score: (@verbose) ->
         
-    clear: ->
-        
-        @grid.clear @size
-        
-    #  0000000   0000000   000       0000000   0000000   0000000   0000000   00000000   00000000  
-    # 000       000   000  000      000       000       000       000   000  000   000  000       
-    # 000       000000000  000      000       0000000   000       000   000  0000000    0000000   
-    # 000       000   000  000      000            000  000       000   000  000   000  000       
-    #  0000000  000   000  0000000   0000000  0000000    0000000   0000000   000   000  00000000  
-        
-    calcScore: (@verbose) ->
-        
-        # ● calcScore
+        # ● score
             
         @calcGroups()
         @linkAreas()
@@ -83,7 +73,7 @@ function Score extends Calc
         else
             finalScore = 'B+'+(points.black-points.white)
           
-        @verb 'score.calcScore' finalScore
+        @verb 'score' finalScore
         
         finalScore
         
@@ -442,7 +432,8 @@ function Score extends Calc
             else if (bl - wl) > 2 and wl < 4
                 if not @looseChainConnection wc[0]
                     deadAlive wc, bc, "areaBattle #{ai} black more libs #{bl} > #{wl} area size #{a.posl.length}" 
-                     
+        
+    clear: -> @grid.clear @size
     verb: -> if @verbose then console.log.apply null, arguments
             
 module.exports = Score

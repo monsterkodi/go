@@ -20,8 +20,22 @@ function Estimate extends Score
     
     estimate: (@verbose) ->
         
-        ● estimate
+        # ● estimate
         
-        @calcScore()
+        score = @score()
+        
+        if @chains.length > 1 and @areas.length  > 1
+        
+            qmark = []
+            for area in @areas
+                if area.color == '?'
+                    qmark.push area
+                    
+            if valid qmark
+                @fancySchmanzy()
+                @deadOrAlive()
+                log qmark
+        
+        score
             
 module.exports = Estimate

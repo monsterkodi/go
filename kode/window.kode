@@ -174,7 +174,7 @@ function MainWin extends win
             'pass'                          ➜ @referee.playerMove 'pass'   'human'
             'resign'                        ➜ @referee.playerMove 'resign' 'human'
             'genmove'                       ➜ @referee.genMove()
-            'calcscore'                     ➜ log @referee.game.estimate(); @referee.board.annotate()
+            'score'                         ➜ log @referee.game.estimate(); @referee.board.annotate()
             'games'                         ➜ @online.toggleGames() 
             'tree'                          ➜ @referee.toggleTree() 
             'numbers'                       ➜ @referee.board.toggleNumbers()

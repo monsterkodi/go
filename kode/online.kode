@@ -45,9 +45,9 @@ function Online
         clockDrift = 0
         latency = 0
         
-        global.myUserId = @myUserId = config.user.id
-        global.myUserName = config.user.username 
-        @myAuth = config.chat_auth
+        global.myUserId    = @myUserId   = config.user.id
+        global.myUserName  = @myUserName = config.user.username 
+        global.myAuth      = @myAuth     = config.chat_auth
         
         ping = =>
             if @socket.connected then @socket.emit 'net/ping' client:Date.now(), drift:clockDrift, latency:latency
@@ -56,20 +56,20 @@ function Online
             now = Date.now()
             latency = now - data.client
             clockDrift = now - latency / 2 - data.server
-            # setTimeout ping, 10000
 
+        notification = =>
+            @socket.emit 'notification/connect' player_id:@myUserId, auth:@myAuth
+            @socket.emit 'chat/connect'         player_id:@myUserId, auth:@myAuth, username:@myUserName, ranking:20, ui_class:''
+            
         authenticate = =>
             @socket.emit 'authenticate',
                 auth:             config.chat_auth
                 player_id:        config.user.id
                 username:         config.user.username 
                 jwt:              config.user_jwt      
-                client_version:   config.version 
+                client_version:   config.version
+            notification()
 
-        notification = =>
-            @socket.emit 'notification/connect'
-            @socket.emit 'chat/connect'
-                
         @socket = io 'https://online-go.com', 
             reconnection: true
             reconnectionDelay: 750
@@ -83,7 +83,6 @@ function Online
         
         @socket.on 'connect'  ping
         @socket.on 'connect'  authenticate
-        @socket.on 'connect'  notification
         @socket.on 'connect' => @connectGames()
             
         setInterval ping, 10000
@@ -91,7 +90,7 @@ function Online
         @socket.onAny (msg, arg) => 
             if msg.startsWith 'game'
                 @onGameData msg, arg
-            else if msg not in ['active-bots' 'net/pong' 'score-estimator-enabled-state']
+            else if msg not in ['active-bots' 'net/pong' 'score-estimator-enabled-state' 'automatch/entry' 'automatch/cancel']
                 log 'on any' msg, noon arg
                 
     #  0000000   000   000         0000000    0000000   00     00  00000000        0000000     0000000   000000000   0000000   

@@ -1,6 +1,6 @@
 // monsterkodi/kode 0.243.0
 
-var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}, profile: function (id) {_k_.hrtime ??= {}; _k_.hrtime[id] = process.hrtime.bigint()}, profilend: function (id) { var b = process.hrtime.bigint()-_k_.hrtime[id]; let f=1000n; for (let u of ['ns','μs','ms','s']) { if (u=='s' || b<f) { return console.log(id+' '+(1000n*b/f)+' '+u); } f*=1000n; }}}
+var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}}
 
 var Estimate, Score, stone
 
@@ -20,11 +20,31 @@ Estimate = (function ()
 
     Estimate.prototype["estimate"] = function (verbose)
     {
+        var area, qmark, score
+
         this.verbose = verbose
     
-        _k_.profile('estimate')
-        _k_.profilend('estimate')
-        return this.calcScore()
+        score = this.score()
+        if (this.chains.length > 1 && this.areas.length > 1)
+        {
+            qmark = []
+            var list = _k_.list(this.areas)
+            for (var _30_21_ = 0; _30_21_ < list.length; _30_21_++)
+            {
+                area = list[_30_21_]
+                if (area.color === '?')
+                {
+                    qmark.push(area)
+                }
+            }
+            if (!_k_.empty(qmark))
+            {
+                this.fancySchmanzy()
+                this.deadOrAlive()
+                console.log(qmark)
+            }
+        }
+        return score
     }
 
     return Estimate

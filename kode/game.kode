@@ -278,7 +278,7 @@ function Game extends Estimate
         if score.endsWith '.0'
             score = score[...-2]
         @info.score = score
-        calc = @calcScore()
+        calc = @score()
         if score != calc
             error 'game.setScore' score, '!=' calc
         @board.annotate()

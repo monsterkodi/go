@@ -198,7 +198,7 @@ MainWin = (function ()
             case 'genmove':
                 return this.referee.genMove()
 
-            case 'calcscore':
+            case 'score':
                 console.log(this.referee.game.estimate())
                 return this.referee.board.annotate()
 

@@ -60,8 +60,8 @@ Online = (function ()
         clockDrift = 0
         latency = 0
         global.myUserId = this.myUserId = config.user.id
-        global.myUserName = config.user.username
-        this.myAuth = config.chat_auth
+        global.myUserName = this.myUserName = config.user.username
+        global.myAuth = this.myAuth = config.chat_auth
         ping = (function ()
         {
             if (this.socket.connected)
@@ -77,14 +77,15 @@ Online = (function ()
             latency = now - data.client
             return clockDrift = now - latency / 2 - data.server
         }).bind(this)
-        authenticate = (function ()
-        {
-            return this.socket.emit('authenticate',{auth:config.chat_auth,player_id:config.user.id,username:config.user.username,jwt:config.user_jwt,client_version:config.version})
-        }).bind(this)
         notification = (function ()
         {
-            this.socket.emit('notification/connect')
-            return this.socket.emit('chat/connect')
+            this.socket.emit('notification/connect',{player_id:this.myUserId,auth:this.myAuth})
+            return this.socket.emit('chat/connect',{player_id:this.myUserId,auth:this.myAuth,username:this.myUserName,ranking:20,ui_class:''})
+        }).bind(this)
+        authenticate = (function ()
+        {
+            this.socket.emit('authenticate',{auth:config.chat_auth,player_id:config.user.id,username:config.user.username,jwt:config.user_jwt,client_version:config.version})
+            return notification()
         }).bind(this)
         this.socket = io('https://online-go.com',{reconnection:true,reconnectionDelay:750,reconnectionDelayMax:10000,transports:["websocket"],upgrade:false})
         this.socket.on('net/pong',pong)
@@ -98,7 +99,6 @@ Online = (function ()
         }).bind(this))
         this.socket.on('connect',ping)
         this.socket.on('connect',authenticate)
-        this.socket.on('connect',notification)
         this.socket.on('connect',(function ()
         {
             return this.connectGames()
@@ -110,7 +110,7 @@ Online = (function ()
             {
                 return this.onGameData(msg,arg)
             }
-            else if (!(_k_.in(msg,['active-bots','net/pong','score-estimator-enabled-state'])))
+            else if (!(_k_.in(msg,['active-bots','net/pong','score-estimator-enabled-state','automatch/entry','automatch/cancel'])))
             {
                 console.log('on any',msg,_k_.noon(arg))
             }
@@ -158,9 +158,9 @@ Online = (function ()
             return
         }
         var list = _k_.list(this.activeGames)
-        for (var _143_17_ = 0; _143_17_ < list.length; _143_17_++)
+        for (var _142_17_ = 0; _142_17_ < list.length; _142_17_++)
         {
-            game = list[_143_17_]
+            game = list[_142_17_]
             this.socket.emit('game/connect',{game_id:game.id,player_id:this.myUserId,chat:0})
         }
     }
@@ -223,9 +223,9 @@ Online = (function ()
 
         this.boards = {}
         var list = _k_.list(this.activeGames)
-        for (var _203_17_ = 0; _203_17_ < list.length; _203_17_++)
+        for (var _202_17_ = 0; _202_17_ < list.length; _202_17_++)
         {
-            game = list[_203_17_]
+            game = list[_202_17_]
             if (!(game != null))
             {
                 console.log('no game?',this.activeGames)

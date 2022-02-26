@@ -12,17 +12,17 @@ est = (b) ->
 
 scr = (b) ->
     s = new Score b
-    r = s.calcScore verbose
+    r = s.score verbose
     r
     
 ars = (b) ->
     s = new Score b
-    r = s.calcScore verbose
+    r = s.score verbose
     s.areaString()
 
 ded = (b) ->
     s = new Score b
-    r = s.calcScore verbose
+    r = s.score verbose
     s.deadString()
 
 module.exports = { scr, ded, ars, est }

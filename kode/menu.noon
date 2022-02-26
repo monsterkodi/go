@@ -65,7 +65,7 @@ game
     resign                  r
     -----
     genmove                 g
-    calcscore               c
+    score                   s
         
 view
     games                   alt+g

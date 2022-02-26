@@ -405,7 +405,7 @@ Game = (function ()
             score = score.slice(0, -2)
         }
         this.info.score = score
-        calc = this.calcScore()
+        calc = this.score()
         if (score !== calc)
         {
             console.error('game.setScore',score,'!=',calc)
