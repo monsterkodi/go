@@ -339,7 +339,16 @@ function Tree
     cursorMove: ->
         
         @cursorTree().moves[@cursor[-1]]
+
+    isAtNextMove: ->
+        
+        if @cursor.length == 3 and @cursor[-1] == 0 and @history().length == @moves.length
+            log 'yes, at next move'
+            return true
+
+        log 'no, not at next move'
             
+        
     # 0000000    00000000  000            0000000  000   000  00000000    0000000   0000000   00000000   
     # 000   000  000       000           000       000   000  000   000  000       000   000  000   000  
     # 000   000  0000000   000           000       000   000  0000000    0000000   000   000  0000000    

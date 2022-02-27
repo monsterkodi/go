@@ -7,7 +7,7 @@
 ###
 
 { stone } = require './util/util'
-{ min } = Math
+{ max, min } = Math
 Score = require './score'
 
 function Estimate extends Score
@@ -34,10 +34,12 @@ function Estimate extends Score
             if valid qmark and global.test
                 @fancySchmanzy()
                 @deadOrAlive()
-                
+              
+            ip = 0
             for area in qmark
-                @estimateArea area
+                ip += @estimateArea area
         
+            log 'ip' ip, score
         score
         
     estimateArea: (area) ->
@@ -47,7 +49,12 @@ function Estimate extends Score
         area.infl = []
         for p in area.posl
             area.infl.push @influence @coord p
-        # log area
+            
+        @inflinfl area
+                
+        ip = area.infl.reduce (a,v) -> a+v
+        log 'area' ip#, area.infl
+        ip
 
     influence: (c) ->
 
@@ -75,5 +82,23 @@ function Estimate extends Score
                         stone.black ➜ iv -= 0.5
                         stone.white ➜ iv += 0.5
         iv
-                
+
+    inflinfl: (area) ->
+        
+        infl = copy area.infl
+        for p,i in area.posl
+            if area.infl[i] == 0
+                c = @coord p
+                nd = [[1 0] [0 1] [-1 0] [0 -1] [1 1] [-1 1] [-1 1] [-1 -1]]
+                iv = 0
+                nc = 0
+                for d in nd
+                    n = [c[0]+d[0], c[1]+d[1]]
+                    np = @pos n
+                    if np in area.posl
+                        if pi = infl[area.posl.indexOf np]
+                            nc++
+                            iv += pi
+                area.infl[i] = iv/nc if nc
+        
 module.exports = Estimate

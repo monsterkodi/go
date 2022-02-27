@@ -27,6 +27,11 @@ function Online
         post.on 'resize'     @onResize
         
     submitMove: (gameId, pos) =>
+        
+        if not @referee.tree.isAtNextMove() 
+            log 'skip submitting variation move!' gameId, pos
+            return
+        
         move = toOGS pos, @boards[gameId].game.size
         @socket.emit 'game/move',
             auth:       @myAuth

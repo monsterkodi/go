@@ -49,6 +49,11 @@ Online = (function ()
     {
         var move
 
+        if (!this.referee.tree.isAtNextMove())
+        {
+            console.log('skip submitting variation move!',gameId,pos)
+            return
+        }
         move = toOGS(pos,this.boards[gameId].game.size)
         return this.socket.emit('game/move',{auth:this.myAuth,player_id:this.myUserId,game_id:gameId,move:move})
     }
@@ -158,9 +163,9 @@ Online = (function ()
             return
         }
         var list = _k_.list(this.activeGames)
-        for (var _142_17_ = 0; _142_17_ < list.length; _142_17_++)
+        for (var _147_17_ = 0; _147_17_ < list.length; _147_17_++)
         {
-            game = list[_142_17_]
+            game = list[_147_17_]
             this.socket.emit('game/connect',{game_id:game.id,player_id:this.myUserId,chat:0})
         }
     }
@@ -223,9 +228,9 @@ Online = (function ()
 
         this.boards = {}
         var list = _k_.list(this.activeGames)
-        for (var _202_17_ = 0; _202_17_ < list.length; _202_17_++)
+        for (var _207_17_ = 0; _207_17_ < list.length; _207_17_++)
         {
-            game = list[_202_17_]
+            game = list[_207_17_]
             if (!(game != null))
             {
                 console.log('no game?',this.activeGames)
