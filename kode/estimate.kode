@@ -20,7 +20,7 @@ function Estimate extends Score
     
     estimate: (@verbose) ->
         
-        # ● estimate
+        ● estimate
         
         score = @score()
         
@@ -31,11 +31,49 @@ function Estimate extends Score
                 if area.color == '?'
                     qmark.push area
                     
-            if valid qmark
+            if valid qmark and global.test
                 @fancySchmanzy()
                 @deadOrAlive()
-                log qmark
+                
+            for area in qmark
+                @estimateArea area
         
         score
-            
+        
+    estimateArea: (area) ->
+        
+        # log @groupString area
+        
+        area.infl = []
+        for p in area.posl
+            area.infl.push @influence @coord p
+        # log area
+
+    influence: (c) ->
+
+        sd = [[1 0] [0 1] [-1 0] [0 -1]]
+        dd = [[1 1] [-1 1] [-1 1] [-1 -1]]
+        iv = 0
+
+        for d in sd
+            n = [c[0]+d[0], c[1]+d[1]]
+            s = @stoneAt n
+            if s in [stone.black, stone.white]
+                g = @groupAt @pos n
+                if g.state != 'dead'
+                    switch s 
+                        stone.black ➜ iv -= 1
+                        stone.white ➜ iv += 1
+
+        for d in dd
+            n = [c[0]+d[0], c[1]+d[1]]
+            s = @stoneAt n
+            if s in [stone.black, stone.white]
+                g = @groupAt @pos n
+                if g.state != 'dead'
+                    switch s 
+                        stone.black ➜ iv -= 0.5
+                        stone.white ➜ iv += 0.5
+        iv
+                
 module.exports = Estimate

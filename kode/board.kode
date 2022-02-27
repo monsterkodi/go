@@ -24,6 +24,7 @@ function Board
         @features.liberties   ?= true
         @features.numbers     ?= true
         @features.hover       ?= true
+        @features.dots        ?= true
         
         @div = elem 'div' class:'board'       parent:@parent
         @img = elem 'img' class:'wood'        src:'../img/spacer.png' parent:@div
@@ -143,8 +144,8 @@ function Board
             @ctx.moveTo o, o+i*d
             @ctx.lineTo s-o, o+i*d
             @ctx.stroke()   
-            
-        if @size >= 9
+        
+        if @size >= 9 and @features.dots and not @features.territory or not window.stash.get 'territory'
             for x in -1..1
                 for y in -1..1
                     @ctx.beginPath()
@@ -194,7 +195,7 @@ function Board
     
     toggleNumbers:     -> @toggleShow 'numbers'
     toggleLiberties:   -> @toggleShow 'liberties'
-    toggleTerritory:   -> @toggleShow 'territory'
+    toggleTerritory:   -> @toggleShow 'territory'; @lines()
     toggleCoordinates: -> @toggleShow 'coordinates'
     toggleVariations:  -> @toggleShow 'variations'
     toggleShow: (key)  ->
@@ -552,6 +553,15 @@ function Board
                     e = elem 'div' class:"eye #{a.color}" parent:@ter
                     r = @coordToPrcnt @game.coord p
                     e.style = "left:#{r.x}%; top:#{r.y}%; width:#{d}%; height:#{d}%; border-radius:100%;" 
+            if a.color == '?' and valid a.infl
+                for p,i in a.posl
+                    if abs(a.infl[i]) != 0
+                        color = a.infl[i] > 0 ? 'white' : 'black'
+                        s = (d * abs(a.infl[i])/4).toFixed 2
+                        # log a.infl[i]/4, d, s
+                        e = elem 'div' class:"eye #{color[0]}" parent:@ter
+                        r = @coordToPrcnt @game.coord p
+                        e.style = "left:#{r.x}%; top:#{r.y}%; width:#{s}%; height:#{s}%; border-radius:100%;" 
             
         for g in @game.grps
             if g.state == 'dead'

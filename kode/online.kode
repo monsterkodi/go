@@ -238,6 +238,7 @@ function Online
                 liberties:   false
                 numbers:     false
                 hover:       false
+                dots:        false
             
             b = new Board e, g.height, features
             b.game = new Game b, g.players.black.username, g.players.white.username, g.handicap

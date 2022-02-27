@@ -1,4 +1,4 @@
-// monsterkodi/kode 0.242.0
+// monsterkodi/kode 0.243.0
 
 var _k_ = {list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, k: { f:(r,g,b)=>'\x1b[38;5;'+(16+36*r+6*g+b)+'m', F:(r,g,b)=>'\x1b[48;5;'+(16+36*r+6*g+b)+'m', r:(i)=>(i<6)&&_k_.k.f(i,0,0)||_k_.k.f(5,i-5,i-5), R:(i)=>(i<6)&&_k_.k.F(i,0,0)||_k_.k.F(5,i-5,i-5), g:(i)=>(i<6)&&_k_.k.f(0,i,0)||_k_.k.f(i-5,5,i-5), G:(i)=>(i<6)&&_k_.k.F(0,i,0)||_k_.k.F(i-5,5,i-5), b:(i)=>(i<6)&&_k_.k.f(0,0,i)||_k_.k.f(i-5,i-5,5), B:(i)=>(i<6)&&_k_.k.F(0,0,i)||_k_.k.F(i-5,i-5,5), y:(i)=>(i<6)&&_k_.k.f(i,i,0)||_k_.k.f(5,5,i-5), Y:(i)=>(i<6)&&_k_.k.F(i,i,0)||_k_.k.F(5,5,i-5), m:(i)=>(i<6)&&_k_.k.f(i,0,i)||_k_.k.f(5,i-5,5), M:(i)=>(i<6)&&_k_.k.F(i,0,i)||_k_.k.F(5,i-5,5), c:(i)=>(i<6)&&_k_.k.f(0,i,i)||_k_.k.f(i-5,5,5), C:(i)=>(i<6)&&_k_.k.F(0,i,i)||_k_.k.F(i-5,5,5), w:(i)=>'\x1b[38;5;'+(232+(i-1)*3)+'m', W:(i)=>'\x1b[48;5;'+(232+(i-1)*3+2)+'m', wrap:(open,close,reg)=>(s)=>open+(~(s+='').indexOf(close,4)&&s.replace(reg,open)||s)+close, F256:(open)=>_k_.k.wrap(open,'\x1b[39m',new RegExp('\\x1b\\[39m','g')), B256:(open)=>_k_.k.wrap(open,'\x1b[49m',new RegExp('\\x1b\\[49m','g'))}, rpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s+=c} return s}, lpad: function (l,s='',c=' ') {s=String(s); while(s.length<l){s=c+s} return s}};_k_.r6=_k_.k.F256(_k_.k.r(6));_k_.g3=_k_.k.F256(_k_.k.g(3));_k_.g5=_k_.k.F256(_k_.k.g(5));_k_.b6=_k_.k.F256(_k_.k.b(6));_k_.Y1=_k_.k.B256(_k_.k.Y(1));_k_.y2=_k_.k.F256(_k_.k.y(2));_k_.y3=_k_.k.F256(_k_.k.y(3));_k_.w1=_k_.k.F256(_k_.k.w(1));_k_.w2=_k_.k.F256(_k_.k.w(2));_k_.w3=_k_.k.F256(_k_.k.w(3));_k_.w4=_k_.k.F256(_k_.k.w(4));_k_.w6=_k_.k.F256(_k_.k.w(6));_k_.w8=_k_.k.F256(_k_.k.w(8))
 
@@ -138,39 +138,42 @@ Print = (function ()
 
         grid = new Grid(this.grid.toString())
         var list = _k_.list(this.grps)
-        for (var _79_15_ = 0; _79_15_ < list.length; _79_15_++)
+        for (var _80_15_ = 0; _80_15_ < list.length; _80_15_++)
         {
-            gr = list[_79_15_]
+            gr = list[_80_15_]
             if (0 <= (idx = [].slice.call(arguments,0).indexOf(gr)))
             {
                 var list1 = _k_.list(gr.posl)
-                for (var _81_23_ = 0; _81_23_ < list1.length; _81_23_++)
+                for (var _82_23_ = 0; _82_23_ < list1.length; _82_23_++)
                 {
-                    gg = list1[_81_23_]
+                    gg = list1[_82_23_]
                     c = (arguments[idx].stone === '○' ? '◻' : '◼')
                     grid.set(gg,this.rainbow(idx,c))
                 }
             }
             else
             {
-                var list2 = _k_.list(gr.posl)
-                for (var _85_23_ = 0; _85_23_ < list2.length; _85_23_++)
+                if (global.test)
                 {
-                    gg = list2[_85_23_]
-                    grid.set(gg,_k_.w2(grid.at(gg)))
+                    var list2 = _k_.list(gr.posl)
+                    for (var _87_27_ = 0; _87_27_ < list2.length; _87_27_++)
+                    {
+                        gg = list2[_87_27_]
+                        grid.set(gg,_k_.w2(grid.at(gg)))
+                    }
                 }
             }
         }
         var list3 = _k_.list(this.areas)
-        for (var _87_15_ = 0; _87_15_ < list3.length; _87_15_++)
+        for (var _89_15_ = 0; _89_15_ < list3.length; _89_15_++)
         {
-            ar = list3[_87_15_]
+            ar = list3[_89_15_]
             if (0 <= (idx = [].slice.call(arguments,0).indexOf(ar)))
             {
                 var list4 = _k_.list(ar.posl)
-                for (var _89_23_ = 0; _89_23_ < list4.length; _89_23_++)
+                for (var _91_23_ = 0; _91_23_ < list4.length; _91_23_++)
                 {
-                    aa = list4[_89_23_]
+                    aa = list4[_91_23_]
                     c = this.areas.indexOf(ar)
                     grid.set(aa,this.rainbow(idx,short[c]))
                 }
@@ -185,15 +188,15 @@ Print = (function ()
 
         grid = new Grid(this.grid.toString())
         var list = _k_.list(this.grps)
-        for (var _97_15_ = 0; _97_15_ < list.length; _97_15_++)
+        for (var _99_15_ = 0; _99_15_ < list.length; _99_15_++)
         {
-            gr = list[_97_15_]
+            gr = list[_99_15_]
             if (0 <= (idx = [].slice.call(arguments,0).indexOf(gr)))
             {
                 var list1 = _k_.list(gr.posl)
-                for (var _99_23_ = 0; _99_23_ < list1.length; _99_23_++)
+                for (var _101_23_ = 0; _101_23_ < list1.length; _101_23_++)
                 {
-                    gg = list1[_99_23_]
+                    gg = list1[_101_23_]
                     c = this.grps.indexOf(gr)
                     grid.set(gg,this.rainbow(idx,short[c]))
                 }
@@ -208,15 +211,15 @@ Print = (function ()
 
         grid = new Grid(this.grid.toString())
         var list = _k_.list(this.chains)
-        for (var _113_15_ = 0; _113_15_ < list.length; _113_15_++)
+        for (var _115_15_ = 0; _115_15_ < list.length; _115_15_++)
         {
-            ch = list[_113_15_]
+            ch = list[_115_15_]
             if (0 <= (idx = [].slice.call(arguments,0).indexOf(ch)))
             {
                 var list1 = _k_.list(ch.posl)
-                for (var _115_23_ = 0; _115_23_ < list1.length; _115_23_++)
+                for (var _117_23_ = 0; _117_23_ < list1.length; _117_23_++)
                 {
-                    cp = list1[_115_23_]
+                    cp = list1[_117_23_]
                     c = this.chains.indexOf(ch)
                     grid.set(cp,this.rainbow(idx,short[c]))
                 }
@@ -236,7 +239,7 @@ Print = (function ()
         s3 = this.grpsString.apply(this,this.grps).split('\n')
         pl = this.size * 2 + 6
         fs = [_k_.w2(_k_.rpad(pl,' areas') + _k_.rpad(pl,' chains') + _k_.rpad(pl,' groups'))]
-        for (var _136_17_ = i = 0, _136_21_ = s1.length; (_136_17_ <= _136_21_ ? i < s1.length : i > s1.length); (_136_17_ <= _136_21_ ? ++i : --i))
+        for (var _138_17_ = i = 0, _138_21_ = s1.length; (_138_17_ <= _138_21_ ? i < s1.length : i > s1.length); (_138_17_ <= _138_21_ ? ++i : --i))
         {
             spc = _k_.lpad(ml - bd[i].length,'')
             fs.push(s1[i] + spc + s2[i] + spc + s3[i])
@@ -259,7 +262,7 @@ Print = (function ()
         })).split('\n')
         pl = this.size * 2 + 6
         fs = [_k_.w2(_k_.rpad(pl,' color') + _k_.rpad(pl,' dead') + _k_.rpad(pl,' alive'))]
-        for (var _158_17_ = i = 0, _158_21_ = as.length; (_158_17_ <= _158_21_ ? i < as.length : i > as.length); (_158_17_ <= _158_21_ ? ++i : --i))
+        for (var _160_17_ = i = 0, _160_21_ = as.length; (_160_17_ <= _160_21_ ? i < as.length : i > as.length); (_160_17_ <= _160_21_ ? ++i : --i))
         {
             spc = _k_.lpad(ml - bd[i].length,'')
             fs.push(as[i] + spc + gs[i] + spc + cs[i])
@@ -270,7 +273,14 @@ Print = (function ()
 
     Print.prototype["rainbow"] = function (idx, c)
     {
-        return [y5,r5,g2,b8,m3,b4,w4,w8][idx % 8](c)
+        if (global.test)
+        {
+            return [y5,r5,g2,b8,m3,b4,w4,w8][idx % 8](c)
+        }
+        else
+        {
+            return c
+        }
     }
 
     Print.prototype["colorChain"] = function (ch)

@@ -150,6 +150,8 @@ function Grid
 
     toAnsi: (legend) ->
         
+        return @toString(legend) if not global.test
+        
         s = w2 '┌─' + lpad(@size*2, '' '─') + '┐'
         for row,ri in @rows
             s += '\n' + w2 '│ '

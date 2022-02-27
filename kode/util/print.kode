@@ -74,16 +74,18 @@ function Print
     #  0000000   000   000   0000000    0000000   000        0000000 
         
     groupString: ->
-        
+
         grid = new Grid @grid.toString()
+
         for gr in @grps
             if 0 <= (idx = [].slice.call(arguments, 0).indexOf(gr))
                 for gg in gr.posl
                     c = arguments[idx].stone == '○' ? '◻' : '◼'
                     grid.set gg, @rainbow idx, c
             else
-                for gg in gr.posl
-                    grid.set gg, w2 grid.at gg
+                if global.test
+                    for gg in gr.posl
+                        grid.set gg, w2 grid.at gg
         for ar in @areas
             if 0 <= (idx = [].slice.call(arguments, 0).indexOf(ar))
                 for aa in ar.posl
@@ -161,7 +163,12 @@ function Print
         log fs.join '\n'
         log ''
 
-    rainbow: (idx,c) -> [y5,r5,g2,b8,m3,b4,w4,w8][idx%8](c)
+    rainbow: (idx,c) -> 
+    
+        if global.test
+            [y5,r5,g2,b8,m3,b4,w4,w8][idx%8](c)
+        else
+            c
     
     colorChain: (ch) -> 
         grps = ch.grps.map((gi)->short[gi]).join ' '

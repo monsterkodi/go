@@ -275,7 +275,7 @@ Online = (function ()
         {
             var b, br, features, rb, t, tb, w
 
-            features = {coordinates:false,liberties:false,numbers:false,hover:false}
+            features = {coordinates:false,liberties:false,numbers:false,hover:false,dots:false}
             b = new Board(e,g.height,features)
             b.game = new Game(b,g.players.black.username,g.players.white.username,g.handicap)
             b.game.paused = true
