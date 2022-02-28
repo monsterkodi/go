@@ -160,6 +160,9 @@ body {
 .variation.white {
   background-color: #faeeea;
 }
+.eye {
+  border-radius: 100%;
+}
 .eye.b {
   filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.533));
   background-color: #000;

@@ -20,11 +20,11 @@ function Estimate extends Score
     
     estimate: (@verbose) ->
         
-        ● estimate
+        # ● estimate
         
         score = @score()
-        
-        if @chains.length > 1 and @areas.length  > 1
+        ip = 0
+        if @chains.length > 1
         
             qmark = []
             for area in @areas
@@ -35,31 +35,34 @@ function Estimate extends Score
                 @fancySchmanzy()
                 @deadOrAlive()
               
-            ip = 0
             for area in qmark
                 ip += @estimateArea area
         
-            log 'ip' ip, score
-        score
+            if score != 'B+0'
+                if score[0]=='W'
+                    ip += int score[2..]
+                else 
+                    ip -= int score[2..]
+            ip = ip.toFixed 1
+        ip
         
     estimateArea: (area) ->
-        
-        # log @groupString area
         
         area.infl = []
         for p in area.posl
             area.infl.push @influence @coord p
             
         @inflinfl area
+        @inflinfl area
+        @inflinfl area
                 
         ip = area.infl.reduce (a,v) -> a+v
-        log 'area' ip#, area.infl
         ip
 
     influence: (c) ->
 
         sd = [[1 0] [0 1] [-1 0] [0 -1]]
-        dd = [[1 1] [-1 1] [-1 1] [-1 -1]]
+        dd = [[1 1] [-1 1] [1 -1] [-1 -1]]
         iv = 0
 
         for d in sd
@@ -81,7 +84,7 @@ function Estimate extends Score
                     switch s 
                         stone.black ➜ iv -= 0.5
                         stone.white ➜ iv += 0.5
-        iv
+        clamp -1 1 iv/2
 
     inflinfl: (area) ->
         
@@ -89,7 +92,7 @@ function Estimate extends Score
         for p,i in area.posl
             if area.infl[i] == 0
                 c = @coord p
-                nd = [[1 0] [0 1] [-1 0] [0 -1] [1 1] [-1 1] [-1 1] [-1 -1]]
+                nd = [[1 0] [0 1] [-1 0] [0 -1] [1 1] [-1 1] [1 -1] [-1 -1]]
                 iv = 0
                 nc = 0
                 for d in nd

@@ -552,22 +552,21 @@ function Board
                 for p in a.posl
                     e = elem 'div' class:"eye #{a.color}" parent:@ter
                     r = @coordToPrcnt @game.coord p
-                    e.style = "left:#{r.x}%; top:#{r.y}%; width:#{d}%; height:#{d}%; border-radius:100%;" 
+                    e.style = "left:#{r.x}%; top:#{r.y}%; width:#{d}%; height:#{d}%;" 
             if a.color == '?' and valid a.infl
                 for p,i in a.posl
                     if abs(a.infl[i]) != 0
                         color = a.infl[i] > 0 ? 'white' : 'black'
-                        s = (d * abs(a.infl[i])/4).toFixed 2
-                        # log a.infl[i]/4, d, s
+                        s = (d * max 0.2 abs(a.infl[i])).toFixed 2
                         e = elem 'div' class:"eye #{color[0]}" parent:@ter
                         r = @coordToPrcnt @game.coord p
-                        e.style = "left:#{r.x}%; top:#{r.y}%; width:#{s}%; height:#{s}%; border-radius:100%;" 
+                        e.style = "left:#{r.x}%; top:#{r.y}%; width:#{s}%; height:#{s}%;" 
             
         for g in @game.grps
             if g.state == 'dead'
                 for p in g.posl
                     e = elem 'div' class:"eye #{opponent[stoneColor[g.stone]][0]}" parent:@ter
                     r = @coordToPrcnt @game.coord p
-                    e.style = "left:#{r.x}%; top:#{r.y}%; width:#{d}%; height:#{d}%; border-radius:100%;" 
+                    e.style = "left:#{r.x}%; top:#{r.y}%; width:#{d}%; height:#{d}%;" 
 
 module.exports = Board

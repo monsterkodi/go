@@ -272,7 +272,7 @@ Referee = (function ()
 
     Referee.prototype["navigate"] = function (action)
     {
-        var info
+        var estimate, hist, info
 
         this.game.paused = true
         if (this.game.start())
@@ -293,14 +293,19 @@ Referee = (function ()
         this.game.paused = true
         this.board.game = this.game
         this.board.tree = this.tree
-        this.game.replay(this.tree.moveHistory())
-        this.game.estimate()
+        hist = this.tree.moveHistory()
+        this.game.replay(hist)
+        estimate = this.game.estimate()
+        if (hist.length % 2 === 0)
+        {
+            console.log(hist.length,estimate)
+        }
         return this.board.annotate()
     }
 
     Referee.prototype["jumpToStart"] = function ()
     {
-        var _254_20_, _255_20_
+        var _257_20_, _258_20_
 
         if (this.game.start())
         {
