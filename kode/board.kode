@@ -555,9 +555,10 @@ function Board
                     e.style = "left:#{r.x}%; top:#{r.y}%; width:#{d}%; height:#{d}%;" 
             if a.color == '?' and valid a.infl
                 for p,i in a.posl
-                    if abs(a.infl[i]) != 0
-                        color = a.infl[i] > 0 ? 'white' : 'black'
-                        s = (d * max 0.2 abs(a.infl[i])).toFixed 2
+                    iv = a.infl[i]
+                    if abs(iv) != 0
+                        color = iv > 0 ? 'white' : 'black'
+                        s = (d * max 0.2 abs(iv)).toFixed 2
                         e = elem 'div' class:"eye #{color[0]}" parent:@ter
                         r = @coordToPrcnt @game.coord p
                         e.style = "left:#{r.x}%; top:#{r.y}%; width:#{s}%; height:#{s}%;" 

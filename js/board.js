@@ -688,7 +688,7 @@ Board = (function ()
 
     Board.prototype["territory"] = function ()
     {
-        var a, color, d, e, g, i, p, r, s
+        var a, color, d, e, g, i, iv, p, r, s
 
         if (!this.features.territory)
         {
@@ -725,10 +725,11 @@ Board = (function ()
                 for (i = 0; i < list2.length; i++)
                 {
                     p = list2[i]
-                    if (abs(a.infl[i]) !== 0)
+                    iv = a.infl[i]
+                    if (abs(iv) !== 0)
                     {
-                        color = (a.infl[i] > 0 ? 'white' : 'black')
-                        s = (d * _k_.max(0.2,abs(a.infl[i]))).toFixed(2)
+                        color = (iv > 0 ? 'white' : 'black')
+                        s = (d * _k_.max(0.2,abs(iv))).toFixed(2)
                         e = elem('div',{class:`eye ${color[0]}`,parent:this.ter})
                         r = this.coordToPrcnt(this.game.coord(p))
                         e.style = `left:${r.x}%; top:${r.y}%; width:${s}%; height:${s}%;`
@@ -737,15 +738,15 @@ Board = (function ()
             }
         }
         var list3 = _k_.list(this.game.grps)
-        for (var _565_14_ = 0; _565_14_ < list3.length; _565_14_++)
+        for (var _566_14_ = 0; _566_14_ < list3.length; _566_14_++)
         {
-            g = list3[_565_14_]
+            g = list3[_566_14_]
             if (g.state === 'dead')
             {
                 var list4 = _k_.list(g.posl)
-                for (var _567_22_ = 0; _567_22_ < list4.length; _567_22_++)
+                for (var _568_22_ = 0; _568_22_ < list4.length; _568_22_++)
                 {
-                    p = list4[_567_22_]
+                    p = list4[_568_22_]
                     e = elem('div',{class:`eye ${opponent[stoneColor[g.stone]][0]}`,parent:this.ter})
                     r = this.coordToPrcnt(this.game.coord(p))
                     e.style = `left:${r.x}%; top:${r.y}%; width:${d}%; height:${d}%;`
