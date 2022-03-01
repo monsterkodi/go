@@ -9,3 +9,4 @@
 ![go](img/go.png)
 ![wacky](img/wacky.png)
 ![online](img/go_online.png)
+![estimator](img/go_estimator.png)
