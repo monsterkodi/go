@@ -50,9 +50,12 @@ function Online
         clockDrift = 0
         latency = 0
         
+        # log noon config
+        
         global.myUserId    = @myUserId   = config.user.id
         global.myUserName  = @myUserName = config.user.username 
         global.myAuth      = @myAuth     = config.chat_auth
+        global.notAuth     = @myNotAuth  = config.notification_auth
         
         ping = =>
             if @socket.connected then @socket.emit 'net/ping' client:Date.now(), drift:clockDrift, latency:latency
@@ -63,7 +66,7 @@ function Online
             clockDrift = now - latency / 2 - data.server
 
         notification = =>
-            @socket.emit 'notification/connect' player_id:@myUserId, auth:@myAuth
+            @socket.emit 'notification/connect' player_id:@myUserId, auth:@myNotAuth
             @socket.emit 'chat/connect'         player_id:@myUserId, auth:@myAuth, username:@myUserName, ranking:20, ui_class:''
             
         authenticate = =>
@@ -93,12 +96,18 @@ function Online
             
         setInterval ping, 10000
         
-        @socket.onAny (msg, arg) => 
-            log 'any' msg
-            if msg.startsWith 'game'
-                @onGameData msg, arg
-            else if msg not in ['active-bots' 'net/pong' 'score-estimator-enabled-state' 'automatch/entry' 'automatch/cancel']
-                log 'on any' msg, noon arg
+        @socket.onAny (msg, arg) =>
+            
+            switch msg.split('/')[0]
+            
+                'nofification'  ➜ if arg.type == 'gameEnded' then @getGames()
+                'active_game'   ➜ if not @boards[arg.id] then @getGames()
+                'game'          ➜ @onGameData msg, arg
+                'score-estimator-enabled-state' 
+                'active-bots' 
+                'net' 
+                'automatch'     ➜
+                                ➜ log 'any' msg, noon arg
                 
     #  0000000   000   000         0000000    0000000   00     00  00000000        0000000     0000000   000000000   0000000   
     # 000   000  0000  000        000        000   000  000   000  000             000   000  000   000     000     000   000  
@@ -111,7 +120,7 @@ function Online
         if msg.endsWith '/move'
 
             pos = ogsMove arg.move, @boards[arg.game_id].game.size
-            log 'onGameData' arg
+            log 'move:' arg
             
             b = @boards[arg.game_id]
             b.game.play pos
@@ -132,6 +141,12 @@ function Online
                 @loadGame arg.game_id
                 # post.emit 'treeReset'
                 # post.emit 'playerMove' pos, b.game.players[b.game.lastColor()]
+        else if msg.endsWith '/chat'
+            log msg
+            log noon arg
+            log 'chat:' arg.line.username, '▸' arg.line.body
+        else
+            log 'game:' msg
         
     #  0000000   0000000   000   000  000   000  00000000   0000000  000000000         0000000    0000000   00     00  00000000   0000000  
     # 000       000   000  0000  000  0000  000  000       000          000           000        000   000  000   000  000       000       
@@ -150,7 +165,14 @@ function Online
             @socket.emit 'game/connect',
                 game_id:    game.id
                 player_id:  @myUserId
-                chat:       0
+                chat:       1
+                
+            # @socket.emit 'game/chat'
+                # auth:             config.chat_auth
+                # player_id:        config.user.id
+                # username:         config.user.username 
+                # jwt:              config.user_jwt      
+                # client_version:   config.version
                         
     showGames: =>
             
