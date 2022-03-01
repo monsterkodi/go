@@ -88,11 +88,13 @@ function Online
         
         @socket.on 'connect'  ping
         @socket.on 'connect'  authenticate
+        @socket.on 'connect'  notification
         @socket.on 'connect' => @connectGames()
             
         setInterval ping, 10000
         
         @socket.onAny (msg, arg) => 
+            log 'any' msg
             if msg.startsWith 'game'
                 @onGameData msg, arg
             else if msg not in ['active-bots' 'net/pong' 'score-estimator-enabled-state' 'automatch/entry' 'automatch/cancel']
@@ -109,6 +111,7 @@ function Online
         if msg.endsWith '/move'
 
             pos = ogsMove arg.move, @boards[arg.game_id].game.size
+            log 'onGameData' arg
             
             b = @boards[arg.game_id]
             b.game.play pos
@@ -126,7 +129,6 @@ function Online
                     
             log 'load game?' @referee.game.info.id, arg.game_id, @referee.game.info.id == arg.game_id
             if @referee.game.info.id == arg.game_id
-                # post.emit 'loadGame' arg.game_id
                 @loadGame arg.game_id
                 # post.emit 'treeReset'
                 # post.emit 'playerMove' pos, b.game.players[b.game.lastColor()]
@@ -249,6 +251,7 @@ function Online
             b.game = new Game b, g.players.black.username, g.players.white.username, g.handicap
             b.game.paused = true
             b.game.info.id = g.id
+            b.game.info.komi = g.gamedata.komi
             b.game.replay ogsMoves(g.gamedata.moves, g.height), true
             
             br = @parent.getBoundingClientRect()
@@ -289,6 +292,7 @@ function Online
             
             @referee.game.paused = true
             @referee.game.info.id = id
+            @referee.game.info.komi = g.info.komi
             @referee.game.replay moves, true
             @referee.tree.replay moves, id
             @referee.game.estimate()
@@ -326,6 +330,7 @@ function Online
             moves = ogsMoves g.gamedata.moves, g.gamedata.height
             @referee.game.paused = true
             @referee.game.info.id = g.id
+            @referee.game.info.komi = g.gamedata.komi
             @referee.game.replay moves, true
             @referee.tree.replay moves, g.id
             @referee.game.estimate()

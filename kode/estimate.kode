@@ -19,10 +19,8 @@ function Estimate extends Score
     
     estimate: (@verbose) ->
         
-        # ● estimate
-        
         score = @score()
-        ip = 0
+
         if @chains.length > 1
         
             qmark = []
@@ -35,16 +33,11 @@ function Estimate extends Score
                 @deadOrAlive()
               
             for area in qmark
-                ip += @estimateArea area
-                
-            if score != 'B+0'
-                if score[0]=='W'
-                    ip += int score[2..]
-                else 
-                    ip -= int score[2..]
-            ip = ip.toFixed 1
-            log ip
-        ip
+                score += @estimateArea area
+            
+        score += @info.komi ? 0
+        @info.estimate = score
+        score
 
     estimateArea: (area) ->
         

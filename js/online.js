@@ -104,6 +104,7 @@ Online = (function ()
         }).bind(this))
         this.socket.on('connect',ping)
         this.socket.on('connect',authenticate)
+        this.socket.on('connect',notification)
         this.socket.on('connect',(function ()
         {
             return this.connectGames()
@@ -111,6 +112,7 @@ Online = (function ()
         setInterval(ping,10000)
         return this.socket.onAny((function (msg, arg)
         {
+            console.log('any',msg)
             if (msg.startsWith('game'))
             {
                 return this.onGameData(msg,arg)
@@ -129,6 +131,7 @@ Online = (function ()
         if (msg.endsWith('/move'))
         {
             pos = ogsMove(arg.move,this.boards[arg.game_id].game.size)
+            console.log('onGameData',arg)
             b = this.boards[arg.game_id]
             b.game.play(pos)
             if (b.game.players[b.game.nextColor()] === global.myUserName)
@@ -163,9 +166,9 @@ Online = (function ()
             return
         }
         var list = _k_.list(this.activeGames)
-        for (var _147_17_ = 0; _147_17_ < list.length; _147_17_++)
+        for (var _149_17_ = 0; _149_17_ < list.length; _149_17_++)
         {
-            game = list[_147_17_]
+            game = list[_149_17_]
             this.socket.emit('game/connect',{game_id:game.id,player_id:this.myUserId,chat:0})
         }
     }
@@ -228,9 +231,9 @@ Online = (function ()
 
         this.boards = {}
         var list = _k_.list(this.activeGames)
-        for (var _207_17_ = 0; _207_17_ < list.length; _207_17_++)
+        for (var _209_17_ = 0; _209_17_ < list.length; _209_17_++)
         {
-            game = list[_207_17_]
+            game = list[_209_17_]
             if (!(game != null))
             {
                 console.log('no game?',this.activeGames)
@@ -285,6 +288,7 @@ Online = (function ()
             b.game = new Game(b,g.players.black.username,g.players.white.username,g.handicap)
             b.game.paused = true
             b.game.info.id = g.id
+            b.game.info.komi = g.gamedata.komi
             b.game.replay(ogsMoves(g.gamedata.moves,g.height),true)
             br = this.parent.getBoundingClientRect()
             tb = br.height / (this.referee.boardsize + 1) - 2
@@ -323,6 +327,7 @@ Online = (function ()
             moves = g.moves.m
             this.referee.game.paused = true
             this.referee.game.info.id = id
+            this.referee.game.info.komi = g.info.komi
             this.referee.game.replay(moves,true)
             this.referee.tree.replay(moves,id)
             this.referee.game.estimate()
@@ -365,6 +370,7 @@ Online = (function ()
             moves = ogsMoves(g.gamedata.moves,g.gamedata.height)
             this.referee.game.paused = true
             this.referee.game.info.id = g.id
+            this.referee.game.info.komi = g.gamedata.komi
             this.referee.game.replay(moves,true)
             this.referee.tree.replay(moves,g.id)
             this.referee.game.estimate()

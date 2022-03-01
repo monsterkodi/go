@@ -143,9 +143,11 @@ function MainWin extends win
         elem 'span' class:'move'    parent:tl, text: mov.black
         elem 'span' class:'player'  parent:tl, text: game.players.black
         elem 'span' class:'capture' parent:tl, text: sb + ' ' + cps.black 
-        if game.info.score      ➜ elem 'span' class:"score #{game.info.score[0]}"  parent:tm, text: game.info.score
+        if 
+            game.info.score     ➜ elem 'span' class:"score #{game.info.score[0]}"  parent:tm, text: game.info.score
+            game.info.estimate  ➜ elem 'span' class:"score #{game.info.estimate > 0 ? 'W' : 'B'}"  parent:tm, text: game.info.estimate.toFixed 1
         if valid @referee.redos ➜ elem 'span' class:"redos"  parent:tm, text: "#{@referee.game.moves.num()} #{stone.white} #{@referee.game.moves.num()+@referee.redos.length}"
-        elem 'span' class:'capture' parent:tr, text: sw + ' ' + cps.white
+        elem 'span' class:'capture' parent:tr, text: sw + ' ' + cps.white + ' ' + game.info.komi
         elem 'span' class:'player'  parent:tr, text: game.players.white 
         elem 'span' class:'move'    parent:tr, text: mov.white
                 

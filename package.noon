@@ -1,23 +1,23 @@
-name                go
-version             0.59.0
-main                js/main.js
-author              monsterkodi
-license             Unlicense
+name            go
+version         0.60.0
+main            js/main.js
+author          monsterkodi
+license         Unlicense
 build
-                    asar    false
-                    mac
-                        icon  img/app.icns
+                asar  false
+                mac
+                  icon  img/app.icns
 scripts
-                    test    kode -t  kode/test/*.kode
-                    watch   kode -wt kode/test/*.kode kode/*.kode
+                test    kode -t  kode/test/*.kode
+                watch   kode -wt kode/test/*.kode kode/*.kode
 dependencies
-                    @sabaki/deadstones  ^2.1.2
-                    @sabaki/sgf         ^3.4.7
-                    kxk                 monsterkodi/kxk
-                    readline-sync       ^1.4.10
-                    socket.io-client    ^4.4.1
-                    ws                  ^8.5.0
+                @sabaki/deadstones  ^2.1.2
+                @sabaki/sgf     ^3.4.7
+                kxk             monsterkodi/kxk
+                readline-sync   ^1.4.10
+                socket.io-client  ^4.4.1
+                ws              ^8.5.0
 devDependencies
-                    electron            ^17.0.1
-                    electron-builder    ^22.14.13
-                    kode                monsterkodi/kode
+                electron        ^17.0.1
+                electron-builder  ^22.14.13
+                kode            monsterkodi/kode

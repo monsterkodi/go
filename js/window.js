@@ -136,11 +136,15 @@ MainWin = (function ()
         {
             elem('span',{class:`score ${game.info.score[0]}`,parent:tm,text:game.info.score})
         }
+        else if (game.info.estimate)
+        {
+            elem('span',{class:`score ${(game.info.estimate > 0 ? 'W' : 'B')}`,parent:tm,text:game.info.estimate.toFixed(1)})
+        }
         if (!_k_.empty(this.referee.redos))
         {
             elem('span',{class:"redos",parent:tm,text:`${this.referee.game.moves.num()} ${stone.white} ${this.referee.game.moves.num() + this.referee.redos.length}`})
         }
-        elem('span',{class:'capture',parent:tr,text:sw + ' ' + cps.white})
+        elem('span',{class:'capture',parent:tr,text:sw + ' ' + cps.white + ' ' + game.info.komi})
         elem('span',{class:'player',parent:tr,text:game.players.white})
         return elem('span',{class:'move',parent:tr,text:mov.white})
     }
