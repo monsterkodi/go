@@ -1,6 +1,6 @@
 // monsterkodi/kode 0.243.0
 
-var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, clamp: function (l,h,v) { var ll = Math.min(l,h), hh = Math.max(l,h); if (!_k_.isNum(v)) { v = ll }; if (v < ll) { v = ll }; if (v > hh) { v = hh }; if (!_k_.isNum(v)) { v = ll }; return v }, isNum: function (o) {return !isNaN(o) && !isNaN(parseFloat(o)) && (isFinite(o) || o === Infinity || o === -Infinity)}}
+var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, clamp: function (l,h,v) { var ll = Math.min(l,h), hh = Math.max(l,h); if (!_k_.isNum(v)) { v = ll }; if (v < ll) { v = ll }; if (v > hh) { v = hh }; if (!_k_.isNum(v)) { v = ll }; return v }, isNum: function (o) {return !isNaN(o) && !isNaN(parseFloat(o)) && (isFinite(o) || o === Infinity || o === -Infinity)}}
 
 var Estimate, Score, stone
 
@@ -18,74 +18,59 @@ Estimate = (function ()
 
     Estimate.prototype["estimate"] = function (verbose)
     {
-        var area, qmark, score, _38_28_
+        var area, score, _23_14_, _24_44_
 
         this.verbose = verbose
     
         score = this.score()
         if (this.chains.length > 1)
         {
-            qmark = []
             var list = _k_.list(this.areas)
-            for (var _27_21_ = 0; _27_21_ < list.length; _27_21_++)
+            for (var _19_21_ = 0; _19_21_ < list.length; _19_21_++)
             {
-                area = list[_27_21_]
+                area = list[_19_21_]
                 if (area.color === '?')
                 {
-                    qmark.push(area)
+                    score += this.estimateArea(area)
                 }
             }
-            if (!_k_.empty(qmark) && global.test)
-            {
-                this.fancySchmanzy()
-                this.deadOrAlive()
-            }
-            var list1 = _k_.list(qmark)
-            for (var _35_21_ = 0; _35_21_ < list1.length; _35_21_++)
-            {
-                area = list1[_35_21_]
-                score += this.estimateArea(area)
-            }
         }
-        score += ((_38_28_=this.info.komi) != null ? _38_28_ : 0)
-        this.info.estimate = score
-        return score
+        this.info = ((_23_14_=this.info) != null ? _23_14_ : {})
+        return this.info.estimate = score + ((_24_44_=this.info.komi) != null ? _24_44_ : 0)
     }
 
     Estimate.prototype["estimateArea"] = function (area)
     {
-        var c, circle, d, g, i, infl, ip, n, p, sign
+        var c, circle, d, i, infl, p, sign
 
         infl = Array(area.posl.length).fill(0)
         var list = _k_.list(area.neighbors)
-        for (var _45_14_ = 0; _45_14_ < list.length; _45_14_++)
+        for (var _29_14_ = 0; _29_14_ < list.length; _29_14_++)
         {
-            p = list[_45_14_]
+            p = list[_29_14_]
             c = this.coord(p)
-            g = this.groupAt(p)
-            if (g.state === 'dead')
+            if (this.groupAt(p).state === 'dead')
             {
                 continue
             }
-            circle = [[0,1,0,0.5,[8,12,16,17]],[1,0,1,0.5,[9,13,20,21]],[2,-1,0,0.5,[10,14,18,19]],[3,0,-1,0.5,[11,15,22,23]],[4,1,1,0.4,[16,20,24]],[5,1,-1,0.4,[17,22,25]],[6,-1,1,0.4,[18,21,26]],[7,-1,-1,0.4,[19,23,27]],[8,2,0,0.3,[12]],[9,0,2,0.3,[13]],[10,-2,0,0.3,[14]],[11,0,-2,0.3,[15]],[12,3,0,0.2,[]],[13,0,3,0.2,[]],[14,-3,0,0.2,[]],[15,0,-3,0.2,[]],[16,2,1,0.2,[]],[17,2,-1,0.2,[]],[18,-2,1,0.2,[]],[19,-2,-1,0.2,[]],[20,1,2,0.2,[]],[21,-1,2,0.2,[]],[22,1,-2,0.2,[]],[23,-1,-2,0.2,[]],[24,2,2,0.1,[]],[25,2,-2,0.1,[]],[26,-2,2,0.1,[]],[27,-2,-2,0.1,[]]]
+            circle = [[1,0,0.5,[8,12,16,17]],[0,1,0.5,[9,13,20,21]],[-1,0,0.5,[10,14,18,19]],[0,-1,0.5,[11,15,22,23]],[1,1,0.4,[16,20,24]],[1,-1,0.4,[17,22,25]],[-1,1,0.4,[18,21,26]],[-1,-1,0.4,[19,23,27]],[2,0,0.3,[12]],[0,2,0.3,[13]],[-2,0,0.3,[14]],[0,-2,0.3,[15]],[3,0,0.2,[]],[0,3,0.2,[]],[-3,0,0.2,[]],[0,-3,0.2,[]],[2,1,0.2,[]],[2,-1,0.2,[]],[-2,1,0.2,[]],[-2,-1,0.2,[]],[1,2,0.2,[]],[-1,2,0.2,[]],[1,-2,0.2,[]],[-1,-2,0.2,[]],[2,2,0.1,[]],[2,-2,0.1,[]],[-2,2,0.1,[]],[-2,-2,0.1,[]]]
             sign = (this.stoneAt(c) === stone.black ? -1 : 1)
             var list1 = _k_.list(circle)
-            for (var _81_18_ = 0; _81_18_ < list1.length; _81_18_++)
+            for (var _65_18_ = 0; _65_18_ < list1.length; _65_18_++)
             {
-                d = list1[_81_18_]
-                n = [c[0] + d[1],c[1] + d[2]]
-                if (p = this.pos(n))
+                d = list1[_65_18_]
+                if (p = this.pos([c[0] + d[0],c[1] + d[1]]))
                 {
                     if (_k_.in(p,area.posl))
                     {
-                        infl[area.posl.indexOf(p)] += sign * d[3]
+                        infl[area.posl.indexOf(p)] += sign * d[2]
                     }
                     else if (_k_.in(p,area.neighbors))
                     {
-                        var list2 = _k_.list(d[4])
-                        for (var _87_30_ = 0; _87_30_ < list2.length; _87_30_++)
+                        var list2 = _k_.list(d[3])
+                        for (var _70_30_ = 0; _70_30_ < list2.length; _70_30_++)
                         {
-                            i = list2[_87_30_]
+                            i = list2[_70_30_]
                             circle[i][3] = 0
                         }
                     }
@@ -96,11 +81,10 @@ Estimate = (function ()
         {
             return _k_.clamp(-1,1,v)
         })
-        ip = area.infl.reduce(function (a, v)
+        return area.infl.reduce(function (a, v)
         {
             return a + v
         })
-        return ip
     }
 
     return Estimate
