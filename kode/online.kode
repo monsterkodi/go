@@ -101,7 +101,7 @@ function Online
             switch msg.split('/')[0]
             
                 'nofification'  ➜ if arg.type == 'gameEnded' then @getGames()
-                'active_game'   ➜ if not @boards[arg.id] then @getGames()
+                'active_game'   ➜ if not @boards[arg.id] then log 'active_game!' arg.id, noon arg # @getGames()
                 'game'          ➜ @onGameData msg, arg
                 'score-estimator-enabled-state' 
                 'active-bots' 
@@ -117,36 +117,47 @@ function Online
     
     onGameData: (msg, arg)->
         
-        if msg.endsWith '/move'
+        gameid = arg.game_id
+        msgtyp = msg.split('/')[-1]
+        
+        switch msgtyp
+            
+            'move'
 
-            pos = ogsMove arg.move, @boards[arg.game_id].game.size
-            log 'move:' arg
+                pos = ogsMove arg.move, @boards[gameid].game.size
+                log 'move:' arg
+                
+                b = @boards[gameid]
+                b.game.play pos
+                
+                if b.game.players[b.game.nextColor()] == global.myUserName
+                    b.div.style.border = '2px solid black'
+                    b.div.style.borderRadius = '6px'
+                    e = b.parent # move 'your move' games to top
+                    t = e.previousElementSibling
+                    e.parentElement.insertBefore e, e.parentElement.firstChild
+                    t.parentElement.insertBefore t, t.parentElement.firstChild
+                    t.scrollIntoViewIfNeeded()
+                else
+                    b.div.style.border = 'none'
+                        
+                log 'load game?' @referee.game.info.id, gameid, @referee.game.info.id == gameid
+                if @referee.game.info.id == gameid
+                    @loadGame gameid
+                    # post.emit 'treeReset'
+                    # post.emit 'playerMove' pos, b.game.players[b.game.lastColor()]
             
-            b = @boards[arg.game_id]
-            b.game.play pos
-            
-            if b.game.players[b.game.nextColor()] == global.myUserName
-                b.div.style.border = '2px solid black'
-                b.div.style.borderRadius = '6px'
-                e = b.parent # move 'your move' games to top
-                t = e.previousElementSibling
-                e.parentElement.insertBefore e, e.parentElement.firstChild
-                t.parentElement.insertBefore t, t.parentElement.firstChild
-                t.scrollIntoViewIfNeeded()
-            else
-                b.div.style.border = 'none'
-                    
-            log 'load game?' @referee.game.info.id, arg.game_id, @referee.game.info.id == arg.game_id
-            if @referee.game.info.id == arg.game_id
-                @loadGame arg.game_id
-                # post.emit 'treeReset'
-                # post.emit 'playerMove' pos, b.game.players[b.game.lastColor()]
-        else if msg.endsWith '/chat'
-            log msg
-            log noon arg
-            log 'chat:' arg.line.username, '▸' arg.line.body
-        else
-            log 'game:' msg
+            'chat'
+                # log msg
+                # log noon arg
+                gameid = int msg.split('/')[-2]
+                post.emit 'chat' gameid:gameid, username:arg.line.username, text:arg.line.body, move:arg.line.move_number
+                # log 'chat:' arg.line.username, '▸' arg.line.body
+                
+            'clock'
+            'conditional_moves'
+            'reset-chats'       ➜
+                                ➜ log 'game:' msg, noon arg
         
     #  0000000   0000000   000   000  000   000  00000000   0000000  000000000         0000000    0000000   00     00  00000000   0000000  
     # 000       000   000  0000  000  0000  000  000       000          000           000        000   000  000   000  000       000       
@@ -238,13 +249,13 @@ function Online
                 rb = elem 'span' parent:g, class:'gameRank black' text:rank game.players.black
                 nb = elem 'span' parent:g, class:'gameName black' text:game.players.black.username
                 ib.addEventListener 'click' ((id) -> -> open 'https://online-go.com/game/'+id) game.id
-                ib.title = game.name
+                # ib.title = game.name
             if game.players.white.username != 'monsterkodi'
                 iw  = elem 'img'  parent:g, class:'gameIcon white' parent:g, src:iconUrl game.players.white.icon, 128
                 rw = elem 'span' parent:g, class:'gameRank white' text:rank game.players.white
                 nw = elem 'span' parent:g, class:'gameName white' text:game.players.white.username
                 iw.addEventListener 'click' ((id) -> -> open 'https://online-go.com/game/'+id) game.id
-                iw.title = game.name
+                # iw.title = game.name
 
             b = elem 'div' class:'gameboard' parent:@games
             @renderGame game, b
@@ -262,6 +273,10 @@ function Online
                 
         @get path:"/api/v1/games/#{game.id}" cb: (g) =>
 
+            if not g.players?
+                log 'no players? bailing out!' noon g
+                return
+            
             features = 
                 coordinates: false
                 liberties:   false
@@ -407,8 +422,15 @@ function Online
         req.write o.body if o.body
         req.end()
           
+    #  0000000   00000000  000000000  
+    # 000        000          000     
+    # 000  0000  0000000      000     
+    # 000   000  000          000     
+    #  0000000   00000000     000     
+    
     get: (o) ->
         
+        log noon o
         req = request {
                 host: 'online-go.com'
                 path: o.path
@@ -417,11 +439,12 @@ function Online
                     'Authorization': "Bearer #{@token}"
                     'Content-Type': 'application/x-www-form-urlencoded'
             }, (response) =>
-                log 'status:' response.statusCode if response.statusCode != 200
+                if response.statusCode != 200
+                    log 'not ok:' response.statusCode, '(429=throttled)'
+                    return
                 response.setEncoding 'utf8'
                 data = ""
-                response.on 'data' (chunk) => 
-                    data += chunk
+                response.on 'data' (chunk) => data += chunk
                 response.on 'end' =>
                     d = JSON.parse data
                     o.cb(d) if o.cb is func

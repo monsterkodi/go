@@ -124,7 +124,7 @@ Online = (function ()
                 case 'active_game':
                     if (!this.boards[arg.id])
                     {
-                        return this.getGames()
+                        console.log('active_game!',arg.id,_k_.noon(arg))
                     }
                     break
                 case 'game':
@@ -144,44 +144,49 @@ Online = (function ()
 
     Online.prototype["onGameData"] = function (msg, arg)
     {
-        var b, e, pos, t
+        var b, e, gameid, msgtyp, pos, t
 
-        if (msg.endsWith('/move'))
+        gameid = arg.game_id
+        msgtyp = msg.split('/').slice(-1)[0]
+        switch (msgtyp)
         {
-            pos = ogsMove(arg.move,this.boards[arg.game_id].game.size)
-            console.log('move:',arg)
-            b = this.boards[arg.game_id]
-            b.game.play(pos)
-            if (b.game.players[b.game.nextColor()] === global.myUserName)
-            {
-                b.div.style.border = '2px solid black'
-                b.div.style.borderRadius = '6px'
-                e = b.parent
-                t = e.previousElementSibling
-                e.parentElement.insertBefore(e,e.parentElement.firstChild)
-                t.parentElement.insertBefore(t,t.parentElement.firstChild)
-                t.scrollIntoViewIfNeeded()
-            }
-            else
-            {
-                b.div.style.border = 'none'
-            }
-            console.log('load game?',this.referee.game.info.id,arg.game_id,this.referee.game.info.id === arg.game_id)
-            if (this.referee.game.info.id === arg.game_id)
-            {
-                return this.loadGame(arg.game_id)
-            }
+            case 'move':
+                pos = ogsMove(arg.move,this.boards[gameid].game.size)
+                console.log('move:',arg)
+                b = this.boards[gameid]
+                b.game.play(pos)
+                if (b.game.players[b.game.nextColor()] === global.myUserName)
+                {
+                    b.div.style.border = '2px solid black'
+                    b.div.style.borderRadius = '6px'
+                    e = b.parent
+                    t = e.previousElementSibling
+                    e.parentElement.insertBefore(e,e.parentElement.firstChild)
+                    t.parentElement.insertBefore(t,t.parentElement.firstChild)
+                    t.scrollIntoViewIfNeeded()
+                }
+                else
+                {
+                    b.div.style.border = 'none'
+                }
+                console.log('load game?',this.referee.game.info.id,gameid,this.referee.game.info.id === gameid)
+                if (this.referee.game.info.id === gameid)
+                {
+                    return this.loadGame(gameid)
+                }
+                break
+            case 'chat':
+                gameid = parseInt(msg.split('/').slice(-2,-1)[0])
+                return post.emit('chat',{gameid:gameid,username:arg.line.username,text:arg.line.body,move:arg.line.move_number})
+
+            case 'clock':
+            case 'conditional_moves':
+            case 'reset-chats':
+                break
+            default:
+                console.log('game:',msg,_k_.noon(arg))
         }
-        else if (msg.endsWith('/chat'))
-        {
-            console.log(msg)
-            console.log(_k_.noon(arg))
-            console.log('chat:',arg.line.username,'▸',arg.line.body)
-        }
-        else
-        {
-            console.log('game:',msg)
-        }
+
     }
 
     Online.prototype["connectGames"] = function ()
@@ -194,9 +199,9 @@ Online = (function ()
             return
         }
         var list = _k_.list(this.activeGames)
-        for (var _164_17_ = 0; _164_17_ < list.length; _164_17_++)
+        for (var _175_17_ = 0; _175_17_ < list.length; _175_17_++)
         {
-            game = list[_164_17_]
+            game = list[_175_17_]
             this.socket.emit('game/connect',{game_id:game.id,player_id:this.myUserId,chat:1})
         }
     }
@@ -259,9 +264,9 @@ Online = (function ()
 
         this.boards = {}
         var list = _k_.list(this.activeGames)
-        for (var _231_17_ = 0; _231_17_ < list.length; _231_17_++)
+        for (var _242_17_ = 0; _242_17_ < list.length; _242_17_++)
         {
-            game = list[_231_17_]
+            game = list[_242_17_]
             if (!(game != null))
             {
                 console.log('no game?',this.activeGames)
@@ -280,7 +285,6 @@ Online = (function ()
                         return open('https://online-go.com/game/' + id)
                     }
                 })(game.id))
-                ib.title = game.name
             }
             if (game.players.white.username !== 'monsterkodi')
             {
@@ -294,7 +298,6 @@ Online = (function ()
                         return open('https://online-go.com/game/' + id)
                     }
                 })(game.id))
-                iw.title = game.name
             }
             b = elem('div',{class:'gameboard',parent:this.games})
             this.renderGame(game,b)
@@ -309,8 +312,13 @@ Online = (function ()
     {
         return this.get({path:`/api/v1/games/${game.id}`,cb:(function (g)
         {
-            var b, br, features, rb, t, tb, w
+            var b, br, features, rb, t, tb, w, _276_28_
 
+            if (!(g.players != null))
+            {
+                console.log('no players? bailing out!',_k_.noon(g))
+                return
+            }
             features = {coordinates:false,liberties:false,numbers:false,hover:false,dots:false}
             b = new Board(e,g.height,features)
             b.game = new Game(b,g.players.black.username,g.players.white.username,g.handicap)
@@ -486,13 +494,15 @@ Online = (function ()
     {
         var req
 
+        console.log(_k_.noon(o))
         req = request({host:'online-go.com',path:o.path,method:'GET',headers:{'Authorization':`Bearer ${this.token}`,'Content-Type':'application/x-www-form-urlencoded'}},(function (response)
         {
             var data
 
             if (response.statusCode !== 200)
             {
-                console.log('status:',response.statusCode)
+                console.log('not ok:',response.statusCode,'(429=throttled)')
+                return
             }
             response.setEncoding('utf8')
             data = ""

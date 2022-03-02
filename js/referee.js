@@ -27,6 +27,7 @@ Referee = (function ()
     {
         this.parent = parent
     
+        this["onChat"] = this["onChat"].bind(this)
         this["navigate"] = this["navigate"].bind(this)
         this["altMove"] = this["altMove"].bind(this)
         this["playerMove"] = this["playerMove"].bind(this)
@@ -35,20 +36,21 @@ Referee = (function ()
         post.on('playerMove',this.playerMove)
         post.on('altMove',this.altMove)
         post.on('navigate',this.navigate)
+        post.on('chat',this.onChat)
     }
 
     Referee.prototype["newGame"] = function (gi = {})
     {
-        var info, moves, _40_14_, _41_14_, _43_33_, _44_33_, _45_33_, _46_33_, _47_33_, _48_33_, _75_20_, _76_20_
+        var info, moves, _41_14_, _42_14_, _44_33_, _45_33_, _46_33_, _47_33_, _48_33_, _49_33_, _76_20_, _77_20_
 
         ;(this.varee != null ? this.varee.remove() : undefined)
         ;(this.board != null ? this.board.remove() : undefined)
-        this.white = ((_43_33_=gi.white) != null ? _43_33_ : this.white)
-        this.black = ((_44_33_=gi.black) != null ? _44_33_ : this.black)
-        this.handicap = ((_45_33_=gi.handicap) != null ? _45_33_ : this.handicap)
-        this.boardsize = ((_46_33_=gi.size) != null ? _46_33_ : this.boardsize)
-        moves = ((_47_33_=gi.moves) != null ? _47_33_ : [])
-        info = ((_48_33_=gi.info) != null ? _48_33_ : {})
+        this.white = ((_44_33_=gi.white) != null ? _44_33_ : this.white)
+        this.black = ((_45_33_=gi.black) != null ? _45_33_ : this.black)
+        this.handicap = ((_46_33_=gi.handicap) != null ? _46_33_ : this.handicap)
+        this.boardsize = ((_47_33_=gi.size) != null ? _47_33_ : this.boardsize)
+        moves = ((_48_33_=gi.moves) != null ? _48_33_ : [])
+        info = ((_49_33_=gi.info) != null ? _49_33_ : {})
         this.redos = []
         this.tree = new Tree
         if (window.stash.get('varee',true))
@@ -133,11 +135,11 @@ Referee = (function ()
         var b, m, p, score, spl, w
 
         var list = _k_.list(moves)
-        for (var _111_14_ = 0; _111_14_ < list.length; _111_14_++)
+        for (var _112_14_ = 0; _112_14_ < list.length; _112_14_++)
         {
-            m = list[_111_14_]
+            m = list[_112_14_]
             spl = m.split(' ')
-            var _113_22_ = spl.slice(0, 3); p = _113_22_[0]; b = _113_22_[1]; w = _113_22_[2]
+            var _114_22_ = spl.slice(0, 3); p = _114_22_[0]; b = _114_22_[1]; w = _114_22_[2]
 
             this.game.play(p)
         }
@@ -158,7 +160,7 @@ Referee = (function ()
 
     Referee.prototype["playerMove"] = function (p, player)
     {
-        var color, next, _137_42_, _137_62_, _146_38_, _146_58_, _161_27_, _162_28_, _163_27_, _164_28_
+        var color, next, _138_42_, _138_62_, _147_38_, _147_58_, _162_27_, _163_28_, _164_27_, _165_28_
 
         if (this.game.info.id && this.game.players[stoneColor[this.game.stoneAt(p)]] === player)
         {
@@ -221,7 +223,7 @@ Referee = (function ()
 
     Referee.prototype["undo"] = function ()
     {
-        var m, _186_15_, _194_20_, _195_20_
+        var m, _187_15_, _195_20_, _196_20_
 
         if (this.game.start())
         {
@@ -236,7 +238,7 @@ Referee = (function ()
             return
         }
         this.game.paused = true
-        this.redos = ((_186_15_=this.redos) != null ? _186_15_ : [])
+        this.redos = ((_187_15_=this.redos) != null ? _187_15_ : [])
         m = this.game.moves.pop()
         this.redos.unshift(m)
         this.game.undoMove(m)
@@ -247,7 +249,7 @@ Referee = (function ()
 
     Referee.prototype["redo"] = function ()
     {
-        var move, _206_20_, _207_20_
+        var move, _207_20_, _208_20_
 
         if (_k_.empty(this.redos))
         {
@@ -305,7 +307,7 @@ Referee = (function ()
 
     Referee.prototype["jumpToStart"] = function ()
     {
-        var _257_20_, _258_20_
+        var _258_20_, _259_20_
 
         if (this.game.start())
         {
@@ -339,6 +341,17 @@ Referee = (function ()
             this.varee = new Varee(this.parent,this.tree,this.boardsize)
             return post.emit('tree')
         }
+    }
+
+    Referee.prototype["onChat"] = function (chat)
+    {
+        var _287_14_
+
+        if (chat.gameid !== this.game.info.id)
+        {
+            return
+        }
+        return (this.varee != null ? this.varee.addChat(chat) : undefined)
     }
 
     return Referee

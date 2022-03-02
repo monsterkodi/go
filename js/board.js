@@ -78,13 +78,13 @@ Board = (function ()
         {
             this.num = elem('div',{class:'numbers',parent:this.div})
         }
-        if (this.features.variations)
-        {
-            this.var = elem('div',{class:'variations',parent:this.div})
-        }
         if (this.features.territory)
         {
             this.ter = elem('div',{class:'territory',parent:this.div})
+        }
+        if (this.features.variations)
+        {
+            this.var = elem('div',{class:'variations',parent:this.div})
         }
         this.hlt = elem('div',{class:'highlts',parent:this.div})
         if (this.features.hover)

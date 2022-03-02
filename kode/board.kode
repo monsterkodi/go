@@ -49,8 +49,8 @@ function Board
         
         if @features.liberties  then @lib = elem 'div' class:'liberties'   parent:@div
         if @features.numbers    then @num = elem 'div' class:'numbers'     parent:@div
-        if @features.variations then @var = elem 'div' class:'variations'  parent:@div
         if @features.territory  then @ter = elem 'div' class:'territory'   parent:@div
+        if @features.variations then @var = elem 'div' class:'variations'  parent:@div
         
         @hlt = elem 'div' class:'highlts'     parent:@div
         

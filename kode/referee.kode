@@ -28,6 +28,7 @@ function Referee
         post.on 'playerMove' @playerMove
         post.on 'altMove'    @altMove
         post.on 'navigate'   @navigate
+        post.on 'chat'       @onChat
 
     # 000   000  00000000  000   000         0000000    0000000   00     00  00000000  
     # 0000  000  000       000 0 000        000        000   000  000   000  000       
@@ -279,5 +280,10 @@ function Referee
             window.stash.set 'varee' true
             @varee = new Varee @parent, @tree, @boardsize
             post.emit 'tree'
+            
+    onChat: (chat) =>
+        
+        return if chat.gameid != @game.info.id
+        @varee?.addChat chat
                     
 module.exports = Referee
