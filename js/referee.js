@@ -298,16 +298,12 @@ Referee = (function ()
         hist = this.tree.moveHistory()
         this.game.replay(hist)
         estimate = this.game.estimate()
-        if (hist.length % 2 === 0)
-        {
-            console.log(hist.length,estimate)
-        }
         return this.board.annotate()
     }
 
     Referee.prototype["jumpToStart"] = function ()
     {
-        var _258_20_, _259_20_
+        var _256_20_, _257_20_
 
         if (this.game.start())
         {
@@ -345,7 +341,7 @@ Referee = (function ()
 
     Referee.prototype["onChat"] = function (chat)
     {
-        var _287_14_
+        var _285_14_
 
         if (chat.gameid !== this.game.info.id)
         {

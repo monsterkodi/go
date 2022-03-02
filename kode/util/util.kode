@@ -55,12 +55,18 @@ class Util
     @rank: (user) ->
         
         rating_to_rank = (rating) -> Math.log(min(6000, max(100, rating)) / 525) * 23.15
-        if ret = user.ratings.overall
+        if ret = user.ratings?.overall
             r = Math.floor rating_to_rank ret.rating
             if r < -900 ➜ return '?'
             if r < 30   ➜ return Math.ceil(30 - r)+'k'
             return Math.floor(r - 29)+'d'
         0
+
+    @rankToKyu: (rank) ->
+        
+        if rank < -900 ➜ return '?'
+        if rank < 30   ➜ return Math.ceil(30 - rank)+'k'
+        Math.floor(rank - 29)+'d'
         
     @ogsMoves: (ogs, size) ->
         moves = []
@@ -85,6 +91,6 @@ class Util
         
     @iconUrl: (icon, size) ->
         
-        icon.replace(/-[0-9]+.png$/, "-#{size}.png").replace(/s=[0-9]+/, "s=#{size}")
+        icon?.replace(/-[0-9]+.png$/, "-#{size}.png").replace(/s=[0-9]+/, "s=#{size}")
 
 module.exports = Util

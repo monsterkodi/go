@@ -36,13 +36,13 @@ class Util
 
     static rank (user)
     {
-        var r, rating_to_rank, ret
+        var r, rating_to_rank, ret, _58_29_
 
         rating_to_rank = function (rating)
         {
             return Math.log(_k_.min(6000,_k_.max(100,rating)) / 525) * 23.15
         }
-        if (ret = user.ratings.overall)
+        if (ret = (user.ratings != null ? user.ratings.overall : undefined))
         {
             r = Math.floor(rating_to_rank(ret.rating))
             if (r < -900)
@@ -58,15 +58,28 @@ class Util
         return 0
     }
 
+    static rankToKyu (rank)
+    {
+        if (rank < -900)
+        {
+            return '?'
+        }
+        if (rank < 30)
+        {
+            return Math.ceil(30 - rank) + 'k'
+        }
+        return Math.floor(rank - 29) + 'd'
+    }
+
     static ogsMoves (ogs, size)
     {
         var moves, o, pos
 
         moves = []
         var list = _k_.list(ogs)
-        for (var _67_14_ = 0; _67_14_ < list.length; _67_14_++)
+        for (var _73_14_ = 0; _73_14_ < list.length; _73_14_++)
         {
-            o = list[_67_14_]
+            o = list[_73_14_]
             pos = Util.ogsMove(o,size)
             moves.push({pos:pos,color:['black','white'][moves.length % 2]})
         }
@@ -100,7 +113,7 @@ class Util
 
     static iconUrl (icon, size)
     {
-        return icon.replace(/-[0-9]+.png$/,`-${size}.png`).replace(/s=[0-9]+/,`s=${size}`)
+        return (icon != null ? icon.replace(/-[0-9]+.png$/,`-${size}.png`).replace(/s=[0-9]+/,`s=${size}`) : undefined)
     }
 }
 

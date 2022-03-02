@@ -11,7 +11,7 @@ Score = require './score'
 
 function Estimate extends Score
 
-    estimate: (@verbose) ->
+    estimate: ->
         
         score = @score()
 

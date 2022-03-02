@@ -7,7 +7,7 @@
 ###
 
 { elem, noon, open, post, slash } = require 'kxk'
-{ rank, ogsMoves, ogsMove, toOGS, iconUrl } = require './util/util'
+{ rank, rankToKyu, ogsMoves, ogsMove, toOGS, iconUrl } = require './util/util'
 { request } = require 'https'
 { io } = require 'socket.io-client'
 
@@ -19,12 +19,18 @@ function Online
     @: (@parent, @referee) ->
 
         @boards = {}
-        @activeGames = []
+
         @postSecret()
                      
         post.on 'submitMove' @submitMove
         post.on 'loadGame'   @loadGame
         post.on 'resize'     @onResize
+        
+        @games = elem 'div' class:'games' parent:@parent 
+        @games.addEventListener 'mousewheel' @onMouseWheel, true
+        
+        if not window.stash.get 'games' true
+            @toggleGames()
         
     submitMove: (gameId, pos) =>
         
@@ -49,8 +55,6 @@ function Online
 
         clockDrift = 0
         latency = 0
-        
-        # log noon config
         
         global.myUserId    = @myUserId   = config.user.id
         global.myUserName  = @myUserName = config.user.username 
@@ -92,7 +96,6 @@ function Online
         @socket.on 'connect'  ping
         @socket.on 'connect'  authenticate
         @socket.on 'connect'  notification
-        @socket.on 'connect' => @connectGames()
             
         setInterval ping, 10000
         
@@ -100,14 +103,25 @@ function Online
             
             switch msg.split('/')[0]
             
-                'nofification'  ➜ if arg.type == 'gameEnded' then @getGames()
-                'active_game'   ➜ if not @boards[arg.id] then log 'active_game!' arg.id, noon arg # @getGames()
-                'game'          ➜ @onGameData msg, arg
+                'nofification'  ➜ # if arg.type == 'gameEnded' then @getGames()
+                'active_game'   
+                                    log 'active_game:' arg.id #, noon arg # if not @boards[arg.id]
+                                    @socket.emit 'game/connect',
+                                        game_id:    arg.id
+                                        player_id:  @myUserId
+                                        chat:       1
+                                        
+                                    # @socket.emit 'game/chat'
+                                        # auth:             @myAuth
+                                        # player_id:        @myUserId
+                                        # username:         @myUserName
+                    
+                'game'          ➜   @onGameData msg, arg
                 'score-estimator-enabled-state' 
                 'active-bots' 
                 'net' 
-                'automatch'     ➜
-                                ➜ log 'any' msg, noon arg
+                'automatch'     ➜   ''
+                                ➜   log 'any' msg, noon arg
                 
     #  0000000   000   000         0000000    0000000   00     00  00000000        0000000     0000000   000000000   0000000   
     # 000   000  0000  000        000        000   000  000   000  000             000   000  000   000     000     000   000  
@@ -144,54 +158,19 @@ function Online
                 log 'load game?' @referee.game.info.id, gameid, @referee.game.info.id == gameid
                 if @referee.game.info.id == gameid
                     @loadGame gameid
-                    # post.emit 'treeReset'
-                    # post.emit 'playerMove' pos, b.game.players[b.game.lastColor()]
             
             'chat'
-                # log msg
-                # log noon arg
                 gameid = int msg.split('/')[-2]
                 post.emit 'chat' gameid:gameid, username:arg.line.username, text:arg.line.body, move:arg.line.move_number
-                # log 'chat:' arg.line.username, '▸' arg.line.body
                 
             'clock'
             'conditional_moves'
-            'reset-chats'       ➜
+            'reset-chats'       ➜ ''
+            'gamedata'          
+                                  # log 'gamedata:' msg, msgtyp, gameid
+                                  if not @boards[gameid] then @addBoard arg
                                 ➜ log 'game:' msg, noon arg
-        
-    #  0000000   0000000   000   000  000   000  00000000   0000000  000000000         0000000    0000000   00     00  00000000   0000000  
-    # 000       000   000  0000  000  0000  000  000       000          000           000        000   000  000   000  000       000       
-    # 000       000   000  000 0 000  000 0 000  0000000   000          000           000  0000  000000000  000000000  0000000   0000000   
-    # 000       000   000  000  0000  000  0000  000       000          000           000   000  000   000  000 0 000  000            000  
-    #  0000000   0000000   000   000  000   000  00000000   0000000     000            0000000   000   000  000   000  00000000  0000000   
-    
-    connectGames: =>
-        
-        if empty @activeGames
-            setTimeout @connectGames, 5000
-            return
-            
-        # log "▸ connect to #{@activeGames.length} active games"
-        for game in @activeGames
-            @socket.emit 'game/connect',
-                game_id:    game.id
-                player_id:  @myUserId
-                chat:       1
-                
-            # @socket.emit 'game/chat'
-                # auth:             config.chat_auth
-                # player_id:        config.user.id
-                # username:         config.user.username 
-                # jwt:              config.user_jwt      
-                # client_version:   config.version
-                        
-    showGames: =>
-            
-        @games = elem 'div' class:'games' parent:@parent 
-        @games.addEventListener 'mousewheel' @onMouseWheel, true
-        @getGames()
-        @onResize()
-                
+                                            
     #  0000000  00000000   0000000  00000000   00000000  000000000  
     # 000       000       000       000   000  000          000     
     # 0000000   0000000   000       0000000    0000000      000     
@@ -206,109 +185,69 @@ function Online
         @post path:'/oauth2/token/' body:body, cb: (d) =>
             if d.access_token
                 @token = d.access_token
-                if window.stash.get 'games' true
-                    @showGames()
+                # if window.stash.get 'games' true
+                    # @showGames()
                 @get path:'/api/v1/ui/config' cb: (d) =>
                     @initSocket d
             else
                 log 'no token!'
-                                
-    #  0000000   00000000  000000000         0000000    0000000   00     00  00000000   0000000  
-    # 000        000          000           000        000   000  000   000  000       000       
-    # 000  0000  0000000      000           000  0000  000000000  000000000  0000000   0000000   
-    # 000   000  000          000           000   000  000   000  000 0 000  000            000  
-    #  0000000   00000000     000            0000000   000   000  000   000  00000000  0000000   
+                                            
+    #  0000000   0000000    0000000          0000000     0000000    0000000   00000000   0000000    
+    # 000   000  000   000  000   000        000   000  000   000  000   000  000   000  000   000  
+    # 000000000  000   000  000   000        0000000    000   000  000000000  0000000    000   000  
+    # 000   000  000   000  000   000        000   000  000   000  000   000  000   000  000   000  
+    # 000   000  0000000    0000000          0000000     0000000   000   000  000   000  0000000    
     
-    getGames: (page=1) =>
-
-        @activeGames = []
+    addBoard: (game) ->
         
-        @get path:"/api/v1/megames/?page=#{page}&ended__isnull=true&page_size=100" cb: (d) =>
-            @activeGames = @activeGames.concat d.results
-            if d.next
-                @getGames page+1
-            else
-                @renderGames()
-                
-    # 00000000   00000000  000   000  0000000    00000000  00000000          0000000    0000000   00     00  00000000   0000000  
-    # 000   000  000       0000  000  000   000  000       000   000        000        000   000  000   000  000       000       
-    # 0000000    0000000   000 0 000  000   000  0000000   0000000          000  0000  000000000  000000000  0000000   0000000   
-    # 000   000  000       000  0000  000   000  000       000   000        000   000  000   000  000 0 000  000            000  
-    # 000   000  00000000  000   000  0000000    00000000  000   000         0000000   000   000  000   000  00000000  0000000   
-    
-    renderGames: ->
+        # log 'addBoard' noon game
         
-        @boards = {}
-        for game in @activeGames
-            if not game?
-                log 'no game?' @activeGames
-                continue
-            g = elem 'div' class:'game' parent:@games
-            if game.players.black.username != 'monsterkodi'
-                ib = elem 'img'  parent:g, class:'gameIcon black' src:iconUrl game.players.black.icon, 128
-                rb = elem 'span' parent:g, class:'gameRank black' text:rank game.players.black
-                nb = elem 'span' parent:g, class:'gameName black' text:game.players.black.username
-                ib.addEventListener 'click' ((id) -> -> open 'https://online-go.com/game/'+id) game.id
-                # ib.title = game.name
-            if game.players.white.username != 'monsterkodi'
-                iw  = elem 'img'  parent:g, class:'gameIcon white' parent:g, src:iconUrl game.players.white.icon, 128
-                rw = elem 'span' parent:g, class:'gameRank white' text:rank game.players.white
-                nw = elem 'span' parent:g, class:'gameName white' text:game.players.white.username
-                iw.addEventListener 'click' ((id) -> -> open 'https://online-go.com/game/'+id) game.id
-                # iw.title = game.name
+        g = elem 'div' class:'game' parent:@games
+        
+        for color in ['black' 'white']
+            p = game.players[color] 
+            if p.username != 'monsterkodi'
+                ib = elem 'img'  parent:g, class:"gameIcon #{color}" 
+                rb = elem 'span' parent:g, class:"gameRank #{color}" text:rankToKyu p.rank
+                nb = elem 'span' parent:g, class:"gameName #{color}" text:p.username
+                ib.addEventListener 'click' ((id) -> -> open 'https://online-go.com/game/'+id) game.game_id
+                @get path:"/api/v1/players/#{p.id}" cb:((ib) => (p) => ib.src = iconUrl p.icon, 128 ) ib
 
-            b = elem 'div' class:'gameboard' parent:@games
-            @renderGame game, b
-            
-        if not @referee.game.info.id and @activeGames.length
-            @loadGame @activeGames[0].id
-            
-    # 00000000   00000000  000   000  0000000    00000000  00000000          0000000    0000000   00     00  00000000  
-    # 000   000  000       0000  000  000   000  000       000   000        000        000   000  000   000  000       
-    # 0000000    0000000   000 0 000  000   000  0000000   0000000          000  0000  000000000  000000000  0000000   
-    # 000   000  000       000  0000  000   000  000       000   000        000   000  000   000  000 0 000  000       
-    # 000   000  00000000  000   000  0000000    00000000  000   000         0000000   000   000  000   000  00000000  
-    
-    renderGame: (game, e) ->
-                
-        @get path:"/api/v1/games/#{game.id}" cb: (g) =>
+        e = elem 'div' class:'gameboard' parent:@games
 
-            if not g.players?
-                log 'no players? bailing out!' noon g
-                return
-            
-            features = 
-                coordinates: false
-                liberties:   false
-                numbers:     false
-                hover:       false
-                dots:        false
-            
-            b = new Board e, g.height, features
-            b.game = new Game b, g.players.black.username, g.players.white.username, g.handicap
-            b.game.paused = true
-            b.game.info.id = g.id
-            b.game.info.komi = g.gamedata.komi
-            b.game.replay ogsMoves(g.gamedata.moves, g.height), true
-            
-            br = @parent.getBoundingClientRect()
-            tb = br.height / (@referee.boardsize+1) - 2
-            rb = tb
-            w  = max 128 (br.width - br.height)/2-tb
+        features = 
+            coordinates: false
+            liberties:   false
+            territory:   false
+            numbers:     false
+            hover:       false
+            dots:        false
+        
+        b = new Board e, game.height, features
+        b.game = new Game b, game.players.black.username, game.players.white.username, game.handicap
+        b.game.paused = true
+        b.game.info.id = game.game_id
+        b.game.info.komi = game.komi
+        b.game.replay ogsMoves(game.moves, game.height), true
+        
+        br = @parent.getBoundingClientRect()
+        tb = br.height / (@referee.boardsize+1) - 2
+        rb = tb
+        w  = max 128 (br.width - br.height)/2-tb
 
-            b.div.style.height = "#{w-30}px"
-            b.div.style.width  = "#{w-30}px"
-            b.div.addEventListener 'click' ((id) => => @loadGame id) g.id
-            @boards[g.id] = b
-            b.onResize()
+        b.div.style.height = "#{w-30}px"
+        b.div.style.width  = "#{w-30}px"
+        b.div.addEventListener 'click' ((id) => => @loadGame id) game.game_id
+        @boards[game.game_id] = b
+        b.onResize()
+        
+        if game.clock.current_player == 1110858
+            b.div.style.border = '2px solid black'
+            b.div.style.borderRadius = '6px'
+            t = e.previousElementSibling # move 'your move' games to top
+            e.parentElement.insertBefore e, e.parentElement.firstChild
+            t.parentElement.insertBefore t, t.parentElement.firstChild
             
-            if g.gamedata.clock.current_player == 1110858
-                b.div.style.border = '2px solid black'
-                b.div.style.borderRadius = '6px'
-                t = e.previousElementSibling # move 'your move' games to top
-                e.parentElement.insertBefore e, e.parentElement.firstChild
-                t.parentElement.insertBefore t, t.parentElement.firstChild
-                
     # 000       0000000    0000000   0000000           0000000    0000000   00     00  00000000  
     # 000      000   000  000   000  000   000        000        000   000  000   000  000       
     # 000      000   000  000000000  000   000        000  0000  000000000  000000000  0000000   
@@ -377,25 +316,28 @@ function Online
             
     nextGame: ->
 
+        ids = Object.keys @boards
         if @referee.game.info.id
-            for game,i in @activeGames
-                if game.id == @referee.game.info.id
-                    id = @activeGames[clamp 0, @activeGames.length-1, i+1].id
+            for i in 0...ids.length
+                if int(ids[i]) == @referee.game.info.id
+                    id = int ids[clamp 0, ids.length-1, i+1]
                     break
 
-        id ?= @activeGames[0].id        
+        id ?= int ids[0]
+        # log 'nextGame id' id
         @loadGame id
         
     prevGame: ->
 
+        ids = Object.keys @boards
         if @referee.game.info.id
-            for game,i in @activeGames
-                if game.id == @referee.game.info.id
-                    id = @activeGames[clamp 0, @activeGames.length-1, i-1].id
+            for i in 0...ids.length
+                if int(ids[i]) == @referee.game.info.id
+                    id = int ids[clamp 0, ids.length-1, i-1]
                     break
 
-        id ?= @activeGames[-1].id
-        
+        id ?= int ids[0]
+        # log 'prevGame id' id
         @loadGame id
         
     # 00000000    0000000    0000000  000000000  
@@ -430,7 +372,7 @@ function Online
     
     get: (o) ->
         
-        log noon o
+        # log noon o
         req = request {
                 host: 'online-go.com'
                 path: o.path
@@ -460,14 +402,20 @@ function Online
     
     toggleGames: ->
 
-        if @games
-            @games.remove()
-            delete @games
+        if @games.style.display != 'none'
+            # @games.remove()
+            @games.style.display = 'none'
+            # delete @games
             window.stash.set 'games' false
         else
             window.stash.set 'games' true
             @showGames()
             
+    showGames: =>
+            
+        @games.style.display = 'initial'
+        @onResize()
+                
     # 00000000   00000000   0000000  000  0000000  00000000  
     # 000   000  000       000       000     000   000       
     # 0000000    0000000   0000000   000    000    0000000   

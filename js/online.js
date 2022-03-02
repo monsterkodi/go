@@ -1,8 +1,8 @@
 // monsterkodi/kode 0.243.0
 
-var _k_ = {noon: function (obj) { var pad = function (s, l) { while (s.length < l) { s += ' ' }; return s }; var esc = function (k, arry) { var es, sp; if (0 <= k.indexOf('\n')) { sp = k.split('\n'); es = sp.map(function (s) { return esc(s,arry) }); es.unshift('...'); es.push('...'); return es.join('\n') } if (k === '' || k === '...' || _k_.in(k[0],[' ','#','|']) || _k_.in(k[k.length - 1],[' ','#','|'])) { k = '|' + k + '|' } else if (arry && /  /.test(k)) { k = '|' + k + '|' }; return k }; var pretty = function (o, ind, seen) { var k, kl, l, v, mk = 4; if (Object.keys(o).length > 1) { for (k in o) { if (Object.hasOwn(o,k)) { kl = parseInt(Math.ceil((k.length + 2) / 4) * 4); mk = Math.max(mk,kl); if (mk > 32) { mk = 32; break } } } }; l = []; var keyValue = function (k, v) { var i, ks, s, vs; s = ind; k = esc(k,true); if (k.indexOf('  ') > 0 && k[0] !== '|') { k = `|${k}|` } else if (k[0] !== '|' && k[k.length - 1] === '|') { k = '|' + k } else if (k[0] === '|' && k[k.length - 1] !== '|') { k += '|' }; ks = pad(k,Math.max(mk,k.length + 2)); i = pad(ind + '    ',mk); s += ks; vs = toStr(v,i,false,seen); if (vs[0] === '\n') { while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) } }; s += vs; while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) }; return s }; for (k in o) { if (Object.hasOwn(o,k)) { l.push(keyValue(k,o[k])) } }; return l.join('\n') }; var toStr = function (o, ind = '', arry = false, seen = []) { var s, t, v; if (!(o != null)) { if (o === null) { return 'null' }; if (o === undefined) { return 'undefined' }; return '<?>' }; switch (t = typeof(o)) { case 'string': {return esc(o,arry)}; case 'object': { if (_k_.in(o,seen)) { return '<v>' }; seen.push(o); if ((o.constructor != null ? o.constructor.name : undefined) === 'Array') { s = ind !== '' && arry && '.' || ''; if (o.length && ind !== '') { s += '\n' }; s += (function () { var result = []; var list = _k_.list(o); for (var li = 0; li < list.length; li++)  { v = list[li];result.push(ind + toStr(v,ind + '    ',true,seen))  } return result }).bind(this)().join('\n') } else if ((o.constructor != null ? o.constructor.name : undefined) === 'RegExp') { return o.source } else { s = (arry && '.\n') || ((ind !== '') && '\n' || ''); s += pretty(o,ind,seen) }; return s } default: return String(o) }; return '<???>' }; return toStr(obj) }, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, max: function () { m = -Infinity; for (a of arguments) { if (Array.isArray(a)) {m = _k_.max.apply(_k_.max,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n > m ? n : m}}}; return m }, isNum: function (o) {return !isNaN(o) && !isNaN(parseFloat(o)) && (isFinite(o) || o === Infinity || o === -Infinity)}, clamp: function (l,h,v) { var ll = Math.min(l,h), hh = Math.max(l,h); if (!_k_.isNum(v)) { v = ll }; if (v < ll) { v = ll }; if (v > hh) { v = hh }; if (!_k_.isNum(v)) { v = ll }; return v }, isFunc: function (o) {return typeof o === 'function'}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}}
+var _k_ = {noon: function (obj) { var pad = function (s, l) { while (s.length < l) { s += ' ' }; return s }; var esc = function (k, arry) { var es, sp; if (0 <= k.indexOf('\n')) { sp = k.split('\n'); es = sp.map(function (s) { return esc(s,arry) }); es.unshift('...'); es.push('...'); return es.join('\n') } if (k === '' || k === '...' || _k_.in(k[0],[' ','#','|']) || _k_.in(k[k.length - 1],[' ','#','|'])) { k = '|' + k + '|' } else if (arry && /  /.test(k)) { k = '|' + k + '|' }; return k }; var pretty = function (o, ind, seen) { var k, kl, l, v, mk = 4; if (Object.keys(o).length > 1) { for (k in o) { if (Object.hasOwn(o,k)) { kl = parseInt(Math.ceil((k.length + 2) / 4) * 4); mk = Math.max(mk,kl); if (mk > 32) { mk = 32; break } } } }; l = []; var keyValue = function (k, v) { var i, ks, s, vs; s = ind; k = esc(k,true); if (k.indexOf('  ') > 0 && k[0] !== '|') { k = `|${k}|` } else if (k[0] !== '|' && k[k.length - 1] === '|') { k = '|' + k } else if (k[0] === '|' && k[k.length - 1] !== '|') { k += '|' }; ks = pad(k,Math.max(mk,k.length + 2)); i = pad(ind + '    ',mk); s += ks; vs = toStr(v,i,false,seen); if (vs[0] === '\n') { while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) } }; s += vs; while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) }; return s }; for (k in o) { if (Object.hasOwn(o,k)) { l.push(keyValue(k,o[k])) } }; return l.join('\n') }; var toStr = function (o, ind = '', arry = false, seen = []) { var s, t, v; if (!(o != null)) { if (o === null) { return 'null' }; if (o === undefined) { return 'undefined' }; return '<?>' }; switch (t = typeof(o)) { case 'string': {return esc(o,arry)}; case 'object': { if (_k_.in(o,seen)) { return '<v>' }; seen.push(o); if ((o.constructor != null ? o.constructor.name : undefined) === 'Array') { s = ind !== '' && arry && '.' || ''; if (o.length && ind !== '') { s += '\n' }; s += (function () { var result = []; var list = _k_.list(o); for (var li = 0; li < list.length; li++)  { v = list[li];result.push(ind + toStr(v,ind + '    ',true,seen))  } return result }).bind(this)().join('\n') } else if ((o.constructor != null ? o.constructor.name : undefined) === 'RegExp') { return o.source } else { s = (arry && '.\n') || ((ind !== '') && '\n' || ''); s += pretty(o,ind,seen) }; return s } default: return String(o) }; return '<???>' }; return toStr(obj) }, max: function () { m = -Infinity; for (a of arguments) { if (Array.isArray(a)) {m = _k_.max.apply(_k_.max,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n > m ? n : m}}}; return m }, isNum: function (o) {return !isNaN(o) && !isNaN(parseFloat(o)) && (isFinite(o) || o === Infinity || o === -Infinity)}, clamp: function (l,h,v) { var ll = Math.min(l,h), hh = Math.max(l,h); if (!_k_.isNum(v)) { v = ll }; if (v < ll) { v = ll }; if (v > hh) { v = hh }; if (!_k_.isNum(v)) { v = ll }; return v }, isFunc: function (o) {return typeof o === 'function'}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}}
 
-var Board, elem, Game, iconUrl, io, ogsMove, ogsMoves, Online, open, post, rank, request, slash, toOGS
+var Board, elem, Game, iconUrl, io, ogsMove, ogsMoves, Online, open, post, rank, rankToKyu, request, slash, toOGS
 
 elem = require('kxk').elem
 noon = require('kxk').noon
@@ -11,6 +11,7 @@ post = require('kxk').post
 slash = require('kxk').slash
 
 rank = require('./util/util').rank
+rankToKyu = require('./util/util').rankToKyu
 ogsMoves = require('./util/util').ogsMoves
 ogsMove = require('./util/util').ogsMove
 toOGS = require('./util/util').toOGS
@@ -32,17 +33,20 @@ Online = (function ()
     
         this["onMouseWheel"] = this["onMouseWheel"].bind(this)
         this["onResize"] = this["onResize"].bind(this)
-        this["loadGame"] = this["loadGame"].bind(this)
-        this["getGames"] = this["getGames"].bind(this)
         this["showGames"] = this["showGames"].bind(this)
-        this["connectGames"] = this["connectGames"].bind(this)
+        this["loadGame"] = this["loadGame"].bind(this)
         this["submitMove"] = this["submitMove"].bind(this)
         this.boards = {}
-        this.activeGames = []
         this.postSecret()
         post.on('submitMove',this.submitMove)
         post.on('loadGame',this.loadGame)
         post.on('resize',this.onResize)
+        this.games = elem('div',{class:'games',parent:this.parent})
+        this.games.addEventListener('mousewheel',this.onMouseWheel,true)
+        if (!window.stash.get('games',true))
+        {
+            this.toggleGames()
+        }
     }
 
     Online.prototype["submitMove"] = function (gameId, pos)
@@ -106,27 +110,16 @@ Online = (function ()
         this.socket.on('connect',ping)
         this.socket.on('connect',authenticate)
         this.socket.on('connect',notification)
-        this.socket.on('connect',(function ()
-        {
-            return this.connectGames()
-        }).bind(this))
         setInterval(ping,10000)
         return this.socket.onAny((function (msg, arg)
         {
             switch (msg.split('/')[0])
             {
                 case 'nofification':
-                    if (arg.type === 'gameEnded')
-                    {
-                        return this.getGames()
-                    }
-                    break
                 case 'active_game':
-                    if (!this.boards[arg.id])
-                    {
-                        console.log('active_game!',arg.id,_k_.noon(arg))
-                    }
-                    break
+                    console.log('active_game:',arg.id)
+                    return this.socket.emit('game/connect',{game_id:arg.id,player_id:this.myUserId,chat:1})
+
                 case 'game':
                     return this.onGameData(msg,arg)
 
@@ -134,7 +127,8 @@ Online = (function ()
                 case 'active-bots':
                 case 'net':
                 case 'automatch':
-                    break
+                    return ''
+
                 default:
                     console.log('any',msg,_k_.noon(arg))
             }
@@ -182,36 +176,18 @@ Online = (function ()
             case 'clock':
             case 'conditional_moves':
             case 'reset-chats':
+                return ''
+
+            case 'gamedata':
+                if (!this.boards[gameid])
+                {
+                    return this.addBoard(arg)
+                }
                 break
             default:
                 console.log('game:',msg,_k_.noon(arg))
         }
 
-    }
-
-    Online.prototype["connectGames"] = function ()
-    {
-        var game
-
-        if (_k_.empty(this.activeGames))
-        {
-            setTimeout(this.connectGames,5000)
-            return
-        }
-        var list = _k_.list(this.activeGames)
-        for (var _175_17_ = 0; _175_17_ < list.length; _175_17_++)
-        {
-            game = list[_175_17_]
-            this.socket.emit('game/connect',{game_id:game.id,player_id:this.myUserId,chat:1})
-        }
-    }
-
-    Online.prototype["showGames"] = function ()
-    {
-        this.games = elem('div',{class:'games',parent:this.parent})
-        this.games.addEventListener('mousewheel',this.onMouseWheel,true)
-        this.getGames()
-        return this.onResize()
     }
 
     Online.prototype["postSecret"] = function ()
@@ -225,10 +201,6 @@ Online = (function ()
             if (d.access_token)
             {
                 this.token = d.access_token
-                if (window.stash.get('games',true))
-                {
-                    this.showGames()
-                }
                 return this.get({path:'/api/v1/ui/config',cb:(function (d)
                 {
                     return this.initSocket(d)
@@ -241,115 +213,68 @@ Online = (function ()
         }).bind(this)})
     }
 
-    Online.prototype["getGames"] = function (page = 1)
+    Online.prototype["addBoard"] = function (game)
     {
-        this.activeGames = []
-        return this.get({path:`/api/v1/megames/?page=${page}&ended__isnull=true&page_size=100`,cb:(function (d)
-        {
-            this.activeGames = this.activeGames.concat(d.results)
-            if (d.next)
-            {
-                return this.getGames(page + 1)
-            }
-            else
-            {
-                return this.renderGames()
-            }
-        }).bind(this)})
-    }
+        var b, br, color, e, features, g, ib, nb, p, rb, t, tb, w
 
-    Online.prototype["renderGames"] = function ()
-    {
-        var b, g, game, ib, iw, nb, nw, rb, rw
-
-        this.boards = {}
-        var list = _k_.list(this.activeGames)
-        for (var _242_17_ = 0; _242_17_ < list.length; _242_17_++)
+        g = elem('div',{class:'game',parent:this.games})
+        var list = ['black','white']
+        for (var _207_18_ = 0; _207_18_ < list.length; _207_18_++)
         {
-            game = list[_242_17_]
-            if (!(game != null))
+            color = list[_207_18_]
+            p = game.players[color]
+            if (p.username !== 'monsterkodi')
             {
-                console.log('no game?',this.activeGames)
-                continue
-            }
-            g = elem('div',{class:'game',parent:this.games})
-            if (game.players.black.username !== 'monsterkodi')
-            {
-                ib = elem('img',{parent:g,class:'gameIcon black',src:iconUrl(game.players.black.icon,128)})
-                rb = elem('span',{parent:g,class:'gameRank black',text:rank(game.players.black)})
-                nb = elem('span',{parent:g,class:'gameName black',text:game.players.black.username})
+                ib = elem('img',{parent:g,class:`gameIcon ${color}`})
+                rb = elem('span',{parent:g,class:`gameRank ${color}`,text:rankToKyu(p.rank)})
+                nb = elem('span',{parent:g,class:`gameName ${color}`,text:p.username})
                 ib.addEventListener('click',(function (id)
                 {
                     return function ()
                     {
                         return open('https://online-go.com/game/' + id)
                     }
-                })(game.id))
-            }
-            if (game.players.white.username !== 'monsterkodi')
-            {
-                iw = elem('img',{parent:g,class:'gameIcon white',parent:g,src:iconUrl(game.players.white.icon,128)})
-                rw = elem('span',{parent:g,class:'gameRank white',text:rank(game.players.white)})
-                nw = elem('span',{parent:g,class:'gameName white',text:game.players.white.username})
-                iw.addEventListener('click',(function (id)
+                })(game.game_id))
+                this.get({path:`/api/v1/players/${p.id}`,cb:((function (ib)
                 {
-                    return function ()
+                    return (function (p)
                     {
-                        return open('https://online-go.com/game/' + id)
-                    }
-                })(game.id))
+                        return ib.src = iconUrl(p.icon,128)
+                    }).bind(this)
+                }).bind(this))(ib)})
             }
-            b = elem('div',{class:'gameboard',parent:this.games})
-            this.renderGame(game,b)
         }
-        if (!this.referee.game.info.id && this.activeGames.length)
+        e = elem('div',{class:'gameboard',parent:this.games})
+        features = {coordinates:false,liberties:false,territory:false,numbers:false,hover:false,dots:false}
+        b = new Board(e,game.height,features)
+        b.game = new Game(b,game.players.black.username,game.players.white.username,game.handicap)
+        b.game.paused = true
+        b.game.info.id = game.game_id
+        b.game.info.komi = game.komi
+        b.game.replay(ogsMoves(game.moves,game.height),true)
+        br = this.parent.getBoundingClientRect()
+        tb = br.height / (this.referee.boardsize + 1) - 2
+        rb = tb
+        w = _k_.max(128,(br.width - br.height) / 2 - tb)
+        b.div.style.height = `${w - 30}px`
+        b.div.style.width = `${w - 30}px`
+        b.div.addEventListener('click',((function (id)
         {
-            return this.loadGame(this.activeGames[0].id)
+            return (function ()
+            {
+                return this.loadGame(id)
+            }).bind(this)
+        }).bind(this))(game.game_id))
+        this.boards[game.game_id] = b
+        b.onResize()
+        if (game.clock.current_player === 1110858)
+        {
+            b.div.style.border = '2px solid black'
+            b.div.style.borderRadius = '6px'
+            t = e.previousElementSibling
+            e.parentElement.insertBefore(e,e.parentElement.firstChild)
+            return t.parentElement.insertBefore(t,t.parentElement.firstChild)
         }
-    }
-
-    Online.prototype["renderGame"] = function (game, e)
-    {
-        return this.get({path:`/api/v1/games/${game.id}`,cb:(function (g)
-        {
-            var b, br, features, rb, t, tb, w, _276_28_
-
-            if (!(g.players != null))
-            {
-                console.log('no players? bailing out!',_k_.noon(g))
-                return
-            }
-            features = {coordinates:false,liberties:false,numbers:false,hover:false,dots:false}
-            b = new Board(e,g.height,features)
-            b.game = new Game(b,g.players.black.username,g.players.white.username,g.handicap)
-            b.game.paused = true
-            b.game.info.id = g.id
-            b.game.info.komi = g.gamedata.komi
-            b.game.replay(ogsMoves(g.gamedata.moves,g.height),true)
-            br = this.parent.getBoundingClientRect()
-            tb = br.height / (this.referee.boardsize + 1) - 2
-            rb = tb
-            w = _k_.max(128,(br.width - br.height) / 2 - tb)
-            b.div.style.height = `${w - 30}px`
-            b.div.style.width = `${w - 30}px`
-            b.div.addEventListener('click',((function (id)
-            {
-                return (function ()
-                {
-                    return this.loadGame(id)
-                }).bind(this)
-            }).bind(this))(g.id))
-            this.boards[g.id] = b
-            b.onResize()
-            if (g.gamedata.clock.current_player === 1110858)
-            {
-                b.div.style.border = '2px solid black'
-                b.div.style.borderRadius = '6px'
-                t = e.previousElementSibling
-                e.parentElement.insertBefore(e,e.parentElement.firstChild)
-                return t.parentElement.insertBefore(t,t.parentElement.firstChild)
-            }
-        }).bind(this)})
     }
 
     Online.prototype["loadGame"] = function (id)
@@ -417,43 +342,41 @@ Online = (function ()
 
     Online.prototype["nextGame"] = function ()
     {
-        var game, i, id
+        var i, id, ids
 
+        ids = Object.keys(this.boards)
         if (this.referee.game.info.id)
         {
-            var list = _k_.list(this.activeGames)
-            for (i = 0; i < list.length; i++)
+            for (var _321_21_ = i = 0, _321_25_ = ids.length; (_321_21_ <= _321_25_ ? i < ids.length : i > ids.length); (_321_21_ <= _321_25_ ? ++i : --i))
             {
-                game = list[i]
-                if (game.id === this.referee.game.info.id)
+                if (parseInt(ids[i]) === this.referee.game.info.id)
                 {
-                    id = this.activeGames[_k_.clamp(0,this.activeGames.length - 1,i + 1)].id
+                    id = parseInt(ids[_k_.clamp(0,ids.length - 1,i + 1)])
                     break
                 }
             }
         }
-        id = (id != null ? id : this.activeGames[0].id)
+        id = (id != null ? id : parseInt(ids[0]))
         return this.loadGame(id)
     }
 
     Online.prototype["prevGame"] = function ()
     {
-        var game, i, id
+        var i, id, ids
 
+        ids = Object.keys(this.boards)
         if (this.referee.game.info.id)
         {
-            var list = _k_.list(this.activeGames)
-            for (i = 0; i < list.length; i++)
+            for (var _334_21_ = i = 0, _334_25_ = ids.length; (_334_21_ <= _334_25_ ? i < ids.length : i > ids.length); (_334_21_ <= _334_25_ ? ++i : --i))
             {
-                game = list[i]
-                if (game.id === this.referee.game.info.id)
+                if (parseInt(ids[i]) === this.referee.game.info.id)
                 {
-                    id = this.activeGames[_k_.clamp(0,this.activeGames.length - 1,i - 1)].id
+                    id = parseInt(ids[_k_.clamp(0,ids.length - 1,i - 1)])
                     break
                 }
             }
         }
-        id = (id != null ? id : this.activeGames.slice(-1)[0].id)
+        id = (id != null ? id : parseInt(ids[0]))
         return this.loadGame(id)
     }
 
@@ -494,7 +417,6 @@ Online = (function ()
     {
         var req
 
-        console.log(_k_.noon(o))
         req = request({host:'online-go.com',path:o.path,method:'GET',headers:{'Authorization':`Bearer ${this.token}`,'Content-Type':'application/x-www-form-urlencoded'}},(function (response)
         {
             var data
@@ -530,10 +452,9 @@ Online = (function ()
 
     Online.prototype["toggleGames"] = function ()
     {
-        if (this.games)
+        if (this.games.style.display !== 'none')
         {
-            this.games.remove()
-            delete this.games
+            this.games.style.display = 'none'
             return window.stash.set('games',false)
         }
         else
@@ -541,6 +462,12 @@ Online = (function ()
             window.stash.set('games',true)
             return this.showGames()
         }
+    }
+
+    Online.prototype["showGames"] = function ()
+    {
+        this.games.style.display = 'initial'
+        return this.onResize()
     }
 
     Online.prototype["onResize"] = function ()

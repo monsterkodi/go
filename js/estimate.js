@@ -16,12 +16,10 @@ Estimate = (function ()
         return Estimate.__super__.constructor.apply(this, arguments)
     }
 
-    Estimate.prototype["estimate"] = function (verbose)
+    Estimate.prototype["estimate"] = function ()
     {
         var area, score, _23_14_, _24_44_
 
-        this.verbose = verbose
-    
         score = this.score()
         if (this.chains.length > 1)
         {

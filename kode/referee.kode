@@ -241,8 +241,6 @@ function Referee
         hist = @tree.moveHistory()
         @game.replay hist
         estimate = @game.estimate()
-        if hist.length%2 == 0
-            log hist.length, estimate
         @board.annotate()
             
     #       000  000   000  00     00  00000000   
