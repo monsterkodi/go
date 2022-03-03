@@ -279,9 +279,9 @@ function Referee
             @varee = new Varee @parent, @tree, @boardsize
             post.emit 'tree'
             
-    onChat: (chat) =>
+    onChat: (line, fix) =>
         
-        return if chat.gameid != @game.info.id
-        @varee?.addChat chat
+        return if line.gameid != @game.info.id
+        @varee?.addChat line, fix
                     
 module.exports = Referee

@@ -19,12 +19,14 @@ function Online
     @: (@parent, @referee) ->
 
         @boards = {}
+        @chats  = {}
 
         @postSecret()
                      
         post.on 'submitMove' @submitMove
         post.on 'loadGame'   @loadGame
         post.on 'resize'     @onResize
+        post.on 'talk'       @onTalk
         
         @games = elem 'div' class:'games' parent:@parent 
         @games.addEventListener 'mousewheel' @onMouseWheel, true
@@ -110,12 +112,7 @@ function Online
                                         game_id:    arg.id
                                         player_id:  @myUserId
                                         chat:       1
-                                        
-                                    # @socket.emit 'game/chat'
-                                        # auth:             @myAuth
-                                        # player_id:        @myUserId
-                                        # username:         @myUserName
-                    
+                                                                                
                 'game'          ➜   @onGameData msg, arg
                 'score-estimator-enabled-state' 
                 'active-bots' 
@@ -144,33 +141,57 @@ function Online
                 b = @boards[gameid]
                 b.game.play pos
                 
-                if b.game.players[b.game.nextColor()] == global.myUserName
-                    b.div.style.border = '2px solid black'
-                    b.div.style.borderRadius = '6px'
-                    e = b.parent # move 'your move' games to top
-                    t = e.previousElementSibling
-                    e.parentElement.insertBefore e, e.parentElement.firstChild
-                    t.parentElement.insertBefore t, t.parentElement.firstChild
-                    t.scrollIntoViewIfNeeded()
-                else
-                    b.div.style.border = 'none'
+                @updateMyMove b
                         
                 log 'load game?' @referee.game.info.id, gameid, @referee.game.info.id == gameid
                 if @referee.game.info.id == gameid
                     @loadGame gameid
             
             'chat'
+                # log 'chat' msg, noon arg
                 gameid = int msg.split('/')[-2]
-                post.emit 'chat' gameid:gameid, username:arg.line.username, text:arg.line.body, move:arg.line.move_number
+                line = arg.line
+                line.color = line.username == @myUserName ? 'myself' : 'black'
+                line.gameid = gameid
+                @chats[gameid] ?= {}
+                @chats[gameid][line.date] = line
+                post.emit 'chat' line, 1
                 
             'clock'
             'conditional_moves'
             'reset-chats'       ➜ ''
             'gamedata'          
-                                  # log 'gamedata:' msg, msgtyp, gameid
+                                  # log 'gamedata:' msg, msgtyp, gameid, noon arg
                                   if not @boards[gameid] then @addBoard arg
                                 ➜ log 'game:' msg, noon arg
-                                            
+
+    onTalk: (msg) =>
+        
+        @socket.emit 'game/chat',
+            body:       msg
+            type:       'main'
+            game_id:     @referee.game.info.id
+            move_number: @referee.game.moves.num()
+    
+    # 00     00  000   000        00     00   0000000   000   000  00000000  
+    # 000   000   000 000         000   000  000   000  000   000  000       
+    # 000000000    00000          000000000  000   000   000 000   0000000   
+    # 000 0 000     000           000 0 000  000   000     000     000       
+    # 000   000     000           000   000   0000000       0      00000000  
+    
+    updateMyMove: (b) ->
+        
+        if b.game.players[b.game.nextColor()] == global.myUserName # it's my turn!
+            b.div.style.border = '2px solid black'
+            b.div.style.borderRadius = '6px'
+            e = b.parent # move board to top
+            t = e.previousElementSibling
+            e.parentElement.insertBefore e, e.parentElement.firstChild
+            t.parentElement.insertBefore t, t.parentElement.firstChild
+            t.scrollIntoViewIfNeeded()
+        else
+            b.div.style.border = 'none'
+                                
     #  0000000  00000000   0000000  00000000   00000000  000000000  
     # 000       000       000       000   000  000          000     
     # 0000000   0000000   000       0000000    0000000      000     
@@ -241,13 +262,8 @@ function Online
         @boards[game.game_id] = b
         b.onResize()
         
-        if game.clock.current_player == 1110858
-            b.div.style.border = '2px solid black'
-            b.div.style.borderRadius = '6px'
-            t = e.previousElementSibling # move 'your move' games to top
-            e.parentElement.insertBefore e, e.parentElement.firstChild
-            t.parentElement.insertBefore t, t.parentElement.firstChild
-            
+        @updateMyMove b
+                    
     # 000       0000000    0000000   0000000           0000000    0000000   00     00  00000000  
     # 000      000   000  000   000  000   000        000        000   000  000   000  000       
     # 000      000   000  000000000  000   000        000  0000  000000000  000000000  0000000   
@@ -313,6 +329,10 @@ function Online
             @referee.board.annotate()
             
             @boards[id]?.div.scrollIntoViewIfNeeded()
+            
+            for date,line of @chats[id]
+                post.emit 'chat' line
+            @referee.varee.fixChat()
             
     nextGame: ->
 

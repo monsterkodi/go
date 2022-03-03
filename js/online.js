@@ -35,12 +35,15 @@ Online = (function ()
         this["onResize"] = this["onResize"].bind(this)
         this["showGames"] = this["showGames"].bind(this)
         this["loadGame"] = this["loadGame"].bind(this)
+        this["onTalk"] = this["onTalk"].bind(this)
         this["submitMove"] = this["submitMove"].bind(this)
         this.boards = {}
+        this.chats = {}
         this.postSecret()
         post.on('submitMove',this.submitMove)
         post.on('loadGame',this.loadGame)
         post.on('resize',this.onResize)
+        post.on('talk',this.onTalk)
         this.games = elem('div',{class:'games',parent:this.parent})
         this.games.addEventListener('mousewheel',this.onMouseWheel,true)
         if (!window.stash.get('games',true))
@@ -138,7 +141,7 @@ Online = (function ()
 
     Online.prototype["onGameData"] = function (msg, arg)
     {
-        var b, e, gameid, msgtyp, pos, t
+        var b, gameid, line, msgtyp, pos, _156_31_
 
         gameid = arg.game_id
         msgtyp = msg.split('/').slice(-1)[0]
@@ -149,20 +152,7 @@ Online = (function ()
                 console.log('move:',arg)
                 b = this.boards[gameid]
                 b.game.play(pos)
-                if (b.game.players[b.game.nextColor()] === global.myUserName)
-                {
-                    b.div.style.border = '2px solid black'
-                    b.div.style.borderRadius = '6px'
-                    e = b.parent
-                    t = e.previousElementSibling
-                    e.parentElement.insertBefore(e,e.parentElement.firstChild)
-                    t.parentElement.insertBefore(t,t.parentElement.firstChild)
-                    t.scrollIntoViewIfNeeded()
-                }
-                else
-                {
-                    b.div.style.border = 'none'
-                }
+                this.updateMyMove(b)
                 console.log('load game?',this.referee.game.info.id,gameid,this.referee.game.info.id === gameid)
                 if (this.referee.game.info.id === gameid)
                 {
@@ -171,7 +161,12 @@ Online = (function ()
                 break
             case 'chat':
                 gameid = parseInt(msg.split('/').slice(-2,-1)[0])
-                return post.emit('chat',{gameid:gameid,username:arg.line.username,text:arg.line.body,move:arg.line.move_number})
+                line = arg.line
+                line.color = (line.username === this.myUserName ? 'myself' : 'black')
+                line.gameid = gameid
+                this.chats[gameid] = ((_156_31_=this.chats[gameid]) != null ? _156_31_ : {})
+                this.chats[gameid][line.date] = line
+                return post.emit('chat',line,1)
 
             case 'clock':
             case 'conditional_moves':
@@ -188,6 +183,31 @@ Online = (function ()
                 console.log('game:',msg,_k_.noon(arg))
         }
 
+    }
+
+    Online.prototype["onTalk"] = function (msg)
+    {
+        return this.socket.emit('game/chat',{body:msg,type:'main',game_id:this.referee.game.info.id,move_number:this.referee.game.moves.num()})
+    }
+
+    Online.prototype["updateMyMove"] = function (b)
+    {
+        var e, t
+
+        if (b.game.players[b.game.nextColor()] === global.myUserName)
+        {
+            b.div.style.border = '2px solid black'
+            b.div.style.borderRadius = '6px'
+            e = b.parent
+            t = e.previousElementSibling
+            e.parentElement.insertBefore(e,e.parentElement.firstChild)
+            t.parentElement.insertBefore(t,t.parentElement.firstChild)
+            return t.scrollIntoViewIfNeeded()
+        }
+        else
+        {
+            return b.div.style.border = 'none'
+        }
     }
 
     Online.prototype["postSecret"] = function ()
@@ -215,13 +235,13 @@ Online = (function ()
 
     Online.prototype["addBoard"] = function (game)
     {
-        var b, br, color, e, features, g, ib, nb, p, rb, t, tb, w
+        var b, br, color, e, features, g, ib, nb, p, rb, tb, w
 
         g = elem('div',{class:'game',parent:this.games})
         var list = ['black','white']
-        for (var _207_18_ = 0; _207_18_ < list.length; _207_18_++)
+        for (var _228_18_ = 0; _228_18_ < list.length; _228_18_++)
         {
-            color = list[_207_18_]
+            color = list[_228_18_]
             p = game.players[color]
             if (p.username !== 'monsterkodi')
             {
@@ -267,14 +287,7 @@ Online = (function ()
         }).bind(this))(game.game_id))
         this.boards[game.game_id] = b
         b.onResize()
-        if (game.clock.current_player === 1110858)
-        {
-            b.div.style.border = '2px solid black'
-            b.div.style.borderRadius = '6px'
-            t = e.previousElementSibling
-            e.parentElement.insertBefore(e,e.parentElement.firstChild)
-            return t.parentElement.insertBefore(t,t.parentElement.firstChild)
-        }
+        return this.updateMyMove(b)
     }
 
     Online.prototype["loadGame"] = function (id)
@@ -320,6 +333,8 @@ Online = (function ()
         }
         return this.get({path:`/api/v1/games/${id}`,cb:(function (g)
         {
+            var date, line
+
             if (g.id !== this.pendingGameId && this.pendingGameId)
             {
                 setTimeout(clearPending,4000)
@@ -336,7 +351,13 @@ Online = (function ()
             this.referee.tree.replay(moves,g.id)
             this.referee.game.estimate()
             this.referee.board.annotate()
-            return (this.boards[id] != null ? this.boards[id].div.scrollIntoViewIfNeeded() : undefined)
+            ;(this.boards[id] != null ? this.boards[id].div.scrollIntoViewIfNeeded() : undefined)
+            for (date in this.chats[id])
+            {
+                line = this.chats[id][date]
+                post.emit('chat',line)
+            }
+            return this.referee.varee.fixChat()
         }).bind(this)})
     }
 
@@ -347,7 +368,7 @@ Online = (function ()
         ids = Object.keys(this.boards)
         if (this.referee.game.info.id)
         {
-            for (var _321_21_ = i = 0, _321_25_ = ids.length; (_321_21_ <= _321_25_ ? i < ids.length : i > ids.length); (_321_21_ <= _321_25_ ? ++i : --i))
+            for (var _341_21_ = i = 0, _341_25_ = ids.length; (_341_21_ <= _341_25_ ? i < ids.length : i > ids.length); (_341_21_ <= _341_25_ ? ++i : --i))
             {
                 if (parseInt(ids[i]) === this.referee.game.info.id)
                 {
@@ -367,7 +388,7 @@ Online = (function ()
         ids = Object.keys(this.boards)
         if (this.referee.game.info.id)
         {
-            for (var _334_21_ = i = 0, _334_25_ = ids.length; (_334_21_ <= _334_25_ ? i < ids.length : i > ids.length); (_334_21_ <= _334_25_ ? ++i : --i))
+            for (var _354_21_ = i = 0, _354_25_ = ids.length; (_354_21_ <= _354_25_ ? i < ids.length : i > ids.length); (_354_21_ <= _354_25_ ? ++i : --i))
             {
                 if (parseInt(ids[i]) === this.referee.game.info.id)
                 {

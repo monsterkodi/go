@@ -193,6 +193,9 @@ body {
   position: absolute;
   display: block;
 }
+.varee {
+  overflow: auto;
+}
 .games {
   line-height: 1;
   padding: 12px;
@@ -287,6 +290,46 @@ body {
 .treelines {
   position: absolute;
   transform: scale3d(0.5, 0.5, 1) translate3d(-50%, -50%, 0px);
+}
+.chatline {
+  font-size: 16px;
+  position: absolute;
+  padding: 6px;
+}
+.chatline.black {
+  color: #000;
+  filter: drop-shadow(0px 1px 1px rgba(0,0,0,0.533));
+}
+.chatline.white {
+  color: #fff;
+  filter: drop-shadow(0px 1px 1px rgba(0,0,0,0.867));
+}
+.chatline.myself {
+  color: rgba(0,0,0,0.5);
+  filter: drop-shadow(0px 1px 1px rgba(0,0,0,0.533));
+}
+.talk {
+  position: absolute;
+  box-shadow: inset 1px 1px 3px rgba(80,30,0,0.3);
+  border-radius: 6px;
+  right: 6px;
+  left: 80px;
+  padding: 6px;
+}
+.talk .input {
+  font-size: 16px;
+  color: rgba(0,0,0,0.5);
+  filter: drop-shadow(0px 1px 1px rgba(0,0,0,0.533));
+  background-color: transparent;
+  -webkit-user-select: text;
+  -webkit-app-region: no-drag;
+  border: none;
+  pointer-events: all;
+  width: 98%;
+}
+.talk .input::selection {
+  color: #f00;
+  background: #ff0;
 }
 #titlebar {
   display: flex;

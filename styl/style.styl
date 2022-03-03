@@ -196,7 +196,10 @@ body
     & .highlts    
         position            absolute
         display             block
-            
+
+.varee
+    overflow                auto
+    
 .games
     & .stones
         display             contents
@@ -284,6 +287,41 @@ body
     position            absolute
     transform           scale3d(0.5, 0.5, 1) translate3d(-50%, -50%, 0px)
     
+.chatline
+    font-size           16px
+    position            absolute
+    padding             6px
+    &.black
+        color           black
+        filter          drop-shadow(0px 1px 1px #0008)
+    &.white
+        color           white
+        filter          drop-shadow(0px 1px 1px #000d)
+    &.myself
+        color           rgba(0,0,0,0.5)
+        filter          drop-shadow(0px 1px 1px #0008)
+
+.talk
+    position                absolute
+    box-shadow              inset 1px 1px 3px rgba(80,30,0,0.3)
+    border-radius           6px    
+    right                   6px
+    left                    80px
+    padding                 6px
+    & .input
+        font-size           16px
+        color               rgba(0,0,0,0.5)
+        filter              drop-shadow(0px 1px 1px #0008)
+        background-color    transparent
+        -webkit-user-select text
+        -webkit-app-region  no-drag
+        border              none
+        pointer-events      all
+        width               98%
+        &::selection 
+          color:            red
+          background:       yellow
+        
 // 000000000  000  000000000  000      00000000  0000000     0000000   00000000 
 //    000     000     000     000      000       000   000  000   000  000   000
 //    000     000     000     000      0000000   0000000    000000000  0000000  

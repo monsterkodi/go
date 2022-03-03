@@ -1,12 +1,13 @@
 // monsterkodi/kode 0.243.0
 
-var _k_ = {list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, max: function () { m = -Infinity; for (a of arguments) { if (Array.isArray(a)) {m = _k_.max.apply(_k_.max,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n > m ? n : m}}}; return m }, noon: function (obj) { var pad = function (s, l) { while (s.length < l) { s += ' ' }; return s }; var esc = function (k, arry) { var es, sp; if (0 <= k.indexOf('\n')) { sp = k.split('\n'); es = sp.map(function (s) { return esc(s,arry) }); es.unshift('...'); es.push('...'); return es.join('\n') } if (k === '' || k === '...' || _k_.in(k[0],[' ','#','|']) || _k_.in(k[k.length - 1],[' ','#','|'])) { k = '|' + k + '|' } else if (arry && /  /.test(k)) { k = '|' + k + '|' }; return k }; var pretty = function (o, ind, seen) { var k, kl, l, v, mk = 4; if (Object.keys(o).length > 1) { for (k in o) { if (Object.hasOwn(o,k)) { kl = parseInt(Math.ceil((k.length + 2) / 4) * 4); mk = Math.max(mk,kl); if (mk > 32) { mk = 32; break } } } }; l = []; var keyValue = function (k, v) { var i, ks, s, vs; s = ind; k = esc(k,true); if (k.indexOf('  ') > 0 && k[0] !== '|') { k = `|${k}|` } else if (k[0] !== '|' && k[k.length - 1] === '|') { k = '|' + k } else if (k[0] === '|' && k[k.length - 1] !== '|') { k += '|' }; ks = pad(k,Math.max(mk,k.length + 2)); i = pad(ind + '    ',mk); s += ks; vs = toStr(v,i,false,seen); if (vs[0] === '\n') { while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) } }; s += vs; while (s[s.length - 1] === ' ') { s = s.substr(0,s.length - 1) }; return s }; for (k in o) { if (Object.hasOwn(o,k)) { l.push(keyValue(k,o[k])) } }; return l.join('\n') }; var toStr = function (o, ind = '', arry = false, seen = []) { var s, t, v; if (!(o != null)) { if (o === null) { return 'null' }; if (o === undefined) { return 'undefined' }; return '<?>' }; switch (t = typeof(o)) { case 'string': {return esc(o,arry)}; case 'object': { if (_k_.in(o,seen)) { return '<v>' }; seen.push(o); if ((o.constructor != null ? o.constructor.name : undefined) === 'Array') { s = ind !== '' && arry && '.' || ''; if (o.length && ind !== '') { s += '\n' }; s += (function () { var result = []; var list = _k_.list(o); for (var li = 0; li < list.length; li++)  { v = list[li];result.push(ind + toStr(v,ind + '    ',true,seen))  } return result }).bind(this)().join('\n') } else if ((o.constructor != null ? o.constructor.name : undefined) === 'RegExp') { return o.source } else { s = (arry && '.\n') || ((ind !== '') && '\n' || ''); s += pretty(o,ind,seen) }; return s } default: return String(o) }; return '<???>' }; return toStr(obj) }, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}}
+var _k_ = {list: function (l) {return l != null ? typeof l.length === 'number' ? l : [] : []}, max: function () { m = -Infinity; for (a of arguments) { if (Array.isArray(a)) {m = _k_.max.apply(_k_.max,[m].concat(a))} else {n = parseFloat(a); if(!isNaN(n)){m = n > m ? n : m}}}; return m }}
 
-var elem, post, Varee
+var elem, keyinfo, post, stopEvent, Varee
 
 elem = require('kxk').elem
-noon = require('kxk').noon
+keyinfo = require('kxk').keyinfo
 post = require('kxk').post
+stopEvent = require('kxk').stopEvent
 
 max = Math.max
 
@@ -19,18 +20,28 @@ Varee = (function ()
         this.tree = tree
         this.boardsize = boardsize
     
+        this["onInputKey"] = this["onInputKey"].bind(this)
         this["onResize"] = this["onResize"].bind(this)
         this["onMouseDown"] = this["onMouseDown"].bind(this)
         this["onTree"] = this["onTree"].bind(this)
-        this.div = elem('div',{class:'varee',parent:this.parent})
+        this.div = elem({class:'varee',parent:this.parent})
         this.div.addEventListener('mousedown',this.onMouseDown)
+        this.chat = elem({class:'chat',parent:this.div})
+        this.talk = elem({class:'talk',parent:this.div})
+        this.input = elem('input',{class:'input',parent:this.talk,spellcheck:'false',value:'',dblclick:stopEvent,click:(function (event)
+        {
+            this.input.focus()
+            return stopEvent(event)
+        }).bind(this)})
+        this.input.addEventListener('keydown',this.onInputKey)
+        this.input.tabIndex = 1
         this.width = 110
         this.height = 800
         this.canvas = elem('canvas',{class:'treelines',parent:this.div})
         this.ctx = this.canvas.getContext('2d')
-        this.hlt = elem('div',{class:'highlts',parent:this.div})
-        this.stn = elem('div',{class:'stones',parent:this.div})
-        this.crs = elem('div',{class:'cursor',parent:this.hlt})
+        this.hlt = elem({class:'highlts',parent:this.div})
+        this.stn = elem({class:'stones',parent:this.div})
+        this.crs = elem({class:'cursor',parent:this.hlt})
         post.on('resize',this.onResize)
         post.on('tree',this.onTree)
         this.onResize()
@@ -97,9 +108,9 @@ Varee = (function ()
         mw = this.width
         mh = this.height
         var list = _k_.list(vlines)
-        for (var _100_15_ = 0; _100_15_ < list.length; _100_15_++)
+        for (var _106_15_ = 0; _106_15_ < list.length; _106_15_++)
         {
-            vl = list[_100_15_]
+            vl = list[_106_15_]
             v00 = 100 + vl[0][0] * 100
             v01 = 100 + vl[0][1] * 100
             v10 = 100 + vl[1][0] * 100
@@ -117,9 +128,9 @@ Varee = (function ()
             this.ctx.stroke()
         }
         var list1 = _k_.list(hlines)
-        for (var _118_15_ = 0; _118_15_ < list1.length; _118_15_++)
+        for (var _124_15_ = 0; _124_15_ < list1.length; _124_15_++)
         {
-            hl = list1[_118_15_]
+            hl = list1[_124_15_]
             h00 = 100 + hl[0][0] * 100
             h01 = 100 + hl[0][1] * 100
             h10 = 100 + hl[1][0] * 100
@@ -164,7 +175,8 @@ Varee = (function ()
         this.div.style.width = `${w}px`
         this.div.style.top = `${tb}px`
         this.div.style.bottom = `${tb}px`
-        return this.div.style.right = `${rb}px`
+        this.div.style.right = `${rb}px`
+        return this.resizeChat()
     }
 
     Varee.prototype["remove"] = function ()
@@ -179,9 +191,75 @@ Varee = (function ()
         return delete this.div
     }
 
-    Varee.prototype["addChat"] = function (chat)
+    Varee.prototype["addChat"] = function (line, fix)
     {
-        console.log('add chat',_k_.noon(chat))
+        var l
+
+        l = elem({class:`chatline ${line.color}`,parent:this.chat,text:line.body})
+        l.move_number = line.move_number
+        l.style.left = `${30 + 50}px`
+        l.style.top = `${line.move_number * 50 + 25}px`
+        if (fix)
+        {
+            return this.fixChat()
+        }
+    }
+
+    Varee.prototype["fixChat"] = function ()
+    {
+        var child, cr, my, so
+
+        so = this.chat.getBoundingClientRect()
+        my = 25
+        var list = _k_.list(this.chat.children)
+        for (var _201_18_ = 0; _201_18_ < list.length; _201_18_++)
+        {
+            child = list[_201_18_]
+            cr = child.getBoundingClientRect()
+            if (cr.top - so.top < my)
+            {
+                child.style.top = `${my}px`
+                my += cr.height
+            }
+            else
+            {
+                my = _k_.max(my,cr.top - so.top + cr.height)
+            }
+        }
+        this.talk.style.top = `${my}px`
+        return this.talk.scrollIntoViewIfNeeded()
+    }
+
+    Varee.prototype["resizeChat"] = function ()
+    {
+        var child
+
+        var list = _k_.list(this.chat.children)
+        for (var _213_18_ = 0; _213_18_ < list.length; _213_18_++)
+        {
+            child = list[_213_18_]
+            child.style.top = `${child.move_number * 50 + 25}px`
+        }
+        return this.fixChat()
+    }
+
+    Varee.prototype["onInputKey"] = function (event)
+    {
+        var info
+
+        info = keyinfo.forEvent(event)
+        if (0 > info.mod.indexOf('ctrl'))
+        {
+            event.stopPropagation()
+        }
+        switch (info.combo)
+        {
+            case 'enter':
+                post.emit('talk',this.input.value)
+                return this.input.value = ''
+
+        }
+
     }
 
     return Varee

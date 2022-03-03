@@ -339,15 +339,15 @@ Referee = (function ()
         }
     }
 
-    Referee.prototype["onChat"] = function (chat)
+    Referee.prototype["onChat"] = function (line, fix)
     {
         var _285_14_
 
-        if (chat.gameid !== this.game.info.id)
+        if (line.gameid !== this.game.info.id)
         {
             return
         }
-        return (this.varee != null ? this.varee.addChat(chat) : undefined)
+        return (this.varee != null ? this.varee.addChat(line,fix) : undefined)
     }
 
     return Referee

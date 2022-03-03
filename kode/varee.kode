@@ -6,24 +6,30 @@
     0      000   000  000   000  00000000  00000000
 ###
 
-{ elem, noon, post } = require 'kxk'
+{ elem, keyinfo, post, stopEvent } = require 'kxk'
 { max } = Math
 
 function Varee
 
     @: (@parent, @tree, @boardsize) ->
         
-        @div = elem 'div' class:'varee' parent:@parent        
+        @div = elem class:'varee' parent:@parent        
         @div.addEventListener 'mousedown'  @onMouseDown
+        
+        @chat  = elem class:'chat' parent:@div
+        @talk  = elem class:'talk' parent:@div
+        @input = elem 'input' class:'input' parent:@talk, spellcheck:'false', value:'' dblclick:stopEvent, click: (event) => @input.focus(); stopEvent event
+        @input.addEventListener 'keydown' @onInputKey
+        @input.tabIndex = 1
         
         @width  = 110
         @height = 800
         @canvas = elem 'canvas' class:'treelines' parent:@div
         @ctx = @canvas.getContext '2d'
                 
-        @hlt = elem 'div' class:'highlts' parent:@div
-        @stn = elem 'div' class:'stones'  parent:@div
-        @crs = elem 'div' class:'cursor'  parent:@hlt
+        @hlt = elem class:'highlts' parent:@div
+        @stn = elem class:'stones'  parent:@div
+        @crs = elem class:'cursor'  parent:@hlt
         
         post.on 'resize' @onResize
         post.on 'tree'   @onTree
@@ -164,6 +170,8 @@ function Varee
         @div.style.bottom = "#{tb}px"
         @div.style.right  = "#{rb}px"
         
+        @resizeChat()
+        
     remove: ->
         
         return if not @div
@@ -172,8 +180,48 @@ function Varee
         @parent.removeChild @div
         delete @div
         
-    addChat: (chat) ->
+    #  0000000  000   000   0000000   000000000  
+    # 000       000   000  000   000     000     
+    # 000       000000000  000000000     000     
+    # 000       000   000  000   000     000     
+    #  0000000  000   000  000   000     000     
+    
+    addChat: (line, fix) ->
         
-        log 'add chat' noon chat
+        l = elem class:"chatline #{line.color}" parent:@chat, text:line.body
+        l.move_number = line.move_number
+        l.style.left  = "#{30+50}px"
+        l.style.top   = "#{line.move_number*50+25}px"
+        @fixChat() if fix
+        
+    fixChat: ->
+        
+        so = @chat.getBoundingClientRect()
+        my = 25
+        for child in @chat.children
+            cr = child.getBoundingClientRect()
+            if cr.top-so.top < my
+                child.style.top = "#{my}px"
+                my += cr.height
+            else
+                my = max my, cr.top-so.top + cr.height
+        @talk.style.top = "#{my}px"
+        @talk.scrollIntoViewIfNeeded()
+                
+    resizeChat: ->
+        
+        for child in @chat.children
+            child.style.top = "#{child.move_number*50+25}px"
+        @fixChat()
 
+    onInputKey: (event) =>
+        
+        info = keyinfo.forEvent event
+
+        if 0 > info.mod.indexOf 'ctrl'
+            event.stopPropagation()
+            
+        switch info.combo
+            'enter'  ➜ post.emit 'talk' @input.value; @input.value = ''
+        
 module.exports = Varee
