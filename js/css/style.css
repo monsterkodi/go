@@ -310,26 +310,28 @@ body {
 }
 .talk {
   position: absolute;
-  box-shadow: inset 1px 1px 3px rgba(80,30,0,0.3);
-  border-radius: 6px;
-  right: 6px;
   left: 80px;
-  padding: 6px;
+  right: 6px;
 }
 .talk .input {
+  border: none;
   font-size: 16px;
+  padding: 6px;
   color: rgba(0,0,0,0.5);
   filter: drop-shadow(0px 1px 1px rgba(0,0,0,0.533));
   background-color: transparent;
   -webkit-user-select: text;
   -webkit-app-region: no-drag;
-  border: none;
   pointer-events: all;
   width: 98%;
 }
 .talk .input::selection {
   color: #f00;
   background: #ff0;
+}
+.talk .input:focus {
+  box-shadow: inset 1px 1px 3px rgba(80,30,0,0.3);
+  border-radius: 6px;
 }
 #titlebar {
   display: flex;

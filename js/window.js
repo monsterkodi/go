@@ -56,10 +56,13 @@ MainWin = (function ()
 
     MainWin.prototype["onPaste"] = function (event)
     {
-        var electron
+        var electron, gameid
 
         electron = require('electron')
-        return post.emit('loadGame',electron.clipboard.readText())
+        gameid = electron.clipboard.readText()
+        post.emit('loadGame',gameid)
+        this.online.chats[gameid] = {}
+        return this.online.socket.emit('game/connect',{game_id:gameid,player_id:global.myUserId,chat:1})
     }
 
     MainWin.prototype["onLoad"] = function ()

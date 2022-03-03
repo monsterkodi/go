@@ -302,25 +302,26 @@ body
         filter          drop-shadow(0px 1px 1px #0008)
 
 .talk
-    position                absolute
-    box-shadow              inset 1px 1px 3px rgba(80,30,0,0.3)
-    border-radius           6px    
-    right                   6px
-    left                    80px
-    padding                 6px
+    position            absolute
+    left                80px
+    right               6px
     & .input
+        border              none
         font-size           16px
+        padding             6px
         color               rgba(0,0,0,0.5)
         filter              drop-shadow(0px 1px 1px #0008)
         background-color    transparent
         -webkit-user-select text
         -webkit-app-region  no-drag
-        border              none
         pointer-events      all
         width               98%
         &::selection 
           color:            red
           background:       yellow
+        &:focus
+            box-shadow          inset 1px 1px 3px rgba(80,30,0,0.3)
+            border-radius       6px    
         
 // 000000000  000  000000000  000      00000000  0000000     0000000   00000000 
 //    000     000     000     000      000       000   000  000   000  000   000

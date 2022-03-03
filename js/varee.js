@@ -226,6 +226,7 @@ Varee = (function ()
                 my = _k_.max(my,cr.top - so.top + cr.height)
             }
         }
+        my = _k_.max(my,this.tree.moves.length * 50 - 16)
         this.talk.style.top = `${my}px`
         return this.talk.scrollIntoViewIfNeeded()
     }
@@ -235,9 +236,9 @@ Varee = (function ()
         var child
 
         var list = _k_.list(this.chat.children)
-        for (var _213_18_ = 0; _213_18_ < list.length; _213_18_++)
+        for (var _214_18_ = 0; _214_18_ < list.length; _214_18_++)
         {
-            child = list[_213_18_]
+            child = list[_214_18_]
             child.style.top = `${child.move_number * 50 + 25}px`
         }
         return this.fixChat()

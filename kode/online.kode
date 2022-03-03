@@ -107,6 +107,7 @@ function Online
             
                 'nofification'  ➜ # if arg.type == 'gameEnded' then @getGames()
                 'active_game'   
+                                    @chats[arg.id] = {}
                                     log 'active_game:' arg.id #, noon arg # if not @boards[arg.id]
                                     @socket.emit 'game/connect',
                                         game_id:    arg.id
@@ -153,7 +154,7 @@ function Online
                 line = arg.line
                 line.color = line.username == @myUserName ? 'myself' : 'black'
                 line.gameid = gameid
-                @chats[gameid] ?= {}
+                # @chats[gameid] ?= {}
                 @chats[gameid][line.date] = line
                 post.emit 'chat' line, 1
                 
@@ -166,6 +167,9 @@ function Online
                                 ➜ log 'game:' msg, noon arg
 
     onTalk: (msg) =>
+        
+        msg = trim msg
+        return if empty msg
         
         @socket.emit 'game/chat',
             body:       msg
