@@ -278,6 +278,21 @@ function Referee
             window.stash.set 'varee' true
             @varee = new Varee @parent, @tree, @boardsize
             post.emit 'tree'
+
+    #  0000000  000   000   0000000   000000000  
+    # 000       000   000  000   000     000     
+    # 000       000000000  000000000     000     
+    # 000       000   000  000   000     000     
+    #  0000000  000   000  000   000     000     
+    
+    toggleChat: ->
+
+        chat = not window.stash.get 'chat' true
+        window.stash.set 'chat' chat
+        if not @varee and chat
+            @toggleTree()
+        if @varee
+            @varee.showChat chat
             
     onChat: (line, fix) =>
         

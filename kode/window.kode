@@ -42,10 +42,7 @@ function MainWin extends win
         @online  = new Online  row, @referee
         
         window.addEventListener 'paste' @onPaste
-        # main.addEventListener 'paste' @onPaste
-        # row.addEventListener 'paste' @onPaste
         row.focus()
-        # @referee.board.div.addEventListener 'paste' @onPaste
         
     # 00000000    0000000    0000000  000000000  00000000  
     # 000   000  000   000  000          000     000       
@@ -153,7 +150,7 @@ function MainWin extends win
             game.info.score     ➜ elem 'span' class:"score #{game.info.score[0]}"  parent:tm, text: game.info.score
             game.info.estimate  ➜ elem 'span' class:"score #{game.info.estimate > 0 ? 'W' : 'B'}"  parent:tm, text: game.info.estimate.toFixed 1
         if valid @referee.redos ➜ elem 'span' class:"redos"  parent:tm, text: "#{@referee.game.moves.num()} #{stone.white} #{@referee.game.moves.num()+@referee.redos.length}"
-        elem 'span' class:'capture' parent:tr, text: sw + ' ' + cps.white + ' ' + game.info.komi
+        elem 'span' class:'capture' parent:tr, text: sw + ' ' + cps.white + ' ' + (game.info.komi ? '')
         elem 'span' class:'player'  parent:tr, text: game.players.white 
         elem 'span' class:'move'    parent:tr, text: mov.white
                 
@@ -185,6 +182,7 @@ function MainWin extends win
             'score'                         ➜ log @referee.game.estimate(); @referee.board.annotate()
             'games'                         ➜ @online.toggleGames() 
             'tree'                          ➜ @referee.toggleTree() 
+            'chat'                          ➜ @referee.toggleChat() 
             'numbers'                       ➜ @referee.board.toggleNumbers()
             'coordinates'                   ➜ @referee.board.toggleCoordinates()
             'liberties'                     ➜ @referee.board.toggleLiberties()

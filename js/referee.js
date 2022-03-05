@@ -339,9 +339,25 @@ Referee = (function ()
         }
     }
 
+    Referee.prototype["toggleChat"] = function ()
+    {
+        var chat
+
+        chat = !window.stash.get('chat',true)
+        window.stash.set('chat',chat)
+        if (!this.varee && chat)
+        {
+            this.toggleTree()
+        }
+        if (this.varee)
+        {
+            return this.varee.showChat(chat)
+        }
+    }
+
     Referee.prototype["onChat"] = function (line, fix)
     {
-        var _285_14_
+        var _300_14_
 
         if (line.gameid !== this.game.info.id)
         {

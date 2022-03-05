@@ -120,7 +120,6 @@ Online = (function ()
             {
                 case 'nofification':
                 case 'active_game':
-                    this.chats[arg.id] = {}
                     console.log('active_game:',arg.id)
                     return this.socket.emit('game/connect',{game_id:arg.id,player_id:this.myUserId,chat:1})
 
@@ -142,7 +141,7 @@ Online = (function ()
 
     Online.prototype["onGameData"] = function (msg, arg)
     {
-        var b, gameid, line, msgtyp, pos
+        var b, gameid, line, msgtyp, pos, _156_31_
 
         gameid = arg.game_id
         msgtyp = msg.split('/').slice(-1)[0]
@@ -165,9 +164,13 @@ Online = (function ()
                 line = arg.line
                 line.color = (line.username === this.myUserName ? 'myself' : 'black')
                 line.gameid = gameid
-                this.chats[gameid][line.date] = line
-                return post.emit('chat',line,1)
-
+                this.chats[gameid] = ((_156_31_=this.chats[gameid]) != null ? _156_31_ : {})
+                if (!this.chats[gameid][line.date])
+                {
+                    this.chats[gameid][line.date] = line
+                    return post.emit('chat',line,1)
+                }
+                break
             case 'clock':
             case 'conditional_moves':
             case 'reset-chats':

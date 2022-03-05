@@ -70,6 +70,7 @@ game
 view
     games                   alt+g
     tree                    alt+t
+    chat                    alt+c
     numbers                 alt+n
     liberties               alt+l
     variations              alt+v

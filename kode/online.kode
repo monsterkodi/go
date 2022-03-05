@@ -107,7 +107,6 @@ function Online
             
                 'nofification'  ➜ # if arg.type == 'gameEnded' then @getGames()
                 'active_game'   
-                                    @chats[arg.id] = {}
                                     log 'active_game:' arg.id #, noon arg # if not @boards[arg.id]
                                     @socket.emit 'game/connect',
                                         game_id:    arg.id
@@ -149,14 +148,15 @@ function Online
                     @loadGame gameid
             
             'chat'
-                # log 'chat' msg, noon arg
+
                 gameid = int msg.split('/')[-2]
                 line = arg.line
                 line.color = line.username == @myUserName ? 'myself' : 'black'
                 line.gameid = gameid
-                # @chats[gameid] ?= {}
-                @chats[gameid][line.date] = line
-                post.emit 'chat' line, 1
+                @chats[gameid] ?= {}
+                if not @chats[gameid][line.date]
+                    @chats[gameid][line.date] = line
+                    post.emit 'chat' line, 1
                 
             'clock'
             'conditional_moves'

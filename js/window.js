@@ -99,7 +99,7 @@ MainWin = (function ()
 
     MainWin.prototype["updateTitle"] = function ()
     {
-        var cps, game, mov, sb, sw, t, td, tl, tm, tr
+        var cps, game, mov, sb, sw, t, td, tl, tm, tr, _153_98_
 
         game = this.referee.game
         if (!game)
@@ -147,7 +147,7 @@ MainWin = (function ()
         {
             elem('span',{class:"redos",parent:tm,text:`${this.referee.game.moves.num()} ${stone.white} ${this.referee.game.moves.num() + this.referee.redos.length}`})
         }
-        elem('span',{class:'capture',parent:tr,text:sw + ' ' + cps.white + ' ' + game.info.komi})
+        elem('span',{class:'capture',parent:tr,text:sw + ' ' + cps.white + ' ' + (((_153_98_=game.info.komi) != null ? _153_98_ : ''))})
         elem('span',{class:'player',parent:tr,text:game.players.white})
         return elem('span',{class:'move',parent:tr,text:mov.white})
     }
@@ -214,6 +214,9 @@ MainWin = (function ()
 
             case 'tree':
                 return this.referee.toggleTree()
+
+            case 'chat':
+                return this.referee.toggleChat()
 
             case 'numbers':
                 return this.referee.board.toggleNumbers()
