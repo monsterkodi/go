@@ -121,6 +121,7 @@ Online = (function ()
                 case 'nofification':
                 case 'active_game':
                     console.log('active_game:',arg.id)
+                    console.log(msg,_k_.noon(arg))
                     return this.socket.emit('game/connect',{game_id:arg.id,player_id:this.myUserId,chat:1})
 
                 case 'game':
@@ -141,7 +142,7 @@ Online = (function ()
 
     Online.prototype["onGameData"] = function (msg, arg)
     {
-        var b, gameid, line, msgtyp, pos, _156_31_
+        var b, gameid, line, msgtyp, pos, _157_31_
 
         gameid = arg.game_id
         msgtyp = msg.split('/').slice(-1)[0]
@@ -164,7 +165,7 @@ Online = (function ()
                 line = arg.line
                 line.color = (line.username === this.myUserName ? 'myself' : 'black')
                 line.gameid = gameid
-                this.chats[gameid] = ((_156_31_=this.chats[gameid]) != null ? _156_31_ : {})
+                this.chats[gameid] = ((_157_31_=this.chats[gameid]) != null ? _157_31_ : {})
                 if (!this.chats[gameid][line.date])
                 {
                     this.chats[gameid][line.date] = line
@@ -247,9 +248,9 @@ Online = (function ()
 
         g = elem('div',{class:'game',parent:this.games})
         var list = ['black','white']
-        for (var _232_18_ = 0; _232_18_ < list.length; _232_18_++)
+        for (var _233_18_ = 0; _233_18_ < list.length; _233_18_++)
         {
-            color = list[_232_18_]
+            color = list[_233_18_]
             p = game.players[color]
             if (p.username !== 'monsterkodi')
             {
@@ -376,7 +377,7 @@ Online = (function ()
         ids = Object.keys(this.boards)
         if (this.referee.game.info.id)
         {
-            for (var _345_21_ = i = 0, _345_25_ = ids.length; (_345_21_ <= _345_25_ ? i < ids.length : i > ids.length); (_345_21_ <= _345_25_ ? ++i : --i))
+            for (var _346_21_ = i = 0, _346_25_ = ids.length; (_346_21_ <= _346_25_ ? i < ids.length : i > ids.length); (_346_21_ <= _346_25_ ? ++i : --i))
             {
                 if (parseInt(ids[i]) === this.referee.game.info.id)
                 {
@@ -396,7 +397,7 @@ Online = (function ()
         ids = Object.keys(this.boards)
         if (this.referee.game.info.id)
         {
-            for (var _358_21_ = i = 0, _358_25_ = ids.length; (_358_21_ <= _358_25_ ? i < ids.length : i > ids.length); (_358_21_ <= _358_25_ ? ++i : --i))
+            for (var _359_21_ = i = 0, _359_25_ = ids.length; (_359_21_ <= _359_25_ ? i < ids.length : i > ids.length); (_359_21_ <= _359_25_ ? ++i : --i))
             {
                 if (parseInt(ids[i]) === this.referee.game.info.id)
                 {

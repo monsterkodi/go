@@ -193,7 +193,8 @@ Varee = (function ()
 
     Varee.prototype["showChat"] = function (show)
     {
-        return this.chat.style.display = (show ? 'initial' : 'none')
+        this.chat.style.display = (show ? 'initial' : 'none')
+        return this.talk.style.display = (show ? 'initial' : 'none')
     }
 
     Varee.prototype["addChat"] = function (line, fix)
@@ -217,9 +218,9 @@ Varee = (function ()
         so = this.chat.getBoundingClientRect()
         my = 25
         var list = _k_.list(this.chat.children)
-        for (var _205_18_ = 0; _205_18_ < list.length; _205_18_++)
+        for (var _206_18_ = 0; _206_18_ < list.length; _206_18_++)
         {
-            child = list[_205_18_]
+            child = list[_206_18_]
             cr = child.getBoundingClientRect()
             if (cr.top - so.top < my)
             {
@@ -241,9 +242,9 @@ Varee = (function ()
         var child
 
         var list = _k_.list(this.chat.children)
-        for (var _218_18_ = 0; _218_18_ < list.length; _218_18_++)
+        for (var _219_18_ = 0; _219_18_ < list.length; _219_18_++)
         {
-            child = list[_218_18_]
+            child = list[_219_18_]
             child.style.top = `${child.move_number * 50 + 25}px`
         }
         return this.fixChat()

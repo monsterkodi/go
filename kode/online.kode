@@ -108,6 +108,7 @@ function Online
                 'nofification'  ➜ # if arg.type == 'gameEnded' then @getGames()
                 'active_game'   
                                     log 'active_game:' arg.id #, noon arg # if not @boards[arg.id]
+                                    log msg, noon arg
                                     @socket.emit 'game/connect',
                                         game_id:    arg.id
                                         player_id:  @myUserId

@@ -189,6 +189,7 @@ function Varee
     showChat: (show) ->
 
         @chat.style.display = show ? 'initial' : 'none'
+        @talk.style.display = show ? 'initial' : 'none'
     
     addChat: (line, fix) ->
         

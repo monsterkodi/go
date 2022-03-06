@@ -40,7 +40,7 @@ class Main extends app
         template = [{label:'go',submenu:[{type:'separator'},{label:'Quit',accelerator:'Command+Q',click:(function ()
         {
             return this.app.quit()
-        }).bind(this)},{label:'Paste',accelerator:'CmdOrCtrl+V',selector:'paste:'}]}]
+        }).bind(this)},{label:'Copy',accelerator:'CmdOrCtrl+C',selector:'copy:'},{label:'Paste',accelerator:'CmdOrCtrl+V',selector:'paste:'}]}]
         Menu.setApplicationMenu(Menu.buildFromTemplate(template))
         post.on('menuAction',this.onMenuAction)
     }
