@@ -120,8 +120,10 @@ Online = (function ()
             {
                 case 'nofification':
                 case 'active_game':
-                    console.log('active_game:',arg.id)
-                    console.log(msg,_k_.noon(arg))
+                    if (arg.phase === 'finished')
+                    {
+                        return
+                    }
                     return this.socket.emit('game/connect',{game_id:arg.id,player_id:this.myUserId,chat:1})
 
                 case 'game':
@@ -142,7 +144,7 @@ Online = (function ()
 
     Online.prototype["onGameData"] = function (msg, arg)
     {
-        var b, gameid, line, msgtyp, pos, _157_31_
+        var b, gameid, line, msgtyp, pos, _161_31_
 
         gameid = arg.game_id
         msgtyp = msg.split('/').slice(-1)[0]
@@ -154,7 +156,6 @@ Online = (function ()
                 b = this.boards[gameid]
                 b.game.play(pos)
                 this.updateMyMove(b)
-                console.log('load game?',this.referee.game.info.id,gameid,this.referee.game.info.id === gameid)
                 if (this.referee.game.info.id === gameid)
                 {
                     return this.loadGame(gameid)
@@ -165,7 +166,7 @@ Online = (function ()
                 line = arg.line
                 line.color = (line.username === this.myUserName ? 'myself' : 'black')
                 line.gameid = gameid
-                this.chats[gameid] = ((_157_31_=this.chats[gameid]) != null ? _157_31_ : {})
+                this.chats[gameid] = ((_161_31_=this.chats[gameid]) != null ? _161_31_ : {})
                 if (!this.chats[gameid][line.date])
                 {
                     this.chats[gameid][line.date] = line
@@ -248,9 +249,9 @@ Online = (function ()
 
         g = elem('div',{class:'game',parent:this.games})
         var list = ['black','white']
-        for (var _233_18_ = 0; _233_18_ < list.length; _233_18_++)
+        for (var _237_18_ = 0; _237_18_ < list.length; _237_18_++)
         {
-            color = list[_233_18_]
+            color = list[_237_18_]
             p = game.players[color]
             if (p.username !== 'monsterkodi')
             {
@@ -377,7 +378,7 @@ Online = (function ()
         ids = Object.keys(this.boards)
         if (this.referee.game.info.id)
         {
-            for (var _346_21_ = i = 0, _346_25_ = ids.length; (_346_21_ <= _346_25_ ? i < ids.length : i > ids.length); (_346_21_ <= _346_25_ ? ++i : --i))
+            for (var _350_21_ = i = 0, _350_25_ = ids.length; (_350_21_ <= _350_25_ ? i < ids.length : i > ids.length); (_350_21_ <= _350_25_ ? ++i : --i))
             {
                 if (parseInt(ids[i]) === this.referee.game.info.id)
                 {
@@ -397,7 +398,7 @@ Online = (function ()
         ids = Object.keys(this.boards)
         if (this.referee.game.info.id)
         {
-            for (var _359_21_ = i = 0, _359_25_ = ids.length; (_359_21_ <= _359_25_ ? i < ids.length : i > ids.length); (_359_21_ <= _359_25_ ? ++i : --i))
+            for (var _363_21_ = i = 0, _363_25_ = ids.length; (_363_21_ <= _363_25_ ? i < ids.length : i > ids.length); (_363_21_ <= _363_25_ ? ++i : --i))
             {
                 if (parseInt(ids[i]) === this.referee.game.info.id)
                 {

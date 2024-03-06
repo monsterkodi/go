@@ -127,7 +127,6 @@ Game = (function ()
     {
         var c, color, h
 
-        console.log('game.play',p)
         color = this.nextColor()
         delete this.lastCaptures
         if (_k_.in(p.toLowerCase(),['pass','resign','illegal']))

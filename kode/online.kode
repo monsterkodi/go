@@ -107,8 +107,13 @@ function Online
             
                 'nofification'  ➜ # if arg.type == 'gameEnded' then @getGames()
                 'active_game'   
-                                    log 'active_game:' arg.id #, noon arg # if not @boards[arg.id]
-                                    log msg, noon arg
+                                    # log 'active_game:' arg.id
+                                    
+                                    if arg.phase == 'finished'
+                                        # log msg, noon arg
+                                        # log arg
+                                        return
+                                        
                                     @socket.emit 'game/connect',
                                         game_id:    arg.id
                                         player_id:  @myUserId
@@ -144,7 +149,6 @@ function Online
                 
                 @updateMyMove b
                         
-                log 'load game?' @referee.game.info.id, gameid, @referee.game.info.id == gameid
                 if @referee.game.info.id == gameid
                     @loadGame gameid
             

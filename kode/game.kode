@@ -87,7 +87,7 @@ function Game extends Estimate
     
     play: (p) ->
 
-        log 'game.play' p
+        # log 'game.play' p
         
         color = @nextColor()
         delete @lastCaptures

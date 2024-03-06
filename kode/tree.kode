@@ -6,7 +6,7 @@
    000     000   000  00000000  00000000
 ###
 
-{ kstr, noon, post } = require 'kxk'
+{ kstr, post } = require 'kxk'
 { opponent } = require './util/util'
 { max } = Math
 
@@ -85,8 +85,8 @@ function Tree
                     if @moves[mi]
                         if @moves[mi].pos != td.moves[0].pos
                             @moves[mi].alt.push new Tree(@).fromPOD td
-                        else
-                            log 'skip alt with same move' mi, @moves[mi].pos, noon td
+                        # else
+                            # log 'skip alt with same move' mi, @moves[mi].pos, noon td
                     else
                         warn "no move at index #{mi}, but in pod from stash!" @moves.length, pod
         
